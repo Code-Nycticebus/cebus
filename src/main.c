@@ -12,8 +12,10 @@ int main(void) {
   strcpy(buffer2, "Hello2");
   printf("%s\n", buffer2);
 
-  char *buffer3 = arena_alloc(arena, 1000);
-  strcpy(buffer3, "Hello3");
+  char *buffer3 = arena_calloc(arena, 1000);
+  buffer3[0] = 'a';
+  buffer3[1] = 'b';
+  buffer3[2] = 'c';
   printf("%s\n", buffer3);
 
   arena_free(arena);
