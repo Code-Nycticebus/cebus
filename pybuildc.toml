@@ -1,0 +1,5 @@
+[project]
+name="ctools"
+version="0.1.0"
+cc="clang"
+bin="exe"
