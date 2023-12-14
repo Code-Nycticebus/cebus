@@ -18,5 +18,21 @@ int main(void) {
   buffer3[2] = 'c';
   printf("%s\n", buffer3);
 
+  ListI32 list = {0};
+  da_init(&list, 2);
+  for (size_t i = 0; i < 10; ++i) {
+    da_push(&list, i + 1);
+  }
+
+  printf("{");
+  for (size_t i = 0; i < list.len; ++i) {
+    if (i != 0) {
+      printf(", ");
+    }
+    printf("%d", list.items[i]);
+  }
+  printf("}\n");
+
+  da_free(&list);
   arena_free(arena);
 }
