@@ -17,4 +17,8 @@ mkdir -p $BUILD_DIR/bin
 mkdir -p $BUILD_DIR/obj
 
 #---------Compilation---------#
-$CC -Isrc -g -Wall -Wextra -Werror -Wpedantic -Wshadow -Wnull-dereference -Wformat=2 ${CFLAGS[@]} src/carena.c src/main.c -o $BIN
+mkdir -p $BUILD_DIR/obj
+$CC -Isrc -g -Wall -Wextra -Werror -Wpedantic -Wshadow -Wnull-dereference -Wformat=2 ${CFLAGS[@]} src/arena.c -o $BUILD_DIR/obj/arena.o -c
+mkdir -p $BUILD_DIR/obj
+$CC -Isrc -g -Wall -Wextra -Werror -Wpedantic -Wshadow -Wnull-dereference -Wformat=2 ${CFLAGS[@]} src/str.c -o $BUILD_DIR/obj/str.o -c
+ar rcs $BUILD_DIR/bin/libctools.a $BUILD_DIR/obj/arena.o $BUILD_DIR/obj/str.o

@@ -1,33 +1,12 @@
-#include "arena.h"
-#include "da.h"
 #include "str.h"
 
 #include <assert.h>
 #include <ctype.h>
-#include <stdio.h>
-#include <string.h>
-
-typedef struct {
-  DA(size_t);
-} ListSize;
 
 bool sep(char c) { return isspace(c); }
 
-int main(void) {
-  ListSize list = {0};
-  da_init(&list, 2);
-  for (size_t i = 0; i < 10; ++i) {
-    da_push(&list, i + 1);
-  }
-
-  for (size_t i = 0; i < list.len; ++i) {
-    assert(list.items[i] == i + 1);
-  }
-
-  da_free(&list);
-
+void test_copy(void) {
   Arena *arena = arena_make();
-
   Str str = STR("Hello");
   Str str2 = str_copy(arena, str);
   Str str3 = str_from_cstr(", World");
@@ -37,6 +16,10 @@ int main(void) {
   assert(str_startswith(full, STR("Hello, ")));
   assert(str_endswith(full, STR(" World")));
 
+  arena_free(arena);
+}
+
+void test_trim(void) {
   Str dirty = STR("\t  Hello World  \n");
   Str trim_l = str_trim_left(dirty);
   assert(str_eq(trim_l, STR("Hello World  \n")));
@@ -46,17 +29,26 @@ int main(void) {
 
   Str trim = str_trim(dirty);
   assert(str_eq(trim, STR("Hello World")));
+}
 
+void test_chop(void) {
   Str text = STR("Hello\nThis is text");
   Str h = str_chop_by_delim(&text, '\n');
   Str rest = str_chop_by_predicate(&text, sep);
   assert(str_eq(h, STR("Hello")));
   assert(str_eq(rest, STR("This")));
+}
 
+void test_u64(void) {
   Str n = STR("64 bytes");
   assert(str_to_u64(n) == 64);
   assert(str_chop_u64(&n) == 64);
   assert(str_eq(n, STR(" bytes")));
+}
 
-  arena_free(arena);
+int main(void) {
+  test_copy();
+  test_trim();
+  test_chop();
+  test_u64();
 }
