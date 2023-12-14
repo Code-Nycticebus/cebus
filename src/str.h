@@ -5,6 +5,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #define STR_FMT "%.*s"
 #define STR_ARG(str) (int)str.len, str.data
@@ -33,5 +34,8 @@ bool str_try_chop_by_delim(Str *str, char delim, Str *chunk);
 Str str_chop_by_delim(Str *str, char delim);
 bool str_try_chop_by_predicate(Str *str, bool (*predicate)(char), Str *chunk);
 Str str_chop_by_predicate(Str *str, bool (*predicate)(char));
+
+uint64_t str_to_u64(Str str);
+uint64_t str_chop_u64(Str *str);
 
 #endif // !__CTOOLS_STR_H__

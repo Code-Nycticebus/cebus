@@ -129,3 +129,22 @@ Str str_chop_by_predicate(Str *str, bool (*predicate)(char)) {
   }
   return *str;
 }
+
+uint64_t str_to_u64(Str str) {
+  uint64_t result = 0;
+  for (size_t i = 0; i < str.len && isdigit(str.data[i]); ++i) {
+    result = result * 10 + (uint64_t)str.data[i] - '0';
+  }
+  return result;
+}
+
+uint64_t str_chop_u64(Str *str) {
+  uint64_t result = 0;
+  size_t i = 0;
+  for (; i < str->len && isdigit(str->data[i]); ++i) {
+    result = result * 10 + (uint64_t)str->data[i] - '0';
+  }
+  str->len -= i;
+  str->data += i;
+  return result;
+}
