@@ -1,6 +1,14 @@
 #include "arena.h"
+#include "da.h"
+#include "str.h"
+
 #include <stdio.h>
 #include <string.h>
+
+typedef struct {
+  DA(int);
+} ListI32;
+
 int main(void) {
   Arena *arena = arena_make();
 
@@ -34,5 +42,13 @@ int main(void) {
   printf("}\n");
 
   da_free(&list);
+
+  Str str = STR("Hello");
+  Str str2 = str_copy(arena, str);
+  Str str3 = str_from_cstr(", World");
+  Str full = str_cat(arena, str2, str3);
+
+  printf(STR_FMT "\n", STR_ARG(full));
+
   arena_free(arena);
 }

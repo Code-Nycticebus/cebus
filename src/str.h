@@ -1,0 +1,24 @@
+#ifndef __CTOOLS_STR_H__
+#define __CTOOLS_STR_H__
+
+#include "arena.h"
+
+#include <stddef.h>
+
+#define STR_FMT "%.*s"
+#define STR_ARG(str) (int)str.len, str.data
+
+#define STR(str) ((Str){.len = sizeof(str) - 1, .data = str})
+
+typedef struct {
+  size_t len;
+  const char *data;
+} Str;
+
+Str str_from_parts(size_t size, const char *cstr);
+Str str_from_cstr(const char *cstr);
+
+Str str_copy(Arena *arena, Str src);
+Str str_cat(Arena *arena, Str s1, Str s2);
+
+#endif // !__CTOOLS_STR_H__
