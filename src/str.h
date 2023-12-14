@@ -3,6 +3,7 @@
 
 #include "arena.h"
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #define STR_FMT "%.*s"
@@ -20,5 +21,8 @@ Str str_from_cstr(const char *cstr);
 
 Str str_copy(Arena *arena, Str src);
 Str str_cat(Arena *arena, Str s1, Str s2);
+bool str_eq(Str s1, Str s2);
+bool str_startswith(Str s1, Str prefix);
+bool str_endswith(Str s1, Str suffix);
 
 #endif // !__CTOOLS_STR_H__

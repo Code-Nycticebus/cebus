@@ -20,8 +20,31 @@ Str str_copy(Arena *arena, Str src) {
 
 Str str_cat(Arena *arena, Str s1, Str s2) {
   const size_t new_size = s1.len + s2.len;
-  char *buffer = arena_alloc(arena, new_size + 1);
+  char *buffer = arena_calloc(arena, new_size + 1);
   strncpy(buffer, s1.data, s1.len);
   strncat(buffer, s2.data, s2.len);
+  buffer[new_size] = '\0';
   return str_from_parts(new_size, buffer);
+}
+
+bool str_eq(Str s1, Str s2) {
+  if (s1.len != s2.len) {
+    return false;
+  }
+  return strncmp(s1.data, s2.data, s1.len) == 0;
+}
+
+bool str_startswith(Str s1, Str prefix) {
+  if (s1.len < prefix.len) {
+    return false;
+  }
+  return strncmp(s1.data, prefix.data, prefix.len) == 0;
+}
+
+bool str_endswith(Str s1, Str suffix) {
+  if (s1.len < suffix.len) {
+    return false;
+  }
+  size_t idx = s1.len - suffix.len;
+  return strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
 }
