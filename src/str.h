@@ -31,7 +31,7 @@ bool str_endswith(Str s1, Str suffix);
 
 bool str_try_chop_by_delim(Str *str, char delim, Str *chunk);
 Str str_chop_by_delim(Str *str, char delim);
-Str str_chop_by_predicate(Str *str, bool (*predicate)(char));
 bool str_try_chop_by_predicate(Str *str, bool (*predicate)(char), Str *chunk);
+Str str_chop_by_predicate(Str *str, bool (*predicate)(char));
 
 #endif // !__CTOOLS_STR_H__

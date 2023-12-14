@@ -99,3 +99,33 @@ Str str_chop_by_delim(Str *str, char delim) {
   }
   return *str;
 }
+
+bool str_try_chop_by_predicate(Str *str, bool (*predicate)(char), Str *chunk) {
+  size_t i = 0;
+  while (i < str->len && !predicate(str->data[i])) {
+    ++i;
+  }
+
+  if (i < str->len) {
+    *chunk = str_from_parts(i, str->data);
+    str->data += i + 1;
+    str->len -= i + 1;
+    return true;
+  }
+  return false;
+}
+
+Str str_chop_by_predicate(Str *str, bool (*predicate)(char)) {
+  size_t i = 0;
+  while (i < str->len && predicate(str->data[i])) {
+    ++i;
+  }
+
+  if (i < str->len) {
+    Str chunk = str_from_parts(i, str->data);
+    str->data += i + 1;
+    str->len -= i + 1;
+    return chunk;
+  }
+  return *str;
+}

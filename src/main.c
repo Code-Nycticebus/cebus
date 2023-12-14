@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
+bool illegal(char c) { return c == '\n'; }
+
 typedef struct {
   DA(size_t);
 } ListSize;
@@ -47,7 +49,8 @@ int main(void) {
   Str text = STR("Hello\nThis is text that i want splitted\nI dont want the "
                  "newlines so i can do some nice shit.\n");
 
-  for (Str s = text, line = {0}; str_try_chop_by_delim(&s, '\n', &line);) {
+  for (Str s = text, line = {0};
+       str_try_chop_by_predicate(&s, illegal, &line);) {
     printf("\t" STR_FMT "\n", STR_ARG(line));
   }
 
