@@ -117,7 +117,7 @@ bool str_try_chop_by_predicate(Str *str, bool (*predicate)(char), Str *chunk) {
 
 Str str_chop_by_predicate(Str *str, bool (*predicate)(char)) {
   size_t i = 0;
-  while (i < str->len && predicate(str->data[i])) {
+  while (i < str->len && !predicate(str->data[i])) {
     ++i;
   }
 

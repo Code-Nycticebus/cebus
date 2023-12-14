@@ -3,12 +3,15 @@
 #include "str.h"
 
 #include <assert.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
 typedef struct {
   DA(size_t);
 } ListSize;
+
+bool sep(char c) { return isspace(c); }
 
 int main(void) {
   ListSize list = {0};
@@ -44,11 +47,11 @@ int main(void) {
   Str trim = str_trim(dirty);
   assert(str_eq(trim, STR("Hello World")));
 
-  Str text = STR("Hello\nThis is text\n");
+  Str text = STR("Hello\nThis is text");
   Str h = str_chop_by_delim(&text, '\n');
-  Str rest = str_chop_by_delim(&text, '\n');
+  Str rest = str_chop_by_predicate(&text, sep);
   assert(str_eq(h, STR("Hello")));
-  assert(str_eq(rest, STR("This is text")));
+  assert(str_eq(rest, STR("This")));
 
   Str n = STR("64 bytes");
   assert(str_to_u64(n) == 64);
