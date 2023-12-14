@@ -11,7 +11,6 @@ typedef struct {
 } ListSize;
 
 int main(void) {
-
   ListSize list = {0};
   da_init(&list, 2);
   for (size_t i = 0; i < 10; ++i) {
@@ -34,6 +33,23 @@ int main(void) {
   assert(str_eq(full, STR("Hello, World")));
   assert(str_startswith(full, STR("Hello, ")));
   assert(str_endswith(full, STR(" World")));
+
+  Str dirty = STR("\t  Hello World  \n");
+  Str trim_l = str_trim_left(dirty);
+  assert(str_eq(trim_l, STR("Hello World  \n")));
+
+  Str trim_r = str_trim_right(dirty);
+  assert(str_eq(trim_r, STR("\t  Hello World")));
+
+  Str trim = str_trim(dirty);
+  assert(str_eq(trim, STR("Hello World")));
+
+  Str text = STR("Hello\nThis is text that i want splitted\nI dont want the "
+                 "newlines so i can do some nice shit.\n");
+
+  for (Str s = text, line = {0}; str_try_chop_by_delim(&s, '\n', &line);) {
+    printf("\t" STR_FMT "\n", STR_ARG(line));
+  }
 
   arena_free(arena);
 }

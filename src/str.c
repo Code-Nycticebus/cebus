@@ -1,6 +1,8 @@
 #include "str.h"
 #include "arena.h"
+#include "inttypes.h"
 
+#include <ctype.h>
 #include <string.h>
 
 Str str_from_parts(size_t size, const char *cstr) {
@@ -10,6 +12,25 @@ Str str_from_parts(size_t size, const char *cstr) {
 Str str_from_cstr(const char *cstr) {
   return (Str){.len = strlen(cstr), .data = cstr};
 }
+
+Str str_trim_left(Str str) {
+  Str result = str;
+  for (size_t i = 0; i < str.len && isspace(str.data[i]); ++i) {
+    result.data++;
+    result.len--;
+  }
+  return result;
+}
+
+Str str_trim_right(Str str) {
+  Str result = str;
+  for (size_t i = 0; i < str.len && isspace(str.data[str.len - i - 1]); ++i) {
+    result.len--;
+  }
+  return result;
+}
+
+Str str_trim(Str str) { return str_trim_left(str_trim_right(str)); }
 
 Str str_copy(Arena *arena, Str src) {
   char *buffer = arena_alloc(arena, src.len + 1);
@@ -47,4 +68,34 @@ bool str_endswith(Str s1, Str suffix) {
   }
   size_t idx = s1.len - suffix.len;
   return strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
+}
+
+bool str_try_chop_by_delim(Str *str, char delim, Str *chunk) {
+  size_t i = 0;
+  while (i < str->len && str->data[i] != delim) {
+    ++i;
+  }
+
+  if (i < str->len) {
+    *chunk = str_from_parts(i, str->data);
+    str->data += i + 1;
+    str->len -= i + 1;
+    return true;
+  }
+  return false;
+}
+
+Str str_chop_by_delim(Str *str, char delim) {
+  size_t i = 0;
+  while (i < str->len && str->data[i] != delim) {
+    ++i;
+  }
+
+  if (i < str->len) {
+    Str chunk = str_from_parts(i, str->data);
+    str->data += i + 1;
+    str->len -= i + 1;
+    return chunk;
+  }
+  return *str;
 }
