@@ -49,6 +49,22 @@ Str str_cat(Arena *arena, Str s1, Str s2) {
   return str_from_parts(new_size, buffer);
 }
 
+Str str_upper(Str s, Arena *arena) {
+  char *buffer = arena_calloc(arena, s.len + 1);
+  for (size_t i = 0; i < s.len; i++) {
+    buffer[i] = toupper(s.data[i]);
+  }
+  return str_from_parts(s.len, buffer);
+}
+
+Str str_lower(Str s, Arena *arena) {
+  char *buffer = arena_calloc(arena, s.len + 1);
+  for (size_t i = 0; i < s.len; i++) {
+    buffer[i] = tolower(s.data[i]);
+  }
+  return str_from_parts(s.len, buffer);
+}
+
 bool str_eq(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;

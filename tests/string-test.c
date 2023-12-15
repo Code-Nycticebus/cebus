@@ -18,6 +18,16 @@ void test_compare(void) {
   assert(str_contains(s, STR("TEST")) == false);
 }
 
+void test_transform(void) {
+  Arena *arena = arena_make();
+  Str s = STR("Hello, World");
+
+  assert(str_eq(str_lower(s, arena), STR("hello, world")));
+  assert(str_eq(str_upper(s, arena), STR("HELLO, WORLD")));
+
+  arena_free(arena);
+}
+
 void test_copy(void) {
   Arena *arena = arena_make();
 
