@@ -71,6 +71,18 @@ bool str_endswith(Str s1, Str suffix) {
   return strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
 }
 
+bool str_in_str(Str needle, Str haystack) {
+  if (haystack.len < needle.len) {
+    return false;
+  }
+  for (size_t i = 0; i < haystack.len - needle.len + 1; i++) {
+    if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool str_try_chop_by_delim(Str *str, char delim, Str *chunk) {
   size_t i = 0;
   while (i < str->len && str->data[i] != delim) {

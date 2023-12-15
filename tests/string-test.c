@@ -9,11 +9,13 @@ bool sep(char c) { return isspace(c); }
 void test_compare(void) {
   Str s = STR("Hello, World");
 
-  assert(str_eq(s, STR("Hello, World")));
-  assert(str_startswith(s, STR("Hello, ")));
-  assert(str_endswith(s, STR(", World")));
+  assert(str_eq(s, STR("Hello, World")) == true);
+  assert(str_startswith(s, STR("Hello, ")) == true);
+  assert(str_endswith(s, STR(", World")) == true);
 
-  // str_in_str(STR("Hell"), s);
+  assert(str_in_str(STR("Hell"), s) == true);
+  assert(str_in_str(STR("World"), s) == true);
+  assert(str_in_str(STR("TEST"), s) == false);
 }
 
 void test_copy(void) {

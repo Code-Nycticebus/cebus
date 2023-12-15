@@ -29,6 +29,7 @@ Str str_cat(Arena *arena, Str s1, Str s2);
 bool str_eq(Str s1, Str s2);
 bool str_startswith(Str s1, Str prefix);
 bool str_endswith(Str s1, Str suffix);
+bool str_in_str(Str needle, Str haystack);
 
 bool str_try_chop_by_delim(Str *str, char delim, Str *chunk);
 Str str_chop_by_delim(Str *str, char delim);
