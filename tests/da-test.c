@@ -41,6 +41,25 @@ void test_map(void) {
   da_free(&list);
 }
 
+int sort(const void *a, const void *b) { return *(size_t *)a - *(size_t *)b; }
+
+void test_sort(void) {
+  const size_t n = 10;
+  ListSize list = {0};
+  da_init(&list, 2);
+  for (size_t i = 0; i < n; ++i) {
+    da_push(&list, n - i - 1);
+  }
+
+  da_sort(&list, sort);
+
+  for (size_t i = 0; i < list.len; ++i) {
+    assert(list.items[i] == i);
+  }
+
+  da_free(&list);
+}
+
 int main(void) {
   test_da();
   test_map();

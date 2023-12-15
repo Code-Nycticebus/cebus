@@ -39,4 +39,9 @@
     }                                                                          \
   } while (0)
 
+#define da_sort(list, sort)                                                    \
+  do {                                                                         \
+    qsort((list)->items, (list)->len, sizeof((list)->items[0]), sort);         \
+  } while (0)
+
 #endif // !__CLIB_DA_H__
