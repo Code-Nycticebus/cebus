@@ -81,7 +81,7 @@ void test_chop(void) {
 void test_u64(void) {
   Arena *arena = arena_make();
   const size_t N = 64;
-  Str number = str_u64_to_str(arena, N);
+  Str number = str_parse_u64(arena, N);
   assert(str_eq(number, STR("64")));
 
   Str n = str_cat(number, STR(" bytes"), arena);

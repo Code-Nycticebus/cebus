@@ -192,7 +192,7 @@ Str str_chop_by_predicate(Str *str, bool (*predicate)(char)) {
   return *str;
 }
 
-Str str_u64_to_str(Arena *arena, uint64_t n) {
+Str str_parse_u64(Arena *arena, uint64_t n) {
   const size_t number_max_chars = 21;
   char *buffer = arena_alloc(arena, number_max_chars);
   size_t len = snprintf(buffer, number_max_chars, "%" PRIu64, n);
