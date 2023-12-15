@@ -2,11 +2,13 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <stdio.h>
 
 bool sep(char c) { return isspace(c); }
 
 void test_copy(void) {
   Arena *arena = arena_make();
+
   Str str = STR("Hello");
   Str str2 = str_copy(arena, str);
   Str str3 = str_from_cstr(", World");
@@ -40,10 +42,19 @@ void test_chop(void) {
 }
 
 void test_u64(void) {
-  Str n = STR("64 bytes");
+  Arena *arena = arena_make();
+  const size_t N = 64;
+  Str number = str_u64_to_str(arena, N);
+  assert(str_eq(number, STR("64")));
+
+  Str n = str_cat(arena, number, STR(" bytes"));
+  assert(str_eq(n, STR("64 bytes")));
+
   assert(str_to_u64(n) == 64);
   assert(str_chop_u64(&n) == 64);
   assert(str_eq(n, STR(" bytes")));
+
+  arena_free(arena);
 }
 
 int main(void) {

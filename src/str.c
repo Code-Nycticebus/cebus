@@ -1,8 +1,9 @@
 #include "str.h"
 #include "arena.h"
-#include "inttypes.h"
 
 #include <ctype.h>
+#include <inttypes.h>
+#include <stdio.h>
 #include <string.h>
 
 Str str_from_parts(size_t size, const char *cstr) {
@@ -130,10 +131,17 @@ Str str_chop_by_predicate(Str *str, bool (*predicate)(char)) {
   return *str;
 }
 
+Str str_u64_to_str(Arena *arena, uint64_t n) {
+  const size_t number_max_chars = 21;
+  char *buffer = arena_alloc(arena, number_max_chars);
+  size_t len = snprintf(buffer, number_max_chars, "%" PRIu64, n);
+  return str_from_parts(len, buffer);
+}
+
 uint64_t str_to_u64(Str str) {
   uint64_t result = 0;
   for (size_t i = 0; i < str.len && isdigit(str.data[i]); ++i) {
-    result = result * 10 + (uint64_t)str.data[i] - '0';
+    result = result * 10 + (uint64_t)str.data[i] - '0'; // NOLINT
   }
   return result;
 }
@@ -142,7 +150,7 @@ uint64_t str_chop_u64(Str *str) {
   uint64_t result = 0;
   size_t i = 0;
   for (; i < str->len && isdigit(str->data[i]); ++i) {
-    result = result * 10 + (uint64_t)str->data[i] - '0';
+    result = result * 10 + (uint64_t)str->data[i] - '0'; // NOLINT
   }
   str->len -= i;
   str->data += i;
