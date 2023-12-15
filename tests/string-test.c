@@ -6,6 +6,16 @@
 
 bool sep(char c) { return isspace(c); }
 
+void test_compare(void) {
+  Str s = STR("Hello, World");
+
+  assert(str_eq(s, STR("Hello, World")));
+  assert(str_startswith(s, STR("Hello, ")));
+  assert(str_endswith(s, STR(", World")));
+
+  // str_in_str(STR("Hell"), s);
+}
+
 void test_copy(void) {
   Arena *arena = arena_make();
 
@@ -15,8 +25,6 @@ void test_copy(void) {
   Str full = str_cat(arena, str2, str3);
 
   assert(str_eq(full, STR("Hello, World")));
-  assert(str_startswith(full, STR("Hello, ")));
-  assert(str_endswith(full, STR(" World")));
 
   arena_free(arena);
 }
@@ -58,6 +66,7 @@ void test_u64(void) {
 }
 
 int main(void) {
+  test_compare();
   test_copy();
   test_trim();
   test_chop();
