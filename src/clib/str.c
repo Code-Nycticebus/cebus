@@ -71,7 +71,7 @@ bool str_endswith(Str s1, Str suffix) {
   return strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
 }
 
-bool str_in_str(Str needle, Str haystack) {
+bool str_contains(Str haystack, Str needle) {
   if (haystack.len < needle.len) {
     return false;
   }

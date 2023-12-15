@@ -13,9 +13,9 @@ void test_compare(void) {
   assert(str_startswith(s, STR("Hello, ")) == true);
   assert(str_endswith(s, STR(", World")) == true);
 
-  assert(str_in_str(STR("Hell"), s) == true);
-  assert(str_in_str(STR("World"), s) == true);
-  assert(str_in_str(STR("TEST"), s) == false);
+  assert(str_contains(s, STR("Hell")) == true);
+  assert(str_contains(s, STR("World")) == true);
+  assert(str_contains(s, STR("TEST")) == false);
 }
 
 void test_copy(void) {
