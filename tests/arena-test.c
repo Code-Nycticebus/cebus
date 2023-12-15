@@ -24,7 +24,7 @@ void test_arena(void) {
   char *buffer = arena_alloc(arena, n_bytes);
   assert(buffer);
 
-  assert(ta->chunk[0]->allocated == 10);
+  assert(ta->chunk[0]->allocated == n_bytes);
 
   arena_free(arena);
 }
