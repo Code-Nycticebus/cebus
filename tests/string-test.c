@@ -1,4 +1,4 @@
-#include "str.h"
+#include "clib/str.h"
 
 #include <assert.h>
 #include <ctype.h>
