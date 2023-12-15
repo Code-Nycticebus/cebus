@@ -94,6 +94,45 @@ void test_u64(void) {
   arena_free(arena);
 }
 
+void test_find(void) {
+  Str s = STR("Hello, World");
+  assert(str_find(s, STR("Hello")) == 0);
+  assert(str_find(s, STR("World")) == 7);
+  assert(str_find(s, STR("TEST")) == STR_NOT_FOUND);
+
+  size_t c = str_count(s, STR("o"));
+  assert(c == 2);
+  c = str_count(s, STR("TEST"));
+  assert(c == 0);
+}
+
+void test_replace(void) {
+  Arena *arena = arena_make();
+
+  Str s = STR("Hello, World");
+  Str goodbye = str_replace(s, STR("Hello"), STR("Goodbye"), arena);
+  Str all = str_replace(s, STR("World"), STR("All!"), arena);
+  assert(str_eq(goodbye, STR("Goodbye, World")));
+  assert(str_eq(all, STR("Hello, All!")));
+
+  Str max_test = STR("test test test");
+  Str result = str_replace(max_test, STR("test"), STR("result"), arena);
+  assert(str_eq(result, STR("result result result")));
+
+  arena_free(arena);
+}
+
+void test_substring(void) {
+  Str s = STR("Hello, World");
+  Str substring = str_substring(s, 0, 4);
+  Str invalid1 = str_substring(s, 4, 2);
+  Str invalid2 = str_substring(s, s.len, 2);
+
+  assert(str_eq(substring, STR("Hell")));
+  assert(str_eq(invalid1, STR("")));
+  assert(str_eq(invalid2, STR("")));
+}
+
 int main(void) {
   test_compare();
   test_transform();
@@ -101,4 +140,7 @@ int main(void) {
   test_trim();
   test_chop();
   test_u64();
+  test_find();
+  test_replace();
+  test_substring();
 }

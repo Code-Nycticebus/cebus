@@ -73,6 +73,24 @@ Str str_map(Str s, char (*map_fn)(size_t, char), Arena *arena) {
   return str_from_parts(s.len, buffer);
 }
 
+Str str_replace(Str s, Str old, Str new, Arena *arena) {
+  size_t count = str_count(s, old);
+  size_t new_size = (s.len - (old.len * count) + (new.len *count));
+  char *buffer = arena_calloc(arena, new_size + 1);
+
+  for (size_t i = 0, j = 0; i < s.len; i++, j++) {
+    if (strncmp(&s.data[i], old.data, old.len) == 0) {
+      strncpy(&buffer[j], new.data, new.len);
+      i += old.len - 1;
+      j += new.len - 1;
+    } else {
+      buffer[j] = s.data[i];
+    }
+  }
+
+  return str_from_parts(new_size, buffer);
+}
+
 bool str_eq(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;
@@ -191,4 +209,30 @@ uint64_t str_chop_u64(Str *str) {
   str->len -= i;
   str->data += i;
   return result;
+}
+
+size_t str_find(Str haystack, Str needle) {
+  if (haystack.len < needle.len) {
+    return STR_NOT_FOUND;
+  }
+  for (size_t i = 0; i < haystack.len - needle.len + 1; i++) {
+    if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
+      return i;
+    }
+  }
+  return STR_NOT_FOUND;
+}
+
+size_t str_count(Str haystack, Str needle) {
+  size_t count = 0;
+  if (haystack.len < needle.len) {
+    return count;
+  }
+  for (size_t i = 0; i < haystack.len - needle.len + 1; i++) {
+    if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
+      count++;
+      i += needle.len;
+    }
+  }
+  return count;
 }
