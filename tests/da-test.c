@@ -22,4 +22,26 @@ void test_da(void) {
   da_free(&list);
 }
 
-int main(void) { test_da(); }
+size_t map(size_t v) { return v * 2; }
+
+void test_map(void) {
+  const size_t n = 10;
+  ListSize list = {0};
+  da_init(&list, 2);
+  for (size_t i = 0; i < n; ++i) {
+    da_push(&list, i);
+  }
+
+  da_map(&list, map);
+
+  for (size_t i = 0; i < list.len; ++i) {
+    assert(list.items[i] == i * 2);
+  }
+
+  da_free(&list);
+}
+
+int main(void) {
+  test_da();
+  test_map();
+}
