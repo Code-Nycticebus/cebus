@@ -91,6 +91,13 @@ Str str_replace(Str s, Str old, Str new, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
+Str str_substring(Str s, size_t idx1, size_t idx2) {
+  if (idx2 <= idx1 || s.len <= idx1) {
+    return STR("");
+  }
+  return str_from_parts(idx2 - idx1, &s.data[idx1]);
+}
+
 bool str_eq(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;

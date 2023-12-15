@@ -12,6 +12,8 @@
 
 #define STR(str) ((Str){.len = sizeof(str) - 1, .data = str})
 
+#define STR_NOT_FOUND SIZE_MAX
+
 typedef struct {
   size_t len;
   const char *data;
@@ -46,5 +48,8 @@ Str str_chop_by_predicate(Str *str, bool (*predicate)(char));
 Str str_u64_to_str(Arena *arena, uint64_t n);
 uint64_t str_to_u64(Str str);
 uint64_t str_chop_u64(Str *str);
+
+size_t str_find(Str haystack, Str needle);
+size_t str_count(Str haystack, Str needle);
 
 #endif // !__CTOOLS_STR_H__
