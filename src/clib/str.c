@@ -65,6 +65,14 @@ Str str_lower(Str s, Arena *arena) {
   return str_from_parts(s.len, buffer);
 }
 
+Str str_map(Str s, char (*map_fn)(size_t, char), Arena *arena) {
+  char *buffer = arena_calloc(arena, s.len + 1);
+  for (size_t i = 0; i < s.len; i++) {
+    buffer[i] = map_fn(i, s.data[i]);
+  }
+  return str_from_parts(s.len, buffer);
+}
+
 bool str_eq(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;

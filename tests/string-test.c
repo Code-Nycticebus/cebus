@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 bool sep(char c) { return isspace(c); }
 
@@ -18,14 +19,29 @@ void test_compare(void) {
   assert(str_contains(s, STR("TEST")) == false);
 }
 
+static char mock(size_t idx, char c) {
+  const size_t upper_cases[] = {3, 7, 9, 11};
+  for (size_t i = 0; i < 4; i++) {
+    if (idx == upper_cases[i]) {
+      return toupper(c);
+    }
+  }
+  return tolower(c);
+}
+
 void test_transform(void) {
   Arena *arena = arena_make();
   Str s = STR("Hello, World");
   Str lower = str_lower(s, arena);
   Str upper = str_upper(s, arena);
 
+  const uint32_t seed = 555;
+  srand(seed);
+  Str mapped = str_map(s, mock, arena);
+
   assert(str_eq(lower, STR("hello, world")));
   assert(str_eq(upper, STR("HELLO, WORLD")));
+  assert(str_eq(mapped, STR("helLo, WoRlD")));
 
   arena_free(arena);
 }
@@ -82,6 +98,7 @@ void test_u64(void) {
 
 int main(void) {
   test_compare();
+  test_transform();
   test_copy();
   test_trim();
   test_chop();
