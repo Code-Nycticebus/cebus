@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool sep(char c) { return isspace(c); }
+bool sep(char c) { return isspace(c) || isblank(c); }
 
 void test_compare(void) {
   Str s = STR("Hello, World");
