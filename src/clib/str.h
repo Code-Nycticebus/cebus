@@ -1,5 +1,5 @@
-#ifndef __CTOOLS_STR_H__
-#define __CTOOLS_STR_H__
+#ifndef __CLIB_STR_H__
+#define __CLIB_STR_H__
 
 #include "arena.h"
 
@@ -52,4 +52,4 @@ uint64_t str_chop_u64(Str *str);
 size_t str_find(Str haystack, Str needle);
 size_t str_count(Str haystack, Str needle);
 
-#endif // !__CTOOLS_STR_H__
+#endif // !__CLIB_STR_H__

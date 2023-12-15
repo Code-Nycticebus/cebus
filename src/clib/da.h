@@ -1,5 +1,5 @@
-#ifndef __CTOOLS_DA_H__
-#define __CTOOLS_DA_H__
+#ifndef __CLIB_DA_H__
+#define __CLIB_DA_H__
 
 #include <stdlib.h>
 
@@ -32,4 +32,4 @@
     (list)->cap = 1;                                                           \
   } while (0)
 
-#endif // !__CTOOLS_DA_H__
+#endif // !__CLIB_DA_H__
