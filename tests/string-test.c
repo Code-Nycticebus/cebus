@@ -21,9 +21,11 @@ void test_compare(void) {
 void test_transform(void) {
   Arena *arena = arena_make();
   Str s = STR("Hello, World");
+  Str lower = str_lower(s, arena);
+  Str upper = str_upper(s, arena);
 
-  assert(str_eq(str_lower(s, arena), STR("hello, world")));
-  assert(str_eq(str_upper(s, arena), STR("HELLO, WORLD")));
+  assert(str_eq(lower, STR("hello, world")));
+  assert(str_eq(upper, STR("HELLO, WORLD")));
 
   arena_free(arena);
 }
