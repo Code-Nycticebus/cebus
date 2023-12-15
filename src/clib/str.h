@@ -45,7 +45,7 @@ Str str_chop_by_delim(Str *str, char delim);
 bool str_try_chop_by_predicate(Str *str, bool (*predicate)(char), Str *chunk);
 Str str_chop_by_predicate(Str *str, bool (*predicate)(char));
 
-Str str_parse_u64(Arena *arena, uint64_t n);
+Str str_u64(Arena *arena, uint64_t n);
 uint64_t str_to_u64(Str str);
 uint64_t str_chop_u64(Str *str);
 
