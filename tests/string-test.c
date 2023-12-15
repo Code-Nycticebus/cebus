@@ -49,6 +49,7 @@ void test_chop(void) {
   Str rest = str_chop_by_predicate(&text, sep);
   assert(str_eq(h, STR("Hello")));
   assert(str_eq(rest, STR("This")));
+  assert(str_eq(text, STR("is text")));
 }
 
 void test_u64(void) {
