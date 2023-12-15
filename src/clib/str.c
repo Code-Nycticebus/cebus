@@ -33,14 +33,14 @@ Str str_trim_right(Str str) {
 
 Str str_trim(Str str) { return str_trim_left(str_trim_right(str)); }
 
-Str str_copy(Arena *arena, Str src) {
+Str str_copy(Str src, Arena *arena) {
   char *buffer = arena_alloc(arena, src.len + 1);
   strncpy(buffer, src.data, src.len);
   buffer[src.len] = '\0';
   return str_from_parts(src.len, buffer);
 }
 
-Str str_cat(Arena *arena, Str s1, Str s2) {
+Str str_cat(Str s1, Str s2, Arena *arena) {
   const size_t new_size = s1.len + s2.len;
   char *buffer = arena_calloc(arena, new_size + 1);
   strncpy(buffer, s1.data, s1.len);

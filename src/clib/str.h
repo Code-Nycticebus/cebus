@@ -24,8 +24,11 @@ Str str_trim_left(Str str);
 Str str_trim_right(Str str);
 Str str_trim(Str str);
 
-Str str_copy(Arena *arena, Str src);
-Str str_cat(Arena *arena, Str s1, Str s2);
+Str str_copy(Str src, Arena *arena);
+Str str_cat(Str s1, Str s2, Arena *arena);
+Str str_upper(Str s, Arena *arena);
+Str str_lower(Str s, Arena *arena);
+
 bool str_eq(Str s1, Str s2);
 bool str_startswith(Str s1, Str prefix);
 bool str_endswith(Str s1, Str suffix);

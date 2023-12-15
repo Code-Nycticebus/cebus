@@ -32,9 +32,9 @@ void test_copy(void) {
   Arena *arena = arena_make();
 
   Str str = STR("Hello");
-  Str str2 = str_copy(arena, str);
+  Str str2 = str_copy(str, arena);
   Str str3 = str_from_cstr(", World");
-  Str full = str_cat(arena, str2, str3);
+  Str full = str_cat(str2, str3, arena);
 
   assert(str_eq(full, STR("Hello, World")));
 
@@ -68,7 +68,7 @@ void test_u64(void) {
   Str number = str_u64_to_str(arena, N);
   assert(str_eq(number, STR("64")));
 
-  Str n = str_cat(arena, number, STR(" bytes"));
+  Str n = str_cat(number, STR(" bytes"), arena);
   assert(str_eq(n, STR("64 bytes")));
 
   assert(str_to_u64(n) == 64);
