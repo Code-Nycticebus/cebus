@@ -35,8 +35,6 @@ void test_transform(void) {
   Str lower = str_lower(s, arena);
   Str upper = str_upper(s, arena);
 
-  const uint32_t seed = 555;
-  srand(seed);
   Str mapped = str_map(s, mock, arena);
 
   assert(str_eq(lower, STR("hello, world")));
