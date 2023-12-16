@@ -112,12 +112,18 @@ void test_replace(void) {
   Str s = STR("Hello, World");
   Str goodbye = str_replace(s, STR("Hello"), STR("Goodbye"), arena);
   Str all = str_replace(s, STR("World"), STR("All!"), arena);
+
+  assert(str_eq(s, STR("Hello, World")));
   assert(str_eq(goodbye, STR("Goodbye, World")));
   assert(str_eq(all, STR("Hello, All!")));
 
   Str max_test = STR("test test test");
   Str result = str_replace(max_test, STR("test"), STR("result"), arena);
   assert(str_eq(result, STR("result result result")));
+
+  Str dash = STR("c-language");
+  Str res = str_replace(dash, STR("-"), STR(""), arena);
+  assert(str_eq(res, STR("clanguage")));
 
   arena_free(arena);
 }

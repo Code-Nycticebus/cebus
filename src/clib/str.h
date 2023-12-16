@@ -8,9 +8,9 @@
 #include <stdint.h>
 
 #define STR_FMT "%.*s"
-#define STR_ARG(str) (int)str.len, str.data
+#define STR_ARG(str) (int)(str).len, (str).data
 
-#define STR(str) ((Str){.len = sizeof(str) - 1, .data = str})
+#define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
 
 #define STR_NOT_FOUND SIZE_MAX
 
