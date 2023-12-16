@@ -46,4 +46,6 @@
     qsort((list)->items, (list)->len, sizeof((list)->items[0]), sort);         \
   } while (0)
 
+#define da_last(list) (list)->items[(list)->len ? (list)->len - 1 : 0]
+
 #endif // !__CLIB_DA_H__

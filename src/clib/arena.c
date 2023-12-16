@@ -1,5 +1,7 @@
 #include "arena.h"
 
+#include "da.h"
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +10,7 @@
 #define KILOBYTES(s) ((s)*1000)
 #define MEGABYTES(s) ((s)*1e+6)
 
-#define CHUNK_DEFAULT_SIZE KILOBYTES(1)
+#define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 
 typedef struct {
   size_t cap;
@@ -17,8 +19,7 @@ typedef struct {
 } Chunk;
 
 struct Arena {
-  size_t chunk_count;
-  Chunk **chunk;
+  DA(Chunk *) chunks;
 };
 
 static Chunk *chunk_allocate(size_t size) {
@@ -35,29 +36,25 @@ static void chunk_free(Chunk *chunk) { free(chunk); }
 
 Arena *arena_make(void) {
   Arena *arena = malloc(sizeof(Arena));
-  arena->chunk_count = 1;
-  arena->chunk = malloc(sizeof(Chunk));
-  arena->chunk[0] = chunk_allocate(CHUNK_DEFAULT_SIZE);
+  da_init(&arena->chunks, 1);
   return arena;
 }
 
 void arena_free(Arena *arena) {
-  for (size_t i = 0; i < arena->chunk_count; i++) {
-    chunk_free(arena->chunk[i]);
+  for (size_t i = 0; i < arena->chunks.len; i++) {
+    chunk_free(arena->chunks.items[i]);
   }
-  free(arena->chunk);
+  da_free(&arena->chunks);
   free(arena);
 }
 
 void *arena_alloc(Arena *arena, size_t size) {
-  Chunk *chunk = arena->chunk[arena->chunk_count - 1];
-  if (!(chunk->allocated + size < chunk->cap)) {
-    const size_t chunk_idx = arena->chunk_count++;
-    arena->chunk = realloc(arena->chunk, arena->chunk_count * sizeof(Chunk));
+  Chunk *chunk = da_last(&arena->chunks);
+  if (arena->chunks.len == 0 || !(chunk->allocated + size < chunk->cap)) {
     const size_t chunk_size =
         size < CHUNK_DEFAULT_SIZE ? CHUNK_DEFAULT_SIZE : size;
-    arena->chunk[chunk_idx] = chunk_allocate(chunk_size);
-    chunk = arena->chunk[chunk_idx];
+    da_push(&arena->chunks, chunk_allocate(chunk_size));
+    chunk = da_last(&arena->chunks);
   }
   void *ptr = &chunk->data[chunk->allocated];
   chunk->allocated += size;
