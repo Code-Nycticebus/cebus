@@ -121,6 +121,10 @@ void test_replace(void) {
   Str result = str_replace(max_test, STR("test"), STR("result"), arena);
   assert(str_eq(result, STR("result result result")));
 
+  Str dash = STR("c-language");
+  Str res = str_replace(dash, STR("-"), STR(""), arena);
+  assert(str_eq(res, STR("clanguage")));
+
   arena_free(arena);
 }
 
