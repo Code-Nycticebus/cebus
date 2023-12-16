@@ -49,8 +49,8 @@ void arena_free(Arena *arena) {
 }
 
 void *arena_alloc(Arena *arena, size_t size) {
-  Chunk *chunk = da_last(&arena->chunks);
-  if (arena->chunks.len == 0 || !(chunk->allocated + size < chunk->cap)) {
+  Chunk *chunk = da_empty(&arena->chunks) ? NULL : da_last(&arena->chunks);
+  if (chunk == NULL || !(chunk->allocated + size < chunk->cap)) {
     const size_t chunk_size =
         size < CHUNK_DEFAULT_SIZE ? CHUNK_DEFAULT_SIZE : size;
     da_push(&arena->chunks, chunk_allocate(chunk_size));
