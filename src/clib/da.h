@@ -9,6 +9,7 @@
     size_t len;                                                                \
     T *items;                                                                  \
   }
+
 #define da_init(list, size)                                                    \
   do {                                                                         \
     (list)->cap = (size);                                                      \
