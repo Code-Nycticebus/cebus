@@ -112,6 +112,8 @@ void test_replace(void) {
   Str s = STR("Hello, World");
   Str goodbye = str_replace(s, STR("Hello"), STR("Goodbye"), arena);
   Str all = str_replace(s, STR("World"), STR("All!"), arena);
+
+  assert(str_eq(s, STR("Hello, World")));
   assert(str_eq(goodbye, STR("Goodbye, World")));
   assert(str_eq(all, STR("Hello, All!")));
 
