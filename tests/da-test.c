@@ -18,7 +18,7 @@ void test_da(void) {
   da_free(&list);
 }
 
-size_t map(size_t v) { return v * 2; }
+size_t times_two(size_t v) { return v * 2; }
 
 void test_map(void) {
   const size_t n = 10;
@@ -28,7 +28,7 @@ void test_map(void) {
     da_push(&list, i);
   }
 
-  da_map(&list, map);
+  da_map(&list, times_two);
 
   for (size_t i = 0; i < list.len; ++i) {
     assert(list.items[i] == i * 2);
