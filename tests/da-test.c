@@ -59,6 +59,15 @@ void test_sort(void) {
   da_free(&list);
 }
 
+void test_last(void) {
+  DA(int) list = {0};
+  da_init(&list, 1);
+  assert(da_empty(&list));
+  da_push(&list, 10);
+  int last = da_last(&list);
+  assert(last == 10);
+}
+
 int main(void) {
   test_da();
   test_map();
