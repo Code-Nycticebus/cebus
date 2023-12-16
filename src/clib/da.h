@@ -37,7 +37,7 @@
 #define da_map(list, map)                                                      \
   do {                                                                         \
     for (size_t i = 0; i < (list)->len; i++) {                                 \
-      (list)->items[i] = map((list)->items[i]);                                \
+      (list)->items[i] = map(i, (list)->items[i]);                             \
     }                                                                          \
   } while (0)
 
