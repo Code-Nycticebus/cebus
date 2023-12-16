@@ -24,7 +24,7 @@
       (list)->items =                                                          \
           realloc((list)->items, (list)->cap * sizeof((list)->items[0]));      \
     }                                                                          \
-    (list)->items[(list)->len++] = item;                                       \
+    (list)->items[(list)->len++] = (item);                                     \
   } while (0)
 
 #define da_free(list)                                                          \
