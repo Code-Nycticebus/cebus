@@ -18,7 +18,7 @@ mkdir -p $BUILD_DIR/obj
 
 #---------Compilation---------#
 mkdir -p $BUILD_DIR/obj/clib
-$CC -Isrc -Wall -Wpedantic -O2 -DNDEBUG -fsanitize=address ${CFLAGS[@]} src/clib/arena.c -o $BUILD_DIR/obj/clib/arena.o -c
+$CC -Isrc -g -Wall -Wextra -Werror -Wpedantic -Wshadow -Wnull-dereference -Wformat=2 -fsanitize=address ${CFLAGS[@]} src/clib/arena.c -o $BUILD_DIR/obj/clib/arena.o -c
 mkdir -p $BUILD_DIR/obj/clib
-$CC -Isrc -Wall -Wpedantic -O2 -DNDEBUG -fsanitize=address ${CFLAGS[@]} src/clib/str.c -o $BUILD_DIR/obj/clib/str.o -c
+$CC -Isrc -g -Wall -Wextra -Werror -Wpedantic -Wshadow -Wnull-dereference -Wformat=2 -fsanitize=address ${CFLAGS[@]} src/clib/str.c -o $BUILD_DIR/obj/clib/str.o -c
 ar rcs $BUILD_DIR/bin/libclib.a $BUILD_DIR/obj/clib/arena.o $BUILD_DIR/obj/clib/str.o
