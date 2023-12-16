@@ -10,6 +10,9 @@
     T *items;                                                                  \
   }
 
+#define da_last(list) (list)->items[(list)->len - 1]
+#define da_empty(list) (!(list)->len)
+
 #define da_init(list, size)                                                    \
   do {                                                                         \
     (list)->cap = (size);                                                      \
@@ -45,8 +48,5 @@
   do {                                                                         \
     qsort((list)->items, (list)->len, sizeof((list)->items[0]), sort);         \
   } while (0)
-
-#define da_last(list) (list)->items[(list)->len - 1]
-#define da_empty(list) (!(list)->len)
 
 #endif // !__CLIB_DA_H__
