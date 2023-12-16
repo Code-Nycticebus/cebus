@@ -1,7 +1,7 @@
 #ifndef __CLIB_ARENA_H__
 #define __CLIB_ARENA_H__
 
-#include <stddef.h>
+#include "defines.h"
 
 typedef struct Arena Arena;
 

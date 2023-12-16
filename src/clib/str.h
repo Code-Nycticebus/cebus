@@ -3,9 +3,7 @@
 
 #include "arena.h"
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
+#include "defines.h"
 
 #define STR_FMT "%.*s"
 #define STR_ARG(str) (int)(str).len, (str).data

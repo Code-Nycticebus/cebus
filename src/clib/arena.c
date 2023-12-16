@@ -2,13 +2,8 @@
 
 #include "da.h"
 
-#include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define KILOBYTES(s) ((s)*1000)
-#define MEGABYTES(s) ((s)*1e+6)
 
 #define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 
