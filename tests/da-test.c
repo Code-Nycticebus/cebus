@@ -3,13 +3,9 @@
 #include <assert.h>
 #include <stddef.h>
 
-typedef struct {
-  DA(size_t);
-} ListSize;
-
 void test_da(void) {
   const size_t n = 10;
-  ListSize list = {0};
+  DA(size_t) list = {0};
   da_init(&list, 2);
   for (size_t i = 0; i < n; ++i) {
     da_push(&list, i + 1);
@@ -26,7 +22,7 @@ size_t map(size_t v) { return v * 2; }
 
 void test_map(void) {
   const size_t n = 10;
-  ListSize list = {0};
+  DA(size_t) list = {0};
   da_init(&list, 2);
   for (size_t i = 0; i < n; ++i) {
     da_push(&list, i);

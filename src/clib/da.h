@@ -4,10 +4,11 @@
 #include <stdlib.h>
 
 #define DA(T)                                                                  \
-  size_t cap;                                                                  \
-  size_t len;                                                                  \
-  T *items
-
+  struct {                                                                     \
+    size_t cap;                                                                \
+    size_t len;                                                                \
+    T *items;                                                                  \
+  }
 #define da_init(list, size)                                                    \
   do {                                                                         \
     (list)->cap = (size);                                                      \
