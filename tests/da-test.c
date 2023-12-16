@@ -44,7 +44,7 @@ int sort(const void *a, const void *b) { return *(size_t *)a - *(size_t *)b; }
 
 void test_sort(void) {
   const size_t n = 10;
-  ListSize list = {0};
+  DA(size_t) list = {0};
   da_init(&list, 2);
   for (size_t i = 0; i < n; ++i) {
     da_push(&list, n - i - 1);
