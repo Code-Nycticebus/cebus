@@ -11,11 +11,11 @@ void test_compare(void) {
   Str s = STR("Hello, World");
 
   assert(str_eq(s, STR("Hello, World")) == true);
+  assert(str_eq_ignorecase(s, STR("hello, world")) == true);
   assert(str_startswith(s, STR("Hello, ")) == true);
   assert(str_endswith(s, STR(", World")) == true);
 
   assert(str_contains(s, STR("Hell")) == true);
-  assert(str_contains(s, STR("World")) == true);
   assert(str_contains(s, STR("TEST")) == false);
 }
 

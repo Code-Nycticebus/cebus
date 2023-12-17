@@ -34,6 +34,7 @@ Str str_replace(Str s, Str old, Str new, Arena *arena);
 Str str_substring(Str s, size_t idx1, size_t idx2);
 
 bool str_eq(Str s1, Str s2);
+bool str_eq_ignorecase(Str s1, Str s2);
 bool str_startswith(Str s1, Str prefix);
 bool str_endswith(Str s1, Str suffix);
 bool str_contains(Str haystack, Str needle);

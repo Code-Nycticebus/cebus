@@ -105,6 +105,13 @@ bool str_eq(Str s1, Str s2) {
   return strncmp(s1.data, s2.data, s1.len) == 0;
 }
 
+bool str_eq_ignorecase(Str s1, Str s2) {
+  if (s1.len != s2.len) {
+    return false;
+  }
+  return strncasecmp(s1.data, s2.data, s1.len) == 0;
+}
+
 bool str_startswith(Str s1, Str prefix) {
   if (s1.len < prefix.len) {
     return false;
