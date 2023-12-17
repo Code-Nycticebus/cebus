@@ -171,6 +171,7 @@ int main(void) {
   test_copy();
   test_trim();
   test_chop();
+  test_chop_right();
   test_u64();
   test_find();
   test_replace();
