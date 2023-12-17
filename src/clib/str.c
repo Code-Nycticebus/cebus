@@ -192,6 +192,34 @@ Str str_chop_by_predicate(Str *str, bool (*predicate)(char)) {
   return *str;
 }
 
+Str str_chop_right_by_delim(Str *str, char delim) {
+  size_t i = 0;
+  while (i < str->len && str->data[str->len - i - 1] != delim) {
+    ++i;
+  }
+
+  if (i < str->len) {
+    Str chunk = str_from_parts(i, &str->data[str->len - i]);
+    str->len -= i + 1;
+    return chunk;
+  }
+  return *str;
+}
+
+Str str_chop_right_by_predicate(Str *str, bool (*predicate)(char)) {
+  size_t i = 0;
+  while (i < str->len && !predicate(str->data[str->len - i - 1])) {
+    ++i;
+  }
+
+  if (i < str->len) {
+    Str chunk = str_from_parts(i, &str->data[str->len - i]);
+    str->len -= i + 1;
+    return chunk;
+  }
+  return *str;
+}
+
 Str str_u64(Arena *arena, uint64_t n) {
   const size_t number_max_chars = 21;
   char *buffer = arena_alloc(arena, number_max_chars);

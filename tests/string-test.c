@@ -95,6 +95,15 @@ void test_try_chop(void) {
   assert(t3 == false);
 }
 
+void test_chop_right(void) {
+  Str text = STR("Hello\nThis is text");
+  Str rest = str_chop_right_by_predicate(&text, sep);
+  Str h = str_chop_right_by_delim(&text, '\n');
+
+  assert(str_eq(rest, STR("text")));
+  assert(str_eq(h, STR("This is")));
+}
+
 void test_u64(void) {
   Arena *arena = arena_make();
   const size_t N = 64;
