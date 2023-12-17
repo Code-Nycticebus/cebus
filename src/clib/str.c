@@ -139,7 +139,9 @@ bool str_try_chop_by_delim(Str *str, char delim, Str *chunk) {
   }
 
   if (i < str->len) {
-    *chunk = str_from_parts(i, str->data);
+    if (chunk) {
+      *chunk = str_from_parts(i, str->data);
+    }
     str->data += i + 1;
     str->len -= i + 1;
     return true;
@@ -169,7 +171,9 @@ bool str_try_chop_by_predicate(Str *str, bool (*predicate)(char), Str *chunk) {
   }
 
   if (i < str->len) {
-    *chunk = str_from_parts(i, str->data);
+    if (chunk) {
+      *chunk = str_from_parts(i, str->data);
+    }
     str->data += i + 1;
     str->len -= i + 1;
     return true;
