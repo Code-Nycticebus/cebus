@@ -78,6 +78,23 @@ void test_chop(void) {
   assert(str_eq(text, STR("is text")));
 }
 
+void test_try_chop(void) {
+  Str text = STR("Hello\nThis is text");
+  Str h = {0};
+  bool t1 = str_try_chop_by_delim(&text, '\n', &h);
+  assert(t1 == true);
+  Str rest = {0};
+  bool t2 = str_try_chop_by_predicate(&text, sep, &rest);
+  assert(t2 == true);
+
+  assert(str_eq(h, STR("Hello")));
+  assert(str_eq(rest, STR("This")));
+  assert(str_eq(text, STR("is text")));
+
+  bool t3 = str_try_chop_by_delim(&text, '\n', &rest);
+  assert(t3 == false);
+}
+
 void test_u64(void) {
   Arena *arena = arena_make();
   const size_t N = 64;
