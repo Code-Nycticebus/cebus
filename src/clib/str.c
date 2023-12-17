@@ -49,6 +49,19 @@ Str str_cat(Str s1, Str s2, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
+Str str_cat_many(size_t count, Str s[count], Arena *arena) {
+  size_t size = 0;
+  for (size_t i = 0; i < count; i++) {
+    size += s[i].len;
+  }
+  char *buffer = arena_calloc(arena, size + 1);
+  for (size_t i = 0; i < count; i++) {
+    strncat(buffer, s[i].data, s[i].len);
+  }
+
+  return str_from_parts(size, buffer);
+}
+
 Str str_upper(Str s, Arena *arena) {
   char *buffer = arena_calloc(arena, s.len + 1);
   for (size_t i = 0; i < s.len; i++) {
