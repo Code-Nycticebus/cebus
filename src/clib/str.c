@@ -40,7 +40,7 @@ Str str_copy(Str src, Arena *arena) {
   return str_from_parts(src.len, buffer);
 }
 
-Str str_cat(Str s1, Str s2, Arena *arena) {
+Str str_concat(Str s1, Str s2, Arena *arena) {
   const size_t new_size = s1.len + s2.len;
   char *buffer = arena_calloc(arena, new_size + 1);
   strncpy(buffer, s1.data, s1.len);
@@ -49,7 +49,7 @@ Str str_cat(Str s1, Str s2, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
-Str str_cat_many(size_t count, Str s[count], Arena *arena) {
+Str str_concat_many(size_t count, Str s[count], Arena *arena) {
   size_t size = 0;
   for (size_t i = 0; i < count; i++) {
     size += s[i].len;

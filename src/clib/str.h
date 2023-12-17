@@ -25,8 +25,8 @@ Str str_trim_right(Str str);
 Str str_trim(Str str);
 
 Str str_copy(Str src, Arena *arena);
-Str str_cat(Str s1, Str s2, Arena *arena);
-Str str_cat_many(size_t count, Str s[count], Arena *arena);
+Str str_concat(Str s1, Str s2, Arena *arena);
+Str str_concat_many(size_t count, Str s[count], Arena *arena);
 Str str_upper(Str s, Arena *arena);
 Str str_lower(Str s, Arena *arena);
 Str str_map(Str s, char (*map_fn)(size_t, char), Arena *arena);

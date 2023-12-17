@@ -50,7 +50,7 @@ void test_copy(void) {
   Str str = STR("Hello");
   Str str2 = str_copy(str, arena);
   Str str3 = str_from_cstr(", World");
-  Str full = str_cat(str2, str3, arena);
+  Str full = str_concat(str2, str3, arena);
 
   assert(str_eq(full, STR("Hello, World")));
 
@@ -112,7 +112,7 @@ void test_u64(void) {
   Str number = str_u64(arena, N);
   assert(str_eq(number, STR("64")));
 
-  Str n = str_cat(number, STR(" bytes"), arena);
+  Str n = str_concat(number, STR(" bytes"), arena);
   assert(str_eq(n, STR("64 bytes")));
 
   assert(str_to_u64(n) == 64);
@@ -169,8 +169,8 @@ void test_substring(void) {
 
 void test_cat_many(void) {
   Arena *arena = arena_make();
-  Str res =
-      str_cat_many(3, (Str[3]){STR("Hello"), STR(", "), STR("World")}, arena);
+  Str res = str_concat_many(3, (Str[3]){STR("Hello"), STR(", "), STR("World")},
+                            arena);
   assert(str_eq(res, STR("Hello, World")));
   arena_free(arena);
 }
