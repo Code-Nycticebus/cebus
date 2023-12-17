@@ -97,11 +97,13 @@ void test_try_chop(void) {
 
 void test_chop_right(void) {
   Str text = STR("Hello\nThis is text");
-  Str rest = str_chop_right_by_predicate(&text, sep);
-  Str h = str_chop_right_by_delim(&text, '\n');
+  Str t = str_chop_right_by_predicate(&text, sep);
+  Str rest = str_chop_right_by_delim(&text, '\n');
+  Str rest2 = str_chop_right_by_delim(&text, '\n');
 
-  assert(str_eq(rest, STR("text")));
-  assert(str_eq(h, STR("This is")));
+  assert(str_eq(t, STR("text")));
+  assert(str_eq(rest, STR("This is")));
+  assert(str_eq(rest2, STR("Hello")));
 }
 
 void test_u64(void) {
