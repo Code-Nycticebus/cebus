@@ -169,7 +169,7 @@ void test_substring(void) {
 
 void test_join(void) {
   Arena *arena = arena_make();
-  Str res = str_join(3, (Str[3]){STR("Hello"), STR(", "), STR("World")}, arena);
+  Str res = str_join(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")}, arena);
   assert(str_eq(res, STR("Hello, World")));
   arena_free(arena);
 }

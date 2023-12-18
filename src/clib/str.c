@@ -49,13 +49,16 @@ Str str_concat(Str s1, Str s2, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
-Str str_join(size_t count, Str s[count], Arena *arena) {
-  size_t size = 0;
+Str str_join(Str sep, size_t count, Str s[count], Arena *arena) {
+  size_t size = sep.len * (count - 1);
   for (size_t i = 0; i < count; i++) {
     size += s[i].len;
   }
   char *buffer = arena_calloc(arena, size + 1);
   for (size_t i = 0; i < count; i++) {
+    if (i != 0) {
+      strncat(buffer, sep.data, sep.len);
+    }
     strncat(buffer, s[i].data, s[i].len);
   }
 
