@@ -115,6 +115,21 @@ void test_filter(void) { // NOLINT
   da_free(&list);
 }
 
+void test_copy(void) { // NOLINT
+  DA(size_t) l1 = {0};
+  const size_t n = 10;
+  for (size_t i = 0; i < n; i++) {
+    da_push(&l1, i + 1);
+  }
+
+  DA(size_t) l2 = {0};
+  da_copy(&l1, &l2);
+  assert(l1.len == l2.len);
+  for (size_t i = 0; i < l2.len; i++) {
+    assert(l1.items[i] == l2.items[i]);
+  }
+}
+
 int main(void) {
   test_da();
   test_map();
@@ -122,4 +137,5 @@ int main(void) {
   test_reserve();
   test_reverse();
   test_filter();
+  test_copy();
 }

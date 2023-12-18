@@ -93,4 +93,13 @@
     (list)->len = 0;                                                           \
   } while (0)
 
+#define da_copy(src, dest)                                                     \
+  do {                                                                         \
+    da_reserve((dest), (src)->len);                                            \
+    for (size_t i = 0; i < (src)->len; i++) {                                  \
+      (dest)->items[i] = (src)->items[i];                                      \
+    }                                                                          \
+    (dest)->len = (src)->len;                                                  \
+  } while (0)
+
 #endif // !__CLIB_DA_H__
