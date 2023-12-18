@@ -43,8 +43,8 @@
 #define da_extend(list, count, _items)                                         \
   do {                                                                         \
     da_reserve((list), (count));                                               \
-    for (size_t i = 0; i < (count); i++) {                                     \
-      (list)->items[(list)->len + i] = (_items)[i];                            \
+    for (size_t __e_i = 0; __e_i < (count); __e_i++) {                         \
+      (list)->items[(list)->len + __e_i] = (_items)[__e_i];                    \
     }                                                                          \
   } while (0)
 
@@ -58,8 +58,8 @@
 #define da_map(src, dest, map)                                                 \
   do {                                                                         \
     da_reserve((dest), (src)->len);                                            \
-    for (size_t i = 0; i < (src)->len; i++) {                                  \
-      (dest)->items[i] = map((src)->items[i]);                                 \
+    for (size_t __m_i = 0; __m_i < (src)->len; __m_i++) {                      \
+      (dest)->items[__m_i] = map((src)->items[__m_i]);                         \
     }                                                                          \
     (dest)->len = (src)->len;                                                  \
   } while (0)
@@ -67,9 +67,9 @@
 #define da_filter(list, filter)                                                \
   do {                                                                         \
     size_t __f_count = 0;                                                      \
-    for (size_t i = 0; i < (list)->len; i++) {                                 \
-      if (filter((list)->items[i])) {                                          \
-        (list)->items[__f_count++] = (list)->items[i];                         \
+    for (size_t __f_i = 0; __f_i < (list)->len; __f_i++) {                     \
+      if (filter((list)->items[__f_i])) {                                      \
+        (list)->items[__f_count++] = (list)->items[__f_i];                     \
       }                                                                        \
     }                                                                          \
     (list)->len = __f_count;                                                   \
@@ -83,18 +83,18 @@
 #define da_reverse(list)                                                       \
   do {                                                                         \
     da_reserve((list), 1);                                                     \
-    for (size_t i = 0; i < (list)->len - i - 1; i++) {                         \
-      (list)->items[(list)->len] = (list)->items[i];                           \
-      (list)->items[i] = (list)->items[(list)->len - i - 1];                   \
-      (list)->items[(list)->len - i - 1] = (list)->items[(list)->len];         \
+    for (size_t __r_i = 0; __r_i < (list)->len - __r_i - 1; __r_i++) {         \
+      (list)->items[(list)->len] = (list)->items[__r_i];                       \
+      (list)->items[__r_i] = (list)->items[(list)->len - __r_i - 1];           \
+      (list)->items[(list)->len - __r_i - 1] = (list)->items[(list)->len];     \
     }                                                                          \
   } while (0)
 
 #define da_copy(src, dest)                                                     \
   do {                                                                         \
     da_reserve((dest), (src)->len);                                            \
-    for (size_t i = 0; i < (src)->len; i++) {                                  \
-      (dest)->items[i] = (src)->items[i];                                      \
+    for (size_t __c_i = 0; __c_i < (src)->len; __c_i++) {                      \
+      (dest)->items[__c_i] = (src)->items[__c_i];                              \
     }                                                                          \
     (dest)->len = (src)->len;                                                  \
   } while (0)
