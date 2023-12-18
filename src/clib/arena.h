@@ -3,6 +3,10 @@
 
 #include "defines.h"
 
+// TODO make arena be static one. maybe no initialization needed.
+// 	Maybe the linked list approach would be better?
+
+
 typedef struct Arena Arena;
 
 Arena *arena_make(void);

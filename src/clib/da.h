@@ -3,6 +3,12 @@
 
 #include <stdlib.h>
 
+// TODO da_extend https://docs.python.org/3/library/array.html#array.array.extend
+// TODO da_reserve to pre extend the array
+// TODO da_reverse
+// TODO da_copy 
+// TODO da_clear
+
 #define DA(T)                                                                  \
   struct {                                                                     \
     size_t cap;                                                                \
