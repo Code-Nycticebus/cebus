@@ -66,13 +66,13 @@
 
 #define da_filter(list, filter)                                                \
   do {                                                                         \
-    size_t count = 0;                                                          \
+    size_t __f_count = 0;                                                      \
     for (size_t i = 0; i < (list)->len; i++) {                                 \
       if (filter((list)->items[i])) {                                          \
-        (list)->items[count++] = (list)->items[i];                             \
+        (list)->items[__f_count++] = (list)->items[i];                         \
       }                                                                        \
     }                                                                          \
-    (list)->len = count;                                                       \
+    (list)->len = __f_count;                                                   \
   } while (0)
 
 #define da_sort(list, sort)                                                    \
