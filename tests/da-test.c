@@ -18,10 +18,7 @@ void test_da(void) {
   da_free(&list);
 }
 
-size_t times_two(size_t idx, size_t v) {
-  (void)idx;
-  return v * 2;
-}
+size_t times_two(size_t v) { return v * 2; }
 
 void test_map(void) {
   const size_t n = 10;
