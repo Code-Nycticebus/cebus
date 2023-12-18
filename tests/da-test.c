@@ -70,31 +70,31 @@ void test_last(void) {
 
 void test_extend(void) {
   DA(int) list = {0};
-  da_init(&list, 1);
 
   da_extend(&list, 3, ((int[]){1, 2, 3}));
+  assert(list.items[0] == 1);
   assert(list.items[1] == 2);
+  assert(list.items[2] == 3);
   da_free(&list);
 }
 
 void test_reserve(void) {
   DA(int) list = {0};
-  da_init(&list, 1);
   da_reserve(&list, 5);
-  assert(list.cap == 6);
+  assert(list.cap == 5);
   da_free(&list);
 }
 
-#include <stdio.h>
 void test_reverse(void) {
-  DA(int) list = {0};
-  da_init(&list, 1);
-  for (size_t i = 0; i < 4; i++) {
+  DA(size_t) list = {0};
+  const size_t n = 10;
+  for (size_t i = 0; i < n; i++) {
     da_push(&list, i + 1);
   }
   da_reverse(&list);
-
-  assert(list.items[0] == 4);
+  for (size_t i = 0; i < n; i++) {
+    assert(list.items[i] == n - i);
+  }
 }
 
 int main(void) {
