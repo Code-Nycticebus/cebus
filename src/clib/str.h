@@ -6,12 +6,13 @@
 #include "defines.h"
 
 // TODO Add string constants like ascii_letter usw.
-// TODO add python center() function "https://docs.python.org/3/library/stdtypes.html#str.center"
+// TODO add python center() function
+//      "https://docs.python.org/3/library/stdtypes.html#str.center"
 // TODO add ljust and rjust to add whitespace
-// TODO add all these "https://docs.python.org/3/library/stdtypes.html#str.isalnum"
+// TODO add all these
+//      "https://docs.python.org/3/library/stdtypes.html#str.isalnum"
 // TODO add str.repeat()
 // TODO implement a str_compare function
-
 
 #define STR_FMT "%.*s"
 #define STR_ARG(str) (int)(str).len, (str).data
