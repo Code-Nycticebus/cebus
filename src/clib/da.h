@@ -3,10 +3,8 @@
 
 #include <stdlib.h>
 
-// TODO da_extend https://docs.python.org/3/library/array.html#array.array.extend
-// TODO da_reserve to pre extend the array
 // TODO da_reverse
-// TODO da_copy 
+// TODO da_copy
 // TODO da_clear
 // TODO da_filter
 
@@ -27,6 +25,13 @@
     (list)->len = 0;                                                           \
   } while (0)
 
+#define da_reserve(list, size)                                                 \
+  do {                                                                         \
+    (list)->cap += size;                                                       \
+    (list)->items =                                                            \
+        realloc((list)->items, (list)->cap * sizeof((list)->items[0]));        \
+  } while (0)
+
 #define da_push(list, item)                                                    \
   do {                                                                         \
     if (!((list)->len < (list)->cap)) {                                        \
@@ -35,6 +40,14 @@
           realloc((list)->items, (list)->cap * sizeof((list)->items[0]));      \
     }                                                                          \
     (list)->items[(list)->len++] = (item);                                     \
+  } while (0)
+
+#define da_extend(list, count, items)                                          \
+  do {                                                                         \
+    da_reserve((list), count);                                                 \
+    for (size_t i = 0; i < count; i++) {                                       \
+      da_push((list), (items)[i]);                                             \
+    }                                                                          \
   } while (0)
 
 #define da_free(list)                                                          \

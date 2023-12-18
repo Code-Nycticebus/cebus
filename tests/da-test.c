@@ -68,7 +68,26 @@ void test_last(void) {
   assert(last == 10);
 }
 
+void test_extend(void) {
+  DA(int) list = {0};
+  da_init(&list, 1);
+
+  da_extend(&list, 3, ((int[]){1, 2, 3}));
+  assert(list.items[1] == 2);
+  da_free(&list);
+}
+
+void test_reserve(void) {
+  DA(int) list = {0};
+  da_init(&list, 1);
+  da_reserve(&list, 5);
+  assert(list.cap == 6);
+  da_free(&list);
+}
+
 int main(void) {
   test_da();
   test_map();
+  test_extend();
+  test_reserve();
 }
