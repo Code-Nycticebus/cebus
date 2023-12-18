@@ -5,7 +5,6 @@
 
 #include "defines.h"
 
-// TODO Add string constants like ascii_letter usw.
 // TODO add python center() function
 //      "https://docs.python.org/3/library/stdtypes.html#str.center"
 // TODO add ljust and rjust to add whitespace
@@ -20,6 +19,14 @@
 #define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
 
 #define STR_NOT_FOUND SIZE_MAX
+
+#define STR_LETTERS STR("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+#define STR_UPPERCASE STR("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+#define STR_LOWERCASE STR("abcdefghijklmnopqrstuvwxyz")
+#define STR_DIGITS STR("0123456789")
+#define STR_HEXDIGITS STR("0123456789abcdefABCDEF")
+#define STR_PUNCTUATION STR("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
+#define STR_WHITESPACE STR(" \t\n\r\x0b\x0c")
 
 typedef struct {
   size_t len;
