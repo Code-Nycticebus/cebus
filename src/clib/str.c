@@ -49,7 +49,7 @@ Str str_concat(Str s1, Str s2, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
-Str str_concat_many(size_t count, Str s[count], Arena *arena) {
+Str str_join(size_t count, Str s[count], Arena *arena) {
   size_t size = 0;
   for (size_t i = 0; i < count; i++) {
     size += s[i].len;

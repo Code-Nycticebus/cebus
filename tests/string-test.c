@@ -167,10 +167,9 @@ void test_substring(void) {
   assert(str_eq(invalid2, STR("")));
 }
 
-void test_cat_many(void) {
+void test_join(void) {
   Arena *arena = arena_make();
-  Str res = str_concat_many(3, (Str[3]){STR("Hello"), STR(", "), STR("World")},
-                            arena);
+  Str res = str_join(3, (Str[3]){STR("Hello"), STR(", "), STR("World")}, arena);
   assert(str_eq(res, STR("Hello, World")));
   arena_free(arena);
 }
@@ -186,5 +185,5 @@ int main(void) {
   test_find();
   test_replace();
   test_substring();
-  test_cat_many();
+  test_join();
 }
