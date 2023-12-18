@@ -21,7 +21,7 @@ void test_da(void) {
 
 size_t times_two(size_t v) { return v * 2; }
 
-void test_map(void) {
+void test_map(void) { // NOLINT
   const size_t n = 10;
   DA(size_t) list = {0};
   da_init(&list, 2);
@@ -29,13 +29,15 @@ void test_map(void) {
     da_push(&list, i);
   }
 
-  da_map(&list, times_two);
+  DA(size_t) l = {0};
+  da_map(&list, &l, times_two);
+  da_free(&list);
 
   for (size_t i = 0; i < list.len; ++i) {
-    assert(list.items[i] == i * 2);
+    assert(l.items[i] == i * 2);
   }
 
-  da_free(&list);
+  da_free(&l);
 }
 
 int sort(const void *a, const void *b) { return *(size_t *)a - *(size_t *)b; }

@@ -55,11 +55,13 @@
     (list)->cap = 1;                                                           \
   } while (0)
 
-#define da_map(list, map)                                                      \
+#define da_map(src, dest, map)                                                 \
   do {                                                                         \
-    for (size_t i = 0; i < (list)->len; i++) {                                 \
-      (list)->items[i] = map((list)->items[i]);                                \
+    da_reserve((dest), (src)->len);                                            \
+    for (size_t i = 0; i < (src)->len; i++) {                                  \
+      (dest)->items[i] = map((src)->items[i]);                                 \
     }                                                                          \
+    (dest)->len = (src)->len;                                                  \
   } while (0)
 
 #define da_filter(list, filter)                                                \
