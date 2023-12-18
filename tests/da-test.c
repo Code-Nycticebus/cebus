@@ -14,7 +14,8 @@ void test_da(void) {
   for (size_t i = 0; i < list.len; ++i) {
     assert(list.items[i] == i + 1);
   }
-
+  da_clear(&list);
+  assert(list.len == 0);
   da_free(&list);
 }
 

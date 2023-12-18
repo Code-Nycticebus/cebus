@@ -88,4 +88,9 @@
     }                                                                          \
   } while (0)
 
+#define da_clear(list)                                                         \
+  do {                                                                         \
+    (list)->len = 0;                                                           \
+  } while (0)
+
 #endif // !__CLIB_DA_H__
