@@ -20,6 +20,11 @@
     (list)->len = 0;                                                           \
   } while (0)
 
+#define da_clear(list)                                                         \
+  do {                                                                         \
+    (list)->len = 0;                                                           \
+  } while (0)
+
 #define da_reserve(list, size)                                                 \
   do {                                                                         \
     if (!((list)->len + size < (list)->cap)) {                                 \
@@ -81,11 +86,6 @@
       (list)->items[i] = (list)->items[(list)->len - i - 1];                   \
       (list)->items[(list)->len - i - 1] = (list)->items[(list)->len];         \
     }                                                                          \
-  } while (0)
-
-#define da_clear(list)                                                         \
-  do {                                                                         \
-    (list)->len = 0;                                                           \
   } while (0)
 
 #define da_copy(src, dest)                                                     \
