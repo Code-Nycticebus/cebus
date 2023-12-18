@@ -92,6 +92,26 @@ void test_reverse(void) {
   for (size_t i = 0; i < n; i++) {
     assert(list.items[i] == n - i);
   }
+
+  da_free(&list);
+}
+
+int is_odd(int i) { return i % 2 == 0; }
+
+#include <stdio.h>
+void test_filter(void) {
+  DA(int) list = {0};
+  const size_t n = 10;
+  for (size_t i = 0; i < n; i++) {
+    da_push(&list, i);
+  }
+
+  da_filter(&list, is_odd);
+
+  assert(list.items[1] == 2);
+  assert(list.items[2] == 4);
+
+  da_free(&list);
 }
 
 int main(void) {
@@ -100,4 +120,5 @@ int main(void) {
   test_extend();
   test_reserve();
   test_reverse();
+  test_filter();
 }

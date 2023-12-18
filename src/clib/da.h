@@ -62,6 +62,17 @@
     }                                                                          \
   } while (0)
 
+#define da_filter(list, filter)                                                \
+  do {                                                                         \
+    size_t count = 0;                                                          \
+    for (size_t i = 0; i < (list)->len; i++) {                                 \
+      if (filter((list)->items[i])) {                                          \
+        (list)->items[count++] = (list)->items[i];                             \
+      }                                                                        \
+    }                                                                          \
+    (list)->len = count;                                                       \
+  } while (0)
+
 #define da_sort(list, sort)                                                    \
   do {                                                                         \
     qsort((list)->items, (list)->len, sizeof((list)->items[0]), sort);         \
