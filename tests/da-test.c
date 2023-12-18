@@ -29,15 +29,14 @@ void test_map(void) { // NOLINT
     da_push(&list, i);
   }
 
-  DA(size_t) l = {0};
-  da_map(&list, &l, times_two);
-  da_free(&list);
+  // Map inplace
+  da_map(&list, &list, times_two);
 
   for (size_t i = 0; i < list.len; ++i) {
-    assert(l.items[i] == i * 2);
+    assert(list.items[i] == i * 2);
   }
 
-  da_free(&l);
+  da_free(&list);
 }
 
 int sort(const void *a, const void *b) { return *(size_t *)a - *(size_t *)b; }
