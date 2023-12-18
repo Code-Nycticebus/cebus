@@ -82,7 +82,7 @@ void test_reserve(void) {
   da_free(&list);
 }
 
-void test_reverse(void) {
+void test_reverse(void) { // NOLINT
   DA(size_t) list = {0};
   const size_t n = 10;
   for (size_t i = 0; i < n; i++) {
@@ -98,8 +98,7 @@ void test_reverse(void) {
 
 int is_odd(int i) { return i % 2 == 0; }
 
-#include <stdio.h>
-void test_filter(void) {
+void test_filter(void) { // NOLINT
   DA(int) list = {0};
   const size_t n = 10;
   for (size_t i = 0; i < n; i++) {
@@ -110,6 +109,7 @@ void test_filter(void) {
 
   assert(list.items[1] == 2);
   assert(list.items[2] == 4);
+  assert(list.items[3] == 6);
 
   da_free(&list);
 }
