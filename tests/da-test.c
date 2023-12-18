@@ -85,9 +85,22 @@ void test_reserve(void) {
   da_free(&list);
 }
 
+#include <stdio.h>
+void test_reverse(void) {
+  DA(int) list = {0};
+  da_init(&list, 1);
+  for (size_t i = 0; i < 4; i++) {
+    da_push(&list, i + 1);
+  }
+  da_reverse(&list);
+
+  assert(list.items[0] == 4);
+}
+
 int main(void) {
   test_da();
   test_map();
   test_extend();
   test_reserve();
+  test_reverse();
 }
