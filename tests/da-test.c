@@ -128,6 +128,9 @@ void test_copy(void) { // NOLINT
   for (size_t i = 0; i < l2.len; i++) {
     assert(l1.items[i] == l2.items[i]);
   }
+
+  da_free(&l1);
+  da_free(&l2);
 }
 
 int main(void) {
