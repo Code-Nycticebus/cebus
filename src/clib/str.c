@@ -298,3 +298,54 @@ size_t str_count(Str haystack, Str needle) {
   }
   return count;
 }
+
+Str str_center(Str str, size_t width, char fillchar, Arena *arena) {
+  if (width < str.len) {
+    return str_copy(str, arena);
+  }
+  char *buffer = arena_calloc(arena, width + 1);
+  const size_t left_width = (width - str.len) / 2;
+  const size_t right_width = (width - str.len - left_width);
+  size_t idx = 0;
+  for (size_t i = 0; i < left_width; i++) {
+    buffer[idx++] = fillchar;
+  }
+  for (size_t i = 0; i < str.len; i++) {
+    buffer[idx++] = str.data[i];
+  }
+  for (size_t i = 0; i < right_width; i++) {
+    buffer[idx++] = fillchar;
+  }
+  return str_from_parts(width, buffer);
+}
+
+Str str_justify_left(Str str, size_t width, char fillchar, Arena *arena) {
+  if (width < str.len) {
+    return str_copy(str, arena);
+  }
+  char *buffer = arena_calloc(arena, width + 1);
+  size_t idx = 0;
+  for (size_t i = 0; i < str.len; i++) {
+    buffer[idx++] = str.data[i];
+  }
+  for (size_t i = 0; i < width - str.len; i++) {
+    buffer[idx++] = fillchar;
+  }
+  return str_from_parts(width, buffer);
+}
+
+Str str_justify_right(Str str, size_t width, char fillchar, Arena *arena) {
+  if (width < str.len) {
+    return str_copy(str, arena);
+  }
+  char *buffer = arena_calloc(arena, width + 1);
+  size_t idx = 0;
+  for (size_t i = 0; i < width - str.len; i++) {
+    buffer[idx++] = fillchar;
+  }
+  for (size_t i = 0; i < str.len; i++) {
+    buffer[idx++] = str.data[i];
+  }
+
+  return str_from_parts(width, buffer);
+}

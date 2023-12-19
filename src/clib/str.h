@@ -5,9 +5,6 @@
 
 #include "defines.h"
 
-// TODO add python center() function
-//      "https://docs.python.org/3/library/stdtypes.html#str.center"
-// TODO add ljust and rjust to add whitespace
 // TODO add all these
 //      "https://docs.python.org/3/library/stdtypes.html#str.isalnum"
 // TODO add str.repeat()
@@ -70,5 +67,9 @@ uint64_t str_chop_u64(Str *str);
 
 size_t str_find(Str haystack, Str needle);
 size_t str_count(Str haystack, Str needle);
+
+Str str_center(Str str, size_t width, char fillchar, Arena *arena);
+Str str_justify_left(Str str, size_t width, char fillchar, Arena *arena);
+Str str_justify_right(Str str, size_t width, char fillchar, Arena *arena);
 
 #endif // !__CLIB_STR_H__

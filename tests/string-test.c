@@ -174,6 +174,18 @@ void test_join(void) {
   arena_free(arena);
 }
 
+void test_justify(void) {
+  Arena *arena = arena_make();
+  const size_t width = 10;
+  Str center = str_center(STR("Hello"), width, ' ', arena);
+  assert(str_eq(center, STR("  Hello   ")));
+  Str left = str_justify_left(STR("Hello"), width, ' ', arena);
+  assert(str_eq(left, STR("Hello     ")));
+  Str right = str_justify_right(STR("Hello"), width, ' ', arena);
+  assert(str_eq(right, STR("     Hello")));
+  arena_free(arena);
+}
+
 int main(void) {
   test_compare();
   test_transform();
