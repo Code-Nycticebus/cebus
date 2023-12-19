@@ -8,7 +8,6 @@
 // TODO add all these
 //      "https://docs.python.org/3/library/stdtypes.html#str.isalnum"
 // TODO add str.repeat()
-// TODO implement a str_compare function
 
 #define STR_FMT "%.*s"
 #define STR_ARG(str) (int)(str).len, (str).data
