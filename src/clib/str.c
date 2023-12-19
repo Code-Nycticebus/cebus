@@ -97,7 +97,7 @@ Str str_map(Str s, char (*map_fn)(size_t, char), Arena *arena) {
 
 Str str_replace(Str s, Str old, Str new, Arena *arena) {
   size_t count = str_count(s, old);
-  size_t new_size = (s.len - (old.len * count) + (new.len *count));
+  size_t new_size = (s.len - (old.len * count) + (count * new.len));
   char *buffer = arena_calloc(arena, new_size + 1);
 
   for (size_t i = 0, j = 0; i < s.len; i++, j++) {
