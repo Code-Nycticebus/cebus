@@ -3,13 +3,12 @@
 
 #include "defines.h"
 
-// TODO make arena be static one. maybe no initialization needed.
-// 	Maybe the linked list approach would be better?
+typedef struct Chunk Chunk;
 
+typedef struct {
+  Chunk *begin;
+} Arena;
 
-typedef struct Arena Arena;
-
-Arena *arena_make(void);
 void arena_free(Arena *arena);
 
 void *arena_alloc(Arena *arena, size_t size);

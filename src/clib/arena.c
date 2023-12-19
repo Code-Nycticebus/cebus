@@ -1,20 +1,15 @@
 #include "arena.h"
 
-#include "da.h"
-
 #include <stdlib.h>
 #include <string.h>
 
 #define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 
-typedef struct {
+struct Chunk {
+  Chunk *next;
   size_t cap;
   size_t allocated;
   uint8_t data[];
-} Chunk;
-
-struct Arena {
-  DA(Chunk *) chunks;
 };
 
 static Chunk *chunk_allocate(size_t size) {
@@ -29,27 +24,23 @@ static Chunk *chunk_allocate(size_t size) {
 
 static void chunk_free(Chunk *chunk) { free(chunk); }
 
-Arena *arena_make(void) {
-  Arena *arena = malloc(sizeof(Arena));
-  da_init(&arena->chunks, 1);
-  return arena;
-}
-
 void arena_free(Arena *arena) {
-  for (size_t i = 0; i < arena->chunks.len; i++) {
-    chunk_free(arena->chunks.items[i]);
+  Chunk *next = arena->begin;
+  while (next != NULL) {
+    Chunk *temp = next;
+    next = next->next;
+    chunk_free(temp);
   }
-  da_free(&arena->chunks);
-  free(arena);
 }
 
 void *arena_alloc(Arena *arena, size_t size) {
-  Chunk *chunk = da_empty(&arena->chunks) ? NULL : da_last(&arena->chunks);
+  Chunk *chunk = arena->begin;
   if (chunk == NULL || !(chunk->allocated + size < chunk->cap)) {
     const size_t chunk_size =
         size < CHUNK_DEFAULT_SIZE ? CHUNK_DEFAULT_SIZE : size;
-    da_push(&arena->chunks, chunk_allocate(chunk_size));
-    chunk = da_last(&arena->chunks);
+    chunk = chunk_allocate(chunk_size);
+    chunk->next = arena->begin;
+    arena->begin = chunk;
   }
   void *ptr = &chunk->data[chunk->allocated];
   chunk->allocated += size;

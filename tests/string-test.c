@@ -30,27 +30,27 @@ static char mock(size_t idx, char c) {
 }
 
 void test_transform(void) {
-  Arena *arena = arena_make();
+  Arena arena = {0};
   Str s = STR("Hello, World");
-  Str lower = str_lower(s, arena);
-  Str upper = str_upper(s, arena);
+  Str lower = str_lower(s, &arena);
+  Str upper = str_upper(s, &arena);
 
-  Str mapped = str_map(s, mock, arena);
+  Str mapped = str_map(s, mock, &arena);
 
   assert(str_eq(lower, STR("hello, world")));
   assert(str_eq(upper, STR("HELLO, WORLD")));
   assert(str_eq(mapped, STR("helLo, WoRlD")));
 
-  arena_free(arena);
+  arena_free(&arena);
 }
 
 void test_copy(void) {
-  Arena *arena = arena_make();
+  Arena arena = {0};
 
   Str str = STR("Hello");
-  Str str2 = str_copy(str, arena);
+  Str str2 = str_copy(str, &arena);
   Str str3 = str_from_cstr(", World");
-  Str full = str_concat(str2, str3, arena);
+  Str full = str_concat(str2, str3, &arena);
 
   assert(str_eq(full, STR("Hello, World")));
   assert(str_getc(full, 0) == 'H');
@@ -58,7 +58,7 @@ void test_copy(void) {
   assert(str_getc(full, 7) == 'W');
   assert(str_getc(full, full.len) == '\0');
 
-  arena_free(arena);
+  arena_free(&arena);
 }
 
 void test_trim(void) {
@@ -111,19 +111,19 @@ void test_chop_right(void) {
 }
 
 void test_u64(void) {
-  Arena *arena = arena_make();
+  Arena arena = {0};
   const size_t N = 64;
-  Str number = str_u64(arena, N);
+  Str number = str_u64(&arena, N);
   assert(str_eq(number, STR("64")));
 
-  Str n = str_concat(number, STR(" bytes"), arena);
+  Str n = str_concat(number, STR(" bytes"), &arena);
   assert(str_eq(n, STR("64 bytes")));
 
   assert(str_to_u64(n) == 64);
   assert(str_chop_u64(&n) == 64);
   assert(str_eq(n, STR(" bytes")));
 
-  arena_free(arena);
+  arena_free(&arena);
 }
 
 void test_find(void) {
@@ -139,25 +139,25 @@ void test_find(void) {
 }
 
 void test_replace(void) {
-  Arena *arena = arena_make();
+  Arena arena = {0};
 
   Str s = STR("Hello, World");
-  Str goodbye = str_replace(s, STR("Hello"), STR("Goodbye"), arena);
-  Str all = str_replace(s, STR("World"), STR("All!"), arena);
+  Str goodbye = str_replace(s, STR("Hello"), STR("Goodbye"), &arena);
+  Str all = str_replace(s, STR("World"), STR("All!"), &arena);
 
   assert(str_eq(s, STR("Hello, World")));
   assert(str_eq(goodbye, STR("Goodbye, World")));
   assert(str_eq(all, STR("Hello, All!")));
 
   Str max_test = STR("test test test");
-  Str result = str_replace(max_test, STR("test"), STR("result"), arena);
+  Str result = str_replace(max_test, STR("test"), STR("result"), &arena);
   assert(str_eq(result, STR("result result result")));
 
   Str dash = STR("c-language");
-  Str res = str_replace(dash, STR("-"), STR(""), arena);
+  Str res = str_replace(dash, STR("-"), STR(""), &arena);
   assert(str_eq(res, STR("clanguage")));
 
-  arena_free(arena);
+  arena_free(&arena);
 }
 
 void test_substring(void) {
@@ -172,22 +172,23 @@ void test_substring(void) {
 }
 
 void test_join(void) {
-  Arena *arena = arena_make();
-  Str res = str_join(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")}, arena);
+  Arena arena = {0};
+  Str res =
+      str_join(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")}, &arena);
   assert(str_eq(res, STR("Hello, World")));
-  arena_free(arena);
+  arena_free(&arena);
 }
 
 void test_justify(void) {
-  Arena *arena = arena_make();
+  Arena arena = {0};
   const size_t width = 10;
-  Str center = str_center(STR("Hello"), width, ' ', arena);
+  Str center = str_center(STR("Hello"), width, ' ', &arena);
   assert(str_eq(center, STR("  Hello   ")));
-  Str left = str_ljust(STR("Hello"), width, ' ', arena);
+  Str left = str_ljust(STR("Hello"), width, ' ', &arena);
   assert(str_eq(left, STR("Hello     ")));
-  Str right = str_rjust(STR("Hello"), width, ' ', arena);
+  Str right = str_rjust(STR("Hello"), width, ' ', &arena);
   assert(str_eq(right, STR("     Hello")));
-  arena_free(arena);
+  arena_free(&arena);
 }
 
 void test_cmp(void) {
@@ -202,10 +203,10 @@ void test_cmp(void) {
 }
 
 void test_repeat(void) {
-  Arena *arena = arena_make();
-  Str tf_fleet = str_repeat(STR("|-#-| "), 4, arena);
+  Arena arena = {0};
+  Str tf_fleet = str_repeat(STR("|-#-| "), 4, &arena);
   assert(str_eq(tf_fleet, STR("|-#-| |-#-| |-#-| |-#-| ")));
-  arena_free(arena);
+  arena_free(&arena);
 }
 
 int main(void) {
