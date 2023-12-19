@@ -37,20 +37,20 @@ Str str_from_cstr(const char *cstr);
 
 char str_getc(Str s, size_t idx);
 
-Str str_trim_left(Str str);
-Str str_trim_right(Str str);
-Str str_trim(Str str);
+Str str_trim_left(Str s);
+Str str_trim_right(Str s);
+Str str_trim(Str s);
 
-Str str_copy(Str src, Arena *arena);
+Str str_copy(Str s, Arena *arena);
 Str str_concat(Str s1, Str s2, Arena *arena);
 Str str_join(Str sep, size_t count, Str s[count], Arena *arena);
 Str str_upper(Str s, Arena *arena);
 Str str_lower(Str s, Arena *arena);
 Str str_map(Str s, char (*map_fn)(size_t, char), Arena *arena);
 Str str_replace(Str s, Str old, Str new, Arena *arena);
-Str str_center(Str str, size_t width, char fillchar, Arena *arena);
-Str str_ljust(Str str, size_t width, char fillchar, Arena *arena);
-Str str_rjust(Str str, size_t width, char fillchar, Arena *arena);
+Str str_center(Str s, size_t width, char fillchar, Arena *arena);
+Str str_ljust(Str s, size_t width, char fillchar, Arena *arena);
+Str str_rjust(Str s, size_t width, char fillchar, Arena *arena);
 Str str_repeat(Str s, size_t count, Arena *arena);
 Str str_reverse(Str s, Arena *arena);
 
@@ -64,17 +64,17 @@ bool str_contains(Str haystack, Str needle);
 CmpOrdering str_compare(Str s1, Str s2);
 CmpOrdering str_compare_qsort(const void *s1, const void *s2);
 
-bool str_try_chop_by_delim(Str *str, char delim, Str *chunk);
-Str str_chop_by_delim(Str *str, char delim);
-bool str_try_chop_by_predicate(Str *str, bool (*predicate)(char), Str *chunk);
-Str str_chop_by_predicate(Str *str, bool (*predicate)(char));
+bool str_try_chop_by_delim(Str *s, char delim, Str *chunk);
+Str str_chop_by_delim(Str *s, char delim);
+bool str_try_chop_by_predicate(Str *s, bool (*predicate)(char), Str *chunk);
+Str str_chop_by_predicate(Str *s, bool (*predicate)(char));
 
-Str str_chop_right_by_delim(Str *str, char delim);
-Str str_chop_right_by_predicate(Str *str, bool (*predicate)(char));
+Str str_chop_right_by_delim(Str *s, char delim);
+Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char));
 
 Str str_u64(Arena *arena, uint64_t n);
-uint64_t str_to_u64(Str str);
-uint64_t str_chop_u64(Str *str);
+uint64_t str_to_u64(Str s);
+uint64_t str_chop_u64(Str *s);
 
 size_t str_find(Str haystack, Str needle);
 size_t str_find_last(Str haystack, Str needle);

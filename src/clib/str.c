@@ -20,30 +20,30 @@ char str_getc(Str s, size_t idx) {
   }
   return s.data[idx];
 }
-Str str_trim_left(Str str) {
-  Str result = str;
-  for (size_t i = 0; i < str.len && isspace(str.data[i]); ++i) {
+Str str_trim_left(Str s) {
+  Str result = s;
+  for (size_t i = 0; i < s.len && isspace(s.data[i]); ++i) {
     result.data++;
     result.len--;
   }
   return result;
 }
 
-Str str_trim_right(Str str) {
-  Str result = str;
-  for (size_t i = 0; i < str.len && isspace(str.data[str.len - i - 1]); ++i) {
+Str str_trim_right(Str s) {
+  Str result = s;
+  for (size_t i = 0; i < s.len && isspace(s.data[s.len - i - 1]); ++i) {
     result.len--;
   }
   return result;
 }
 
-Str str_trim(Str str) { return str_trim_left(str_trim_right(str)); }
+Str str_trim(Str s) { return str_trim_left(str_trim_right(s)); }
 
-Str str_copy(Str src, Arena *arena) {
-  char *buffer = arena_alloc(arena, src.len + 1);
-  strncpy(buffer, src.data, src.len);
-  buffer[src.len] = '\0';
-  return str_from_parts(src.len, buffer);
+Str str_copy(Str s, Arena *arena) {
+  char *buffer = arena_alloc(arena, s.len + 1);
+  strncpy(buffer, s.data, s.len);
+  buffer[s.len] = '\0';
+  return str_from_parts(s.len, buffer);
 }
 
 Str str_concat(Str s1, Str s2, Arena *arena) {
@@ -113,19 +113,19 @@ Str str_replace(Str s, Str old, Str new, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
-Str str_center(Str str, size_t width, char fillchar, Arena *arena) {
-  if (width < str.len) {
-    return str_copy(str, arena);
+Str str_center(Str s, size_t width, char fillchar, Arena *arena) {
+  if (width < s.len) {
+    return str_copy(s, arena);
   }
   char *buffer = arena_calloc(arena, width + 1);
-  const size_t left_width = (width - str.len) / 2;
-  const size_t right_width = (width - str.len - left_width);
+  const size_t left_width = (width - s.len) / 2;
+  const size_t right_width = (width - s.len - left_width);
   size_t idx = 0;
   for (size_t i = 0; i < left_width; i++) {
     buffer[idx++] = fillchar;
   }
-  for (size_t i = 0; i < str.len; i++) {
-    buffer[idx++] = str.data[i];
+  for (size_t i = 0; i < s.len; i++) {
+    buffer[idx++] = s.data[i];
   }
   for (size_t i = 0; i < right_width; i++) {
     buffer[idx++] = fillchar;
@@ -133,45 +133,45 @@ Str str_center(Str str, size_t width, char fillchar, Arena *arena) {
   return str_from_parts(width, buffer);
 }
 
-Str str_ljust(Str str, size_t width, char fillchar, Arena *arena) {
-  if (width < str.len) {
-    return str_copy(str, arena);
+Str str_ljust(Str s, size_t width, char fillchar, Arena *arena) {
+  if (width < s.len) {
+    return str_copy(s, arena);
   }
   char *buffer = arena_calloc(arena, width + 1);
   size_t idx = 0;
-  for (size_t i = 0; i < str.len; i++) {
-    buffer[idx++] = str.data[i];
+  for (size_t i = 0; i < s.len; i++) {
+    buffer[idx++] = s.data[i];
   }
-  for (size_t i = 0; i < width - str.len; i++) {
+  for (size_t i = 0; i < width - s.len; i++) {
     buffer[idx++] = fillchar;
   }
   return str_from_parts(width, buffer);
 }
 
-Str str_rjust(Str str, size_t width, char fillchar, Arena *arena) {
-  if (width < str.len) {
-    return str_copy(str, arena);
+Str str_rjust(Str s, size_t width, char fillchar, Arena *arena) {
+  if (width < s.len) {
+    return str_copy(s, arena);
   }
   char *buffer = arena_calloc(arena, width + 1);
   size_t idx = 0;
-  for (size_t i = 0; i < width - str.len; i++) {
+  for (size_t i = 0; i < width - s.len; i++) {
     buffer[idx++] = fillchar;
   }
-  for (size_t i = 0; i < str.len; i++) {
-    buffer[idx++] = str.data[i];
+  for (size_t i = 0; i < s.len; i++) {
+    buffer[idx++] = s.data[i];
   }
 
   return str_from_parts(width, buffer);
 }
 
-Str str_repeat(Str str, size_t count, Arena *arena) {
-  size_t len = str.len * count;
+Str str_repeat(Str s, size_t count, Arena *arena) {
+  size_t len = s.len * count;
   char *buffer = arena_calloc(arena, len + 1);
 
   size_t idx = 0;
   for (size_t i = 0; i < count; i++) {
-    for (size_t j = 0; j < str.len; j++) {
-      buffer[idx++] = str.data[j];
+    for (size_t j = 0; j < s.len; j++) {
+      buffer[idx++] = s.data[j];
     }
   }
 
@@ -246,96 +246,96 @@ CmpOrdering str_compare_qsort(const void *s1, const void *s2) {
   return str_compare(*(Str *)s1, *(Str *)s2);
 }
 
-bool str_try_chop_by_delim(Str *str, char delim, Str *chunk) {
+bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {
   size_t i = 0;
-  while (i < str->len && str->data[i] != delim) {
+  while (i < s->len && s->data[i] != delim) {
     ++i;
   }
 
-  if (i < str->len) {
+  if (i < s->len) {
     if (chunk) {
-      *chunk = str_from_parts(i, str->data);
+      *chunk = str_from_parts(i, s->data);
     }
-    str->data += i + 1;
-    str->len -= i + 1;
+    s->data += i + 1;
+    s->len -= i + 1;
     return true;
   }
   return false;
 }
 
-Str str_chop_by_delim(Str *str, char delim) {
+Str str_chop_by_delim(Str *s, char delim) {
   size_t i = 0;
-  while (i < str->len && str->data[i] != delim) {
+  while (i < s->len && s->data[i] != delim) {
     ++i;
   }
 
-  if (i < str->len) {
-    Str chunk = str_from_parts(i, str->data);
-    str->data += i + 1;
-    str->len -= i + 1;
+  if (i < s->len) {
+    Str chunk = str_from_parts(i, s->data);
+    s->data += i + 1;
+    s->len -= i + 1;
     return chunk;
   }
-  return *str;
+  return *s;
 }
 
-bool str_try_chop_by_predicate(Str *str, bool (*predicate)(char), Str *chunk) {
+bool str_try_chop_by_predicate(Str *s, bool (*predicate)(char), Str *chunk) {
   size_t i = 0;
-  while (i < str->len && !predicate(str->data[i])) {
+  while (i < s->len && !predicate(s->data[i])) {
     ++i;
   }
 
-  if (i < str->len) {
+  if (i < s->len) {
     if (chunk) {
-      *chunk = str_from_parts(i, str->data);
+      *chunk = str_from_parts(i, s->data);
     }
-    str->data += i + 1;
-    str->len -= i + 1;
+    s->data += i + 1;
+    s->len -= i + 1;
     return true;
   }
   return false;
 }
 
-Str str_chop_by_predicate(Str *str, bool (*predicate)(char)) {
+Str str_chop_by_predicate(Str *s, bool (*predicate)(char)) {
   size_t i = 0;
-  while (i < str->len && !predicate(str->data[i])) {
+  while (i < s->len && !predicate(s->data[i])) {
     ++i;
   }
 
-  if (i < str->len) {
-    Str chunk = str_from_parts(i, str->data);
-    str->data += i + 1;
-    str->len -= i + 1;
+  if (i < s->len) {
+    Str chunk = str_from_parts(i, s->data);
+    s->data += i + 1;
+    s->len -= i + 1;
     return chunk;
   }
-  return *str;
+  return *s;
 }
 
-Str str_chop_right_by_delim(Str *str, char delim) {
+Str str_chop_right_by_delim(Str *s, char delim) {
   size_t i = 0;
-  while (i < str->len && str->data[str->len - i - 1] != delim) {
+  while (i < s->len && s->data[s->len - i - 1] != delim) {
     ++i;
   }
 
-  if (i < str->len) {
-    Str chunk = str_from_parts(i, &str->data[str->len - i]);
-    str->len -= i + 1;
+  if (i < s->len) {
+    Str chunk = str_from_parts(i, &s->data[s->len - i]);
+    s->len -= i + 1;
     return chunk;
   }
-  return *str;
+  return *s;
 }
 
-Str str_chop_right_by_predicate(Str *str, bool (*predicate)(char)) {
+Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
   size_t i = 0;
-  while (i < str->len && !predicate(str->data[str->len - i - 1])) {
+  while (i < s->len && !predicate(s->data[s->len - i - 1])) {
     ++i;
   }
 
-  if (i < str->len) {
-    Str chunk = str_from_parts(i, &str->data[str->len - i]);
-    str->len -= i + 1;
+  if (i < s->len) {
+    Str chunk = str_from_parts(i, &s->data[s->len - i]);
+    s->len -= i + 1;
     return chunk;
   }
-  return *str;
+  return *s;
 }
 
 Str str_u64(Arena *arena, uint64_t n) {
@@ -345,22 +345,22 @@ Str str_u64(Arena *arena, uint64_t n) {
   return str_from_parts(len, buffer);
 }
 
-uint64_t str_to_u64(Str str) {
+uint64_t str_to_u64(Str s) {
   uint64_t result = 0;
-  for (size_t i = 0; i < str.len && isdigit(str.data[i]); ++i) {
-    result = result * 10 + (uint64_t)str.data[i] - '0'; // NOLINT
+  for (size_t i = 0; i < s.len && isdigit(s.data[i]); ++i) {
+    result = result * 10 + (uint64_t)s.data[i] - '0'; // NOLINT
   }
   return result;
 }
 
-uint64_t str_chop_u64(Str *str) {
+uint64_t str_chop_u64(Str *s) {
   uint64_t result = 0;
   size_t i = 0;
-  for (; i < str->len && isdigit(str->data[i]); ++i) {
-    result = result * 10 + (uint64_t)str->data[i] - '0'; // NOLINT
+  for (; i < s->len && isdigit(s->data[i]); ++i) {
+    result = result * 10 + (uint64_t)s->data[i] - '0'; // NOLINT
   }
-  str->len -= i;
-  str->data += i;
+  s->len -= i;
+  s->data += i;
   return result;
 }
 
