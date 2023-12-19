@@ -9,4 +9,10 @@
 #define MEGABYTES(s) ((size_t)(s) * (size_t)1e+6)
 #define GIGABYTES(s) ((size_t)(s) * (size_t)1e+9)
 
+typedef enum {
+  CMP_LESS = -1,
+  CMP_EQUAL = 0,
+  CMP_GRATER = 1,
+} CmpOrdering;
+
 #endif /* !__CLIB_DEFINES_H__ */
