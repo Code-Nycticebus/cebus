@@ -107,6 +107,57 @@ Str str_replace(Str s, Str old, Str new, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
+Str str_center(Str str, size_t width, char fillchar, Arena *arena) {
+  if (width < str.len) {
+    return str_copy(str, arena);
+  }
+  char *buffer = arena_calloc(arena, width + 1);
+  const size_t left_width = (width - str.len) / 2;
+  const size_t right_width = (width - str.len - left_width);
+  size_t idx = 0;
+  for (size_t i = 0; i < left_width; i++) {
+    buffer[idx++] = fillchar;
+  }
+  for (size_t i = 0; i < str.len; i++) {
+    buffer[idx++] = str.data[i];
+  }
+  for (size_t i = 0; i < right_width; i++) {
+    buffer[idx++] = fillchar;
+  }
+  return str_from_parts(width, buffer);
+}
+
+Str str_ljust(Str str, size_t width, char fillchar, Arena *arena) {
+  if (width < str.len) {
+    return str_copy(str, arena);
+  }
+  char *buffer = arena_calloc(arena, width + 1);
+  size_t idx = 0;
+  for (size_t i = 0; i < str.len; i++) {
+    buffer[idx++] = str.data[i];
+  }
+  for (size_t i = 0; i < width - str.len; i++) {
+    buffer[idx++] = fillchar;
+  }
+  return str_from_parts(width, buffer);
+}
+
+Str str_rjust(Str str, size_t width, char fillchar, Arena *arena) {
+  if (width < str.len) {
+    return str_copy(str, arena);
+  }
+  char *buffer = arena_calloc(arena, width + 1);
+  size_t idx = 0;
+  for (size_t i = 0; i < width - str.len; i++) {
+    buffer[idx++] = fillchar;
+  }
+  for (size_t i = 0; i < str.len; i++) {
+    buffer[idx++] = str.data[i];
+  }
+
+  return str_from_parts(width, buffer);
+}
+
 Str str_substring(Str s, size_t idx1, size_t idx2) {
   if (idx2 <= idx1 || s.len <= idx1) {
     return STR("");
@@ -309,55 +360,4 @@ size_t str_count(Str haystack, Str needle) {
     }
   }
   return count;
-}
-
-Str str_center(Str str, size_t width, char fillchar, Arena *arena) {
-  if (width < str.len) {
-    return str_copy(str, arena);
-  }
-  char *buffer = arena_calloc(arena, width + 1);
-  const size_t left_width = (width - str.len) / 2;
-  const size_t right_width = (width - str.len - left_width);
-  size_t idx = 0;
-  for (size_t i = 0; i < left_width; i++) {
-    buffer[idx++] = fillchar;
-  }
-  for (size_t i = 0; i < str.len; i++) {
-    buffer[idx++] = str.data[i];
-  }
-  for (size_t i = 0; i < right_width; i++) {
-    buffer[idx++] = fillchar;
-  }
-  return str_from_parts(width, buffer);
-}
-
-Str str_ljust(Str str, size_t width, char fillchar, Arena *arena) {
-  if (width < str.len) {
-    return str_copy(str, arena);
-  }
-  char *buffer = arena_calloc(arena, width + 1);
-  size_t idx = 0;
-  for (size_t i = 0; i < str.len; i++) {
-    buffer[idx++] = str.data[i];
-  }
-  for (size_t i = 0; i < width - str.len; i++) {
-    buffer[idx++] = fillchar;
-  }
-  return str_from_parts(width, buffer);
-}
-
-Str str_rjust(Str str, size_t width, char fillchar, Arena *arena) {
-  if (width < str.len) {
-    return str_copy(str, arena);
-  }
-  char *buffer = arena_calloc(arena, width + 1);
-  size_t idx = 0;
-  for (size_t i = 0; i < width - str.len; i++) {
-    buffer[idx++] = fillchar;
-  }
-  for (size_t i = 0; i < str.len; i++) {
-    buffer[idx++] = str.data[i];
-  }
-
-  return str_from_parts(width, buffer);
 }

@@ -43,6 +43,9 @@ Str str_upper(Str s, Arena *arena);
 Str str_lower(Str s, Arena *arena);
 Str str_map(Str s, char (*map_fn)(size_t, char), Arena *arena);
 Str str_replace(Str s, Str old, Str new, Arena *arena);
+Str str_center(Str str, size_t width, char fillchar, Arena *arena);
+Str str_ljust(Str str, size_t width, char fillchar, Arena *arena);
+Str str_rjust(Str str, size_t width, char fillchar, Arena *arena);
 
 Str str_substring(Str s, size_t idx1, size_t idx2);
 
