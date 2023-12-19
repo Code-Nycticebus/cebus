@@ -31,6 +31,8 @@ typedef struct {
 Str str_from_parts(size_t size, const char *cstr);
 Str str_from_cstr(const char *cstr);
 
+char str_getc(Str s, size_t idx);
+
 Str str_trim_left(Str str);
 Str str_trim_right(Str str);
 Str str_trim(Str str);

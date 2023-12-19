@@ -14,6 +14,12 @@ Str str_from_cstr(const char *cstr) {
   return (Str){.len = strlen(cstr), .data = cstr};
 }
 
+char str_getc(Str s, size_t idx) {
+  if (s.len <= idx) {
+    return '\0';
+  }
+  return s.data[idx];
+}
 Str str_trim_left(Str str) {
   Str result = str;
   for (size_t i = 0; i < str.len && isspace(str.data[i]); ++i) {

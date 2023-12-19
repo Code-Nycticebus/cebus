@@ -53,6 +53,10 @@ void test_copy(void) {
   Str full = str_concat(str2, str3, arena);
 
   assert(str_eq(full, STR("Hello, World")));
+  assert(str_getc(full, 0) == 'H');
+  assert(str_getc(full, 1) == 'e');
+  assert(str_getc(full, 7) == 'W');
+  assert(str_getc(full, full.len) == '\0');
 
   arena_free(arena);
 }
