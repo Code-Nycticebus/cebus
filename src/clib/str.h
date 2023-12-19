@@ -52,6 +52,8 @@ bool str_eq_ignorecase(Str s1, Str s2);
 bool str_startswith(Str s1, Str prefix);
 bool str_endswith(Str s1, Str suffix);
 bool str_contains(Str haystack, Str needle);
+CmpOrdering str_compare(Str s1, Str s2);
+CmpOrdering str_compare_qsort(const void *s1, const void *s2);
 
 bool str_try_chop_by_delim(Str *str, char delim, Str *chunk);
 Str str_chop_by_delim(Str *str, char delim);

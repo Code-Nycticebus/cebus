@@ -186,6 +186,17 @@ void test_justify(void) {
   arena_free(arena);
 }
 
+void test_cmp(void) {
+  const size_t n = 4;
+  Str array[] = {STR("Banana"), STR("Strawberry"), STR("Apple"), STR("Lemon")};
+  qsort(array, n, sizeof(array[0]), str_compare_qsort);
+
+  assert(str_eq(array[0], STR("Apple")));
+  assert(str_eq(array[1], STR("Banana")));
+  assert(str_eq(array[2], STR("Lemon")));
+  assert(str_eq(array[3], STR("Strawberry")));
+}
+
 int main(void) {
   test_compare();
   test_transform();
@@ -199,4 +210,5 @@ int main(void) {
   test_substring();
   test_join();
   test_justify();
+  test_cmp();
 }
