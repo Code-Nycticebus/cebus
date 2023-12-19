@@ -319,7 +319,7 @@ Str str_center(Str str, size_t width, char fillchar, Arena *arena) {
   return str_from_parts(width, buffer);
 }
 
-Str str_justify_left(Str str, size_t width, char fillchar, Arena *arena) {
+Str str_ljust(Str str, size_t width, char fillchar, Arena *arena) {
   if (width < str.len) {
     return str_copy(str, arena);
   }
@@ -334,7 +334,7 @@ Str str_justify_left(Str str, size_t width, char fillchar, Arena *arena) {
   return str_from_parts(width, buffer);
 }
 
-Str str_justify_right(Str str, size_t width, char fillchar, Arena *arena) {
+Str str_rjust(Str str, size_t width, char fillchar, Arena *arena) {
   if (width < str.len) {
     return str_copy(str, arena);
   }

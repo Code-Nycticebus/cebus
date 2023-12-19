@@ -179,9 +179,9 @@ void test_justify(void) {
   const size_t width = 10;
   Str center = str_center(STR("Hello"), width, ' ', arena);
   assert(str_eq(center, STR("  Hello   ")));
-  Str left = str_justify_left(STR("Hello"), width, ' ', arena);
+  Str left = str_ljust(STR("Hello"), width, ' ', arena);
   assert(str_eq(left, STR("Hello     ")));
-  Str right = str_justify_right(STR("Hello"), width, ' ', arena);
+  Str right = str_rjust(STR("Hello"), width, ' ', arena);
   assert(str_eq(right, STR("     Hello")));
   arena_free(arena);
 }
@@ -198,4 +198,5 @@ int main(void) {
   test_replace();
   test_substring();
   test_join();
+  test_justify();
 }

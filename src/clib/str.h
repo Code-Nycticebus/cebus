@@ -69,7 +69,7 @@ size_t str_find(Str haystack, Str needle);
 size_t str_count(Str haystack, Str needle);
 
 Str str_center(Str str, size_t width, char fillchar, Arena *arena);
-Str str_justify_left(Str str, size_t width, char fillchar, Arena *arena);
-Str str_justify_right(Str str, size_t width, char fillchar, Arena *arena);
+Str str_ljust(Str str, size_t width, char fillchar, Arena *arena);
+Str str_rjust(Str str, size_t width, char fillchar, Arena *arena);
 
 #endif // !__CLIB_STR_H__
