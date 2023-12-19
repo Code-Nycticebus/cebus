@@ -7,7 +7,6 @@
 
 // TODO add all these
 //      "https://docs.python.org/3/library/stdtypes.html#str.isalnum"
-// TODO make the arguments name uniform (s or str pick one)
 // TODO str_insert(Str s, size_t idx, Str src, Arena* arena);
 // TODO str_replace_at(Str s, size_t idx, Str new, Arena* arena);
 // TODO Str str_reverse(Str s, Arena *arena);
