@@ -129,9 +129,14 @@ void test_u64(void) {
 void test_find(void) {
   Str s = STR("Hello, World");
   assert(str_find(s, STR("Hello")) == 0);
+  assert(str_find_last(s, STR("Hello")) == 0);
   assert(str_find(s, STR("World")) == 7);
+  assert(str_find_last(s, STR("World")) == 7);
   assert(str_find(s, STR("TEST")) == STR_NOT_FOUND);
+}
 
+void test_count(void) {
+  Str s = STR("Hello, World");
   size_t c = str_count(s, STR("o"));
   assert(c == 2);
   c = str_count(s, STR("TEST"));
@@ -218,6 +223,7 @@ int main(void) {
   test_chop_right();
   test_u64();
   test_find();
+  test_count();
   test_replace();
   test_substring();
   test_join();

@@ -368,6 +368,18 @@ size_t str_find(Str haystack, Str needle) {
   return STR_NOT_FOUND;
 }
 
+size_t str_find_last(Str haystack, Str needle) {
+  if (haystack.len < needle.len) {
+    return STR_NOT_FOUND;
+  }
+  for (size_t i = haystack.len - needle.len + 1; i > 0; i--) {
+    if (strncmp(&haystack.data[i - 1], needle.data, needle.len) == 0) {
+      return i - 1;
+    }
+  }
+  return STR_NOT_FOUND;
+}
+
 size_t str_count(Str haystack, Str needle) {
   size_t count = 0;
   if (haystack.len < needle.len) {

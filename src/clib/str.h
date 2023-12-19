@@ -11,10 +11,6 @@
 // TODO str_insert(Str s, size_t idx, Str src, Arena* arena);
 // TODO str_replace_at(Str s, size_t idx, Str new, Arena* arena);
 // TODO Str str_reverse(Str s, Arena *arena);
-// TODO Change str_find to find_first;
-// TODO size_t str_find_last_of(Str s, Str chars);
-// TODO size_t str_find_first_not_of(Str s, Str chars);
-// TODO size_t str_find_last_not_of(Str s, Str chars);
 
 #define STR_FMT "%.*s"
 #define STR_ARG(str) (int)(str).len, (str).data
@@ -80,6 +76,7 @@ uint64_t str_to_u64(Str str);
 uint64_t str_chop_u64(Str *str);
 
 size_t str_find(Str haystack, Str needle);
+size_t str_find_last(Str haystack, Str needle);
 size_t str_count(Str haystack, Str needle);
 
 #endif // !__CLIB_STR_H__
