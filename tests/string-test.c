@@ -197,6 +197,13 @@ void test_cmp(void) {
   assert(str_eq(array[3], STR("Strawberry")));
 }
 
+void test_repeat(void) {
+  Arena *arena = arena_make();
+  Str tf_fleet = str_repeat(STR("|-#-| "), 4, arena);
+  assert(str_eq(tf_fleet, STR("|-#-| |-#-| |-#-| |-#-| ")));
+  arena_free(arena);
+}
+
 int main(void) {
   test_compare();
   test_transform();

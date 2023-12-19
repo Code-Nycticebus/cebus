@@ -158,6 +158,20 @@ Str str_rjust(Str str, size_t width, char fillchar, Arena *arena) {
   return str_from_parts(width, buffer);
 }
 
+Str str_repeat(Str str, size_t count, Arena *arena) {
+  size_t len = str.len * count;
+  char *buffer = arena_calloc(arena, len + 1);
+
+  size_t idx = 0;
+  for (size_t i = 0; i < count; i++) {
+    for (size_t j = 0; j < str.len; j++) {
+      buffer[idx++] = str.data[j];
+    }
+  }
+
+  return str_from_parts(len, buffer);
+}
+
 Str str_substring(Str s, size_t idx1, size_t idx2) {
   if (idx2 <= idx1 || s.len <= idx1) {
     return STR("");

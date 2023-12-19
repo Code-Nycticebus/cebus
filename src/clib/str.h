@@ -7,7 +7,6 @@
 
 // TODO add all these
 //      "https://docs.python.org/3/library/stdtypes.html#str.isalnum"
-// TODO add str.repeat()
 
 #define STR_FMT "%.*s"
 #define STR_ARG(str) (int)(str).len, (str).data
@@ -46,6 +45,7 @@ Str str_replace(Str s, Str old, Str new, Arena *arena);
 Str str_center(Str str, size_t width, char fillchar, Arena *arena);
 Str str_ljust(Str str, size_t width, char fillchar, Arena *arena);
 Str str_rjust(Str str, size_t width, char fillchar, Arena *arena);
+Str str_repeat(Str s, size_t count, Arena *arena);
 
 Str str_substring(Str s, size_t idx1, size_t idx2);
 
