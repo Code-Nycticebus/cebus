@@ -218,4 +218,5 @@ int main(void) {
   test_join();
   test_justify();
   test_cmp();
+  test_repeat();
 }
