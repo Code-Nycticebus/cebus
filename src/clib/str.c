@@ -178,6 +178,14 @@ Str str_repeat(Str str, size_t count, Arena *arena) {
   return str_from_parts(len, buffer);
 }
 
+Str str_reverse(Str s, Arena *arena) {
+  char *buffer = arena_calloc(arena, s.len + 1);
+  for (size_t i = 0; i < s.len; i++) {
+    buffer[i] = s.data[s.len - i - 1];
+  }
+  return str_from_parts(s.len, buffer);
+}
+
 Str str_substring(Str s, size_t idx1, size_t idx2) {
   if (idx2 <= idx1 || s.len <= idx1) {
     return STR("");

@@ -214,6 +214,13 @@ void test_repeat(void) {
   arena_free(&arena);
 }
 
+void test_reverse(void) {
+  Arena arena = {0};
+  Str s = str_reverse(STR("Hello, World"), &arena);
+  assert(str_eq(s, STR("dlroW ,olleH")));
+  arena_free(&arena);
+}
+
 int main(void) {
   test_compare();
   test_transform();
@@ -230,4 +237,5 @@ int main(void) {
   test_justify();
   test_cmp();
   test_repeat();
+  test_reverse();
 }

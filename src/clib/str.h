@@ -52,6 +52,7 @@ Str str_center(Str str, size_t width, char fillchar, Arena *arena);
 Str str_ljust(Str str, size_t width, char fillchar, Arena *arena);
 Str str_rjust(Str str, size_t width, char fillchar, Arena *arena);
 Str str_repeat(Str s, size_t count, Arena *arena);
+Str str_reverse(Str s, Arena *arena);
 
 Str str_substring(Str s, size_t idx1, size_t idx2);
 
