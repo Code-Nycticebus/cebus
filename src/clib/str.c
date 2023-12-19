@@ -156,8 +156,8 @@ bool str_contains(Str haystack, Str needle) {
 }
 
 CmpOrdering str_compare(Str s1, Str s2) {
-  size_t min_bytes = s1.len < s2.len ? s1.len : s2.len;
-  int r = strncmp(s1.data, s2.data, min_bytes);
+  const size_t min_bytes = s1.len < s2.len ? s1.len : s2.len;
+  const int r = strncmp(s1.data, s2.data, min_bytes);
   return r < 0   ? CMP_LESS    // less
          : 0 < r ? CMP_GREATER // greater
                  : CMP_EQUAL;  // equal
