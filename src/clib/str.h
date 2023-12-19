@@ -80,4 +80,4 @@ size_t str_find(Str haystack, Str needle);
 size_t str_find_last(Str haystack, Str needle);
 size_t str_count(Str haystack, Str needle);
 
-#endif // !__CLIB_STR_H__
+#endif /* !__CLIB_STR_H__ */

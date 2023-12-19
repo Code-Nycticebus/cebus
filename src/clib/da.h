@@ -99,4 +99,4 @@
     (dest)->len = (src)->len;                                                  \
   } while (0)
 
-#endif // !__CLIB_DA_H__
+#endif /* !__CLIB_DA_H__ */
