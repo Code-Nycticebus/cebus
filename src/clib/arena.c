@@ -31,6 +31,7 @@ void arena_free(Arena *arena) {
     next = next->next;
     chunk_free(temp);
   }
+  arena->begin = NULL;
 }
 
 void *arena_alloc(Arena *arena, size_t size) {
