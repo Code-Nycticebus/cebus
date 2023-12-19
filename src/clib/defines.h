@@ -12,7 +12,7 @@
 typedef enum {
   CMP_LESS = -1,
   CMP_EQUAL = 0,
-  CMP_GRATER = 1,
+  CMP_GREATER = 1,
 } CmpOrdering;
 
 #endif /* !__CLIB_DEFINES_H__ */

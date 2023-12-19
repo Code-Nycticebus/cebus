@@ -162,7 +162,7 @@ CmpOrdering str_compare(Str s1, Str s2) {
     return CMP_LESS;
   }
   if (0 < r) {
-    return CMP_GRATER;
+    return CMP_GREATER;
   }
   return CMP_EQUAL;
 }
