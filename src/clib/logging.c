@@ -15,7 +15,7 @@ struct CmLogLevelPrefix {
 typedef enum {
   CLIB_LOG_FATAL = 0,
   CLIB_LOG_ERROR,
-  CLIB_LOG_WARN,
+  CLIB_LOG_WARNING,
   CLIB_LOG_INFO,
   CLIB_LOG_DEBUG,
   CLIB_LOG_TRACE,
@@ -41,7 +41,7 @@ static void clib_log(CmLogLevel log_level, const char *msg) {
   static const struct CmLogLevelPrefix log_level_str[] = {
       [CLIB_LOG_FATAL] = {"FATAL", "\033[1m\033[91m"},
       [CLIB_LOG_ERROR] = {"ERROR", "\033[91m"},
-      [CLIB_LOG_WARN] = {"WARN", "\033[33m"},
+      [CLIB_LOG_WARNING] = {"WARNING", "\033[33m"},
       [CLIB_LOG_INFO] = {"INFO", "\033[34m"},
       [CLIB_LOG_DEBUG] = {"DEBUG", "\033[1m\033[95m"},
       [CLIB_LOG_TRACE] = {"TRACE", "\033[97m"},
@@ -60,7 +60,7 @@ CLIB_FMT(1, 2) void clib_log_error(const char *fmt, ...) {
   _LOG(CLIB_LOG_ERROR, fmt);
 }
 CLIB_FMT(1, 2) void clib_log_warning(const char *fmt, ...) {
-  _LOG(CLIB_LOG_WARN, fmt);
+  _LOG(CLIB_LOG_WARNING, fmt);
 }
 CLIB_FMT(1, 2) void clib_log_info(const char *fmt, ...) {
   _LOG(CLIB_LOG_INFO, fmt);
