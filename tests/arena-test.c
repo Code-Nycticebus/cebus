@@ -58,7 +58,7 @@ void test_calloc(void) {
   arena_free(&arena);
 }
 
-void test_reset(void) {
+void test_reset(void) { // NOLINT
   Arena arena = {0};
 
   const size_t n_bytes = 10;
