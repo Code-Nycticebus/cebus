@@ -34,9 +34,20 @@ void arena_free(Arena *arena) {
   arena->begin = NULL;
 }
 
+void arena_reset(Arena *arena) {
+  for (Chunk *next = arena->begin; next != NULL; next = next->next) {
+    next->allocated = 0;
+  }
+}
+
 void *arena_alloc(Arena *arena, size_t size) {
   Chunk *chunk = arena->begin;
-  if (chunk == NULL || !(chunk->allocated + size < chunk->cap)) {
+  for (; chunk != NULL; chunk = chunk->next) {
+    if (chunk->allocated + size < chunk->cap) {
+      break;
+    }
+  }
+  if (chunk == NULL) {
     const size_t chunk_size =
         size < CHUNK_DEFAULT_SIZE ? CHUNK_DEFAULT_SIZE : size;
     chunk = chunk_allocate(chunk_size);

@@ -5,8 +5,8 @@
 #include <assert.h>
 #include <stdint.h>
 
-typedef struct {
-  Chunk *next;
+typedef struct TestChunk {
+  struct TestChunk *next;
   size_t cap;
   size_t allocated;
   uint8_t data[];
@@ -58,7 +58,34 @@ void test_calloc(void) {
   arena_free(&arena);
 }
 
+void test_reset(void) {
+  Arena arena = {0};
+
+  const size_t n_bytes = 10;
+  char *buffer = arena_alloc(&arena, n_bytes);
+  assert(buffer);
+
+  const size_t more_bytes = ((TestChunk *)arena.begin)->cap;
+  char *big_buffer = arena_alloc(&arena, more_bytes);
+  assert(big_buffer);
+
+  arena_reset(&arena);
+  TestChunk *tc = (TestChunk *)arena.begin;
+  assert(tc->allocated == 0);
+  assert(tc->next->allocated == 0);
+
+  char *buffer_after_reset = arena_alloc(&arena, n_bytes);
+  assert(buffer_after_reset);
+  assert(tc->allocated == n_bytes);
+
+  char *big_buffer_after_reset = arena_alloc(&arena, more_bytes);
+  assert(big_buffer_after_reset);
+
+  arena_free(&arena);
+}
+
 int main(void) {
   test_arena();
   test_calloc();
+  test_reset();
 }
