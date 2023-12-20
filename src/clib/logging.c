@@ -12,26 +12,19 @@ struct CmLogLevelPrefix {
   const char *color;
 };
 
-typedef enum {
-  CLIB_LOG_FATAL = 0,
-  CLIB_LOG_ERROR,
-  CLIB_LOG_WARNING,
-  CLIB_LOG_INFO,
-  CLIB_LOG_DEBUG,
-  CLIB_LOG_TRACE,
-} CmLogLevel;
-
 #define FMT_RESET "\033[0m"
 
 #define _LOG(__log_level, __fmt)                                               \
   char __buffer[CLIB_LOGGER_CHAR_BUFFER_SIZE];                                 \
   va_list __args;                                                              \
   va_start(__args, __fmt);                                                     \
-  vsnprintf(__buffer, CLIB_LOGGER_CHAR_BUFFER_SIZE, __fmt, __args);            \
+  size_t size =                                                                \
+      vsnprintf(__buffer, CLIB_LOGGER_CHAR_BUFFER_SIZE, __fmt, __args);        \
+  assert(size < CLIB_LOGGER_CHAR_BUFFER_SIZE && "Message too big!");           \
   va_end(__args);                                                              \
-  clib_log(__log_level, __buffer);
+  _clib_log(__log_level, __buffer);
 
-static void clib_log(CmLogLevel log_level, const char *msg) {
+static void _clib_log(LogLevel log_level, const char *msg) {
   static bool display_colors = false;
   static bool tty_determent = false;
   if (!tty_determent) {
@@ -51,6 +44,10 @@ static void clib_log(CmLogLevel log_level, const char *msg) {
           display_colors ? log_level_str[log_level].color : "",
           log_level_str[log_level].prefix, msg,
           display_colors ? FMT_RESET : "");
+}
+
+CLIB_FMT(2, 3) void clib_log(LogLevel log_level, const char *fmt, ...) {
+  _LOG(log_level, fmt);
 }
 
 CLIB_FMT(1, 2) void clib_log_fatal(const char *fmt, ...) {
