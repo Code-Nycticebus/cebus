@@ -2,6 +2,7 @@
 #define __CLIB_ASSERTS_H__
 
 #include "defines.h"
+#include "logging.h"
 #include <stdlib.h>
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -14,15 +15,14 @@
 #define debugbreak(...) abort()
 #endif
 
-void _clib_assert_print_error(const char *msg, const char *expression,
-                              const char *filename, int line);
-void _clib_assert_print_warning(const char *msg, const char *expression,
-                                const char *filename, int line);
+#define _clib_assert_print(level, msg, expression)                             \
+  clib_log(level, "%s:%d: assert '%s' failed: %s", __FILE__, __LINE__,         \
+           expression, msg);
 
 #define clib_assert(expression, msg)                                           \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _clib_assert_print_error(msg, #expression, __FILE__, __LINE__);          \
+      _clib_assert_print(CLIB_LOG_ERROR, msg, #expression);                    \
       debugbreak();                                                            \
     }                                                                          \
   } while (0)
@@ -30,7 +30,7 @@ void _clib_assert_print_warning(const char *msg, const char *expression,
 #define clib_assert_warn(expression, msg)                                      \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _clib_assert_print_warning(msg, #expression, __FILE__, __LINE__);        \
+      _clib_assert_print(CLIB_LOG_WARNING, msg, #expression);                  \
     }                                                                          \
   } while (0)
 
@@ -38,7 +38,7 @@ void _clib_assert_print_warning(const char *msg, const char *expression,
 #define clib_assert_debug(expression, msg)                                     \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _clib_assert_print_error(msg, #expression, __FILE__, __LINE__);          \
+      _clib_assert_print(CLIB_LOG_ERROR, msg, #expression);                    \
       debugbreak();                                                            \
     }                                                                          \
   } while (0)
