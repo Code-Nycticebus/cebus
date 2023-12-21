@@ -15,5 +15,5 @@
 - [ ] Unit testing framework
 - [ ] Localization
 - [ ] UTF-8
-- [ ] Platform
+- [x] Platform
 - [ ] INI/.conf file parsing
