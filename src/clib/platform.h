@@ -4,7 +4,15 @@
 typedef enum {
   LINUX = 1,
   WINDOWS,
-} Platform;
+} ClibPlatform;
+
+#if defined(__linux__)
+#define CLIB_SYSTEM LINUX
+#elif defined(_Win32) || defined(_Win64)
+#define CLIB_SYSTEM WINDOWS
+#else
+#error "Platform currently not supported"
+#endif
 
 typedef enum {
   ARCHITECTURE_UNKNOWN,
@@ -28,25 +36,7 @@ typedef enum {
   POWERPC64,
   SPARC,
   M68K,
-} Architecture;
-
-typedef enum {
-  COMPILER_UNKOWN,
-  GCC,
-  CLANG,
-  MSVC,
-  MINGW32,
-  MINGW64,
-  INTEL_CC,
-} Compiler;
-
-#if defined(__linux__)
-#define CLIB_SYSTEM LINUX
-#elif defined(_Win32) || defined(_Win64)
-#define CLIB_SYSTEM WINDOWS
-#else
-#error "Platform currently not supported"
-#endif
+} ClibArchitecture;
 
 #if defined(__x86_64__) || defined(_M_X64)
 #define CLIB_ARCHITECTURE x86_64
@@ -100,6 +90,16 @@ typedef enum {
 #define CLIB_ARCHITECTURE ARCHITECTURE_UNKNOWN
 #endif
 
+typedef enum {
+  COMPILER_UNKOWN,
+  GCC,
+  CLANG,
+  MSVC,
+  MINGW32,
+  MINGW64,
+  INTEL_CC,
+} ClibCompiler;
+
 #if defined(__GNUC__) && !defined(__clang__)
 #define CLIB_COMPILER GCC
 #elif defined(__clang__)
@@ -114,6 +114,35 @@ typedef enum {
 #define CLIB_COMPILER INTEL_CC
 #else
 #define CLIB_COMPILER COMPILER_UNKOWN
+#endif
+
+#if defined(__LP64__) || defined(_LP64)
+#define CLIB_64BIT
+#else
+#define CLIB_32BIT
+#endif
+
+typedef enum {
+  ENDIAN_UNKOWN,
+  ENDIAN_LITTLE,
+  ENDIAN_BIG,
+} ClibEndians;
+
+#if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) &&                \
+    defined(__ORDER_LITTLE_ENDIAN__)
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define CLIB_ENDIANNESS ENDIAN_BIG
+#elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#define CLIB_ENDIANNESS ENDIAN_LITTLE
+#else
+#define CLIB_ENDIANNESS ENDIAN_UNKOWN
+#endif
+#else
+#define CLIB_ENDIANNESS ENDIAN_UNKOWN
+#endif
+
+#ifdef __cross__
+#define CLIB_CROSS_COMPILATION
 #endif
 
 #endif /*  !__CLIB_PLATFORM_H__ */
