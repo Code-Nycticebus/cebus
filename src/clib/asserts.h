@@ -3,12 +3,14 @@
 
 #include "defines.h"
 #include "logging.h"
+#include "platform.h"
+
 #include <stdlib.h>
 
-#if CLIB_PLATFORM == LINUX
+#if CLIB_SYSTEM == LINUX
 #include <signal.h>
 #define debugbreak() raise(SIGTRAP)
-#elif CLIB_PLATFORM == WINDOWS
+#elif CLIB_SYSTEM == WINDOWS
 #include <intrin.h>
 #define debugbreak() __debugbreak()
 #else
