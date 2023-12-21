@@ -197,8 +197,8 @@ void test_justify(void) {
 }
 
 void test_cmp(void) {
-  const size_t n = 4;
   Str array[] = {STR("Banana"), STR("Strawberry"), STR("Apple"), STR("Lemon")};
+  const size_t n = sizeof(array) / sizeof(array[0]);
   qsort(array, n, sizeof(array[0]), str_compare_qsort);
 
   clib_assert(str_eq(array[0], STR("Apple")), "");
