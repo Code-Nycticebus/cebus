@@ -12,13 +12,19 @@ typedef enum {
   CLIB_LOG_TRACE,
 } LogLevel;
 
-#if defined(__GNUC__) || defined(__clang__)
+#if CLIB_PLATFORM == LINUX
+#include <unistd.h>
+#elif CLIB_PLATFORM == WINDOWS
+#define isatty(...) _isatty(__VA_ARGS__)
+#else
+#define isatty(...) false
+#endif
+
+#if CLIB_COMPILER == GCC || CLIB_COMPILER == CLANG
 #define CLIB_FMT(__fmt_arg, __var_args)                                        \
   __attribute__((format(printf, __fmt_arg, __var_args)))
-#include <unistd.h>
-#elif defined(_MSC_VER)
+#elif CLIB_COMPILER == MSVC
 #define CLIB_FMT(__fmt_arg, __var_args) _Printf_format_string_ __fmt_arg
-#define isatty(...) _isatty(__VA_ARGS__)
 #else
 #define CLIB_FMT(...)
 #endif

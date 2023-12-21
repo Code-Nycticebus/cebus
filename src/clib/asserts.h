@@ -5,10 +5,10 @@
 #include "logging.h"
 #include <stdlib.h>
 
-#if defined(__linux__)
+#if CLIB_PLATFORM == LINUX
 #include <signal.h>
 #define debugbreak() raise(SIGTRAP)
-#elif defined(_WIN32) ||defined(_WIN64)
+#elif CLIB_PLATFORM == WINDOWS
 #include <intrin.h>
 #define debugbreak() __debugbreak()
 #else
