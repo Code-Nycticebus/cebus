@@ -2,6 +2,11 @@
 
 ## TODO
 
+- [x] String library 
+- [x] Arena allocator
+- [x] Dynamic array
+- [x] Logging
+- [x] Asserts
 - [ ] Config file (JSON, TOML, usw)
 - [ ] File IO (Best async)
 - [ ] Paths
@@ -9,9 +14,6 @@
 - [ ] DateTime
 - [ ] Dynamic Library loading
 - [ ] Unit testing framework
-- [ ] System information fetching
-- [ ] Serialization
 - [ ] Localization
-- [ ] Logging
-- [ ] Asserts
-- [ ] Platfrom
+- [ ] UTF-8
+- [ ] Platform
