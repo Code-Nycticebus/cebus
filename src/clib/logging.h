@@ -2,7 +2,6 @@
 #define __CLIB_LOGGING_H__
 
 #include "defines.h"
-#include "platform.h"
 
 typedef enum {
   CLIB_LOG_FATAL = 0,
@@ -12,14 +11,6 @@ typedef enum {
   CLIB_LOG_DEBUG,
   CLIB_LOG_TRACE,
 } LogLevel;
-
-#if CLIB_SYSTEM == LINUX
-#include <unistd.h>
-#elif CLIB_SYSTEM == WINDOWS
-#define isatty(...) _isatty(__VA_ARGS__)
-#else
-#define isatty(...) false
-#endif
 
 #if CLIB_COMPILER == GCC || CLIB_COMPILER == CLANG
 #define CLIB_FMT(__fmt_arg, __var_args)                                        \
