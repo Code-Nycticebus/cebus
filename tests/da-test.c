@@ -1,7 +1,6 @@
 #include "clib/da.h"
 
-#include <assert.h>
-#include <stddef.h>
+#include "clib/asserts.h"
 
 void test_da(void) {
   const size_t n = 10;
@@ -12,10 +11,11 @@ void test_da(void) {
   }
 
   for (size_t i = 0; i < list.len; ++i) {
-    assert(list.items[i] == i + 1);
+    clib_assert(list.items[i] == i + 1,
+                "Numbers were not pushed on the stack correctly");
   }
   da_clear(&list);
-  assert(list.len == 0);
+  clib_assert(list.len == 0, "Clearing did not reset list.len");
   da_free(&list);
 }
 
@@ -33,7 +33,7 @@ void test_map(void) { // NOLINT
   da_map(&list, &list, times_two);
 
   for (size_t i = 0; i < list.len; ++i) {
-    assert(list.items[i] == i * 2);
+    clib_assert(list.items[i] == i * 2, "Mapping did not multiply by two");
   }
 
   da_free(&list);
@@ -52,7 +52,7 @@ void test_sort(void) {
   da_sort(&list, sort);
 
   for (size_t i = 0; i < list.len; ++i) {
-    assert(list.items[i] == i);
+    clib_assert(list.items[i] == i, "sorting did not work correctly");
   }
 
   da_free(&list);
@@ -61,30 +61,29 @@ void test_sort(void) {
 void test_last(void) {
   DA(int) list = {0};
   da_init(&list, 1);
-  assert(da_empty(&list));
+  clib_assert(da_empty(&list), "List should be initialized empty");
   da_push(&list, 10);
   int last = da_last(&list);
-  assert(last == 10);
+  clib_assert(last == 10, "Last is not the correct number");
 }
 
 void test_extend(void) {
   DA(int) list = {0};
 
   da_extend(&list, 3, ((int[]){1, 2, 3}));
-  assert(list.items[0] == 1);
-  assert(list.items[1] == 2);
-  assert(list.items[2] == 3);
+  clib_assert(list.items[0] == 1 && list.items[1] == 2 && list.items[2] == 3,
+              "List did not extend correctly");
   da_free(&list);
 }
 
 void test_reserve(void) {
   DA(int) list = {0};
   da_reserve(&list, 5);
-  assert(list.cap == 5);
+  clib_assert(list.cap == 5, "Capacity was not increased");
   da_free(&list);
 }
 
-void test_reverse(void) { // NOLINT
+void test_reverse(void) {
   DA(size_t) list = {0};
   const size_t n = 10;
   for (size_t i = 0; i < n; i++) {
@@ -92,7 +91,7 @@ void test_reverse(void) { // NOLINT
   }
   da_reverse(&list);
   for (size_t i = 0; i < n; i++) {
-    assert(list.items[i] == n - i);
+    clib_assert(list.items[i] == n - i, "List was not reversed correctly");
   }
 
   da_free(&list);
@@ -100,7 +99,7 @@ void test_reverse(void) { // NOLINT
 
 int is_odd(int i) { return i % 2 == 0; }
 
-void test_filter(void) { // NOLINT
+void test_filter(void) {
   DA(int) list = {0};
   const size_t n = 10;
   for (size_t i = 0; i < n; i++) {
@@ -109,14 +108,14 @@ void test_filter(void) { // NOLINT
 
   da_filter(&list, is_odd);
 
-  assert(list.items[1] == 2);
-  assert(list.items[2] == 4);
-  assert(list.items[3] == 6);
+  clib_assert(list.items[1] == 2, "list was not filtered correctly");
+  clib_assert(list.items[2] == 4, "list was not filtered correctly");
+  clib_assert(list.items[3] == 6, "list was not filtered correctly");
 
   da_free(&list);
 }
 
-void test_copy(void) { // NOLINT
+void test_copy(void) {
   DA(size_t) l1 = {0};
   const size_t n = 10;
   for (size_t i = 0; i < n; i++) {
@@ -125,9 +124,9 @@ void test_copy(void) { // NOLINT
 
   DA(size_t) l2 = {0};
   da_copy(&l1, &l2);
-  assert(l1.len == l2.len);
+  clib_assert(l1.len == l2.len, "list was not copied correctly");
   for (size_t i = 0; i < l2.len; i++) {
-    assert(l1.items[i] == l2.items[i]);
+    clib_assert(l1.items[i] == l2.items[i], "list was not copied correctly");
   }
 
   da_free(&l1);
