@@ -126,19 +126,16 @@ typedef enum {
   ENDIAN_UNKOWN,
   ENDIAN_LITTLE,
   ENDIAN_BIG,
-} ClibEndians;
+} ClibByteOrder;
 
 #if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) &&                \
     defined(__ORDER_LITTLE_ENDIAN__)
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define CLIB_ENDIANNESS ENDIAN_BIG
+#define CLIB_BYTE_ORDER ENDIAN_BIG
 #elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define CLIB_ENDIANNESS ENDIAN_LITTLE
+#define CLIB_BYTE_ORDER ENDIAN_LITTLE
 #else
-#define CLIB_ENDIANNESS ENDIAN_UNKOWN
-#endif
-#else
-#define CLIB_ENDIANNESS ENDIAN_UNKOWN
+#define CLIB_BYTE_ORDER ENDIAN_UNKOWN
 #endif
 
 #ifdef __cross__
