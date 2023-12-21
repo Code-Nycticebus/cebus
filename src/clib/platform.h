@@ -134,6 +134,7 @@ typedef enum {
 #define CLIB_BYTE_ORDER ENDIAN_BIG
 #elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 #define CLIB_BYTE_ORDER ENDIAN_LITTLE
+#endif
 #else
 #define CLIB_BYTE_ORDER ENDIAN_UNKOWN
 #endif
