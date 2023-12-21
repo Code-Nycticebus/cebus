@@ -16,7 +16,7 @@
 #endif
 
 #define _clib_assert_print(level, msg, expression)                             \
-  clib_log(level, "%s:%d: assert '%s' failed: %s", __FILE__, __LINE__,         \
+  clib_log(level, "%s:%d: assert failed: '%s': %s", __FILE__, __LINE__,        \
            expression, msg);
 
 #define clib_assert(expression, msg)                                           \
