@@ -7,13 +7,13 @@
 - [x] Dynamic array
 - [x] Logging
 - [x] Asserts
-- [ ] Config file (JSON, TOML, usw)
-- [ ] File IO (Best async)
 - [ ] Paths
-- [ ] Command line args
 - [ ] DateTime
+- [ ] File IO (Best async)
+- [ ] Command line args
 - [ ] Dynamic Library loading
 - [ ] Unit testing framework
 - [ ] Localization
 - [ ] UTF-8
 - [ ] Platform
+- [ ] INI/.conf file parsing
