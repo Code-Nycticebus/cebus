@@ -5,10 +5,10 @@
 #include "logging.h"
 #include <stdlib.h>
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__linux__)
 #include <signal.h>
 #define debugbreak() raise(SIGTRAP)
-#elif defined(_MSC_VER)
+#elif defined(_WIN32) ||defined(_WIN64)
 #include <intrin.h>
 #define debugbreak() __debugbreak()
 #else
