@@ -1,6 +1,7 @@
 #ifndef __CLIB_PLATFORM_H__
 #define __CLIB_PLATFORM_H__
 
+/* System */
 #if defined(__linux__)
 #define LINUX 1
 #define CLIB_SYSTEM LINUX
@@ -10,7 +11,9 @@
 #else
 #error "Platform currently not supported"
 #endif
+/* !System */
 
+/* Architecture */
 #if defined(__x86_64__) || defined(_M_X64)
 #define x86_64 1
 #define CLIB_ARCHITECTURE x86_64
@@ -83,7 +86,9 @@
 #define ARCHITECTURE_UNKNOWN 0
 #define CLIB_ARCHITECTURE ARCHITECTURE_UNKNOWN
 #endif
+/* !Architecture */
 
+/* Compiler */
 #if defined(__GNUC__) && !defined(__clang__)
 #define GCC 1
 #define CLIB_COMPILER GCC
@@ -100,20 +105,24 @@
 #define MINGW64 5
 #define CLIB_COMPILER MINGW64
 #elif defined(__INTEL_COMPILER)
-#define INTEL_CC 6
-#define CLIB_COMPILER INTEL_CC
+#define INTEL_COMPILER 6
+#define CLIB_COMPILER INTEL_COMPILER
 #else
 #define COMPILER_UNKOWN 0
 #define CLIB_COMPILER COMPILER_UNKOWN
 #endif
+/* !Compiler */
 
+/* CPU */
 #if defined(__LP64__) || defined(_LP64)
 #define CLIB_64BIT
 #else
 #define CLIB_32BIT
 #endif
+/* !CPU */
 
-#define ENDIAN_UNKOWN 0x0
+/* Byte-Order */
+#define ENDIAN_UNKOWN 0x00
 #define ENDIAN_LITTLE 0x01
 #define ENDIAN_BIG 0x80
 
@@ -127,6 +136,7 @@
 #else
 #define CLIB_BYTE_ORDER ENDIAN_UNKOWN
 #endif
+/* !Byte-Order */
 
 #ifdef __cross__
 #define CLIB_CROSS_COMPILATION

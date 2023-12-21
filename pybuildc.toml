@@ -1,6 +1,6 @@
 [project]
 name="clib"
 version="0.1.0"
-cc="gcc"
+cc="clang"
 bin="static"
 
