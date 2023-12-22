@@ -1,7 +1,8 @@
 #include <locale.h>
 #include <stdio.h>
 
-#include "clib/utf-8.h"
+#include "datatypes/bytes.h"
+#include "datatypes/utf8.h"
 
 int main(void) {
   setlocale(LC_ALL, "");

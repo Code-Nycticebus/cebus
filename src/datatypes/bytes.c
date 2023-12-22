@@ -36,5 +36,5 @@ Str bytes_hex(Bytes bytes, Arena *arena) {
       b_idx += snprintf(&buffer[b_idx], 3, "%02x", bytes.data[i]);
     }
   }
-  return str_from_parts(b_idx, buffer);
+  return (Str){.len = b_idx, .data = buffer};
 }

@@ -1,8 +1,8 @@
-#include "utf-8.h"
+#include "utf8.h"
 #include <string.h>
 #include <wchar.h>
 
-#include "asserts.h"
+#include "clib/asserts.h"
 
 Utf8 utf8_from_parts(size_t len, const wchar_t *s) {
   return (Utf8){.len = len, .data = s};

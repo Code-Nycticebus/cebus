@@ -2,13 +2,8 @@
 #define __CLIB_BYTES_H__
 
 #include "clib/arena.h"
-#include "clib/str.h"
-#include "defines.h"
-
-typedef struct {
-  size_t size;
-  const uint8_t *data;
-} Bytes;
+#include "clib/defines.h"
+#include "datatypes.h" // IWYU pragma: private: include "bytes.h"
 
 #define BYTES(...)                                                             \
   (Bytes) {                                                                    \

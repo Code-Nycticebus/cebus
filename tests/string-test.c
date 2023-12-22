@@ -1,8 +1,9 @@
-#include "clib/str.h"
+#include "datatypes/str.h"
 
-#include "clib/asserts.h"
 #include <ctype.h>
 #include <stdlib.h>
+
+#include "clib/asserts.h"
 
 bool sep(char c) { return isspace(c) || isblank(c); }
 

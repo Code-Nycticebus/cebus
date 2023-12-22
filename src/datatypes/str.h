@@ -1,9 +1,11 @@
 #ifndef __CLIB_STR_H__
 #define __CLIB_STR_H__
 
-#include "arena.h"
+#include "clib/arena.h"
 
-#include "defines.h"
+#include "datatypes.h" // IWYU pragma: private: include "str.h"
+
+#include "clib/defines.h"
 
 // TODO add all these
 //      "https://docs.python.org/3/library/stdtypes.html#str.isalnum"
@@ -24,11 +26,6 @@
 #define STR_HEXDIGITS STR("0123456789abcdefABCDEF")
 #define STR_PUNCTUATION STR("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 #define STR_WHITESPACE STR(" \t\n\r\x0b\x0c")
-
-typedef struct {
-  size_t len;
-  const char *data;
-} Str;
 
 Str str_from_parts(size_t size, const char *cstr);
 Str str_from_cstr(const char *cstr);
@@ -77,5 +74,7 @@ uint64_t str_chop_u64(Str *s);
 size_t str_find(Str haystack, Str needle);
 size_t str_find_last(Str haystack, Str needle);
 size_t str_count(Str haystack, Str needle);
+
+Bytes str_to_bytes(Str s);
 
 #endif /* !__CLIB_STR_H__ */

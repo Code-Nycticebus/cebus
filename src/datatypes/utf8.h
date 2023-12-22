@@ -2,13 +2,8 @@
 #define __CLIB_UTF8_H__
 
 #include "clib/arena.h"
-#include "clib/bytes.h"
+#include "datatypes.h" // IWYU pragma: private: include "utf8.h"
 #include <wchar.h>
-
-typedef struct {
-  size_t len;
-  const wchar_t *data;
-} Utf8;
 
 #define UTF8(str)                                                              \
   (Utf8) { .len = (sizeof(L##str) / sizeof(wchar_t)) - 1, .data = L##str }
