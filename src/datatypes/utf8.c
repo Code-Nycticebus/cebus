@@ -5,12 +5,13 @@
 #include "clib/arena.h"
 #include "datatypes/bytes.h"
 
+#define LEADING_TWO_BITS ((uint8_t)0xC0)
+#define LEADING_FIRST_BIT ((uint8_t)0x80)
+
 Utf8 utf8_decode(Bytes bytes) {
-  const uint8_t lead_two = 0xC0;
-  const uint8_t lead_first = 0x80;
   size_t len = 0;
   for (size_t i = 0; i < bytes.size; i++) {
-    if ((bytes.data[i] & lead_two) != lead_first) {
+    if ((bytes.data[i] & LEADING_TWO_BITS) != LEADING_FIRST_BIT) {
       len++;
     }
   }
@@ -27,12 +28,10 @@ Utf8 utf8_next(Utf8 *str) {
     *str = (Utf8){0};
     return res;
   }
-  const uint8_t lead_two = 0xC0;
-  const uint8_t lead_first = 0x80;
   size_t i = 0;
   size_t len = 0;
   for (; i < str->size && len < 2; i++) {
-    if ((str->data[i] & lead_two) != lead_first) {
+    if ((str->data[i] & LEADING_TWO_BITS) != LEADING_FIRST_BIT) {
       len++;
     }
   }
