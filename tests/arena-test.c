@@ -1,12 +1,8 @@
 #include "clib/arena.h"
 
 #include "clib/asserts.h"
-#include "clib/da.h"
 
 #include <stdint.h>
-#include <stdio.h>
-
-#include "clib/platform.h"
 
 typedef struct TestChunk {
   struct TestChunk *next;

@@ -2,7 +2,6 @@
 
 #include "clib/asserts.h"
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 bool sep(char c) { return isspace(c) || isblank(c); }

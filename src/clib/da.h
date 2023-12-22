@@ -1,7 +1,7 @@
 #ifndef __CLIB_DA_H__
 #define __CLIB_DA_H__
 
-#include <stdlib.h>
+#include <stdlib.h> // IWYU pragma: export
 
 #define DA(T)                                                                  \
   struct {                                                                     \

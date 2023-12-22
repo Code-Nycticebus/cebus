@@ -1,11 +1,8 @@
 #ifndef __CLIB_ASSERTS_H__
 #define __CLIB_ASSERTS_H__
 
-#include "defines.h"
-#include "logging.h"
+#include "logging.h" // IWYU pragma: export
 #include "platform.h"
-
-#include <stdlib.h>
 
 #if defined(LINUX)
 #include <signal.h>
@@ -14,6 +11,7 @@
 #include <intrin.h>
 #define debugbreak() __debugbreak()
 #else
+#include <stdlib.h>
 #define debugbreak(...) abort()
 #endif
 

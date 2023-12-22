@@ -1,7 +1,6 @@
 #ifndef __CLIB_LOGGING_H__
 #define __CLIB_LOGGING_H__
 
-#include "defines.h"
 #include "platform.h"
 
 #include <stdio.h>

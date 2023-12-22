@@ -1,5 +1,6 @@
 #include "logging.h"
 
+#include "defines.h"
 #include <stdarg.h>
 #include <stdio.h>
 
