@@ -4,6 +4,8 @@
 #include "clib/arena.h"
 #include "datatypes.h" // IWYU pragma: private: include "utf8.h"
 
+// TODO utf8_validate()
+
 #define UTF8(s) utf8_decode(BYTES_STR(s));
 #define UTF8_FMT "%.*s"
 #define UTF8_ARG(s) (int)(s).size, (s).data
