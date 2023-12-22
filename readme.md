@@ -2,18 +2,18 @@
 
 ## TODO
 
-- [x] String library 
+- [x] String library
 - [x] Arena allocator
 - [x] Dynamic array
 - [x] Logging
 - [x] Asserts
+- [x] Platform
+- [ ] Unit testing framework
 - [ ] Paths
+- [ ] Localization
+- [ ] UTF-8
 - [ ] DateTime
 - [ ] File IO (Best async)
 - [ ] Command line args
 - [ ] Dynamic Library loading
-- [ ] Unit testing framework
-- [ ] Localization
-- [ ] UTF-8
-- [x] Platform
 - [ ] INI/.conf file parsing
