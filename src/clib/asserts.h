@@ -5,13 +5,13 @@
 #include "platform.h"
 
 #if defined(LINUX)
-#include <signal.h>
+#include <signal.h> // IWYU pragma: export
 #define debugbreak() raise(SIGTRAP)
 #elif defined(WINDOWS)
-#include <intrin.h>
+#include <intrin.h> // IWYU pragma: export
 #define debugbreak() __debugbreak()
 #else
-#include <stdlib.h>
+#include <stdlib.h> // IWYU pragma: export
 #define debugbreak(...) abort()
 #endif
 
