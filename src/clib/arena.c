@@ -1,7 +1,10 @@
 #include "arena.h"
 
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "asserts.h"
 
 #define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 
@@ -15,7 +18,8 @@ struct Chunk {
 static Chunk *chunk_allocate(size_t size) {
   Chunk *chunk = malloc(sizeof(Chunk) + size);
   if (chunk == NULL) {
-    return NULL;
+    clib_log_fatal("Memory allocation failed: %s", strerror(errno));
+    abort();
   }
   chunk->cap = size;
   chunk->allocated = 0;
@@ -43,6 +47,7 @@ void arena_reset(Arena *arena) {
 void *arena_alloc(Arena *arena, size_t size) {
   Chunk *chunk = arena->begin;
   for (; chunk != NULL; chunk = chunk->next) {
+    clib_assert_debug(size <= SIZE_MAX - chunk->allocated, "integer overflow");
     if (chunk->allocated + size < chunk->cap) {
       break;
     }
