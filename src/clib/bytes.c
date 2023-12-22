@@ -30,7 +30,11 @@ Str bytes_hex(Bytes bytes, Arena *arena) {
   char *buffer = arena_calloc(arena, bytes.size * 2 + 1);
   size_t b_idx = 0;
   for (size_t i = 0; i < bytes.size; i++) {
-    b_idx += snprintf(&buffer[b_idx], 3, "%02x", bytes.data[i]);
+    if (i == 0) {
+      b_idx += snprintf(&buffer[b_idx], 3, "%x", bytes.data[i]);
+    } else {
+      b_idx += snprintf(&buffer[b_idx], 3, "%02x", bytes.data[i]);
+    }
   }
   return str_from_parts(b_idx, buffer);
 }

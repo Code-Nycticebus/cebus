@@ -10,7 +10,7 @@ void test_bytes(void) {
   clib_assert(b.data[3] == 0xbb, "Bytes are not initialized correctly");
 
   Str s = bytes_hex(b, &arena);
-  clib_assert(str_eq(s, STR("02ffaabb")), "String conversion was not correct!");
+  clib_assert(str_eq(s, STR("2ffaabb")), "String conversion was not correct!");
   arena_free(&arena);
 }
 
