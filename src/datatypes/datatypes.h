@@ -15,7 +15,8 @@ typedef struct {
 
 typedef struct {
   size_t len;
-  const wchar_t *data;
+  size_t size;
+  const char *data;
 } Utf8;
 
 #endif /* !__CLIB_DATATYPES_H__ */
