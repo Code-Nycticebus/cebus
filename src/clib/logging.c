@@ -7,9 +7,9 @@
 
 #define CLIB_LOGGER_CHAR_BUFFER_SIZE 1000
 
-#if CLIB_SYSTEM == LINUX
+#if defined(LINUX)
 #include <unistd.h>
-#elif CLIB_SYSTEM == WINDOWS
+#elif defined(WINDOWS)
 #include <io.h>
 #define isatty(...) _isatty(__VA_ARGS__)
 #else

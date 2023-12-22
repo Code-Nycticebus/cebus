@@ -7,10 +7,10 @@
 
 #include <stdlib.h>
 
-#if CLIB_SYSTEM == LINUX
+#if defined(LINUX)
 #include <signal.h>
 #define debugbreak() raise(SIGTRAP)
-#elif CLIB_SYSTEM == WINDOWS
+#elif defined(WINDOWS)
 #include <intrin.h>
 #define debugbreak() __debugbreak()
 #else

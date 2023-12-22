@@ -2,6 +2,7 @@
 #define __CLIB_LOGGING_H__
 
 #include "defines.h"
+#include "platform.h"
 
 #include <stdio.h>
 
@@ -14,12 +15,13 @@ typedef enum {
   CLIB_LOG_TRACE,
 } LogLevel;
 
-#if CLIB_COMPILER == GCC || CLIB_COMPILER == CLANG
+#if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 #define CLIB_FMT(__fmt_arg, __var_args)                                        \
   __attribute__((format(printf, __fmt_arg, __var_args)))
-#elif CLIB_COMPILER == MSVC
+#elif defined(MSVC)
 #define CLIB_FMT(__fmt_arg, __var_args) _Printf_format_string_ __fmt_arg
 #else
+#error WDWA
 #define CLIB_FMT(...)
 #endif
 
