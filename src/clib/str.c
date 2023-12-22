@@ -187,7 +187,7 @@ Str str_reverse(Str s, Arena *arena) {
 }
 
 Str str_substring(Str s, size_t idx1, size_t idx2) {
-  if (idx2 <= idx1 || s.len <= idx1) {
+  if (idx2 <= idx1 || s.len <= idx1 || s.len <= idx2) {
     return STR("");
   }
   return str_from_parts(idx2 - idx1, &s.data[idx1]);

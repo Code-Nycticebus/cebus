@@ -34,6 +34,16 @@ void test_bytes_cmp(void) {
               "Bytes not compared correctly");
 }
 
+void test_bytes_slice(void) {
+  Bytes b = BYTES_STR("ABC");
+  Bytes slice = bytes_slice(b, 1, 2);
+  clib_assert(bytes_eq(slice, BYTES_STR("BC")),
+              "Bytes were not sliced correctly");
+  Bytes invalid = bytes_slice(b, b.size, 2);
+  clib_assert(bytes_eq(invalid, BYTES_STR("")),
+              "Bytes were not sliced correctly");
+}
+
 int main(void) {
   test_bytes();
   test_bytes_str();
