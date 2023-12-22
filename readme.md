@@ -8,6 +8,7 @@
 - [x] Logging
 - [x] Asserts
 - [x] Platform
+- [ ] Bytes
 - [ ] Paths
 - [ ] Localization
 - [ ] UTF-8
