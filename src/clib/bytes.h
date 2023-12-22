@@ -23,6 +23,8 @@ typedef struct {
 Bytes bytes_from_parts(size_t size, const uint8_t *data);
 Bytes bytes_copy(Bytes bytes, Arena *arena);
 
+bool bytes_eq(Bytes b1, Bytes b2);
+
 Str bytes_hex(Bytes bytes, Arena *arena);
 
 #endif /* !__CLIB_BYTES_H__ */

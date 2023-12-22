@@ -12,6 +12,13 @@ Bytes bytes_copy(Bytes bytes, Arena *arena) {
   return bytes_from_parts(bytes.size, buffer);
 }
 
+bool bytes_eq(Bytes b1, Bytes b2) {
+  if (b1.size != b2.size) {
+    return false;
+  }
+  return memcmp(b1.data, b2.data, b1.size) == 0;
+}
+
 Str bytes_hex(Bytes bytes, Arena *arena) {
   char *buffer = arena_calloc(arena, bytes.size * 2 + 1);
   size_t b_idx = 0;

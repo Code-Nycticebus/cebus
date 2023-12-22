@@ -26,7 +26,16 @@ void test_bytes_str(void) {
   arena_free(&arena);
 }
 
+void test_bytes_cmp(void) {
+  Bytes b1 = BYTES(0xFF);
+  clib_assert(bytes_eq(b1, BYTES(0xFF)) == true,
+              "Bytes not compared correctly");
+  clib_assert(bytes_eq(b1, BYTES(0x0F)) == false,
+              "Bytes not compared correctly");
+}
+
 int main(void) {
   test_bytes();
   test_bytes_str();
+  test_bytes_cmp();
 }
