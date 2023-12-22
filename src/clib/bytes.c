@@ -19,6 +19,13 @@ bool bytes_eq(Bytes b1, Bytes b2) {
   return memcmp(b1.data, b2.data, b1.size) == 0;
 }
 
+Bytes bytes_slice(Bytes bytes, size_t idx1, size_t idx2) {
+  if (idx2 <= idx1 || bytes.size <= idx1 || bytes.size < idx2) {
+    return BYTES(0);
+  }
+  return bytes_from_parts(idx2 - idx1, &bytes.data[idx1]);
+}
+
 Str bytes_hex(Bytes bytes, Arena *arena) {
   char *buffer = arena_calloc(arena, bytes.size * 2 + 1);
   size_t b_idx = 0;
