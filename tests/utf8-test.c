@@ -14,8 +14,8 @@ int main(void) {
   Utf8 s2 = utf8_copy(s, &arena);
   printf(UTF8_FMT "\n", UTF8_ARG(s2));
 
-  Bytes bytes =
-      BYTES(0xF0, 0x9F, 0x8E, 0x89, 0xE2, 0x9C, 0x85, 0xF0, 0x9F, 0x98, 0x81);
+  Bytes bytes = BYTES(0xF0, 0x9F, 0x8E, 0x89, 0xE2, 0x9C, 0x85, 0xF0, 0x9F,
+                      0x98, 0x81, 0x43, 0x41);
   Utf8 s3 = utf8_decode(bytes);
   printf(UTF8_FMT "\n", UTF8_ARG(s3));
 
@@ -37,5 +37,10 @@ int main(void) {
   one = utf8_next(&test);
   printf("Rest: " UTF8_FMT "\n", UTF8_ARG(test));
   printf("One: " UTF8_FMT "\n", UTF8_ARG(one));
+
+  one = utf8_next(&test);
+  printf("Rest: " UTF8_FMT "\n", UTF8_ARG(test));
+  printf("One: " UTF8_FMT "\n", UTF8_ARG(one));
+
   arena_free(&arena);
 }
