@@ -8,7 +8,6 @@
 - [x] Logging
 - [x] Asserts
 - [x] Platform
-- [ ] Unit testing framework
 - [ ] Paths
 - [ ] Localization
 - [ ] UTF-8
