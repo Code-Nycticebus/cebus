@@ -13,8 +13,8 @@ int main(void) {
   Utf8 s2 = utf8_from_cstr("What the hell", &arena);
   printf(UTF8_FMT "\n", UTF8_ARG(s2));
 
-  const char buffer[] = {0xF0, 0x9F, 0x8E, 0x89};
-  Utf8 s3 = utf8_decode(sizeof(buffer), buffer, &arena);
+  Bytes bytes = BYTES(0xF0, 0x9F, 0x8E, 0x89);
+  Utf8 s3 = utf8_decode(bytes, &arena);
   printf(UTF8_FMT "\n", UTF8_ARG(s3));
 
   arena_free(&arena);

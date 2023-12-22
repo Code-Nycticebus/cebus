@@ -17,9 +17,10 @@ Utf8 utf8_from_cstr(const char *cstr, Arena *arena) {
   return utf8_from_parts(len, buffer);
 }
 
-Utf8 utf8_decode(size_t size, const char *mbytes, Arena *arena) {
-  clib_assert(size % sizeof(wchar_t) == 0, "bytes are not uft-8 decodable!");
-  wchar_t *buffer = arena_calloc(arena, size);
-  mbrtowc(buffer, mbytes, size, NULL);
-  return utf8_from_parts(size / sizeof(wchar_t), (wchar_t *)buffer);
+Utf8 utf8_decode(Bytes bytes, Arena *arena) {
+  clib_assert(bytes.size % sizeof(wchar_t) == 0,
+              "bytes are not uft-8 decodable!");
+  wchar_t *buffer = arena_calloc(arena, bytes.size + 1);
+  mbrtowc(buffer, (char *)bytes.data, bytes.size, NULL);
+  return utf8_from_parts(bytes.size / sizeof(wchar_t), (wchar_t *)buffer);
 }

@@ -7,14 +7,22 @@
 
 typedef struct {
   size_t size;
-  uint8_t *data;
+  const uint8_t *data;
 } Bytes;
 
 #define BYTES(...)                                                             \
   (Bytes) {                                                                    \
-    .size = sizeof(b), .data = (uint8_t[]) { __VA_ARGS__ }                     \
+    sizeof((uint8_t[]){__VA_ARGS__}), (uint8_t[]) { __VA_ARGS__ }              \
   }
 
-Bytes bytes_from_hex(Str hex, Arena *arena);
+#define BYTES_STR(s)                                                           \
+  (Bytes) {                                                                    \
+    sizeof(s) - 1, (uint8_t[]) { (s) }                                         \
+  }
+
+Bytes bytes_from_parts(size_t size, const uint8_t *data);
+Bytes bytes_copy(Bytes bytes, Arena *arena);
+
+Str bytes_hex(Bytes bytes, Arena *arena);
 
 #endif /* !__CLIB_BYTES_H__ */

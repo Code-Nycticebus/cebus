@@ -2,6 +2,7 @@
 #define __CLIB_UTF8_H__
 
 #include "clib/arena.h"
+#include "clib/bytes.h"
 #include <wchar.h>
 
 typedef struct {
@@ -17,6 +18,6 @@ typedef struct {
 Utf8 utf8_from_parts(size_t len, const wchar_t *s);
 Utf8 utf8_from_cstr(const char *cstr, Arena *arena);
 
-Utf8 utf8_decode(size_t size, const char *bytes, Arena *arena);
+Utf8 utf8_decode(Bytes bytes, Arena *arena);
 
 #endif /* ifndef __CLIB_UTF8_H__ */
