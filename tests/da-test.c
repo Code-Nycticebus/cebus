@@ -134,14 +134,16 @@ void test_copy(void) {
 }
 
 void test_pop(void) {
-  DA(int) list = {0};
-  da_push(&list, 1);
-  da_push(&list, 2);
-  da_push(&list, 3);
+  DA(size_t) list = {0};
+  const size_t n = 10;
+  for (size_t i = 0; i < n; i++) {
+    da_push(&list, i + 1);
+  }
 
-  clib_assert(da_pop(&list) == 3, "Poping not correctly");
-  clib_assert(da_pop(&list) == 2, "Poping not correctly");
-  clib_assert(da_pop(&list) == 1, "Poping not correctly");
+  for (size_t i = list.len; 0 < i; i--) {
+    clib_assert(da_pop(&list) == i, "Poping not correctly");
+  }
+
   clib_assert(da_empty(&list) == true, "After all that not empty");
 
   da_free(&list);
