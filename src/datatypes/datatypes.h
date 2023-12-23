@@ -50,6 +50,9 @@ typedef size_t usize;
 #define USIZE_MIN 0
 #define USIZE_BITS (sizeof(usize) * 8)
 
+typedef float f32;
+typedef double f64;
+
 typedef struct {
   usize size;
   const u8 *data;
