@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define BITS 8
 #define FIRST_BIT ((u8)0x80)
 
 Bytes bytes_from_parts(usize size, const u8 *data) {
@@ -44,7 +43,7 @@ Str bytes_hex(Bytes bytes, Arena *arena) {
 
 usize bytes_leading_ones(u8 byte) {
   usize count = 0;
-  for (usize i = 0; i < BITS; i++) {
+  for (usize i = 0; i < U8_BITS; i++) {
     if (!(byte & (FIRST_BIT >> i))) {
       break;
     }
@@ -55,7 +54,7 @@ usize bytes_leading_ones(u8 byte) {
 
 usize bytes_leading_zeros(u8 byte) {
   usize count = 0;
-  for (usize i = 0; i < BITS; i++) {
+  for (usize i = 0; i < U8_BITS; i++) {
     if (byte & (FIRST_BIT >> i)) {
       break;
     }
