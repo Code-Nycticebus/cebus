@@ -49,12 +49,16 @@ void test_bytes_slice(void) {
 
 void test_leading_bits(void) {
   const uint8_t b = 0xf0;
-  size_t res = bytes_leading_ones(b);
-  clib_assert(res == 4, "Did not count correctly");
+  clib_assert(bytes_leading_ones(b) == 4, "Did not count correctly");
 
   const uint8_t b2 = 0x0f;
-  size_t res2 = bytes_leading_zeros(b2);
-  clib_assert(res2 == 4, "Did not count correctly");
+  clib_assert(bytes_leading_zeros(b2) == 4, "Did not count correctly");
+
+  const uint8_t b3 = 0xc0;
+  clib_assert(bytes_leading_ones(b3) == 2, "Did not count correctly");
+
+  const uint8_t b4 = 0x3c;
+  clib_assert(bytes_leading_zeros(b4) == 2, "Did not count correctly");
 }
 
 int main(void) {
