@@ -32,7 +32,6 @@ int main(void) {
   one = utf8_next(&test);
   printf("Rest: " UTF8_FMT "\n", UTF8_ARG(test));
   printf("One: " UTF8_FMT "\n", UTF8_ARG(one));
-  arena_free(&arena);
 
   one = utf8_next(&test);
   printf("Rest: " UTF8_FMT "\n", UTF8_ARG(test));
