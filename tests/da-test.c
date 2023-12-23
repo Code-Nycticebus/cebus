@@ -133,6 +133,20 @@ void test_copy(void) {
   da_free(&l2);
 }
 
+void test_pop(void) {
+  DA(int) list = {0};
+  da_push(&list, 1);
+  da_push(&list, 2);
+  da_push(&list, 3);
+
+  clib_assert(da_pop(&list) == 3, "Poping not correctly");
+  clib_assert(da_pop(&list) == 2, "Poping not correctly");
+  clib_assert(da_pop(&list) == 1, "Poping not correctly");
+  clib_assert(da_empty(&list) == true, "After all that not empty");
+
+  da_free(&list);
+}
+
 int main(void) {
   test_da();
   test_map();
@@ -141,4 +155,5 @@ int main(void) {
   test_reverse();
   test_filter();
   test_copy();
+  test_pop();
 }

@@ -1,7 +1,8 @@
 #ifndef __CLIB_DA_H__
 #define __CLIB_DA_H__
 
-#include <stdlib.h> // IWYU pragma: export
+#include "defines.h" // IWYU pragma: export
+#include <stdlib.h>  // IWYU pragma: export
 
 #define DA(T)                                                                  \
   struct {                                                                     \
@@ -39,6 +40,8 @@
     da_reserve((list), 1);                                                     \
     (list)->items[(list)->len++] = (item);                                     \
   } while (0)
+
+#define da_pop(list) (list)->items[--(list)->len]
 
 #define da_extend(list, count, _items)                                         \
   do {                                                                         \
