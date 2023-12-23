@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-Str str_from_parts(size_t size, const char *cstr) {
+Str str_from_parts(usize size, const char *cstr) {
   return (Str){.len = size, .data = cstr};
 }
 
@@ -14,7 +14,7 @@ Str str_from_cstr(const char *cstr) {
   return (Str){.len = strlen(cstr), .data = cstr};
 }
 
-char str_getc(Str s, size_t idx) {
+char str_getc(Str s, usize idx) {
   if (s.len <= idx) {
     return '\0';
   }
@@ -22,7 +22,7 @@ char str_getc(Str s, size_t idx) {
 }
 Str str_trim_left(Str s) {
   Str result = s;
-  for (size_t i = 0; i < s.len && isspace(s.data[i]); ++i) {
+  for (usize i = 0; i < s.len && isspace(s.data[i]); ++i) {
     result.data++;
     result.len--;
   }
@@ -31,7 +31,7 @@ Str str_trim_left(Str s) {
 
 Str str_trim_right(Str s) {
   Str result = s;
-  for (size_t i = 0; i < s.len && isspace(s.data[s.len - i - 1]); ++i) {
+  for (usize i = 0; i < s.len && isspace(s.data[s.len - i - 1]); ++i) {
     result.len--;
   }
   return result;
@@ -47,7 +47,7 @@ Str str_copy(Str s, Arena *arena) {
 }
 
 Str str_concat(Str s1, Str s2, Arena *arena) {
-  const size_t new_size = s1.len + s2.len;
+  const usize new_size = s1.len + s2.len;
   char *buffer = arena_calloc(arena, new_size + 1);
   strncpy(buffer, s1.data, s1.len);
   strncat(buffer, s2.data, s2.len);
@@ -55,13 +55,13 @@ Str str_concat(Str s1, Str s2, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
-Str str_join(Str sep, size_t count, Str s[count], Arena *arena) {
-  size_t size = sep.len * (count - 1);
-  for (size_t i = 0; i < count; i++) {
+Str str_join(Str sep, usize count, Str s[count], Arena *arena) {
+  usize size = sep.len * (count - 1);
+  for (usize i = 0; i < count; i++) {
     size += s[i].len;
   }
   char *buffer = arena_calloc(arena, size + 1);
-  for (size_t i = 0; i < count; i++) {
+  for (usize i = 0; i < count; i++) {
     if (i != 0) {
       strncat(buffer, sep.data, sep.len);
     }
@@ -73,7 +73,7 @@ Str str_join(Str sep, size_t count, Str s[count], Arena *arena) {
 
 Str str_upper(Str s, Arena *arena) {
   char *buffer = arena_calloc(arena, s.len + 1);
-  for (size_t i = 0; i < s.len; i++) {
+  for (usize i = 0; i < s.len; i++) {
     buffer[i] = toupper(s.data[i]);
   }
   return str_from_parts(s.len, buffer);
@@ -81,26 +81,26 @@ Str str_upper(Str s, Arena *arena) {
 
 Str str_lower(Str s, Arena *arena) {
   char *buffer = arena_calloc(arena, s.len + 1);
-  for (size_t i = 0; i < s.len; i++) {
+  for (usize i = 0; i < s.len; i++) {
     buffer[i] = tolower(s.data[i]);
   }
   return str_from_parts(s.len, buffer);
 }
 
-Str str_map(Str s, char (*map_fn)(size_t, char), Arena *arena) {
+Str str_map(Str s, char (*map_fn)(usize, char), Arena *arena) {
   char *buffer = arena_calloc(arena, s.len + 1);
-  for (size_t i = 0; i < s.len; i++) {
+  for (usize i = 0; i < s.len; i++) {
     buffer[i] = map_fn(i, s.data[i]);
   }
   return str_from_parts(s.len, buffer);
 }
 
 Str str_replace(Str s, Str old, Str new, Arena *arena) {
-  size_t count = str_count(s, old);
-  size_t new_size = (s.len - (old.len * count) + (count * new.len));
+  usize count = str_count(s, old);
+  usize new_size = (s.len - (old.len * count) + (count * new.len));
   char *buffer = arena_calloc(arena, new_size + 1);
 
-  for (size_t i = 0, j = 0; i < s.len; i++, j++) {
+  for (usize i = 0, j = 0; i < s.len; i++, j++) {
     if (strncmp(&s.data[i], old.data, old.len) == 0) {
       strncpy(&buffer[j], new.data, new.len);
       i += old.len - 1;
@@ -113,64 +113,64 @@ Str str_replace(Str s, Str old, Str new, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
-Str str_center(Str s, size_t width, char fillchar, Arena *arena) {
+Str str_center(Str s, usize width, char fillchar, Arena *arena) {
   if (width < s.len) {
     return str_copy(s, arena);
   }
   char *buffer = arena_calloc(arena, width + 1);
-  const size_t left_width = (width - s.len) / 2;
-  const size_t right_width = (width - s.len - left_width);
-  size_t idx = 0;
-  for (size_t i = 0; i < left_width; i++) {
+  const usize left_width = (width - s.len) / 2;
+  const usize right_width = (width - s.len - left_width);
+  usize idx = 0;
+  for (usize i = 0; i < left_width; i++) {
     buffer[idx++] = fillchar;
   }
-  for (size_t i = 0; i < s.len; i++) {
+  for (usize i = 0; i < s.len; i++) {
     buffer[idx++] = s.data[i];
   }
-  for (size_t i = 0; i < right_width; i++) {
+  for (usize i = 0; i < right_width; i++) {
     buffer[idx++] = fillchar;
   }
   return str_from_parts(width, buffer);
 }
 
-Str str_ljust(Str s, size_t width, char fillchar, Arena *arena) {
+Str str_ljust(Str s, usize width, char fillchar, Arena *arena) {
   if (width < s.len) {
     return str_copy(s, arena);
   }
   char *buffer = arena_calloc(arena, width + 1);
-  size_t idx = 0;
-  for (size_t i = 0; i < s.len; i++) {
+  usize idx = 0;
+  for (usize i = 0; i < s.len; i++) {
     buffer[idx++] = s.data[i];
   }
-  for (size_t i = 0; i < width - s.len; i++) {
+  for (usize i = 0; i < width - s.len; i++) {
     buffer[idx++] = fillchar;
   }
   return str_from_parts(width, buffer);
 }
 
-Str str_rjust(Str s, size_t width, char fillchar, Arena *arena) {
+Str str_rjust(Str s, usize width, char fillchar, Arena *arena) {
   if (width < s.len) {
     return str_copy(s, arena);
   }
   char *buffer = arena_calloc(arena, width + 1);
-  size_t idx = 0;
-  for (size_t i = 0; i < width - s.len; i++) {
+  usize idx = 0;
+  for (usize i = 0; i < width - s.len; i++) {
     buffer[idx++] = fillchar;
   }
-  for (size_t i = 0; i < s.len; i++) {
+  for (usize i = 0; i < s.len; i++) {
     buffer[idx++] = s.data[i];
   }
 
   return str_from_parts(width, buffer);
 }
 
-Str str_repeat(Str s, size_t count, Arena *arena) {
-  size_t len = s.len * count;
+Str str_repeat(Str s, usize count, Arena *arena) {
+  usize len = s.len * count;
   char *buffer = arena_calloc(arena, len + 1);
 
-  size_t idx = 0;
-  for (size_t i = 0; i < count; i++) {
-    for (size_t j = 0; j < s.len; j++) {
+  usize idx = 0;
+  for (usize i = 0; i < count; i++) {
+    for (usize j = 0; j < s.len; j++) {
       buffer[idx++] = s.data[j];
     }
   }
@@ -180,13 +180,13 @@ Str str_repeat(Str s, size_t count, Arena *arena) {
 
 Str str_reverse(Str s, Arena *arena) {
   char *buffer = arena_calloc(arena, s.len + 1);
-  for (size_t i = 0; i < s.len; i++) {
+  for (usize i = 0; i < s.len; i++) {
     buffer[i] = s.data[s.len - i - 1];
   }
   return str_from_parts(s.len, buffer);
 }
 
-Str str_substring(Str s, size_t idx1, size_t idx2) {
+Str str_substring(Str s, usize idx1, usize idx2) {
   if (idx2 <= idx1 || s.len <= idx1 || s.len < idx2) {
     return STR("");
   }
@@ -218,7 +218,7 @@ bool str_endswith(Str s1, Str suffix) {
   if (s1.len < suffix.len) {
     return false;
   }
-  size_t idx = s1.len - suffix.len;
+  usize idx = s1.len - suffix.len;
   return strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
 }
 
@@ -226,7 +226,7 @@ bool str_contains(Str haystack, Str needle) {
   if (haystack.len < needle.len) {
     return false;
   }
-  for (size_t i = 0; i < haystack.len - needle.len + 1; i++) {
+  for (usize i = 0; i < haystack.len - needle.len + 1; i++) {
     if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
       return true;
     }
@@ -235,7 +235,7 @@ bool str_contains(Str haystack, Str needle) {
 }
 
 CmpOrdering str_compare(Str s1, Str s2) {
-  const size_t min_bytes = s1.len < s2.len ? s1.len : s2.len;
+  const usize min_bytes = s1.len < s2.len ? s1.len : s2.len;
   const int r = strncmp(s1.data, s2.data, min_bytes);
   return r < 0   ? CMP_LESS    // less
          : 0 < r ? CMP_GREATER // greater
@@ -247,7 +247,7 @@ CmpOrdering str_compare_qsort(const void *s1, const void *s2) {
 }
 
 bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {
-  size_t i = 0;
+  usize i = 0;
   while (i < s->len && s->data[i] != delim) {
     ++i;
   }
@@ -264,7 +264,7 @@ bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {
 }
 
 Str str_chop_by_delim(Str *s, char delim) {
-  size_t i = 0;
+  usize i = 0;
   while (i < s->len && s->data[i] != delim) {
     ++i;
   }
@@ -279,7 +279,7 @@ Str str_chop_by_delim(Str *s, char delim) {
 }
 
 bool str_try_chop_by_predicate(Str *s, bool (*predicate)(char), Str *chunk) {
-  size_t i = 0;
+  usize i = 0;
   while (i < s->len && !predicate(s->data[i])) {
     ++i;
   }
@@ -296,7 +296,7 @@ bool str_try_chop_by_predicate(Str *s, bool (*predicate)(char), Str *chunk) {
 }
 
 Str str_chop_by_predicate(Str *s, bool (*predicate)(char)) {
-  size_t i = 0;
+  usize i = 0;
   while (i < s->len && !predicate(s->data[i])) {
     ++i;
   }
@@ -311,7 +311,7 @@ Str str_chop_by_predicate(Str *s, bool (*predicate)(char)) {
 }
 
 Str str_chop_right_by_delim(Str *s, char delim) {
-  size_t i = 0;
+  usize i = 0;
   while (i < s->len && s->data[s->len - i - 1] != delim) {
     ++i;
   }
@@ -325,7 +325,7 @@ Str str_chop_right_by_delim(Str *s, char delim) {
 }
 
 Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
-  size_t i = 0;
+  usize i = 0;
   while (i < s->len && !predicate(s->data[s->len - i - 1])) {
     ++i;
   }
@@ -338,37 +338,37 @@ Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
   return *s;
 }
 
-Str str_u64(Arena *arena, uint64_t n) {
-  const size_t number_max_chars = 21;
+Str str_u64(Arena *arena, u64 n) {
+  const usize number_max_chars = 21;
   char *buffer = arena_alloc(arena, number_max_chars);
-  size_t len = snprintf(buffer, number_max_chars, "%" PRIu64, n);
+  usize len = snprintf(buffer, number_max_chars, "%" PRIu64, n);
   return str_from_parts(len, buffer);
 }
 
-uint64_t str_to_u64(Str s) {
-  uint64_t result = 0;
-  for (size_t i = 0; i < s.len && isdigit(s.data[i]); ++i) {
-    result = result * 10 + (uint64_t)s.data[i] - '0'; // NOLINT
+u64 str_to_u64(Str s) {
+  u64 result = 0;
+  for (usize i = 0; i < s.len && isdigit(s.data[i]); ++i) {
+    result = result * 10 + (u64)s.data[i] - '0'; // NOLINT
   }
   return result;
 }
 
-uint64_t str_chop_u64(Str *s) {
-  uint64_t result = 0;
-  size_t i = 0;
+u64 str_chop_u64(Str *s) {
+  u64 result = 0;
+  usize i = 0;
   for (; i < s->len && isdigit(s->data[i]); ++i) {
-    result = result * 10 + (uint64_t)s->data[i] - '0'; // NOLINT
+    result = result * 10 + (u64)s->data[i] - '0'; // NOLINT
   }
   s->len -= i;
   s->data += i;
   return result;
 }
 
-size_t str_find(Str haystack, Str needle) {
+usize str_find(Str haystack, Str needle) {
   if (haystack.len < needle.len) {
     return STR_NOT_FOUND;
   }
-  for (size_t i = 0; i < haystack.len - needle.len + 1; i++) {
+  for (usize i = 0; i < haystack.len - needle.len + 1; i++) {
     if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
       return i;
     }
@@ -376,11 +376,11 @@ size_t str_find(Str haystack, Str needle) {
   return STR_NOT_FOUND;
 }
 
-size_t str_find_last(Str haystack, Str needle) {
+usize str_find_last(Str haystack, Str needle) {
   if (haystack.len < needle.len) {
     return STR_NOT_FOUND;
   }
-  for (size_t i = haystack.len - needle.len + 1; i > 0; i--) {
+  for (usize i = haystack.len - needle.len + 1; i > 0; i--) {
     if (strncmp(&haystack.data[i - 1], needle.data, needle.len) == 0) {
       return i - 1;
     }
@@ -388,12 +388,12 @@ size_t str_find_last(Str haystack, Str needle) {
   return STR_NOT_FOUND;
 }
 
-size_t str_count(Str haystack, Str needle) {
-  size_t count = 0;
+usize str_count(Str haystack, Str needle) {
+  usize count = 0;
   if (haystack.len < needle.len) {
     return count;
   }
-  for (size_t i = 0; i < haystack.len - needle.len + 1; i++) {
+  for (usize i = 0; i < haystack.len - needle.len + 1; i++) {
     if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
       count++;
       i += needle.len;

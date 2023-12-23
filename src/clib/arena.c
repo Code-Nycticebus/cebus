@@ -10,12 +10,12 @@
 
 struct Chunk {
   Chunk *next;
-  size_t cap;
-  size_t allocated;
-  uint8_t data[];
+  usize cap;
+  usize allocated;
+  u8 data[];
 };
 
-static Chunk *chunk_allocate(size_t size) {
+static Chunk *chunk_allocate(usize size) {
   Chunk *chunk = malloc(sizeof(Chunk) + size);
   if (chunk == NULL) {
     clib_log_fatal("Memory allocation failed: %s", strerror(errno));
@@ -44,7 +44,7 @@ void arena_reset(Arena *arena) {
   }
 }
 
-void *arena_alloc(Arena *arena, size_t size) {
+void *arena_alloc(Arena *arena, usize size) {
   Chunk *chunk = arena->begin;
   for (; chunk != NULL; chunk = chunk->next) {
     clib_assert_debug(size <= SIZE_MAX - chunk->allocated, "integer overflow");
@@ -53,7 +53,7 @@ void *arena_alloc(Arena *arena, size_t size) {
     }
   }
   if (chunk == NULL) {
-    const size_t chunk_size =
+    const usize chunk_size =
         size < CHUNK_DEFAULT_SIZE ? CHUNK_DEFAULT_SIZE : size;
     chunk = chunk_allocate(chunk_size);
     chunk->next = arena->begin;
@@ -64,7 +64,7 @@ void *arena_alloc(Arena *arena, size_t size) {
   return ptr;
 }
 
-void *arena_calloc(Arena *arena, size_t size) {
+void *arena_calloc(Arena *arena, usize size) {
   void *ptr = arena_alloc(arena, size);
   memset(ptr, 0, size);
   return ptr;

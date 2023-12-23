@@ -6,7 +6,7 @@
 
 #define UTF8(s) utf8_decode(BYTES_STR(s))
 #define UTF8_FMT "%.*s"
-#define UTF8_ARG(s) (int)(s).size, (s).data
+#define UTF8_ARG(s) (i32)(s).size, (s).data
 
 bool utf8_try_decode(Bytes bytes, Utf8 *out);
 Utf8 utf8_decode(Bytes bytes);

@@ -19,9 +19,9 @@ void test_compare(void) {
   clib_assert(str_contains(s, STR("TEST")) == false, "");
 }
 
-static char mock(size_t idx, char c) {
-  const size_t upper_cases[] = {3, 7, 9, 11};
-  for (size_t i = 0; i < 4; i++) {
+static char mock(usize idx, char c) {
+  const usize upper_cases[] = {3, 7, 9, 11};
+  for (usize i = 0; i < 4; i++) {
     if (idx == upper_cases[i]) {
       return toupper(c);
     }
@@ -112,7 +112,7 @@ void test_chop_right(void) {
 
 void test_u64(void) {
   Arena arena = {0};
-  const size_t N = 64;
+  const u64 N = 64;
   Str number = str_u64(&arena, N);
   clib_assert(str_eq(number, STR("64")), "");
 
@@ -137,7 +137,7 @@ void test_find(void) {
 
 void test_count(void) {
   Str s = STR("Hello, World");
-  size_t c = str_count(s, STR("o"));
+  usize c = str_count(s, STR("o"));
   clib_assert(c == 2, "");
   c = str_count(s, STR("TEST"));
   clib_assert(c == 0, "");
@@ -186,7 +186,7 @@ void test_join(void) {
 
 void test_justify(void) {
   Arena arena = {0};
-  const size_t width = 10;
+  const usize width = 10;
   Str center = str_center(STR("Hello"), width, ' ', &arena);
   clib_assert(str_eq(center, STR("  Hello   ")), "");
   Str left = str_ljust(STR("Hello"), width, ' ', &arena);
@@ -198,7 +198,7 @@ void test_justify(void) {
 
 void test_cmp(void) {
   Str array[] = {STR("Banana"), STR("Strawberry"), STR("Apple"), STR("Lemon")};
-  const size_t n = sizeof(array) / sizeof(array[0]);
+  const usize n = sizeof(array) / sizeof(array[0]);
   qsort(array, n, sizeof(array[0]), str_compare_qsort);
 
   clib_assert(str_eq(array[0], STR("Apple")), "");

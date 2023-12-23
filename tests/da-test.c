@@ -3,14 +3,14 @@
 #include "clib/asserts.h"
 
 void test_da(void) {
-  const size_t n = 10;
-  DA(size_t) list = {0};
+  const usize n = 10;
+  DA(usize) list = {0};
   da_init(&list, 2);
-  for (size_t i = 0; i < n; ++i) {
+  for (usize i = 0; i < n; ++i) {
     da_push(&list, i + 1);
   }
 
-  for (size_t i = 0; i < list.len; ++i) {
+  for (usize i = 0; i < list.len; ++i) {
     clib_assert(list.items[i] == i + 1,
                 "Numbers were not pushed on the stack correctly");
   }
@@ -19,39 +19,39 @@ void test_da(void) {
   da_free(&list);
 }
 
-size_t times_two(size_t v) { return v * 2; }
+usize times_two(usize v) { return v * 2; }
 
 void test_map(void) { // NOLINT
-  const size_t n = 10;
-  DA(size_t) list = {0};
+  const usize n = 10;
+  DA(usize) list = {0};
   da_init(&list, 2);
-  for (size_t i = 0; i < n; ++i) {
+  for (usize i = 0; i < n; ++i) {
     da_push(&list, i);
   }
 
   // Map inplace
   da_map(&list, &list, times_two);
 
-  for (size_t i = 0; i < list.len; ++i) {
+  for (usize i = 0; i < list.len; ++i) {
     clib_assert(list.items[i] == i * 2, "Mapping did not multiply by two");
   }
 
   da_free(&list);
 }
 
-int sort(const void *a, const void *b) { return *(size_t *)a - *(size_t *)b; }
+int sort(const void *a, const void *b) { return *(usize *)a - *(usize *)b; }
 
 void test_sort(void) {
-  const size_t n = 10;
-  DA(size_t) list = {0};
+  const usize n = 10;
+  DA(usize) list = {0};
   da_init(&list, 2);
-  for (size_t i = 0; i < n; ++i) {
+  for (usize i = 0; i < n; ++i) {
     da_push(&list, n - i - 1);
   }
 
   da_sort(&list, sort);
 
-  for (size_t i = 0; i < list.len; ++i) {
+  for (usize i = 0; i < list.len; ++i) {
     clib_assert(list.items[i] == i, "sorting did not work correctly");
   }
 
@@ -59,7 +59,7 @@ void test_sort(void) {
 }
 
 void test_last(void) {
-  DA(int) list = {0};
+  DA(i32) list = {0};
   da_init(&list, 1);
   clib_assert(da_empty(&list), "List should be initialized empty");
   da_push(&list, 10);
@@ -68,7 +68,7 @@ void test_last(void) {
 }
 
 void test_extend(void) {
-  DA(int) list = {0};
+  DA(i32) list = {0};
 
   da_extend(&list, 3, ((int[]){1, 2, 3}));
   clib_assert(list.items[0] == 1 && list.items[1] == 2 && list.items[2] == 3,
@@ -77,32 +77,32 @@ void test_extend(void) {
 }
 
 void test_reserve(void) {
-  DA(int) list = {0};
+  DA(i32) list = {0};
   da_reserve(&list, 5);
   clib_assert(list.cap == 5, "Capacity was not increased");
   da_free(&list);
 }
 
 void test_reverse(void) {
-  DA(size_t) list = {0};
-  const size_t n = 10;
-  for (size_t i = 0; i < n; i++) {
+  DA(usize) list = {0};
+  const usize n = 10;
+  for (usize i = 0; i < n; i++) {
     da_push(&list, i + 1);
   }
   da_reverse(&list);
-  for (size_t i = 0; i < n; i++) {
+  for (usize i = 0; i < n; i++) {
     clib_assert(list.items[i] == n - i, "List was not reversed correctly");
   }
 
   da_free(&list);
 }
 
-bool is_odd(int i) { return i % 2 == 0; }
+bool is_odd(i32 i) { return i % 2 == 0; }
 
 void test_filter(void) {
-  DA(int) list = {0};
-  const size_t n = 10;
-  for (size_t i = 0; i < n; i++) {
+  DA(i32) list = {0};
+  const usize n = 10;
+  for (usize i = 0; i < n; i++) {
     da_push(&list, i);
   }
 
@@ -116,16 +116,16 @@ void test_filter(void) {
 }
 
 void test_copy(void) {
-  DA(size_t) l1 = {0};
-  const size_t n = 10;
-  for (size_t i = 0; i < n; i++) {
+  DA(usize) l1 = {0};
+  const usize n = 10;
+  for (usize i = 0; i < n; i++) {
     da_push(&l1, i + 1);
   }
 
-  DA(size_t) l2 = {0};
+  DA(usize) l2 = {0};
   da_copy(&l1, &l2);
   clib_assert(l1.len == l2.len, "list was not copied correctly");
-  for (size_t i = 0; i < l2.len; i++) {
+  for (usize i = 0; i < l2.len; i++) {
     clib_assert(l1.items[i] == l2.items[i], "list was not copied correctly");
   }
 
@@ -134,13 +134,13 @@ void test_copy(void) {
 }
 
 void test_pop(void) {
-  DA(size_t) list = {0};
-  const size_t n = 10;
-  for (size_t i = 0; i < n; i++) {
+  DA(usize) list = {0};
+  const usize n = 10;
+  for (usize i = 0; i < n; i++) {
     da_push(&list, i + 1);
   }
 
-  for (size_t i = list.len; 0 < i; i--) {
+  for (usize i = list.len; 0 < i; i--) {
     clib_assert(da_pop(&list) == i, "Poping not correctly");
   }
 
