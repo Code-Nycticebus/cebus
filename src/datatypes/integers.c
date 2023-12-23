@@ -1,6 +1,7 @@
 #include "integers.h"
 
 #include "clib/platform.h"
+#include "datatypes/str.h"
 
 u8 u8_reverse_bits(u8 value) {
   u8 reversed = 0;
@@ -51,3 +52,5 @@ u8 u8_from_le(u8 value) {
   return value;
 #endif
 }
+
+Str u8_to_str(u8 value, Arena *arena) { return str_u64(arena, value); }
