@@ -5,14 +5,15 @@
 #include "clib/arena.h"
 #include "clib/asserts.h"
 #include "datatypes/bytes.h"
+#include "datatypes/integers.h"
 
 bool utf8_validate_bytes(Bytes bytes) {
   for (usize i = 0; i < bytes.size; i++) {
-    usize bit_count = bytes_leading_ones(bytes.data[i]);
+    usize bit_count = u8_leading_ones(bytes.data[i]);
     clib_assert_return(bit_count <= 4, false);
     usize idx = i;
     for (usize j = 1; j < bit_count; j++) {
-      clib_assert_return(bytes_leading_ones(bytes.data[idx + j]) == 1, false);
+      clib_assert_return(u8_leading_ones(bytes.data[idx + j]) == 1, false);
       i++;
     }
   }
@@ -26,11 +27,11 @@ bool utf8_validate(Utf8 s) {
 bool utf8_try_decode(Bytes bytes, Utf8 *out) {
   usize len = 0;
   for (usize i = 0; i < bytes.size; i++) {
-    usize bit_count = bytes_leading_ones(bytes.data[i]);
+    usize bit_count = u8_leading_ones(bytes.data[i]);
     clib_assert_return(bit_count <= 4, false);
     usize idx = i;
     for (usize j = 1; j < bit_count; j++) {
-      clib_assert_return(bytes_leading_ones(bytes.data[idx + j]) == 1, false);
+      clib_assert_return(u8_leading_ones(bytes.data[idx + j]) == 1, false);
       i++;
     }
     len++;
@@ -69,7 +70,7 @@ bool utf8_eq(Utf8 s1, Utf8 s2) {
 }
 
 bool utf8_try_next(Utf8 *str, Utf8 *out) {
-  usize bit_count = bytes_leading_ones(str->data[0]);
+  usize bit_count = u8_leading_ones(str->data[0]);
   clib_assert_return(bit_count <= 4, false);
   clib_assert_return(bit_count != 1, false);
   usize bytes = bit_count == 0 ? 1 : bit_count;
