@@ -27,6 +27,13 @@
     }                                                                          \
   } while (0)
 
+#define clib_assert_return(expression, ret)                                    \
+  do {                                                                         \
+    if (!(expression)) {                                                       \
+      return ret;                                                              \
+    }                                                                          \
+  } while (0)
+
 #define clib_assert_warn(expression, msg)                                      \
   do {                                                                         \
     if (!(expression)) {                                                       \
