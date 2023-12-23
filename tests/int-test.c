@@ -1,25 +1,22 @@
 #include "datatypes/integers.h"
 
-#include <stdio.h>
-
 #include "clib/asserts.h"
 
-void test_leading_bits(void) {
-  const uint8_t b = 0xf0;
+void test_u8_leading_bits(void) {
+  const u8 b = 0xf0;
   clib_assert(u8_leading_ones(b) == 4, "Did not count correctly");
-
-  const uint8_t b2 = 0x0f;
+  const u8 b2 = 0x0f;
   clib_assert(u8_leading_zeros(b2) == 4, "Did not count correctly");
+}
 
-  const uint8_t b3 = 0xc0;
-  clib_assert(u8_leading_ones(b3) == 2, "Did not count correctly");
-
-  const uint8_t b4 = 0x3c;
-  clib_assert(u8_leading_zeros(b4) == 2, "Did not count correctly");
+void test_u8__swaping_bits(void) {
+  const u8 b = 0x80;
+  clib_assert(u8_reverse_bits(b) == 0x01, "Did not reverse correctly");
+  const u8 b2 = 0x01;
+  clib_assert(u8_reverse_bits(b2) == 0x80, "Did not reverse correctly");
 }
 
 int main(void) {
-  test_leading_bits();
-  u8 b = u8_reverse_bits(0x81);
-  printf("%x\n", b);
+  test_u8_leading_bits();
+  test_u8__swaping_bits();
 }

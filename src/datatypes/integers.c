@@ -1,7 +1,17 @@
 #include "integers.h"
 
+#include "clib/platform.h"
+
 u8 u8_reverse_bits(u8 value) {
-  return ((value & 0xf0) >> 4) | ((value & 0x0f) << 4); // NOLINT
+  u8 reversed = 0;
+  for (usize i = 0; i < U8_BITS; i++) {
+    reversed = reversed << 1;
+    if (value & 1) {
+      reversed = reversed | 1;
+    }
+    value = value >> 1;
+  }
+  return reversed;
 }
 
 usize u8_leading_ones(u8 value) {
@@ -24,4 +34,20 @@ usize u8_leading_zeros(u8 value) {
     count++;
   }
   return count;
+}
+
+u8 u8_from_be(u8 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u8_reverse_bits(value);
+#else
+  return value;
+#endif
+}
+
+u8 u8_from_le(u8 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return u8_reverse_bits(value);
+#else
+  return value;
+#endif
 }
