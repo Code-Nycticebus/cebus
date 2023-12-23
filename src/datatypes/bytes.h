@@ -24,4 +24,7 @@ bool bytes_eq(Bytes b1, Bytes b2);
 
 Str bytes_hex(Bytes bytes, Arena *arena);
 
+size_t bytes_leading_ones(uint8_t byte);
+size_t bytes_leading_zeros(uint8_t byte);
+
 #endif /* !__CLIB_BYTES_H__ */

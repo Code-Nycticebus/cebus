@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define BITS 8
+#define FIRST_BIT ((uint8_t)0x80)
+
 Bytes bytes_from_parts(size_t size, const uint8_t *data) {
   return (Bytes){.size = size, .data = data};
 }
@@ -37,4 +40,26 @@ Str bytes_hex(Bytes bytes, Arena *arena) {
     }
   }
   return (Str){.len = b_idx, .data = buffer};
+}
+
+size_t bytes_leading_ones(uint8_t byte) {
+  size_t count = 0;
+  for (size_t i = 0; i < BITS; i++) {
+    if (!(byte & (FIRST_BIT >> i))) {
+      break;
+    }
+    count++;
+  }
+  return count;
+}
+
+size_t bytes_leading_zeros(uint8_t byte) {
+  size_t count = 0;
+  for (size_t i = 0; i < BITS; i++) {
+    if (byte & (FIRST_BIT >> i)) {
+      break;
+    }
+    count++;
+  }
+  return count;
 }

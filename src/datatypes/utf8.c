@@ -6,27 +6,13 @@
 #include "clib/asserts.h"
 #include "datatypes/bytes.h"
 
-#define BITS 8
-#define FIRST_BIT ((uint8_t)0x80)
-
-static size_t count_left_bits(uint8_t byte) {
-  size_t count = 0;
-  for (size_t i = 0; i < BITS; i++) {
-    if (!(byte & (FIRST_BIT >> i))) {
-      break;
-    }
-    count++;
-  }
-  return count;
-}
-
 bool utf8_validate_bytes(Bytes bytes) {
   for (size_t i = 0; i < bytes.size; i++) {
-    size_t bit_count = count_left_bits(bytes.data[i]);
+    size_t bit_count = bytes_leading_ones(bytes.data[i]);
     clib_assert_return(bit_count <= 4, false);
     size_t idx = i;
     for (size_t j = 1; j < bit_count; j++) {
-      clib_assert_return(count_left_bits(bytes.data[idx + j]) == 1, false);
+      clib_assert_return(bytes_leading_ones(bytes.data[idx + j]) == 1, false);
       i++;
     }
   }
@@ -40,11 +26,11 @@ bool utf8_validate(Utf8 s) {
 bool utf8_try_decode(Bytes bytes, Utf8 *out) {
   size_t len = 0;
   for (size_t i = 0; i < bytes.size; i++) {
-    size_t bit_count = count_left_bits(bytes.data[i]);
+    size_t bit_count = bytes_leading_ones(bytes.data[i]);
     clib_assert_return(bit_count <= 4, false);
     size_t idx = i;
     for (size_t j = 1; j < bit_count; j++) {
-      clib_assert_return(count_left_bits(bytes.data[idx + j]) == 1, false);
+      clib_assert_return(bytes_leading_ones(bytes.data[idx + j]) == 1, false);
       i++;
     }
     len++;
@@ -83,7 +69,7 @@ bool utf8_eq(Utf8 s1, Utf8 s2) {
 }
 
 bool utf8_try_next(Utf8 *str, Utf8 *out) {
-  size_t bit_count = count_left_bits(str->data[0]);
+  size_t bit_count = bytes_leading_ones(str->data[0]);
   clib_assert_return(bit_count <= 4, false);
   clib_assert_return(bit_count != 1, false);
   size_t bytes = bit_count == 0 ? 1 : bit_count;
