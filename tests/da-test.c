@@ -97,7 +97,7 @@ void test_reverse(void) {
   da_free(&list);
 }
 
-int is_odd(int i) { return i % 2 == 0; }
+bool is_odd(int i) { return i % 2 == 0; }
 
 void test_filter(void) {
   DA(int) list = {0};
