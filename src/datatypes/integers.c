@@ -16,6 +16,7 @@
     }                                                                          \
     return reversed;                                                           \
   }                                                                            \
+                                                                               \
   T T##_swap_bytes(T value) {                                                  \
     u8 *bytes = (u8 *)&value;                                                  \
     for (size_t i = 0; i < sizeof(T) / 2; i++) {                               \
@@ -25,6 +26,7 @@
     }                                                                          \
     return value;                                                              \
   }                                                                            \
+                                                                               \
   usize T##_leading_ones(T value) {                                            \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
@@ -35,6 +37,7 @@
     }                                                                          \
     return count;                                                              \
   }                                                                            \
+                                                                               \
   usize T##_trailing_ones(T value) {                                           \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
@@ -45,6 +48,7 @@
     }                                                                          \
     return count;                                                              \
   }                                                                            \
+                                                                               \
   usize T##_leading_zeros(T value) {                                           \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
@@ -55,6 +59,7 @@
     }                                                                          \
     return count;                                                              \
   }                                                                            \
+                                                                               \
   usize T##_trailing_zeros(T value) {                                          \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
@@ -65,6 +70,7 @@
     }                                                                          \
     return count;                                                              \
   }                                                                            \
+                                                                               \
   usize T##_count_zeros(T value) {                                             \
     usize count = 0;                                                           \
     for (size_t i = 0; i < BITS; i++) {                                        \
@@ -74,6 +80,7 @@
     }                                                                          \
     return count;                                                              \
   }                                                                            \
+                                                                               \
   usize T##_count_ones(T value) {                                              \
     usize count = 0;                                                           \
     for (size_t i = 0; i < BITS; i++) {                                        \
@@ -105,6 +112,7 @@
     }                                                                          \
     return *(T *)bytes.data;                                                   \
   }                                                                            \
+                                                                               \
   Bytes T##_to_be_bytes(T value, Arena *arena) {                               \
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
@@ -117,18 +125,21 @@
     }                                                                          \
     return bytes_from_parts(sizeof(value), buffer);                            \
   }                                                                            \
+                                                                               \
   T T##_to_le(T value) {                                                       \
     if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                       \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
+                                                                               \
   T T##_from_le(T value) {                                                     \
     if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                       \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
+                                                                               \
   T T##_from_le_bytes(Bytes bytes) {                                           \
     clib_assert(sizeof(T) == bytes.size, "Byte array not correct size");       \
     if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                       \
@@ -136,6 +147,7 @@
     }                                                                          \
     return *(T *)bytes.data;                                                   \
   }                                                                            \
+                                                                               \
   Bytes T##_to_le_bytes(T value, Arena *arena) {                               \
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
@@ -148,10 +160,12 @@
     }                                                                          \
     return bytes_from_parts(sizeof(value), buffer);                            \
   }                                                                            \
+                                                                               \
   T T##_from_ne_bytes(Bytes bytes) {                                           \
     clib_assert(sizeof(T) == bytes.size, "Byte array not correct size");       \
     return *(T *)bytes.data;                                                   \
   }                                                                            \
+                                                                               \
   Bytes T##_to_ne_bytes(T value, Arena *arena) {                               \
     if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                       \
       return T##_to_be_bytes(value, arena);                                    \
