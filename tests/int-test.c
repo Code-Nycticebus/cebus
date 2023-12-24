@@ -18,13 +18,11 @@ void test_u8_swaping_bits(void) {
 
 void test_u8_endian(void) {
 #if CLIB_BYTE_ORDER == ENDIAN_BIG
-  printf("BIG\n");
-  clib_assert(u8_to_le(0x80) == 0x01, "Bits were not swapped");
+  clib_assert(u8_to_le(0x80) == 0x80, "Bits were not swapped");
   clib_assert(u8_to_be(0x80) == 0x80, "Bits are somehow different")
 #else
-  printf("LITTLE\n");
   clib_assert(u8_to_le(0x80) == 0x80, "Bits are somehow different");
-  clib_assert(u8_to_be(0x80) == 0x01, "Bits are somehow different");
+  clib_assert(u8_to_be(0x80) == 0x80, "Bits are somehow different");
 #endif
 }
 

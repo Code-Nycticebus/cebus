@@ -16,6 +16,17 @@
     return reversed;                                                           \
   } while (0)
 
+#define BYTES_SWAP(value)                                                      \
+  do {                                                                         \
+    u8 *bytes = (u8 *)&value;                                                  \
+    for (size_t i = 0; i < sizeof(value); i++) {                               \
+      u8 temp = bytes[i];                                                      \
+      bytes[i] = bytes[sizeof(value) - i - 1];                                 \
+      bytes[sizeof(value) - i - 1] = temp;                                     \
+    }                                                                          \
+    return value;                                                              \
+  } while (0)
+
 #define BITS_LEADING_ONES(value, BITS)                                         \
   do {                                                                         \
     usize count = 0;                                                           \
@@ -41,12 +52,21 @@
   } while (0)
 
 u8 u8_reverse_bits(u8 value) { BITS_REVERSE(u8, value, U8_BITS); }
+u8 u8_swap_bytes(u8 value) { BYTES_SWAP(value); }
 usize u8_leading_ones(u8 value) { BITS_LEADING_ONES(value, U8_BITS); }
 usize u8_leading_zeros(u8 value) { BITS_LEADING_ZEROS(value, U8_BITS); }
 
 u8 u8_to_be(u8 value) {
 #if CLIB_BYTE_ORDER == ENDIAN_LITTLE
-  return u8_reverse_bits(value);
+  return u8_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u8 u8_from_be(u8 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u8_swap_bytes(value);
 #else
   return value;
 #endif
@@ -54,7 +74,15 @@ u8 u8_to_be(u8 value) {
 
 u8 u8_to_le(u8 value) {
 #if CLIB_BYTE_ORDER == ENDIAN_BIG
-  return u8_reverse_bits(value);
+  return u8_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u8 u8_from_le(u8 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return u8_swap_bytes(value);
 #else
   return value;
 #endif
