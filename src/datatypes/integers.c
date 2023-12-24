@@ -20,7 +20,7 @@
 #define BYTES_SWAP(value)                                                      \
   do {                                                                         \
     u8 *bytes = (u8 *)&value;                                                  \
-    for (size_t i = 0; i < sizeof(value); i++) {                               \
+    for (size_t i = 0; i < sizeof(value) / 2; i++) {                           \
       u8 temp = bytes[i];                                                      \
       bytes[i] = bytes[sizeof(value) - i - 1];                                 \
       bytes[sizeof(value) - i - 1] = temp;                                     \
@@ -31,8 +31,8 @@
 #define BITS_LEADING_ONES(value, BITS)                                         \
   do {                                                                         \
     usize count = 0;                                                           \
-    for (usize i = 0; i < U8_BITS; i++) {                                      \
-      if (!(value & (0x80 >> i))) {                                            \
+    for (usize i = 0; i < BITS; i++) {                                         \
+      if (!(value & ((1 << (BITS - 1)) >> i))) {                               \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -43,7 +43,7 @@
 #define BITS_TRAILING_ONES(value, BITS)                                        \
   do {                                                                         \
     usize count = 0;                                                           \
-    for (usize i = 0; i < U8_BITS; i++) {                                      \
+    for (usize i = 0; i < BITS; i++) {                                         \
       if (!(value & (0x1 << i))) {                                             \
         break;                                                                 \
       }                                                                        \
@@ -56,7 +56,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (value & (0x80 >> i)) {                                               \
+      if (value & ((1 << (BITS - 1)) >> i)) {                                  \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -80,7 +80,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (size_t i = 0; i < BITS; i++) {                                        \
-      if (!(value & (0x80 >> i))) {                                            \
+      if (!(value & ((1 << (BITS - 1)) >> i))) {                               \
         count++;                                                               \
       }                                                                        \
     }                                                                          \
@@ -91,7 +91,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (size_t i = 0; i < BITS; i++) {                                        \
-      if (value & (0x80 >> i)) {                                               \
+      if (value & ((1 << (BITS - 1)) >> i)) {                                  \
         count++;                                                               \
       }                                                                        \
     }                                                                          \
@@ -126,6 +126,7 @@
     return bytes_from_parts(sizeof(value), buffer);                            \
   } while (0)
 
+/* u8 */
 u8 u8_reverse_bits(u8 value) { BITS_REVERSE(u8, value, U8_BITS); }
 u8 u8_swap_bytes(u8 value) { BYTES_SWAP(value); }
 usize u8_leading_ones(u8 value) { BITS_LEADING_ONES(value, U8_BITS); }
@@ -179,7 +180,7 @@ u8 u8_from_le(u8 value) {
 
 u8 u8_from_le_bytes(Bytes bytes) {
   clib_assert(sizeof(u8) == bytes.size, "Byte array not correct size");
-#if CLIB_BYE_ORDER == ENDIAN_BIG
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
   return u8_swap_bytes(*(u8 *)bytes.data);
 #else
   return *(u8 *)bytes.data;
@@ -199,7 +200,9 @@ Bytes u8_to_ne_bytes(u8 value, Arena *arena) {
   TO_LE_BYTES(value, arena);
 #endif
 }
+/* u8 */
 
+/* i8 */
 i8 i8_reverse_bits(i8 value) { BITS_REVERSE(i8, value, I8_BITS); }
 i8 i8_swap_bytes(i8 value) { BYTES_SWAP(value); }
 usize i8_leading_ones(i8 value) { BITS_LEADING_ONES(value, I8_BITS); }
@@ -253,7 +256,7 @@ i8 i8_from_le(i8 value) {
 
 i8 i8_from_le_bytes(Bytes bytes) {
   clib_assert(sizeof(i8) == bytes.size, "Byte array not correct size");
-#if CLIB_BYE_ORDER == ENDIAN_BIG
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
   return i8_swap_bytes(*(i8 *)bytes.data);
 #else
   return *(i8 *)bytes.data;
@@ -273,3 +276,80 @@ Bytes i8_to_ne_bytes(i8 value, Arena *arena) {
   TO_LE_BYTES(value, arena);
 #endif
 }
+/* i8 */
+
+/* u16 */
+u16 u16_reverse_bits(u16 value) { BITS_REVERSE(u16, value, U16_BITS); }
+u16 u16_swap_bytes(u16 value) { BYTES_SWAP(value); }
+usize u16_leading_ones(u16 value) { BITS_LEADING_ONES(value, U16_BITS); }
+usize u16_trailing_ones(u16 value) { BITS_TRAILING_ONES(value, U16_BITS); }
+usize u16_leading_zeros(u16 value) { BITS_LEADING_ZEROS(value, U16_BITS); }
+usize u16_trailing_zeros(u16 value) { BITS_TRAILING_ZEROS(value, U16_BITS); }
+usize u16_count_zeros(u16 value) { BITS_COUNT_ZEROS(value, U16_BITS); }
+usize u16_count_ones(u16 value) { BITS_COUNT_ONES(value, U16_BITS); }
+
+u16 u16_to_be(u16 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u16_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u16 u16_from_be(u16 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u16_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u16 u16_from_be_bytes(Bytes bytes) {
+  clib_assert(sizeof(u16) == bytes.size, "Byte array correct size");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u16_swap_bytes(*(u16 *)bytes.data);
+#else
+  return *(u16 *)bytes.data;
+#endif
+}
+Bytes u16_to_be_bytes(u16 value, Arena *arena) { TO_BE_BYTES(value, arena); }
+
+u16 u16_to_le(u16 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return u16_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u16 u16_from_le(u16 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return u16_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u16 u16_from_le_bytes(Bytes bytes) {
+  clib_assert(sizeof(u16) == bytes.size, "Byte array not correct size");
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return u16_swap_bytes(*(u16 *)bytes.data);
+#else
+  return *(u16 *)bytes.data;
+#endif
+}
+Bytes u16_to_le_bytes(u16 value, Arena *arena) { TO_LE_BYTES(value, arena); }
+
+u16 u16_from_ne_bytes(Bytes bytes) {
+  clib_assert(sizeof(u16) == bytes.size, "Byte array not correct size");
+  return *(u16 *)bytes.data;
+}
+
+Bytes u16_to_ne_bytes(u16 value, Arena *arena) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  TO_BE_BYTES(value, arena);
+#else
+  TO_LE_BYTES(value, arena);
+#endif
+}
+/* u16 */

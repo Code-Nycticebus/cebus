@@ -5,29 +5,30 @@
 
 /* u8 */
 void test_u8_leading_bits(void) {
-  clib_assert(u8_leading_ones(0xf0) == 4, "Did not count correctly");
-  clib_assert(u8_leading_zeros(0x0f) == 4, "Did not count correctly");
+  clib_assert(u8_leading_ones(0xe0) == 3, "Did not count correctly");
+  clib_assert(u8_leading_zeros(0x1f) == 3, "Did not count correctly");
   clib_assert(u8_trailing_ones(0x07) == 3, "Did not count correctly");
   clib_assert(u8_trailing_zeros(0x08) == 3, "Did not count correctly");
 }
 
 void test_u8_swaping_bits(void) {
   clib_assert(u8_reverse_bits(0x12) == 0x48, "Did not reverse correctly");
+  clib_assert(u8_swap_bytes(0x12) == 0x12, "Did not swap correctly");
 }
 
 void test_u8_endian(void) {
 #if CLIB_BYTE_ORDER == ENDIAN_BIG
-  clib_assert(u8_to_le(0x80) == 0x80, "Bytes are somehow different");
-  clib_assert(u8_to_be(0x80) == 0x80, "Bytes are somehow different")
+  clib_assert(u8_to_le(0x12) == 0x12, "Bytes are somehow different");
+  clib_assert(u8_to_be(0x12) == 0x12, "Bytes are somehow different")
 #else
-  clib_assert(u8_to_le(0x80) == 0x80, "Bytes are somehow different");
-  clib_assert(u8_to_be(0x80) == 0x80, "Bytes are somehow different");
+  clib_assert(u8_to_le(0x12) == 0x12, "Bytes are somehow different");
+  clib_assert(u8_to_be(0x12) == 0x12, "Bytes are somehow different");
 #endif
 }
 
 void test_u8_count_bits(void) {
-  clib_assert(u8_count_ones(42) == 3, "Did count correctly");
-  clib_assert(u8_count_zeros(42) == 5, "Did count correctly");
+  clib_assert(u8_count_ones(0x12) == 2, "Did count correctly");
+  clib_assert(u8_count_zeros(0x12) == 6, "Did count correctly");
 }
 
 void test_u8_from_bytes(void) {
@@ -55,14 +56,15 @@ void test_u8_to_bytes(void) {
 
 /* i8 */
 void test_i8_leading_bits(void) {
-  clib_assert(i8_leading_ones(0xf0) == 4, "Did not count correctly");
-  clib_assert(i8_leading_zeros(0x0f) == 4, "Did not count correctly");
+  clib_assert(i8_leading_ones(0xe0) == 3, "Did not count correctly");
+  clib_assert(i8_leading_zeros(0x1f) == 3, "Did not count correctly");
   clib_assert(i8_trailing_ones(0x07) == 3, "Did not count correctly");
   clib_assert(i8_trailing_zeros(0x08) == 3, "Did not count correctly");
 }
 
 void test_i8_swaping_bits(void) {
   clib_assert(i8_reverse_bits(0x12) == 0x48, "Did not reverse correctly");
+  clib_assert(i8_swap_bytes(0x12) == 0x12, "Did not swap correctly");
 }
 
 void test_i8_endian(void) {
@@ -76,8 +78,8 @@ void test_i8_endian(void) {
 }
 
 void test_i8_count_bits(void) {
-  clib_assert(i8_count_ones(42) == 3, "Did count correctly");
-  clib_assert(i8_count_zeros(42) == 5, "Did count correctly");
+  clib_assert(i8_count_ones(0x12) == 2, "Did count correctly");
+  clib_assert(i8_count_zeros(0x12) == 6, "Did count correctly");
 }
 
 void test_i8_from_bytes(void) {
@@ -103,6 +105,65 @@ void test_i8_to_bytes(void) {
 }
 /* i8 */
 
+/* u16 */
+void test_u16_leading_bits(void) {
+  clib_assert(u16_leading_ones(0xe001) == 3, "Did not count correctly");
+  clib_assert(u16_leading_zeros(0x1f00) == 3, "Did not count correctly");
+  clib_assert(u16_trailing_ones(0x1007) == 3, "Did not count correctly");
+  clib_assert(u16_trailing_zeros(0x1008) == 3, "Did not count correctly");
+}
+
+void test_u16_swaping_bits(void) {
+  clib_assert(u16_reverse_bits(0x1234) == 0x2c48, "Did not reverse correctly");
+  clib_assert(u16_swap_bytes(0x1234) == 0x3412, "Did not swap correctly");
+}
+
+void test_u16_endian(void) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  clib_assert(u16_to_le(0x80) == 0x80, "Bytes are somehow different");
+  clib_assert(u16_to_be(0x80) == 0x80, "Bytes are somehow different")
+#else
+  clib_assert(u16_to_le(0x1234) == 0x1234, "Bytes are somehow different");
+  clib_assert(u16_to_be(0x1234) == 0x3412, "Bytes are somehow different");
+#endif
+}
+
+void test_u16_count_bits(void) {
+  clib_assert(u16_count_ones(0x1234) == 5, "Did count correctly");
+  clib_assert(u16_count_zeros(0x1234) == 11, "Did count correctly");
+}
+
+void test_u16_from_bytes(void) {
+  clib_assert(u16_from_be_bytes(BYTES(0x12, 0x34)) == 0x1234,
+              "Conversion not correct");
+  clib_assert(u16_from_le_bytes(BYTES(0x34, 0x12)) == 0x1234,
+              "Conversion not correct");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  clib_assert(u16_from_ne_bytes(BYTES(0x34, 0x12)) == 0x1234,
+              "Not converted correctly");
+#else
+  clib_assert(u16_from_ne_bytes(BYTES(0x12, 0x34)) == 0x1234,
+              "Not converted correctly");
+#endif
+}
+
+void test_u16_to_bytes(void) {
+  Arena arena = {0};
+  clib_assert(bytes_eq(u16_to_be_bytes(0x1234, &arena), BYTES(0x12, 0x34)),
+              "Not converted correctly");
+  clib_assert(bytes_eq(u16_to_le_bytes(0x1234, &arena), BYTES(0x34, 0x12)),
+              "Not converted correctly");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  clib_assert(bytes_eq(u16_to_ne_bytes(0x1234, &arena), BYTES(0x34, 0x12)),
+              "Not converted correctly");
+#else
+  clib_assert(bytes_eq(u16_to_ne_bytes(0x1234, &arena), BYTES(0x12, 0x34)),
+              "Not converted correctly");
+#endif
+  arena_free(&arena);
+}
+/* u16 */
+
 int main(void) {
   test_u8_leading_bits();
   test_u8_swaping_bits();
@@ -117,4 +178,11 @@ int main(void) {
   test_i8_count_bits();
   test_i8_from_bytes();
   test_i8_to_bytes();
+
+  test_u16_leading_bits();
+  test_u16_swaping_bits();
+  test_u16_endian();
+  test_u16_count_bits();
+  test_u16_from_bytes();
+  test_u16_to_bytes();
 }
