@@ -199,3 +199,77 @@ Bytes u8_to_ne_bytes(u8 value, Arena *arena) {
   TO_LE_BYTES(value, arena);
 #endif
 }
+
+i8 i8_reverse_bits(i8 value) { BITS_REVERSE(i8, value, I8_BITS); }
+i8 i8_swap_bytes(i8 value) { BYTES_SWAP(value); }
+usize i8_leading_ones(i8 value) { BITS_LEADING_ONES(value, I8_BITS); }
+usize i8_trailing_ones(i8 value) { BITS_TRAILING_ONES(value, I8_BITS); }
+usize i8_leading_zeros(i8 value) { BITS_LEADING_ZEROS(value, I8_BITS); }
+usize i8_trailing_zeros(i8 value) { BITS_TRAILING_ZEROS(value, I8_BITS); }
+usize i8_count_zeros(i8 value) { BITS_COUNT_ZEROS(value, I8_BITS); }
+usize i8_count_ones(i8 value) { BITS_COUNT_ONES(value, I8_BITS); }
+
+i8 i8_to_be(i8 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return i8_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+i8 i8_from_be(i8 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return i8_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+i8 i8_from_be_bytes(Bytes bytes) {
+  clib_assert(sizeof(i8) == bytes.size, "Byte array correct size");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return i8_swap_bytes(*(i8 *)bytes.data);
+#else
+  return *(i8 *)bytes.data;
+#endif
+}
+Bytes i8_to_be_bytes(i8 value, Arena *arena) { TO_BE_BYTES(value, arena); }
+
+i8 i8_to_le(i8 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return i8_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+i8 i8_from_le(i8 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return i8_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+i8 i8_from_le_bytes(Bytes bytes) {
+  clib_assert(sizeof(i8) == bytes.size, "Byte array not correct size");
+#if CLIB_BYE_ORDER == ENDIAN_BIG
+  return i8_swap_bytes(*(i8 *)bytes.data);
+#else
+  return *(i8 *)bytes.data;
+#endif
+}
+Bytes i8_to_le_bytes(i8 value, Arena *arena) { TO_LE_BYTES(value, arena); }
+
+i8 i8_from_ne_bytes(Bytes bytes) {
+  clib_assert(sizeof(i8) == bytes.size, "Byte array not correct size");
+  return *(i8 *)bytes.data;
+}
+
+Bytes i8_to_ne_bytes(i8 value, Arena *arena) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  TO_BE_BYTES(value, arena);
+#else
+  TO_LE_BYTES(value, arena);
+#endif
+}
