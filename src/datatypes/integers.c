@@ -1,6 +1,8 @@
 #include "integers.h"
 
+#include "clib/asserts.h"
 #include "clib/platform.h"
+#include "datatypes/bytes.h"
 #include "datatypes/str.h"
 
 #define BITS_REVERSE(T, value, BITS)                                           \
@@ -95,6 +97,26 @@
       }                                                                        \
     }                                                                          \
     return count;                                                              \
+  } while (0)
+
+#define TO_BE_BYTES(value, arena)                                              \
+  do {                                                                         \
+    u8 *buffer = arena_alloc(arena, sizeof(value));                            \
+    u8 *bytes = (u8 *)&value;                                                  \
+    for (size_t i = 0; i < sizeof(value); i++) {                               \
+      buffer[i] = bytes[i];                                                    \
+    }                                                                          \
+    return bytes_from_parts(sizeof(value), buffer);                            \
+  } while (0)
+
+#define TO_LE_BYTES(value, arena)                                              \
+  do {                                                                         \
+    u8 *buffer = arena_alloc(arena, sizeof(value));                            \
+    u8 *bytes = (u8 *)&value;                                                  \
+    for (size_t i = 0; i < sizeof(value); i++) {                               \
+      buffer[sizeof(value) - i - 1] = bytes[i];                                \
+    }                                                                          \
+    return bytes_from_parts(sizeof(value), buffer);                            \
   } while (0)
 
 u8 u8_reverse_bits(u8 value) { BITS_REVERSE(u8, value, U8_BITS); }
