@@ -11,9 +11,7 @@
   }
 
 #define BYTES_STR(s)                                                           \
-  (Bytes) {                                                                    \
-    sizeof(s) - 1, (void *) { (s) }                                            \
-  }
+  (Bytes) { sizeof(s) - 1, (u8 *)(s) }
 
 Bytes bytes_from_parts(usize size, const u8 *data);
 Bytes bytes_copy(Bytes bytes, Arena *arena);
