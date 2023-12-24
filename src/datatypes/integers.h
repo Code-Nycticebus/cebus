@@ -19,4 +19,7 @@ u8 u8_from_le(u8 value);
 u8 u8_from_le_bytes(Bytes bytes);
 Str u8_to_str(u8 value, Arena *arena);
 
+Bytes u32_to_le_bytes(u32 value, Arena *arena);
+Bytes u32_to_be_bytes(u32 value, Arena *arena);
+
 #endif /* !__CLIB_INTEGERS_H__ */
