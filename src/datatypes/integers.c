@@ -51,10 +51,34 @@
     return count;                                                              \
   } while (0)
 
+#define BITS_COUNT_ZEROS(value, BITS)                                          \
+  do {                                                                         \
+    usize count = 0;                                                           \
+    for (size_t i = 0; i < BITS; i++) {                                        \
+      if (!(value & (0x80 >> i))) {                                            \
+        count++;                                                               \
+      }                                                                        \
+    }                                                                          \
+    return count;                                                              \
+  } while (0)
+
+#define BITS_COUNT_ONES(value, BITS)                                           \
+  do {                                                                         \
+    usize count = 0;                                                           \
+    for (size_t i = 0; i < BITS; i++) {                                        \
+      if (value & (0x80 >> i)) {                                               \
+        count++;                                                               \
+      }                                                                        \
+    }                                                                          \
+    return count;                                                              \
+  } while (0)
+
 u8 u8_reverse_bits(u8 value) { BITS_REVERSE(u8, value, U8_BITS); }
 u8 u8_swap_bytes(u8 value) { BYTES_SWAP(value); }
 usize u8_leading_ones(u8 value) { BITS_LEADING_ONES(value, U8_BITS); }
 usize u8_leading_zeros(u8 value) { BITS_LEADING_ZEROS(value, U8_BITS); }
+usize u8_count_zeros(u8 value) { BITS_COUNT_ZEROS(value, U8_BITS); }
+usize u8_count_ones(u8 value) { BITS_COUNT_ONES(value, U8_BITS); }
 
 u8 u8_to_be(u8 value) {
 #if CLIB_BYTE_ORDER == ENDIAN_LITTLE
