@@ -122,6 +122,15 @@ u8 u8_from_be(u8 value) {
 #endif
 }
 
+u8 u8_from_be_bytes(Bytes bytes) {
+  clib_assert(sizeof(u8) == bytes.size, "Byte array correct size");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u8_swap_bytes(*(u8 *)bytes.data);
+#else
+  return *(u8 *)bytes.data;
+#endif
+}
+
 u8 u8_to_le(u8 value) {
 #if CLIB_BYTE_ORDER == ENDIAN_BIG
   return u8_swap_bytes(value);
@@ -135,6 +144,15 @@ u8 u8_from_le(u8 value) {
   return u8_swap_bytes(value);
 #else
   return value;
+#endif
+}
+
+u8 u8_from_le_bytes(Bytes bytes) {
+  clib_assert(sizeof(u8) == bytes.size, "Byte array not correct size");
+#if CLIB_BYE_ORDER == ENDIAN_BIG
+  return u8_swap_bytes(*(u8 *)bytes.data);
+#else
+  return *(u8 *)bytes.data;
 #endif
 }
 
