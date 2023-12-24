@@ -29,6 +29,9 @@ Bytes bytes_slice(Bytes bytes, usize idx1, usize idx2) {
 }
 
 Bytes bytes_take(Bytes *bytes, usize count) {
+  if (bytes->size < count) {
+    count = bytes->size;
+  }
   Bytes ret = bytes_from_parts(count, bytes->data);
   bytes->size -= count;
   bytes->data += count;

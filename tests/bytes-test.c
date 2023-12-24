@@ -40,6 +40,7 @@ void test_bytes_slice(void) {
   Bytes slice = bytes_slice(b, 1, 3);
   clib_assert(bytes_eq(slice, BYTES_STR("BC")),
               "Bytes were not sliced correctly");
+
   Bytes invalid = bytes_slice(b, b.size, 2);
   clib_assert(bytes_eq(invalid, BYTES_STR("")), "Bytes were not invalidated");
 
