@@ -353,3 +353,79 @@ Bytes u16_to_ne_bytes(u16 value, Arena *arena) {
 #endif
 }
 /* u16 */
+
+/* i16 */
+i16 i16_reverse_bits(i16 value) { BITS_REVERSE(i16, value, I16_BITS); }
+i16 i16_swap_bytes(i16 value) { BYTES_SWAP(value); }
+usize i16_leading_ones(i16 value) { BITS_LEADING_ONES(value, I16_BITS); }
+usize i16_trailing_ones(i16 value) { BITS_TRAILING_ONES(value, I16_BITS); }
+usize i16_leading_zeros(i16 value) { BITS_LEADING_ZEROS(value, I16_BITS); }
+usize i16_trailing_zeros(i16 value) { BITS_TRAILING_ZEROS(value, I16_BITS); }
+usize i16_count_zeros(i16 value) { BITS_COUNT_ZEROS(value, I16_BITS); }
+usize i16_count_ones(i16 value) { BITS_COUNT_ONES(value, I16_BITS); }
+
+i16 i16_to_be(i16 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return i16_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+i16 i16_from_be(i16 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return i16_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+i16 i16_from_be_bytes(Bytes bytes) {
+  clib_assert(sizeof(i16) == bytes.size, "Byte array correct size");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return i16_swap_bytes(*(i16 *)bytes.data);
+#else
+  return *(i16 *)bytes.data;
+#endif
+}
+Bytes i16_to_be_bytes(i16 value, Arena *arena) { TO_BE_BYTES(value, arena); }
+
+i16 i16_to_le(i16 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return i16_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+i16 i16_from_le(i16 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return i16_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+i16 i16_from_le_bytes(Bytes bytes) {
+  clib_assert(sizeof(i16) == bytes.size, "Byte array not correct size");
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return i16_swap_bytes(*(i16 *)bytes.data);
+#else
+  return *(i16 *)bytes.data;
+#endif
+}
+Bytes i16_to_le_bytes(i16 value, Arena *arena) { TO_LE_BYTES(value, arena); }
+
+i16 i16_from_ne_bytes(Bytes bytes) {
+  clib_assert(sizeof(i16) == bytes.size, "Byte array not correct size");
+  return *(i16 *)bytes.data;
+}
+
+Bytes i16_to_ne_bytes(i16 value, Arena *arena) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  TO_BE_BYTES(value, arena);
+#else
+  TO_LE_BYTES(value, arena);
+#endif
+}
+/* i16 */

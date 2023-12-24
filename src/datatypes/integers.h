@@ -76,4 +76,28 @@ u16 u16_from_ne_bytes(Bytes bytes);
 Bytes u16_to_ne_bytes(u16 value, Arena *arena);
 /* u16 */
 
+/* i16 */
+i16 i16_reverse_bits(i16 value);
+i16 i16_swap_bytes(i16 value);
+usize i16_leading_ones(i16 value);
+usize i16_trailing_ones(i16 value);
+usize i16_leading_zeros(i16 value);
+usize i16_trailing_zeros(i16 value);
+usize i16_count_zeros(i16 value);
+usize i16_count_ones(i16 value);
+
+i16 i16_to_be(i16 value);
+i16 i16_from_be(i16 value);
+i16 i16_from_be_bytes(Bytes bytes);
+Bytes i16_to_be_bytes(i16 value, Arena *arena);
+
+i16 i16_to_le(i16 value);
+i16 i16_from_le(i16 value);
+i16 i16_from_le_bytes(Bytes bytes);
+Bytes i16_to_le_bytes(i16 value, Arena *arena);
+
+i16 i16_from_ne_bytes(Bytes bytes);
+Bytes i16_to_ne_bytes(i16 value, Arena *arena);
+/* i16 */
+
 #endif /* !__CLIB_INTEGERS_H__ */
