@@ -223,6 +223,75 @@ void test_i16_to_bytes(void) {
 }
 /* i16 */
 
+/* u32 */
+void test_u32_leading_bits(void) {
+  clib_assert(u32_leading_ones(0xe0000001) == 3, "Did not count correctly");
+  clib_assert(u32_leading_zeros(0x1f000000) == 3, "Did not count correctly");
+  clib_assert(u32_trailing_ones(0x80000007) == 3, "Did not count correctly");
+  clib_assert(u32_trailing_zeros(0x80000008) == 3, "Did not count correctly");
+}
+
+void test_u32_swaping_bits(void) {
+  clib_assert(u32_reverse_bits(0x12345678) == 0x1e6a2c48,
+              "Did not reverse correctly");
+  clib_assert(u32_swap_bytes(0x12345678) == 0x78563412,
+              "Did not swap correctly");
+}
+
+void test_u32_endian(void) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  clib_assert(u32_to_le(0x12345678) == 0x78563412,
+              "Bytes are somehow different");
+  clib_assert(u32_to_be(0x12345678) == 0x12345678,
+              "Bytes are somehow different");
+#else
+  clib_assert(u32_to_le(0x12345678) == 0x12345678,
+              "Bytes are somehow different");
+  clib_assert(u32_to_be(0x12345678) == 0x78563412,
+              "Bytes are somehow different");
+#endif
+}
+
+void test_u32_count_bits(void) {
+  clib_assert(u32_count_ones(0x12345678) == 13, "Did count correctly");
+  clib_assert(u32_count_zeros(0x12345678) == 19, "Did count correctly");
+}
+
+void test_u32_from_bytes(void) {
+  clib_assert(u32_from_be_bytes(BYTES(0x12, 0x34, 0x56, 0x78)) == 0x12345678,
+              "Conversion not correct");
+  clib_assert(u32_from_le_bytes(BYTES(0x78, 0x56, 0x34, 0x12)) == 0x12345678,
+              "Conversion not correct");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  clib_assert(u32_from_ne_bytes(BYTES(0x78, 0x56, 0x34, 0x12)) == 0x12345678,
+              "Not converted correctly");
+#else
+  clib_assert(u32_from_ne_bytes(BYTES(0x12, 0x34, 0x56, 0x78)) == 0x12345678,
+              "Not converted correctly");
+#endif
+}
+
+void test_u32_to_bytes(void) {
+  Arena arena = {0};
+  clib_assert(bytes_eq(u32_to_be_bytes(0x12345678, &arena),
+                       BYTES(0x12, 0x34, 0x56, 0x78)),
+              "Not converted correctly");
+  clib_assert(bytes_eq(u32_to_le_bytes(0x12345678, &arena),
+                       BYTES(0x78, 0x56, 0x34, 0x12)),
+              "Not converted correctly");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  clib_assert(bytes_eq(u32_to_ne_bytes(0x12345678, &arena),
+                       BYTES(0x78, 0x56, 0x34, 0x12)),
+              "Not converted correctly");
+#else
+  clib_assert(bytes_eq(u32_to_ne_bytes(0x12345678, &arena),
+                       BYTES(0x12, 0x34, 0x56, 0x78)),
+              "Not converted correctly");
+#endif
+  arena_free(&arena);
+}
+/* u32 */
+
 int main(void) {
   test_u8_leading_bits();
   test_u8_swaping_bits();
@@ -251,4 +320,11 @@ int main(void) {
   test_i16_count_bits();
   test_i16_from_bytes();
   test_i16_to_bytes();
+
+  test_u32_leading_bits();
+  test_u32_swaping_bits();
+  test_u32_endian();
+  test_u32_count_bits();
+  test_u32_from_bytes();
+  test_u32_to_bytes();
 }

@@ -32,7 +32,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (!(value & ((1 << (BITS - 1)) >> i))) {                               \
+      if (!(value & (1 << (BITS - i - 1)))) {                                  \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -44,7 +44,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (!(value & (0x1 << i))) {                                             \
+      if (!(value & (1 << i))) {                                               \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -56,7 +56,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (value & ((1 << (BITS - 1)) >> i)) {                                  \
+      if (value & (1 << (BITS - i - 1))) {                                     \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -68,7 +68,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (value & (0x1 << i)) {                                                \
+      if (value & (1 << i)) {                                                  \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -80,7 +80,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (size_t i = 0; i < BITS; i++) {                                        \
-      if (!(value & ((1 << (BITS - 1)) >> i))) {                               \
+      if (!(value & (1 << i))) {                                               \
         count++;                                                               \
       }                                                                        \
     }                                                                          \
@@ -91,7 +91,7 @@
   do {                                                                         \
     usize count = 0;                                                           \
     for (size_t i = 0; i < BITS; i++) {                                        \
-      if (value & ((1 << (BITS - 1)) >> i)) {                                  \
+      if (value & (1 << i)) {                                                  \
         count++;                                                               \
       }                                                                        \
     }                                                                          \
@@ -429,3 +429,79 @@ Bytes i16_to_ne_bytes(i16 value, Arena *arena) {
 #endif
 }
 /* i16 */
+
+/* u32 */
+u32 u32_reverse_bits(u32 value) { BITS_REVERSE(u32, value, U32_BITS); }
+u32 u32_swap_bytes(u32 value) { BYTES_SWAP(value); }
+usize u32_leading_ones(u32 value) { BITS_LEADING_ONES(value, U32_BITS); }
+usize u32_trailing_ones(u32 value) { BITS_TRAILING_ONES(value, U32_BITS); }
+usize u32_leading_zeros(u32 value) { BITS_LEADING_ZEROS(value, U32_BITS); }
+usize u32_trailing_zeros(u32 value) { BITS_TRAILING_ZEROS(value, U32_BITS); }
+usize u32_count_zeros(u32 value) { BITS_COUNT_ZEROS(value, U32_BITS); }
+usize u32_count_ones(u32 value) { BITS_COUNT_ONES(value, U32_BITS); }
+
+u32 u32_to_be(u32 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u32_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u32 u32_from_be(u32 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u32_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u32 u32_from_be_bytes(Bytes bytes) {
+  clib_assert(sizeof(u32) == bytes.size, "Byte array correct size");
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  return u32_swap_bytes(*(u32 *)bytes.data);
+#else
+  return *(u32 *)bytes.data;
+#endif
+}
+Bytes u32_to_be_bytes(u32 value, Arena *arena) { TO_BE_BYTES(value, arena); }
+
+u32 u32_to_le(u32 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return u32_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u32 u32_from_le(u32 value) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return u32_swap_bytes(value);
+#else
+  return value;
+#endif
+}
+
+u32 u32_from_le_bytes(Bytes bytes) {
+  clib_assert(sizeof(u32) == bytes.size, "Byte array not correct size");
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  return u32_swap_bytes(*(u32 *)bytes.data);
+#else
+  return *(u32 *)bytes.data;
+#endif
+}
+Bytes u32_to_le_bytes(u32 value, Arena *arena) { TO_LE_BYTES(value, arena); }
+
+u32 u32_from_ne_bytes(Bytes bytes) {
+  clib_assert(sizeof(u32) == bytes.size, "Byte array not correct size");
+  return *(u32 *)bytes.data;
+}
+
+Bytes u32_to_ne_bytes(u32 value, Arena *arena) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  TO_BE_BYTES(value, arena);
+#else
+  TO_LE_BYTES(value, arena);
+#endif
+}
+/* u32 */
