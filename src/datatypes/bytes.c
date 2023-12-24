@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define FIRST_BIT ((u8)0x80)
-
 Bytes bytes_from_parts(usize size, const u8 *data) {
   return (Bytes){.size = size, .data = data};
 }

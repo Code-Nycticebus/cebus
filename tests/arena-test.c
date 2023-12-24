@@ -2,8 +2,6 @@
 
 #include "clib/asserts.h"
 
-#include <stdint.h>
-
 typedef struct TestChunk {
   struct TestChunk *next;
   usize cap;
