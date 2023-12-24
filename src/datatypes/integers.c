@@ -39,11 +39,35 @@
     return count;                                                              \
   } while (0)
 
+#define BITS_TRAILING_ONES(value, BITS)                                        \
+  do {                                                                         \
+    usize count = 0;                                                           \
+    for (usize i = 0; i < U8_BITS; i++) {                                      \
+      if (!(value & (0x1 << i))) {                                             \
+        break;                                                                 \
+      }                                                                        \
+      count++;                                                                 \
+    }                                                                          \
+    return count;                                                              \
+  } while (0)
+
 #define BITS_LEADING_ZEROS(value, BITS)                                        \
   do {                                                                         \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
       if (value & (0x80 >> i)) {                                               \
+        break;                                                                 \
+      }                                                                        \
+      count++;                                                                 \
+    }                                                                          \
+    return count;                                                              \
+  } while (0)
+
+#define BITS_TRAILING_ZEROS(value, BITS)                                       \
+  do {                                                                         \
+    usize count = 0;                                                           \
+    for (usize i = 0; i < BITS; i++) {                                         \
+      if (value & (0x1 << i)) {                                                \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -76,7 +100,9 @@
 u8 u8_reverse_bits(u8 value) { BITS_REVERSE(u8, value, U8_BITS); }
 u8 u8_swap_bytes(u8 value) { BYTES_SWAP(value); }
 usize u8_leading_ones(u8 value) { BITS_LEADING_ONES(value, U8_BITS); }
+usize u8_trailing_ones(u8 value) { BITS_TRAILING_ONES(value, U8_BITS); }
 usize u8_leading_zeros(u8 value) { BITS_LEADING_ZEROS(value, U8_BITS); }
+usize u8_trailing_zeros(u8 value) { BITS_TRAILING_ZEROS(value, U8_BITS); }
 usize u8_count_zeros(u8 value) { BITS_COUNT_ZEROS(value, U8_BITS); }
 usize u8_count_ones(u8 value) { BITS_COUNT_ONES(value, U8_BITS); }
 
