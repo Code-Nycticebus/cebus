@@ -17,6 +17,7 @@ Bytes bytes_from_parts(usize size, const u8 *data);
 Bytes bytes_copy(Bytes bytes, Arena *arena);
 
 Bytes bytes_slice(Bytes bytes, usize idx1, size_t idx2);
+Bytes bytes_take(Bytes *bytes, usize count);
 
 bool bytes_eq(Bytes b1, Bytes b2);
 

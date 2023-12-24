@@ -47,9 +47,17 @@ void test_bytes_slice(void) {
   clib_assert(bytes_eq(invalid2, BYTES_STR("")), "Bytes were not invalidated");
 }
 
+void test_bytes_take(void) {
+  Bytes b = BYTES(0x12, 0x34, 0x56, 0x78);
+  Bytes t = bytes_take(&b, 2);
+  clib_assert(b.size == 2, "Did not take enough bytes");
+  clib_assert(t.size == 2, "Did not take enough bytes");
+}
+
 int main(void) {
   test_bytes();
   test_bytes_str();
   test_bytes_cmp();
   test_bytes_slice();
+  test_bytes_take();
 }

@@ -28,6 +28,13 @@ Bytes bytes_slice(Bytes bytes, usize idx1, usize idx2) {
   return bytes_from_parts(idx2 - idx1, &bytes.data[idx1]);
 }
 
+Bytes bytes_take(Bytes *bytes, usize count) {
+  Bytes ret = bytes_from_parts(count, bytes->data);
+  bytes->size -= count;
+  bytes->data += count;
+  return ret;
+}
+
 Str bytes_hex(Bytes bytes, Arena *arena) {
   char *buffer = arena_calloc(arena, bytes.size * 2 + 1);
   usize b_idx = 0;
