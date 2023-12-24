@@ -22,7 +22,7 @@ void test_u8_endian(void) {
   clib_assert(u8_to_le(0x80) == 0x01, "Bits were not swapped");
   clib_assert(u8_to_be(0x80) == 0x80, "Bits are somehow different")
 #else
-  printf("BIG\n");
+  printf("LITTLE\n");
   clib_assert(u8_to_le(0x80) == 0x80, "Bits are somehow different");
   clib_assert(u8_to_be(0x80) == 0x01, "Bits are somehow different");
 #endif
