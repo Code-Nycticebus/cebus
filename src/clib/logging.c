@@ -12,6 +12,8 @@
 #elif defined(WINDOWS)
 #include <io.h>
 #define isatty(...) _isatty(__VA_ARGS__)
+#define STDOUT_FILENO 0
+#define STDERR_FILENO 2
 #else
 #define isatty(...) false
 #endif
@@ -36,7 +38,7 @@ static void _clib_log(LogLevel log_level, FILE *file, const char *msg) {
   static bool tty_checked = false;
   if (!tty_checked) {
     tty_checked = true;
-    display_colors = isatty(STDOUT_FILENO);
+    display_colors = isatty(STDOUT_FILENO) && isatty(STDERR_FILENO);
   }
   static const struct CmLogLevelPrefix log_level_str[] = {
       [CLIB_LOG_FATAL] = {"FATAL", "\033[1m\033[91m"},
