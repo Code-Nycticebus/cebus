@@ -5,9 +5,6 @@
 void test_u8_leading_bits(void) {
   clib_assert(u8_leading_ones(0xf0) == 4, "Did not count correctly");
   clib_assert(u8_leading_zeros(0x0f) == 4, "Did not count correctly");
-}
-
-void test_u8_trailing_bits(void) {
   clib_assert(u8_trailing_ones(0x07) == 3, "Did not count correctly");
   clib_assert(u8_trailing_zeros(0x08) == 3, "Did not count correctly");
 }
@@ -34,7 +31,6 @@ void test_u8_count_bits(void) {
 
 int main(void) {
   test_u8_leading_bits();
-  test_u8_trailing_bits();
   test_u8_swaping_bits();
   test_u8_endian();
   test_u8_count_bits();
