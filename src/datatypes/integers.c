@@ -19,7 +19,7 @@
                                                                                \
   T T##_swap_bytes(T value) {                                                  \
     u8 *bytes = (u8 *)&value;                                                  \
-    for (size_t i = 0; i < sizeof(T) / 2; i++) {                               \
+    for (size_t i = 0; i < (sizeof(T) + 1) / 2; i++) {                         \
       u8 temp = bytes[i];                                                      \
       bytes[i] = bytes[sizeof(T) - i - 1];                                     \
       bytes[sizeof(T) - i - 1] = temp;                                         \
