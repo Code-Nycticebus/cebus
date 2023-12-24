@@ -3,7 +3,7 @@
 
 #include "platform.h"
 
-#include <stdio.h>
+#include <stdio.h> // IWYU pragma: export
 
 typedef enum {
   CLIB_LOG_FATAL = 0,

@@ -2,7 +2,6 @@
 
 #include "defines.h" // IWYU pragma: export
 #include <stdarg.h>
-#include <stdio.h>
 
 #include "platform.h"
 
@@ -37,7 +36,7 @@ static void _clib_log(LogLevel log_level, FILE *file, const char *msg) {
   static bool tty_checked = false;
   if (!tty_checked) {
     tty_checked = true;
-    display_colors = isatty(fileno(stdout));
+    display_colors = isatty(STDOUT_FILENO);
   }
   static const struct CmLogLevelPrefix log_level_str[] = {
       [CLIB_LOG_FATAL] = {"FATAL", "\033[1m\033[91m"},

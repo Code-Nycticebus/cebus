@@ -205,7 +205,12 @@ bool str_eq_ignorecase(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;
   }
-  return strncasecmp(s1.data, s2.data, s1.len) == 0;
+  for (size_t i = 0; i < s1.len; i++) {
+    if (tolower(s1.data[i]) != tolower(s2.data[i])) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool str_startswith(Str s1, Str prefix) {
