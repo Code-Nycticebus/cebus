@@ -1,5 +1,6 @@
 #include "str.h"
 #include "clib/arena.h"
+#include "datatypes/integers.h"
 
 #include <ctype.h>
 #include <inttypes.h>
@@ -235,7 +236,7 @@ bool str_contains(Str haystack, Str needle) {
 }
 
 CmpOrdering str_compare(Str s1, Str s2) {
-  const usize min_bytes = s1.len < s2.len ? s1.len : s2.len;
+  const usize min_bytes = usize_min(s1.len, s2.len);
   const int r = strncmp(s1.data, s2.data, min_bytes);
   return r < 0   ? CMP_LESS    // less
          : 0 < r ? CMP_GREATER // greater
