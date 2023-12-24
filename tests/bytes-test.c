@@ -53,6 +53,12 @@ void test_bytes_take(void) {
   Bytes t = bytes_take(&b, 2);
   clib_assert(b.size == 2, "Did not take enough bytes");
   clib_assert(t.size == 2, "Did not take enough bytes");
+
+  Bytes rest = bytes_take(&b, 3);
+  clib_assert(rest.size == 2, "Did not take the correct amount of bytes");
+
+  Bytes invalid = bytes_take(&b, 3);
+  clib_assert(invalid.size == 0, "Did not take the correct amount of bytes");
 }
 
 int main(void) {
