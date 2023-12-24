@@ -3,24 +3,18 @@
 #include "clib/asserts.h"
 
 void test_u8_leading_bits(void) {
-  const u8 b = 0xf0;
-  clib_assert(u8_leading_ones(b) == 4, "Did not count correctly");
-  const u8 b2 = 0x0f;
-  clib_assert(u8_leading_zeros(b2) == 4, "Did not count correctly");
+  clib_assert(u8_leading_ones(0xf0) == 4, "Did not count correctly");
+  clib_assert(u8_leading_zeros(0x0f) == 4, "Did not count correctly");
 }
 
 void test_u8_trailing_bits(void) {
-  const u8 b = 0x07;
-  clib_assert(u8_trailing_ones(b) == 3, "Did not count correctly");
-  const u8 b2 = 0x08;
-  clib_assert(u8_trailing_zeros(b2) == 3, "Did not count correctly");
+  clib_assert(u8_trailing_ones(0x07) == 3, "Did not count correctly");
+  clib_assert(u8_trailing_zeros(0x08) == 3, "Did not count correctly");
 }
 
 void test_u8_swaping_bits(void) {
-  const u8 b = 0x80;
-  clib_assert(u8_reverse_bits(b) == 0x01, "Did not reverse correctly");
-  const u8 b2 = 0x01;
-  clib_assert(u8_reverse_bits(b2) == 0x80, "Did not reverse correctly");
+  clib_assert(u8_reverse_bits(0x80) == 0x01, "Did not reverse correctly");
+  clib_assert(u8_reverse_bits(0x01) == 0x80, "Did not reverse correctly");
 }
 
 void test_u8_endian(void) {
