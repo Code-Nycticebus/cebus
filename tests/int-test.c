@@ -33,18 +33,22 @@ void test_u8_count_bits(void) {
 void test_u8_from_bytes(void) {
   clib_assert(u8_from_be_bytes(BYTES(0x12)) == 0x12, "Conversion not correct");
   clib_assert(u8_from_le_bytes(BYTES(0x12)) == 0x12, "Conversion not correct");
+  clib_assert(u8_from_ne_bytes(BYTES(0x12)) == 0x12, "Conversion not correct");
 }
 
-void test_u32_to_bytes(void) {
+void test_u8_to_bytes(void) {
   Arena arena = {0};
-  clib_assert(bytes_eq(u32_to_be_bytes(0x12345678, &arena),
-                       BYTES(0x12, 0x34, 0x56, 0x78)),
+  clib_assert(bytes_eq(u8_to_be_bytes(0x12, &arena), BYTES(0x12)),
               "Not converted correctly");
-
-  clib_assert(bytes_eq(u32_to_le_bytes(0x12345678, &arena),
-                       BYTES(0x78, 0x56, 0x34, 0x12)),
+  clib_assert(bytes_eq(u8_to_le_bytes(0x12, &arena), BYTES(0x12)),
               "Not converted correctly");
-
+#if CLIB_BYTE_ORDER == ENDIAN_LITTLE
+  clib_assert(bytes_eq(u8_to_ne_bytes(0x12, &arena), BYTES(0x12)),
+              "Not converted correctly");
+#else
+  clib_assert(bytes_eq(u8_to_ne_bytes(0x12, &arena), BYTES(0x12)),
+              "Not converted correctly");
+#endif
   arena_free(&arena);
 }
 
@@ -54,6 +58,5 @@ int main(void) {
   test_u8_endian();
   test_u8_count_bits();
   test_u8_from_bytes();
-
-  test_u32_to_bytes();
+  test_u8_to_bytes();
 }

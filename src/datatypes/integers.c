@@ -3,7 +3,6 @@
 #include "clib/asserts.h"
 #include "clib/platform.h"
 #include "datatypes/bytes.h"
-#include "datatypes/str.h"
 
 #define BITS_REVERSE(T, value, BITS)                                           \
   do {                                                                         \
@@ -99,22 +98,30 @@
     return count;                                                              \
   } while (0)
 
-#define TO_BE_BYTES(value, arena)                                              \
-  do {                                                                         \
-    u8 *buffer = arena_alloc(arena, sizeof(value));                            \
-    u8 *bytes = (u8 *)&value;                                                  \
-    for (size_t i = 0; i < sizeof(value); i++) {                               \
-      buffer[i] = bytes[i];                                                    \
-    }                                                                          \
-    return bytes_from_parts(sizeof(value), buffer);                            \
-  } while (0)
-
 #define TO_LE_BYTES(value, arena)                                              \
   do {                                                                         \
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
     for (size_t i = 0; i < sizeof(value); i++) {                               \
-      buffer[sizeof(value) - i - 1] = bytes[i];                                \
+      if (CLIB_BYTE_ORDER == ENDIAN_LITTLE) {                                  \
+        buffer[i] = bytes[i];                                                  \
+      } else {                                                                 \
+        buffer[sizeof(value) - i - 1] = bytes[i];                              \
+      }                                                                        \
+    }                                                                          \
+    return bytes_from_parts(sizeof(value), buffer);                            \
+  } while (0)
+
+#define TO_BE_BYTES(value, arena)                                              \
+  do {                                                                         \
+    u8 *buffer = arena_alloc(arena, sizeof(value));                            \
+    u8 *bytes = (u8 *)&value;                                                  \
+    for (size_t i = 0; i < sizeof(value); i++) {                               \
+      if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                     \
+        buffer[i] = bytes[i];                                                  \
+      } else {                                                                 \
+        buffer[sizeof(value) - i - 1] = bytes[i];                              \
+      }                                                                        \
     }                                                                          \
     return bytes_from_parts(sizeof(value), buffer);                            \
   } while (0)
@@ -152,6 +159,7 @@ u8 u8_from_be_bytes(Bytes bytes) {
   return *(u8 *)bytes.data;
 #endif
 }
+Bytes u8_to_be_bytes(u8 value, Arena *arena) { TO_BE_BYTES(value, arena); }
 
 u8 u8_to_le(u8 value) {
 #if CLIB_BYTE_ORDER == ENDIAN_BIG
@@ -177,9 +185,17 @@ u8 u8_from_le_bytes(Bytes bytes) {
   return *(u8 *)bytes.data;
 #endif
 }
+Bytes u8_to_le_bytes(u8 value, Arena *arena) { TO_LE_BYTES(value, arena); }
 
-Str u8_to_str(u8 value, Arena *arena) { return str_u64(arena, value); }
+u8 u8_from_ne_bytes(Bytes bytes) {
+  clib_assert(sizeof(u8) == bytes.size, "Byte array not correct size");
+  return *(u8 *)bytes.data;
+}
 
-Bytes u32_to_le_bytes(u32 value, Arena *arena) { TO_BE_BYTES(value, arena); }
-
-Bytes u32_to_be_bytes(u32 value, Arena *arena) { TO_LE_BYTES(value, arena); }
+Bytes u8_to_ne_bytes(u8 value, Arena *arena) {
+#if CLIB_BYTE_ORDER == ENDIAN_BIG
+  TO_BE_BYTES(value, arena);
+#else
+  TO_LE_BYTES(value, arena);
+#endif
+}
