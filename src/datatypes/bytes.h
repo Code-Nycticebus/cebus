@@ -12,7 +12,7 @@
 
 #define BYTES_STR(s)                                                           \
   (Bytes) {                                                                    \
-    sizeof(s) - 1, (u8[]) { (s) }                                              \
+    sizeof(s) - 1, (void *) { (s) }                                            \
   }
 
 Bytes bytes_from_parts(usize size, const u8 *data);
