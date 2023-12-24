@@ -49,15 +49,15 @@ void test_bytes_slice(void) {
 }
 
 void test_bytes_take(void) {
-  Bytes b = BYTES(0x12, 0x34, 0x56, 0x78);
-  Bytes t = bytes_take(&b, 2);
-  clib_assert(b.size == 2, "Did not take enough bytes");
-  clib_assert(t.size == 2, "Did not take enough bytes");
+  Bytes bytes = BYTES(0x12, 0x34, 0x56, 0x78);
+  Bytes take = bytes_take(&bytes, 3);
+  clib_assert(bytes.size == 1, "Did not take enough bytes");
+  clib_assert(take.size == 3, "Did not take enough bytes");
 
-  Bytes rest = bytes_take(&b, 3);
-  clib_assert(rest.size == 2, "Did not take the correct amount of bytes");
+  Bytes rest = bytes_take(&bytes, 3);
+  clib_assert(rest.size == 1, "Did not take the correct amount of bytes");
 
-  Bytes invalid = bytes_take(&b, 3);
+  Bytes invalid = bytes_take(&bytes, 3);
   clib_assert(invalid.size == 0, "Did not take the correct amount of bytes");
 }
 
