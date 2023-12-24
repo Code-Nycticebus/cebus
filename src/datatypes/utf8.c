@@ -73,7 +73,7 @@ bool utf8_try_next(Utf8 *str, Utf8 *out) {
   usize bit_count = u8_leading_ones(str->data[0]);
   clib_assert_return(bit_count <= 4, false);
   clib_assert_return(bit_count != 1, false);
-  usize bytes = bit_count == 0 ? 1 : bit_count;
+  usize bytes = usize_max(1, bit_count);
   clib_assert_return(bytes <= str->size, false);
   *out = (Utf8){.len = 1, .size = bytes, .data = str->data};
   str->size -= bytes;
