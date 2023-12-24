@@ -174,7 +174,9 @@
       return T##_to_be_bytes(value, arena);                                    \
     }                                                                          \
     return T##_to_le_bytes(value, arena);                                      \
-  }
+  }                                                                            \
+  T T##_max(T a, T b) { return a < b ? b : a; }                                \
+  T T##_min(T a, T b) { return a < b ? b : a; }
 
 INTEGER_IMPL(u8, U8_BITS)
 INTEGER_IMPL(i8, I8_BITS)

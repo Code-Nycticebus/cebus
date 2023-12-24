@@ -22,7 +22,9 @@
   T T##_from_le_bytes(Bytes bytes);                                            \
   Bytes T##_to_le_bytes(T value, Arena *arena);                                \
   T T##_from_ne_bytes(Bytes bytes);                                            \
-  Bytes T##_to_ne_bytes(T value, Arena *arena);
+  Bytes T##_to_ne_bytes(T value, Arena *arena);                                \
+  T T##_max(T a, T b);                                                         \
+  T T##_min(T a, T b);
 
 INTEGER_DECL(u8)
 INTEGER_DECL(i8)
