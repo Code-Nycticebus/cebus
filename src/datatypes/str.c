@@ -104,8 +104,8 @@ Str str_replace(Str s, Str old, Str new, Arena *arena) {
   for (usize i = 0, j = 0; i < s.len; i++, j++) {
     if (strncmp(&s.data[i], old.data, old.len) == 0) {
       strncpy(&buffer[j], new.data, new.len);
-      i += old.len - 1;
-      j += new.len - 1;
+      i = (i + old.len) - 1;
+      j = (j + new.len) - 1;
     } else {
       buffer[j] = s.data[i];
     }
