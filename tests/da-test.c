@@ -105,7 +105,7 @@ static void test_filter(void) {
     da_push(&list, i);
   }
 
-  da_filter(&list, is_odd);
+  da_filter(&list, &list, is_odd);
 
   clib_assert(list.items[1] == 2, "list was not filtered correctly");
   clib_assert(list.items[2] == 4, "list was not filtered correctly");

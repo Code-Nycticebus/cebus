@@ -67,15 +67,16 @@
     (dest)->len = (src)->len;                                                  \
   } while (0)
 
-#define da_filter(list, filter)                                                \
+#define da_filter(src, dest, filter)                                           \
   do {                                                                         \
+    da_reserve((dest), (src)->len);                                            \
     usize __f_count = 0;                                                       \
-    for (usize __f_i = 0; __f_i < (list)->len; __f_i++) {                      \
-      if (filter((list)->items[__f_i])) {                                      \
-        (list)->items[__f_count++] = (list)->items[__f_i];                     \
+    for (usize __f_i = 0; __f_i < (src)->len; __f_i++) {                       \
+      if (filter((src)->items[__f_i])) {                                       \
+        (dest)->items[__f_count++] = (src)->items[__f_i];                      \
       }                                                                        \
     }                                                                          \
-    (list)->len = __f_count;                                                   \
+    (dest)->len = __f_count;                                                   \
   } while (0)
 
 #define da_sort(list, sort)                                                    \
