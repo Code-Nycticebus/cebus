@@ -21,7 +21,7 @@ Utf8 utf8_next(Utf8 *str);
 
 Utf8 utf8_copy(Utf8 str, Arena *arena);
 
-bool utf8_validate(Utf8 s);
 bool utf8_validate_bytes(Bytes s);
+bool utf8_validate(Utf8 s);
 
 #endif /* ifndef __CLIB_UTF8_H__ */

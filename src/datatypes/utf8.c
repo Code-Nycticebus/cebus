@@ -7,23 +7,6 @@
 #include "datatypes/bytes.h"
 #include "datatypes/integers.h"
 
-bool utf8_validate_bytes(Bytes bytes) {
-  for (usize i = 0; i < bytes.size; i++) {
-    usize bit_count = u8_leading_ones(bytes.data[i]);
-    clib_assert_return(bit_count <= 4, false);
-    usize idx = i;
-    for (usize j = 1; j < bit_count; j++) {
-      clib_assert_return(u8_leading_ones(bytes.data[idx + j]) == 1, false);
-      i++;
-    }
-  }
-  return true;
-}
-
-bool utf8_validate(Utf8 s) {
-  return utf8_validate_bytes(bytes_from_parts(s.size, (uint8_t *)s.data));
-}
-
 bool utf8_try_decode(Bytes bytes, Utf8 *out) {
   usize len = 0;
   for (usize i = 0; i < bytes.size; i++) {
@@ -93,4 +76,21 @@ Utf8 utf8_copy(Utf8 str, Arena *arena) {
   char *buffer = arena_calloc(arena, str.size + 1);
   memcpy(buffer, str.data, str.size);
   return (Utf8){.len = str.len, .size = str.size, .data = buffer};
+}
+
+bool utf8_validate_bytes(Bytes bytes) {
+  for (usize i = 0; i < bytes.size; i++) {
+    usize bit_count = u8_leading_ones(bytes.data[i]);
+    clib_assert_return(bit_count <= 4, false);
+    usize idx = i;
+    for (usize j = 1; j < bit_count; j++) {
+      clib_assert_return(u8_leading_ones(bytes.data[idx + j]) == 1, false);
+      i++;
+    }
+  }
+  return true;
+}
+
+bool utf8_validate(Utf8 s) {
+  return utf8_validate_bytes(bytes_from_parts(s.size, (uint8_t *)s.data));
 }
