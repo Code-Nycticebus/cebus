@@ -101,13 +101,13 @@ Str str_replace(Str s, Str old, Str new, Arena *arena) {
   usize new_size = (s.len - (old.len * count) + (count * new.len));
   char *buffer = arena_calloc(arena, new_size + 1);
 
-  for (usize i = 0, j = 0; i < s.len; i++, j++) {
+  for (usize i = 0, j = 0; i < s.len;) {
     if (strncmp(&s.data[i], old.data, old.len) == 0) {
       strncpy(&buffer[j], new.data, new.len);
-      i = (i + old.len) - 1;
-      j = (j + new.len) - 1;
+      i += old.len;
+      j += new.len;
     } else {
-      buffer[j] = s.data[i];
+      buffer[j++] = s.data[i++];
     }
   }
 
