@@ -58,11 +58,13 @@ static void test_sort(void) {
 
 static void test_last(void) {
   DA(i32) list = {0};
-  da_init(&list, 1);
   clib_assert(da_empty(&list), "List should be initialized empty");
   da_push(&list, 10);
+  da_push(&list, 20);
   int last = da_last(&list);
-  clib_assert(last == 10, "Last is not the correct number");
+  clib_assert(last == 20, "Last is not the correct number");
+  int first = da_first(&list);
+  clib_assert(first == 10, "First is not the correct number");
   da_free(&list);
 }
 
