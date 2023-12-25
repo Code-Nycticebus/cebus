@@ -18,3 +18,4 @@
 - [ ] Command line args
 - [ ] Dynamic Library loading
 - [ ] INI/.conf file parsing
+- [ ] Formatting library
