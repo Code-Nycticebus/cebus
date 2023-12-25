@@ -1,8 +1,10 @@
 #include "clib/da.h"
 
 #include "clib/asserts.h"
+#include "datatypes/integers.h"
+#include <stdio.h>
 
-void test_da(void) {
+static void test_da(void) {
   const usize n = 10;
   DA(usize) list = {0};
   da_init(&list, 2);
@@ -21,7 +23,7 @@ void test_da(void) {
 
 usize times_two(usize v) { return v * 2; }
 
-void test_map(void) { // NOLINT
+static void test_map(void) { // NOLINT
   const usize n = 10;
   DA(usize) list = {0};
   da_init(&list, 2);
@@ -39,9 +41,7 @@ void test_map(void) { // NOLINT
   da_free(&list);
 }
 
-int sort(const void *a, const void *b) { return *(usize *)a - *(usize *)b; }
-
-void test_sort(void) {
+static void test_sort(void) {
   const usize n = 10;
   DA(usize) list = {0};
   da_init(&list, 2);
@@ -49,7 +49,7 @@ void test_sort(void) {
     da_push(&list, n - i - 1);
   }
 
-  da_sort(&list, sort);
+  da_sort(&list, usize_compare_qsort(CMP_LESS));
 
   for (usize i = 0; i < list.len; ++i) {
     clib_assert(list.items[i] == i, "sorting did not work correctly");
@@ -58,7 +58,7 @@ void test_sort(void) {
   da_free(&list);
 }
 
-void test_last(void) {
+static void test_last(void) {
   DA(i32) list = {0};
   da_init(&list, 1);
   clib_assert(da_empty(&list), "List should be initialized empty");
@@ -67,7 +67,7 @@ void test_last(void) {
   clib_assert(last == 10, "Last is not the correct number");
 }
 
-void test_extend(void) {
+static void test_extend(void) {
   DA(i32) list = {0};
 
   da_extend(&list, 3, ((int[]){1, 2, 3}));
@@ -76,14 +76,14 @@ void test_extend(void) {
   da_free(&list);
 }
 
-void test_reserve(void) {
+static void test_reserve(void) {
   DA(i32) list = {0};
   da_reserve(&list, 5);
   clib_assert(list.cap == 5, "Capacity was not increased");
   da_free(&list);
 }
 
-void test_reverse(void) {
+static void test_reverse(void) {
   DA(usize) list = {0};
   const usize n = 10;
   for (usize i = 0; i < n; i++) {
@@ -99,7 +99,7 @@ void test_reverse(void) {
 
 bool is_odd(i32 i) { return i % 2 == 0; }
 
-void test_filter(void) {
+static void test_filter(void) {
   DA(i32) list = {0};
   const usize n = 10;
   for (usize i = 0; i < n; i++) {
@@ -115,7 +115,7 @@ void test_filter(void) {
   da_free(&list);
 }
 
-void test_copy(void) {
+static void test_copy(void) {
   DA(usize) l1 = {0};
   const usize n = 10;
   for (usize i = 0; i < n; i++) {
@@ -133,7 +133,7 @@ void test_copy(void) {
   da_free(&l2);
 }
 
-void test_pop(void) {
+static void test_pop(void) {
   DA(usize) list = {0};
   const usize n = 10;
   for (usize i = 0; i < n; i++) {
@@ -155,6 +155,8 @@ int main(void) {
   test_extend();
   test_reserve();
   test_reverse();
+  test_sort();
+  test_last();
   test_filter();
   test_copy();
   test_pop();

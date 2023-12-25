@@ -24,7 +24,10 @@
   T T##_from_ne_bytes(Bytes bytes);                                            \
   Bytes T##_to_ne_bytes(T value, Arena *arena);                                \
   T T##_max(T a, T b);                                                         \
-  T T##_min(T a, T b);
+  T T##_min(T a, T b);                                                         \
+  CmpOrdering T##_compare_lt(T a, T b);                                        \
+  CmpOrdering T##_compare_gt(T a, T b);                                        \
+  CompareFn T##_compare_qsort(CmpOrdering ordering);
 
 INTEGER_DECL(u8)
 INTEGER_DECL(i8)
