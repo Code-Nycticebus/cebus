@@ -11,6 +11,7 @@
     T *items;                                                                  \
   }
 
+#define da_first(list) (list)->items[0]
 #define da_last(list) (list)->items[(list)->len - 1]
 #define da_empty(list) (!(list)->len)
 
