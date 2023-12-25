@@ -108,7 +108,7 @@
   }                                                                            \
                                                                                \
   T T##_from_be_bytes(Bytes bytes) {                                           \
-    clib_assert(sizeof(T) == bytes.size, "Byte array correct size");           \
+    clib_assert(sizeof(T) == bytes.size, "Byte array not correct size");       \
     if (CLIB_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
       return T##_swap_bytes(*(T *)bytes.data);                                 \
     }                                                                          \
