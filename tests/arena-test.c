@@ -9,7 +9,7 @@ typedef struct TestChunk {
   u8 data[];
 } TestChunk;
 
-void test_arena(void) {
+static void test_arena(void) {
   Arena arena = {0};
 
   const usize n_bytes = 10;
@@ -23,7 +23,7 @@ void test_arena(void) {
   arena_free(&arena);
 }
 
-void test_chunks(void) {
+static void test_chunks(void) {
   Arena arena = {0};
   const usize n_bytes = 10;
   char *buffer = arena_alloc(&arena, n_bytes);
@@ -38,12 +38,12 @@ void test_chunks(void) {
 
   TestChunk *tc2 = (TestChunk *)arena.begin;
   clib_assert(tc2 != tc, "No new chunk was allocated");
-  clib_assert(tc->allocated == more_bytes, "Not enough bytes are allocated");
+  clib_assert(tc2->allocated == more_bytes, "Not enough bytes are allocated");
 
   arena_free(&arena);
 }
 
-void test_calloc(void) {
+static void test_calloc(void) {
   Arena arena = {0};
 
   const usize n_bytes = 20;
@@ -55,7 +55,7 @@ void test_calloc(void) {
   arena_free(&arena);
 }
 
-void test_reset(void) { // NOLINT
+static void test_reset(void) { // NOLINT
   Arena arena = {0};
 
   const usize n_bytes = 10;
@@ -83,6 +83,7 @@ void test_reset(void) { // NOLINT
 
 int main(void) {
   test_arena();
+  test_chunks();
   test_calloc();
   test_reset();
 }

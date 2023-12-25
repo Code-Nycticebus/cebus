@@ -6,7 +6,7 @@
 
 #include <string.h>
 
-void test_decode(void) {
+static void test_decode(void) {
   Bytes bytes = BYTES(        //
       0xF0, 0x9F, 0x8E, 0x89, // 🎉
       0xE2, 0x9C, 0x85,       // ✅
@@ -24,13 +24,13 @@ void test_decode(void) {
   clib_assert(ret == false, "This should not be a valid utf-8 string");
 }
 
-void test_creation(void) {
+static void test_creation(void) {
   Utf8 s = UTF8("🎉✅😁 Hellö  Wörld 💩");
   clib_assert(memcmp(s.data, "🎉✅😁 Hellö  Wörld 💩", s.size) == 0,
               "Was not created correctly");
 }
 
-void test_copy(void) {
+static void test_copy(void) {
   Arena arena = {0};
   Utf8 s = UTF8("🎉✅😁 Hellö  Wörld 💩");
   Utf8 s2 = utf8_copy(s, &arena);
@@ -40,7 +40,7 @@ void test_copy(void) {
   arena_free(&arena);
 }
 
-void test_cmp(void) {
+static void test_cmp(void) {
   Utf8 s1 = UTF8("🎉✅😁CA");
   Utf8 s2 = UTF8("🎉✅😁CA");
   Utf8 s3 = UTF8("🎉✅✅CA");
@@ -48,7 +48,7 @@ void test_cmp(void) {
   clib_assert(utf8_eq(s1, s3) == false, "Strings should not be equal");
 }
 
-void test_next(void) {
+static void test_next(void) {
   Utf8 test = UTF8("🎉✅😁CA");
   Utf8 one = utf8_next(&test);
   clib_assert(utf8_eq(one, UTF8("🎉")), "Utf-8 was not correctly choped!");

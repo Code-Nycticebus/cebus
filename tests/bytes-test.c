@@ -2,7 +2,7 @@
 #include "datatypes/bytes.h"
 #include "datatypes/str.h"
 
-void test_bytes(void) {
+static void test_bytes(void) {
   Arena arena = {0};
   Bytes b = BYTES(0x02, 0xFF, 0xAA, 0xBB);
   clib_assert(b.data[0] == 0x02, "Bytes are not initialized correctly");
@@ -15,7 +15,7 @@ void test_bytes(void) {
   arena_free(&arena);
 }
 
-void test_bytes_str(void) {
+static void test_bytes_str(void) {
   Arena arena = {0};
   Bytes b = BYTES_STR("ABC");
   clib_assert(b.data[0] == 0x41, "Bytes are not initialized correctly");
@@ -27,7 +27,7 @@ void test_bytes_str(void) {
   arena_free(&arena);
 }
 
-void test_bytes_cmp(void) {
+static void test_bytes_cmp(void) {
   Bytes b1 = BYTES(0xFF);
   clib_assert(bytes_eq(b1, BYTES(0xFF)) == true,
               "Bytes not compared correctly");
@@ -35,7 +35,7 @@ void test_bytes_cmp(void) {
               "Bytes not compared correctly");
 }
 
-void test_bytes_slice(void) {
+static void test_bytes_slice(void) {
   Bytes b = BYTES_STR("ABC");
   Bytes slice = bytes_slice(b, 1, 3);
   clib_assert(bytes_eq(slice, BYTES_STR("BC")),
@@ -48,7 +48,7 @@ void test_bytes_slice(void) {
   clib_assert(bytes_eq(invalid2, BYTES_STR("")), "Bytes were not invalidated");
 }
 
-void test_bytes_take(void) {
+static void test_bytes_take(void) {
   Bytes bytes = BYTES(0x12, 0x34, 0x56, 0x78);
   Bytes take = bytes_take(&bytes, 3);
   clib_assert(bytes.size == 1, "Did not take enough bytes");

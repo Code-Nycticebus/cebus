@@ -7,7 +7,7 @@
 
 bool sep(char c) { return isspace(c) || isblank(c); }
 
-void test_compare(void) {
+static void test_compare(void) {
   Str s = STR("Hello, World");
 
   clib_assert(str_eq(s, STR("Hello, World")) == true, "");
@@ -29,7 +29,7 @@ static char mock(usize idx, char c) {
   return tolower(c);
 }
 
-void test_transform(void) {
+static void test_transform(void) {
   Arena arena = {0};
   Str s = STR("Hello, World");
   Str lower = str_lower(s, &arena);
@@ -44,7 +44,7 @@ void test_transform(void) {
   arena_free(&arena);
 }
 
-void test_copy(void) {
+static void test_copy(void) {
   Arena arena = {0};
 
   Str str = STR("Hello");
@@ -61,7 +61,7 @@ void test_copy(void) {
   arena_free(&arena);
 }
 
-void test_trim(void) {
+static void test_trim(void) {
   Str dirty = STR("\t  Hello World  \n");
   Str trim_l = str_trim_left(dirty);
   clib_assert(str_eq(trim_l, STR("Hello World  \n")), "");
@@ -73,7 +73,7 @@ void test_trim(void) {
   clib_assert(str_eq(trim, STR("Hello World")), "");
 }
 
-void test_chop(void) {
+static void test_chop(void) {
   Str text = STR("Hello\nThis is text");
   Str h = str_chop_by_delim(&text, '\n');
   Str rest = str_chop_by_predicate(&text, sep);
@@ -82,7 +82,7 @@ void test_chop(void) {
   clib_assert(str_eq(text, STR("is text")), "");
 }
 
-void test_try_chop(void) {
+static void test_try_chop(void) {
   Str text = STR("Hello\nThis is text");
   Str h = {0};
   bool t1 = str_try_chop_by_delim(&text, '\n', &h);
@@ -99,7 +99,7 @@ void test_try_chop(void) {
   clib_assert(t3 == false, "");
 }
 
-void test_chop_right(void) {
+static void test_chop_right(void) {
   Str text = STR("Hello\nThis is text");
   Str t = str_chop_right_by_predicate(&text, sep);
   Str rest = str_chop_right_by_delim(&text, '\n');
@@ -110,7 +110,7 @@ void test_chop_right(void) {
   clib_assert(str_eq(rest2, STR("Hello")), "");
 }
 
-void test_u64(void) {
+static void test_u64(void) {
   Arena arena = {0};
   const u64 N = 64;
   Str number = str_u64(&arena, N);
@@ -126,7 +126,7 @@ void test_u64(void) {
   arena_free(&arena);
 }
 
-void test_find(void) {
+static void test_find(void) {
   Str s = STR("Hello, World");
   clib_assert(str_find(s, STR("Hello")) == 0, "");
   clib_assert(str_find_last(s, STR("Hello")) == 0, "");
@@ -135,7 +135,7 @@ void test_find(void) {
   clib_assert(str_find(s, STR("TEST")) == STR_NOT_FOUND, "");
 }
 
-void test_count(void) {
+static void test_count(void) {
   Str s = STR("Hello, World");
   usize c = str_count(s, STR("o"));
   clib_assert(c == 2, "");
@@ -143,7 +143,7 @@ void test_count(void) {
   clib_assert(c == 0, "");
 }
 
-void test_replace(void) {
+static void test_replace(void) {
   Arena arena = {0};
 
   Str s = STR("Hello, World");
@@ -169,7 +169,7 @@ void test_replace(void) {
   arena_free(&arena);
 }
 
-void test_substring(void) {
+static void test_substring(void) {
   Str s = STR("Hello, World");
   Str substring = str_substring(s, 0, 4);
   Str invalid1 = str_substring(s, 4, 2);
@@ -180,7 +180,7 @@ void test_substring(void) {
   clib_assert(str_eq(invalid2, STR("")), "");
 }
 
-void test_join(void) {
+static void test_join(void) {
   Arena arena = {0};
   Str res =
       str_join(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")}, &arena);
@@ -188,7 +188,7 @@ void test_join(void) {
   arena_free(&arena);
 }
 
-void test_justify(void) {
+static void test_justify(void) {
   Arena arena = {0};
   const usize width = 10;
   Str center = str_center(STR("Hello"), width, ' ', &arena);
@@ -200,7 +200,7 @@ void test_justify(void) {
   arena_free(&arena);
 }
 
-void test_cmp(void) {
+static void test_cmp(void) {
   Str array[] = {STR("Banana"), STR("Strawberry"), STR("Apple"), STR("Lemon")};
   const usize n = sizeof(array) / sizeof(array[0]);
   qsort(array, n, sizeof(array[0]), str_compare_qsort(CMP_GREATER));
@@ -211,14 +211,14 @@ void test_cmp(void) {
   clib_assert(str_eq(array[3], STR("Strawberry")), "");
 }
 
-void test_repeat(void) {
+static void test_repeat(void) {
   Arena arena = {0};
   Str tf_fleet = str_repeat(STR("|-#-| "), 4, &arena);
   clib_assert(str_eq(tf_fleet, STR("|-#-| |-#-| |-#-| |-#-| ")), "");
   arena_free(&arena);
 }
 
-void test_reverse(void) {
+static void test_reverse(void) {
   Arena arena = {0};
   Str s = str_reverse(STR("Hello, World"), &arena);
   clib_assert(str_eq(s, STR("dlroW ,olleH")), "");
@@ -231,6 +231,7 @@ int main(void) {
   test_copy();
   test_trim();
   test_chop();
+  test_try_chop();
   test_chop_right();
   test_u64();
   test_find();

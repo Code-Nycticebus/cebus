@@ -2,7 +2,6 @@
 
 #include "clib/asserts.h"
 #include "datatypes/integers.h"
-#include <stdio.h>
 
 static void test_da(void) {
   const usize n = 10;
@@ -44,7 +43,6 @@ static void test_map(void) { // NOLINT
 static void test_sort(void) {
   const usize n = 10;
   DA(usize) list = {0};
-  da_init(&list, 2);
   for (usize i = 0; i < n; ++i) {
     da_push(&list, n - i - 1);
   }
@@ -65,6 +63,7 @@ static void test_last(void) {
   da_push(&list, 10);
   int last = da_last(&list);
   clib_assert(last == 10, "Last is not the correct number");
+  da_free(&list);
 }
 
 static void test_extend(void) {
