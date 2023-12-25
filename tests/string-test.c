@@ -162,6 +162,10 @@ void test_replace(void) {
   Str res = str_replace(dash, STR("-"), STR(""), &arena);
   clib_assert(str_eq(res, STR("clanguage")), "");
 
+  Str edge = STR("-language");
+  Str res2 = str_replace(edge, STR("-"), STR(""), &arena);
+  clib_assert(str_eq(res2, STR("language")), "");
+
   arena_free(&arena);
 }
 

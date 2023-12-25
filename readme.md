@@ -8,10 +8,11 @@
 - [x] Logging
 - [x] Asserts
 - [x] Platform
-- [ ] Bytes
+- [x] Bytes
+- [x] Integers
+- [ ] UTF-8
 - [ ] Paths
 - [ ] Localization
-- [ ] UTF-8
 - [ ] DateTime
 - [ ] File IO (Best async)
 - [ ] Command line args
