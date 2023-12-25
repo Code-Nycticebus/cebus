@@ -240,6 +240,8 @@ bool str_contains(Str haystack, Str needle) {
   return false;
 }
 
+bool str_is_empty(Str s) { return s.len == 0; }
+
 CmpOrdering str_compare_gt(Str s1, Str s2) {
   const usize min_bytes = usize_min(s1.len, s2.len);
   const int r = strncmp(s1.data, s2.data, min_bytes);
