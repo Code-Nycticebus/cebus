@@ -240,7 +240,7 @@ bool str_contains(Str haystack, Str needle) {
   return false;
 }
 
-CmpOrdering str_compare(Str s1, Str s2) {
+CmpOrdering str_compare_gt(Str s1, Str s2) {
   const usize min_bytes = usize_min(s1.len, s2.len);
   const int r = strncmp(s1.data, s2.data, min_bytes);
   return r < 0   ? CMP_LESS    // less
@@ -248,8 +248,18 @@ CmpOrdering str_compare(Str s1, Str s2) {
                  : CMP_EQUAL;  // equal
 }
 
-CmpOrdering str_compare_qsort(const void *s1, const void *s2) {
-  return str_compare(*(Str *)s1, *(Str *)s2);
+CmpOrdering str_compare_lt(Str s1, Str s2) { return str_compare_gt(s2, s1); }
+
+static CmpOrdering _str_cmp_gt(const void *s1, const void *s2) {
+  return str_compare_gt(*(Str *)s1, *(Str *)s2);
+}
+
+static CmpOrdering _str_cmp_lt(const void *s1, const void *s2) {
+  return str_compare_gt(*(Str *)s2, *(Str *)s1);
+}
+
+CompareFn str_compare_qsort(CmpOrdering ordering) {
+  return ordering == CMP_LESS ? _str_cmp_lt : _str_cmp_gt;
 }
 
 bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {

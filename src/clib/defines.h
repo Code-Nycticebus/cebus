@@ -13,4 +13,6 @@ typedef enum {
   CMP_GREATER = 1,
 } CmpOrdering;
 
+typedef CmpOrdering (*CompareFn)(const void *, const void *);
+
 #endif /* !__CLIB_DEFINES_H__ */
