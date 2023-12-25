@@ -6,7 +6,7 @@ typedef struct TestChunk {
   struct TestChunk *next;
   usize cap;
   usize allocated;
-  uint8_t data[];
+  u8 data[];
 } TestChunk;
 
 void test_arena(void) {
