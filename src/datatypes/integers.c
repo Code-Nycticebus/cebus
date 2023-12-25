@@ -32,7 +32,7 @@
   usize T##_leading_ones(T value) {                                            \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (!(value & ((T)1 << (BITS - i - 1)))) {                               \
+      if (!(value >> (BITS - i - 1) & (T)0x1)) {                               \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -43,7 +43,7 @@
   usize T##_trailing_ones(T value) {                                           \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (!(value & ((T)1 << i))) {                                            \
+      if (!(value >> i & (T)0x1)) {                                            \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -54,7 +54,7 @@
   usize T##_leading_zeros(T value) {                                           \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (value & ((T)1 << (BITS - i - 1))) {                                  \
+      if (value >> (BITS - i - 1) & (T)0x1) {                                  \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -65,7 +65,7 @@
   usize T##_trailing_zeros(T value) {                                          \
     usize count = 0;                                                           \
     for (usize i = 0; i < BITS; i++) {                                         \
-      if (value & ((T)1 << i)) {                                               \
+      if (value >> i & (T)0x1) {                                               \
         break;                                                                 \
       }                                                                        \
       count++;                                                                 \
@@ -76,7 +76,7 @@
   usize T##_count_zeros(T value) {                                             \
     usize count = 0;                                                           \
     for (size_t i = 0; i < BITS; i++) {                                        \
-      if (!(value & ((T)1 << i))) {                                            \
+      if (!(value >> i & (T)0x1)) {                                            \
         count++;                                                               \
       }                                                                        \
     }                                                                          \
@@ -86,7 +86,7 @@
   usize T##_count_ones(T value) {                                              \
     usize count = 0;                                                           \
     for (size_t i = 0; i < BITS; i++) {                                        \
-      if (value & ((T)1 << i)) {                                               \
+      if (value >> i & (T)0x1) {                                               \
         count++;                                                               \
       }                                                                        \
     }                                                                          \
