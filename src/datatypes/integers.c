@@ -174,20 +174,29 @@
     }                                                                          \
     return T##_to_le_bytes(value, arena);                                      \
   }                                                                            \
+                                                                               \
   T T##_max(T a, T b) { return a < b ? b : a; }                                \
   T T##_min(T a, T b) { return a > b ? b : a; }                                \
+  T T##_clamp(T min, T max, T value) {                                         \
+    return value < min ? min : max < value ? max : value;                      \
+  }                                                                            \
+                                                                               \
   CmpOrdering T##_compare_lt(T a, T b) {                                       \
     return a == b ? CMP_EQUAL : a < b ? CMP_LESS : CMP_GREATER;                \
   }                                                                            \
+                                                                               \
   CmpOrdering T##_compare_gt(T a, T b) {                                       \
     return a == b ? CMP_EQUAL : a > b ? CMP_LESS : CMP_GREATER;                \
   }                                                                            \
+                                                                               \
   static CmpOrdering _##T##_cmp_gt(const void *a, const void *b) {             \
     return T##_compare_gt(*(T *)a, *(T *)b);                                   \
   }                                                                            \
+                                                                               \
   static CmpOrdering _##T##_cmp_lt(const void *a, const void *b) {             \
     return T##_compare_lt(*(T *)a, *(T *)b);                                   \
   }                                                                            \
+                                                                               \
   CompareFn T##_compare_qsort(CmpOrdering ordering) {                          \
     return ordering == CMP_LESS ? _##T##_cmp_lt : _##T##_cmp_gt;               \
   }
