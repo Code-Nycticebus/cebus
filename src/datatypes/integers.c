@@ -20,7 +20,7 @@
   T T##_swap_bytes(T value) {                                                  \
     if (1 < sizeof(T)) {                                                       \
       u8 *bytes = (u8 *)&value;                                                \
-      for (size_t i = 0; i < (sizeof(T) + 1) / 2; i++) {                       \
+      for (usize i = 0; i < (sizeof(T) + 1) / 2; i++) {                        \
         u8 temp = bytes[i];                                                    \
         bytes[i] = bytes[sizeof(T) - i - 1];                                   \
         bytes[sizeof(T) - i - 1] = temp;                                       \
@@ -75,7 +75,7 @@
                                                                                \
   usize T##_count_zeros(T value) {                                             \
     usize count = 0;                                                           \
-    for (size_t i = 0; i < BITS; i++) {                                        \
+    for (usize i = 0; i < BITS; i++) {                                         \
       if (!(value >> i & (T)0x1)) {                                            \
         count++;                                                               \
       }                                                                        \
@@ -85,7 +85,7 @@
                                                                                \
   usize T##_count_ones(T value) {                                              \
     usize count = 0;                                                           \
-    for (size_t i = 0; i < BITS; i++) {                                        \
+    for (usize i = 0; i < BITS; i++) {                                         \
       if (value >> i & (T)0x1) {                                               \
         count++;                                                               \
       }                                                                        \
@@ -118,7 +118,7 @@
   Bytes T##_to_be_bytes(T value, Arena *arena) {                               \
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
-    for (size_t i = 0; i < sizeof(value); i++) {                               \
+    for (usize i = 0; i < sizeof(value); i++) {                                \
       if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                     \
         buffer[i] = bytes[i];                                                  \
       } else {                                                                 \
@@ -153,7 +153,7 @@
   Bytes T##_to_le_bytes(T value, Arena *arena) {                               \
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
-    for (size_t i = 0; i < sizeof(value); i++) {                               \
+    for (usize i = 0; i < sizeof(value); i++) {                                \
       if (CLIB_BYTE_ORDER == ENDIAN_LITTLE) {                                  \
         buffer[i] = bytes[i];                                                  \
       } else {                                                                 \
