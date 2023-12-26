@@ -56,7 +56,7 @@ bool str_eq_ignorecase(Str s1, Str s2);
 bool str_startswith(Str s1, Str prefix);
 bool str_endswith(Str s1, Str suffix);
 bool str_contains(Str haystack, Str needle);
-bool str_is_empty(Str s);
+bool str_empty(Str s);
 CmpOrdering str_compare_gt(Str s1, Str s2);
 CmpOrdering str_compare_lt(Str s1, Str s2);
 CompareFn str_compare_qsort(CmpOrdering ordering);

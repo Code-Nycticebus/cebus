@@ -17,6 +17,9 @@ static void test_compare(void) {
 
   clib_assert(str_contains(s, STR("Hell")) == true, "");
   clib_assert(str_contains(s, STR("TEST")) == false, "");
+
+  clib_assert(str_empty(s) == false, "String should not be empty");
+  clib_assert(str_empty(STR("")) == true, "String should be empty");
 }
 
 static char mock(usize idx, char c) {
