@@ -30,6 +30,14 @@ static void test_creation(void) {
               "Was not created correctly");
 }
 
+static void test_cmp(void) {
+  Utf8 s1 = UTF8("🎉✅😁CA");
+  Utf8 s2 = UTF8("🎉✅😁CA");
+  Utf8 s3 = UTF8("🎉✅✅CA");
+  clib_assert(utf8_eq(s1, s2) == true, "Strings should be equal");
+  clib_assert(utf8_eq(s1, s3) == false, "Strings should not be equal");
+}
+
 static void test_copy(void) {
   Arena arena = {0};
   Utf8 s = UTF8("🎉✅😁 Hellö  Wörld 💩");
@@ -86,6 +94,7 @@ int main(void) {
 
   test_decode();
   test_creation();
+  test_cmp();
   test_copy();
   test_concat();
   test_join();
