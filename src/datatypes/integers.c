@@ -108,7 +108,8 @@
   }                                                                            \
                                                                                \
   T T##_from_be_bytes(Bytes bytes) {                                           \
-    clib_assert(sizeof(T) == bytes.size, "Byte array not correct size");       \
+    clib_assert(sizeof(T) == bytes.size, "expected %zu bytes but got %zu",     \
+                sizeof(T), bytes.size);                                        \
     if (CLIB_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
       return T##_swap_bytes(*(T *)bytes.data);                                 \
     }                                                                          \
@@ -143,7 +144,8 @@
   }                                                                            \
                                                                                \
   T T##_from_le_bytes(Bytes bytes) {                                           \
-    clib_assert(sizeof(T) == bytes.size, "Byte array not correct size");       \
+    clib_assert(sizeof(T) == bytes.size, "expected %zu bytes but got %zu",     \
+                sizeof(T), bytes.size);                                        \
     if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                       \
       return T##_swap_bytes(*(T *)bytes.data);                                 \
     }                                                                          \
@@ -164,7 +166,8 @@
   }                                                                            \
                                                                                \
   T T##_from_ne_bytes(Bytes bytes) {                                           \
-    clib_assert(sizeof(T) == bytes.size, "Byte array not correct size");       \
+    clib_assert(sizeof(T) == bytes.size, "expected %zu bytes but got %zu",     \
+                sizeof(T), bytes.size);                                        \
     return *(T *)bytes.data;                                                   \
   }                                                                            \
                                                                                \
