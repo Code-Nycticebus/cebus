@@ -86,6 +86,26 @@ Utf8 utf8_concat(Utf8 s1, Utf8 s2, Arena *arena) {
   return (Utf8){.len = s1.len + s2.len, .size = new_size, .data = buffer};
 }
 
+Utf8 utf8_join(Utf8 sep, usize count, Utf8 s[count], Arena *arena) {
+  usize new_size = (sep.size * (count - 1));
+  usize new_len = (sep.len * (count - 1));
+  for (usize i = 0; i < count; i++) {
+    new_size += s[i].size;
+    new_len += s[i].len;
+  }
+  char *buffer = arena_calloc(arena, new_size + 1);
+  usize b_idx = 0;
+  for (usize i = 0; i < count; i++) {
+    if (i != 0) {
+      memcpy(&buffer[b_idx], sep.data, sep.size);
+      b_idx += sep.size;
+    }
+    memcpy(&buffer[b_idx], s[i].data, s[i].size);
+    b_idx += s[i].size;
+  }
+  return (Utf8){.len = new_len, .size = new_size, .data = buffer};
+}
+
 bool utf8_validate_bytes(Bytes bytes) {
   for (usize i = 0; i < bytes.size; i++) {
     usize bit_count = u8_leading_ones(bytes.data[i]);

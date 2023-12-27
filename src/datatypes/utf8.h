@@ -21,6 +21,7 @@ Utf8 utf8_next(Utf8 *str);
 
 Utf8 utf8_copy(Utf8 str, Arena *arena);
 Utf8 utf8_concat(Utf8 s1, Utf8 s2, Arena *arena);
+Utf8 utf8_join(Utf8 sep, usize count, Utf8 s[count], Arena *arena);
 
 bool utf8_validate_bytes(Bytes s);
 bool utf8_validate(Utf8 s);

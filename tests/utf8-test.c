@@ -49,12 +49,16 @@ static void test_concat(void) {
   arena_free(&arena);
 }
 
-static void test_cmp(void) {
-  Utf8 s1 = UTF8("🎉✅😁CA");
-  Utf8 s2 = UTF8("🎉✅😁CA");
-  Utf8 s3 = UTF8("🎉✅✅CA");
-  clib_assert(utf8_eq(s1, s2) == true, "Strings should be equal");
-  clib_assert(utf8_eq(s1, s3) == false, "Strings should not be equal");
+static void test_join(void) {
+  Arena arena = {0};
+
+  Utf8 res = utf8_join(UTF8(" "), 3,
+                       (Utf8[]){UTF8("🎉"), UTF8("✅"), UTF8("🎉")}, &arena);
+
+  clib_assert(utf8_eq(res, UTF8("🎉 ✅ 🎉")),
+              "String was not joined correctly");
+
+  arena_free(&arena);
 }
 
 static void test_next(void) {
@@ -84,6 +88,6 @@ int main(void) {
   test_creation();
   test_copy();
   test_concat();
-  test_cmp();
+  test_join();
   test_next();
 }
