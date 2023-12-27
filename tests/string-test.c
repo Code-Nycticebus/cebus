@@ -22,14 +22,11 @@ static void test_compare(void) {
   clib_assert(str_empty(STR("")) == true, "String should be empty");
 }
 
-
-
 static void test_transform(void) {
   Arena arena = {0};
   Str s = STR("Hello, World");
   Str lower = str_lower(s, &arena);
   Str upper = str_upper(s, &arena);
-
 
   clib_assert(str_eq(lower, STR("hello, world")), "");
   clib_assert(str_eq(upper, STR("HELLO, WORLD")), "");
