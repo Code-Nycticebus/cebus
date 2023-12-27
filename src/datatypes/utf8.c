@@ -78,6 +78,14 @@ Utf8 utf8_copy(Utf8 str, Arena *arena) {
   return (Utf8){.len = str.len, .size = str.size, .data = buffer};
 }
 
+Utf8 utf8_concat(Utf8 s1, Utf8 s2, Arena *arena) {
+  const usize new_size = s1.size + s2.size;
+  char *buffer = arena_calloc(arena, new_size + 1);
+  memcpy(&buffer[0], s1.data, s1.size);
+  memcpy(&buffer[s1.size], s2.data, s2.size);
+  return (Utf8){.len = s1.len + s2.len, .size = new_size, .data = buffer};
+}
+
 bool utf8_validate_bytes(Bytes bytes) {
   for (usize i = 0; i < bytes.size; i++) {
     usize bit_count = u8_leading_ones(bytes.data[i]);

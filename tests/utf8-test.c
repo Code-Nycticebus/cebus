@@ -40,6 +40,15 @@ static void test_copy(void) {
   arena_free(&arena);
 }
 
+static void test_concat(void) {
+  Arena arena = {0};
+
+  Utf8 res = utf8_concat(UTF8("🎉✅😁"), UTF8(" 💩"), &arena);
+  clib_assert(utf8_eq(res, UTF8("🎉✅😁 💩")), "Did not concat correctly");
+
+  arena_free(&arena);
+}
+
 static void test_cmp(void) {
   Utf8 s1 = UTF8("🎉✅😁CA");
   Utf8 s2 = UTF8("🎉✅😁CA");
@@ -74,6 +83,7 @@ int main(void) {
   test_decode();
   test_creation();
   test_copy();
+  test_concat();
   test_cmp();
   test_next();
 }

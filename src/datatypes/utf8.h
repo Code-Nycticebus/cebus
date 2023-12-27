@@ -20,6 +20,7 @@ bool utf8_try_next(Utf8 *str, Utf8 *out);
 Utf8 utf8_next(Utf8 *str);
 
 Utf8 utf8_copy(Utf8 str, Arena *arena);
+Utf8 utf8_concat(Utf8 s1, Utf8 s2, Arena *arena);
 
 bool utf8_validate_bytes(Bytes s);
 bool utf8_validate(Utf8 s);
