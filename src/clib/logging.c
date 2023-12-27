@@ -2,10 +2,9 @@
 
 #include "defines.h" // IWYU pragma: export
 #include <stdarg.h>
+#include <stdio.h>
 
 #include "platform.h"
-
-#define CLIB_LOGGER_CHAR_BUFFER_SIZE 1000
 
 #if defined(LINUX)
 #include <unistd.h>
@@ -26,16 +25,17 @@ struct CmLogLevelPrefix {
 #define FMT_RESET "\033[0m"
 
 #define _LOG(__log_level, __file, __fmt)                                       \
-  char __buffer[CLIB_LOGGER_CHAR_BUFFER_SIZE];                                 \
+  _clib_log(__log_level, __file);                                              \
   va_list __args;                                                              \
   va_start(__args, __fmt);                                                     \
-  vsnprintf(__buffer, CLIB_LOGGER_CHAR_BUFFER_SIZE, __fmt, __args);            \
+  vfprintf(__file, __fmt, __args);                                             \
   va_end(__args);                                                              \
-  _clib_log(__log_level, __file, __buffer);
+  fprintf(__file, "%s\n", display_colors ? FMT_RESET : "");
 
-static void _clib_log(LogLevel log_level, FILE *file, const char *msg) {
-  static bool display_colors = false;
-  static bool tty_checked = false;
+static bool display_colors = false;
+static bool tty_checked = false;
+
+static void _clib_log(LogLevel log_level, FILE *file) {
   if (!tty_checked) {
     tty_checked = true;
     display_colors = isatty(STDOUT_FILENO) && isatty(STDERR_FILENO);
@@ -49,10 +49,9 @@ static void _clib_log(LogLevel log_level, FILE *file, const char *msg) {
       [CLIB_LOG_TRACE] = {"TRACE", "\033[97m"},
   };
 
-  fprintf(file, "%s[%s]: %s%s\n",
-          display_colors ? log_level_str[log_level].color : "",
-          log_level_str[log_level].prefix, msg,
-          display_colors ? FMT_RESET : "");
+  fprintf(file,
+          "%s[%s]: ", display_colors ? log_level_str[log_level].color : "",
+          log_level_str[log_level].prefix);
 }
 
 CLIB_FMT(3, 4)
