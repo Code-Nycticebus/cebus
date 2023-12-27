@@ -15,14 +15,18 @@
 #define debugbreak(...) abort()
 #endif
 
-#define _clib_assert_print(level, msg, expression)                             \
-  clib_log(stderr, level, "%s:%d: assert failed: '%s': %s", __FILE__,          \
-           __LINE__, expression, msg);
+#define _STR(s) #s
+#define __STR(s) _STR(s)
 
-#define clib_assert(expression, msg)                                           \
+#define _clib_assert_print(level, expr, ...)                                   \
+  clib_log(stderr, level,                                                      \
+           __FILE__ ":"__STR(__LINE__) ": assert failed: '" expr               \
+                                       "': " __VA_ARGS__);
+
+#define clib_assert(expression, ...)                                           \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _clib_assert_print(CLIB_LOG_ERROR, msg, #expression);                    \
+      _clib_assert_print(CLIB_LOG_ERROR, #expression, __VA_ARGS__);            \
       debugbreak();                                                            \
     }                                                                          \
   } while (0)
@@ -34,18 +38,18 @@
     }                                                                          \
   } while (0)
 
-#define clib_assert_warn(expression, msg)                                      \
+#define clib_assert_warn(expression, ...)                                      \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _clib_assert_print(CLIB_LOG_WARNING, msg, #expression);                  \
+      _clib_assert_print(CLIB_LOG_WARNING, #expression, __VA_ARGS__);          \
     }                                                                          \
   } while (0)
 
 #ifndef NDEBUG
-#define clib_assert_debug(expression, msg)                                     \
+#define clib_assert_debug(expression, ...)                                     \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _clib_assert_print(CLIB_LOG_ERROR, msg, #expression);                    \
+      _clib_assert_print(CLIB_LOG_ERROR, #expression, __VA_ARGS__);            \
       debugbreak();                                                            \
     }                                                                          \
   } while (0)
