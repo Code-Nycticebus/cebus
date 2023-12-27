@@ -15,9 +15,6 @@
 #define debugbreak(...) abort()
 #endif
 
-#define __ASSERT_STR(s) #s
-#define _ASSERT_STR(s) __ASSERT_STR(s)
-
 #define _clib_assert_print(level, expr, ...)                                   \
   clib_log(stderr, level, "%s:%d: assert '" expr "' failed", __FILE__,         \
            __LINE__);                                                          \
