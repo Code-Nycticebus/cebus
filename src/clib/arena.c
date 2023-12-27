@@ -17,10 +17,7 @@ struct Chunk {
 
 static Chunk *chunk_allocate(usize size) {
   Chunk *chunk = malloc(sizeof(Chunk) + size);
-  if (chunk == NULL) {
-    clib_log_fatal("Memory allocation failed: %s", strerror(errno));
-    abort();
-  }
+  clib_assert(chunk != NULL, "Memory allocation failed: %s", strerror(errno));
   chunk->cap = size;
   chunk->allocated = 0;
   return chunk;

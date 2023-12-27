@@ -15,13 +15,13 @@
 #define debugbreak(...) abort()
 #endif
 
-#define _STR(s) #s
-#define __STR(s) _STR(s)
+#define __ASSERT_STR(s) #s
+#define _ASSERT_STR(s) __ASSERT_STR(s)
 
 #define _clib_assert_print(level, expr, ...)                                   \
   clib_log(stderr, level,                                                      \
-           __FILE__ ":"__STR(__LINE__) ": assert failed: '" expr               \
-                                       "': " __VA_ARGS__);
+           __FILE__ ":"_ASSERT_STR(__LINE__) ": assert failed: '" expr         \
+                                             "': " __VA_ARGS__);
 
 #define clib_assert(expression, ...)                                           \
   do {                                                                         \
