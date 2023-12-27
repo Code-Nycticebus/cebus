@@ -22,15 +22,7 @@ static void test_compare(void) {
   clib_assert(str_empty(STR("")) == true, "String should be empty");
 }
 
-static char mock(usize idx, char c) {
-  const usize upper_cases[] = {3, 7, 9, 11};
-  for (usize i = 0; i < 4; i++) {
-    if (idx == upper_cases[i]) {
-      return toupper(c);
-    }
-  }
-  return tolower(c);
-}
+
 
 static void test_transform(void) {
   Arena arena = {0};
@@ -38,11 +30,9 @@ static void test_transform(void) {
   Str lower = str_lower(s, &arena);
   Str upper = str_upper(s, &arena);
 
-  Str mapped = str_map(s, mock, &arena);
 
   clib_assert(str_eq(lower, STR("hello, world")), "");
   clib_assert(str_eq(upper, STR("HELLO, WORLD")), "");
-  clib_assert(str_eq(mapped, STR("helLo, WoRlD")), "");
 
   arena_free(&arena);
 }

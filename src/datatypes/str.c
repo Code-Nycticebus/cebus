@@ -88,14 +88,6 @@ Str str_lower(Str s, Arena *arena) {
   return str_from_parts(s.len, buffer);
 }
 
-Str str_map(Str s, char (*map_fn)(usize, char), Arena *arena) {
-  char *buffer = arena_calloc(arena, s.len + 1);
-  for (usize i = 0; i < s.len; i++) {
-    buffer[i] = map_fn(i, s.data[i]);
-  }
-  return str_from_parts(s.len, buffer);
-}
-
 Str str_replace(Str s, Str old, Str new, Arena *arena) {
   usize count = str_count(s, old);
   usize new_size = (s.len - (old.len * count) + (count * new.len));

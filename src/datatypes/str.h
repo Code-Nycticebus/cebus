@@ -41,7 +41,6 @@ Str str_concat(Str s1, Str s2, Arena *arena);
 Str str_join(Str sep, usize count, Str s[count], Arena *arena);
 Str str_upper(Str s, Arena *arena);
 Str str_lower(Str s, Arena *arena);
-Str str_map(Str s, char (*map_fn)(usize, char), Arena *arena);
 Str str_replace(Str s, Str old, Str new, Arena *arena);
 Str str_center(Str s, usize width, char fillchar, Arena *arena);
 Str str_ljust(Str s, usize width, char fillchar, Arena *arena);
