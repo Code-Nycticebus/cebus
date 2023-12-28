@@ -47,11 +47,20 @@ Str str_copy(Str s, Arena *arena) {
   return str_from_parts(s.len, buffer);
 }
 
-Str str_concat(Str s1, Str s2, Arena *arena) {
-  const usize new_size = s1.len + s2.len;
+Str str_append(Str s, Str suffix, Arena *arena) {
+  const usize new_size = s.len + suffix.len;
   char *buffer = arena_calloc(arena, new_size + 1);
-  strncpy(buffer, s1.data, s1.len);
-  strncat(buffer, s2.data, s2.len);
+  strncpy(&buffer[0], s.data, s.len);
+  strncpy(&buffer[s.len], suffix.data, suffix.len);
+  buffer[new_size] = '\0';
+  return str_from_parts(new_size, buffer);
+}
+
+Str str_prepend(Str s, Str prefix, Arena *arena) {
+  const usize new_size = s.len + prefix.len;
+  char *buffer = arena_calloc(arena, new_size + 1);
+  strncpy(&buffer[0], prefix.data, prefix.len);
+  strncpy(&buffer[prefix.len], s.data, s.len);
   buffer[new_size] = '\0';
   return str_from_parts(new_size, buffer);
 }

@@ -37,7 +37,8 @@ Str str_trim_right(Str s);
 Str str_trim(Str s);
 
 Str str_copy(Str s, Arena *arena);
-Str str_concat(Str s1, Str s2, Arena *arena);
+Str str_append(Str s1, Str s2, Arena *arena);
+Str str_prepend(Str s1, Str s2, Arena *arena);
 Str str_join(Str sep, usize count, Str s[count], Arena *arena);
 Str str_upper(Str s, Arena *arena);
 Str str_lower(Str s, Arena *arena);

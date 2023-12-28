@@ -37,16 +37,26 @@ static void test_transform(void) {
 static void test_copy(void) {
   Arena arena = {0};
 
-  Str str = STR("Hello");
-  Str str2 = str_copy(str, &arena);
-  Str str3 = str_from_cstr(", World");
-  Str full = str_concat(str2, str3, &arena);
+  Str str = STR("Hello, World");
+  Str full = str_copy(str, &arena);
 
   clib_assert(str_eq(full, STR("Hello, World")), "");
   clib_assert(str_getc(full, 0) == 'H', "");
   clib_assert(str_getc(full, 1) == 'e', "");
   clib_assert(str_getc(full, 7) == 'W', "");
   clib_assert(str_getc(full, full.len) == '\0', "");
+
+  arena_free(&arena);
+}
+
+static void test_append(void) {
+  Arena arena = {0};
+  Str append = str_append(STR("filename"), STR(".c"), &arena);
+  clib_assert(str_eq(append, STR("filename.c")), "did not append correctly");
+
+  Str prepend = str_prepend(STR("filename.c"), STR("used_mark__"), &arena);
+  clib_assert(str_eq(prepend, STR("used_mark__filename.c")),
+              "did not prepend correctly");
 
   arena_free(&arena);
 }
@@ -106,7 +116,7 @@ static void test_u64(void) {
   Str number = str_u64(&arena, N);
   clib_assert(str_eq(number, STR("64")), "");
 
-  Str n = str_concat(number, STR(" bytes"), &arena);
+  Str n = str_append(number, STR(" bytes"), &arena);
   clib_assert(str_eq(n, STR("64 bytes")), "");
 
   clib_assert(str_to_u64(n) == 64, "");
@@ -219,6 +229,7 @@ int main(void) {
   test_compare();
   test_transform();
   test_copy();
+  test_append();
   test_trim();
   test_chop();
   test_try_chop();
