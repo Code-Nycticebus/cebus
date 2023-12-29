@@ -21,6 +21,7 @@ char str_getc(Str s, usize idx) {
   }
   return s.data[idx];
 }
+
 Str str_trim_left(Str s) {
   Str result = s;
   for (usize i = 0; i < s.len && isspace(s.data[i]); ++i) {
