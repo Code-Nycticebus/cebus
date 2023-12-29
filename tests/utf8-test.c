@@ -36,6 +36,20 @@ static void test_cmp(void) {
   Utf8 s3 = UTF8("🎉✅✅CA");
   clib_assert(utf8_eq(s1, s2) == true, "Strings should be equal");
   clib_assert(utf8_eq(s1, s3) == false, "Strings should not be equal");
+
+  clib_assert(utf8_starts_with(s1, UTF8("🎉✅")) == true,
+              "Did not handle prefix correctly");
+  clib_assert(utf8_starts_with(s1, UTF8("🎉✅🎉✅🎉✅🎉✅")) == false,
+              "Should detect that prefix is bigger");
+  clib_assert(utf8_starts_with(s1, UTF8("✅")) == false,
+              "Should not start with ✅");
+
+  clib_assert(utf8_ends_with(s1, UTF8("😁CA")) == true,
+              "Did not detect suffix");
+  clib_assert(utf8_ends_with(s1, UTF8("😁CA😁CA")) == false,
+              "Should detect that suffix is bigger");
+  clib_assert(utf8_ends_with(s1, UTF8("😁")) == false,
+              "Should not end with 😁");
 }
 
 static void test_copy(void) {

@@ -16,6 +16,7 @@ Bytes utf8_encode(Utf8 s);
 
 bool utf8_eq(Utf8 s1, Utf8 s2);
 bool utf8_starts_with(Utf8 s, Utf8 prefix);
+bool utf8_ends_with(Utf8 s, Utf8 suffix);
 
 bool utf8_try_next(Utf8 *str, Utf8 *out);
 Utf8 utf8_next(Utf8 *str);

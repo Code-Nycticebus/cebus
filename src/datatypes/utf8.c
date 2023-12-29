@@ -46,10 +46,24 @@ Bytes utf8_encode(Utf8 s) {
 }
 
 bool utf8_eq(Utf8 s1, Utf8 s2) {
-  if (s1.len != s2.len || s1.size != s2.size) {
+  if (s1.size != s2.size) {
     return false;
   }
   return memcmp(s1.data, s2.data, s1.size) == 0;
+}
+
+bool utf8_starts_with(Utf8 s, Utf8 prefix) {
+  if (s.size < prefix.size) {
+    return false;
+  }
+  return memcmp(s.data, prefix.data, prefix.size) == 0;
+}
+
+bool utf8_ends_with(Utf8 s, Utf8 prefix) {
+  if (s.size < prefix.size) {
+    return false;
+  }
+  return memcmp(&s.data[s.size - prefix.size], prefix.data, prefix.size) == 0;
 }
 
 bool utf8_try_next(Utf8 *str, Utf8 *out) {
