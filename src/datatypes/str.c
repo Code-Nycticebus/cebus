@@ -281,14 +281,16 @@ bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {
     ++i;
   }
 
-  if (i < s->len) {
+  if (i && i <= s->len) {
     if (chunk) {
       *chunk = str_from_parts(i, s->data);
     }
-    s->data += i + 1;
-    s->len -= i + 1;
+    const usize new_len = usize_min(s->len, i + 1);
+    s->data += new_len;
+    s->len -= new_len;
     return true;
   }
+
   return false;
 }
 
@@ -298,12 +300,14 @@ Str str_chop_by_delim(Str *s, char delim) {
     ++i;
   }
 
-  if (i < s->len) {
+  if (i && i <= s->len) {
     Str chunk = str_from_parts(i, s->data);
-    s->data += i + 1;
-    s->len -= i + 1;
+    const usize new_len = usize_min(s->len, i + 1);
+    s->data += new_len;
+    s->len -= new_len;
     return chunk;
   }
+
   return *s;
 }
 
@@ -313,12 +317,13 @@ bool str_try_chop_by_predicate(Str *s, bool (*predicate)(char), Str *chunk) {
     ++i;
   }
 
-  if (i < s->len) {
+  if (i && i <= s->len) {
     if (chunk) {
       *chunk = str_from_parts(i, s->data);
     }
-    s->data += i + 1;
-    s->len -= i + 1;
+    const usize new_len = usize_min(s->len, i + 1);
+    s->data += new_len;
+    s->len -= new_len;
     return true;
   }
   return false;
@@ -330,10 +335,11 @@ Str str_chop_by_predicate(Str *s, bool (*predicate)(char)) {
     ++i;
   }
 
-  if (i < s->len) {
+  if (i && i <= s->len) {
     Str chunk = str_from_parts(i, s->data);
-    s->data += i + 1;
-    s->len -= i + 1;
+    const usize new_len = usize_min(s->len, i + 1);
+    s->data += new_len;
+    s->len -= new_len;
     return chunk;
   }
   return *s;
@@ -345,9 +351,9 @@ Str str_chop_right_by_delim(Str *s, char delim) {
     ++i;
   }
 
-  if (i < s->len) {
+  if (i && i <= s->len) {
     Str chunk = str_from_parts(i, &s->data[s->len - i]);
-    s->len -= i + 1;
+    s->len -= usize_min(s->len, i + 1);
     return chunk;
   }
   return *s;
@@ -359,9 +365,9 @@ Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
     ++i;
   }
 
-  if (i < s->len) {
+  if (i && i <= s->len) {
     Str chunk = str_from_parts(i, &s->data[s->len - i]);
-    s->len -= i + 1;
+    s->len -= usize_min(s->len, i + 1);
     return chunk;
   }
   return *s;

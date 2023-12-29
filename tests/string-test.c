@@ -76,10 +76,14 @@ static void test_trim(void) {
 static void test_chop(void) {
   Str text = STR("Hello\nThis is text");
   Str h = str_chop_by_delim(&text, '\n');
-  Str rest = str_chop_by_predicate(&text, sep);
   clib_assert(str_eq(h, STR("Hello")), "");
-  clib_assert(str_eq(rest, STR("This")), "");
-  clib_assert(str_eq(text, STR("is text")), "");
+
+  Str rest = str_chop_by_predicate(&text, sep);
+  clib_assert(str_eq(rest, STR("This")), STR_FMT, STR_ARG(rest));
+  rest = str_chop_by_predicate(&text, sep);
+  clib_assert(str_eq(rest, STR("is")), STR_FMT, STR_ARG(rest));
+  rest = str_chop_by_predicate(&text, sep);
+  clib_assert(str_eq(rest, STR("text")), STR_FMT, STR_ARG(rest));
 }
 
 static void test_try_chop(void) {
@@ -87,16 +91,23 @@ static void test_try_chop(void) {
   Str h = {0};
   bool t1 = str_try_chop_by_delim(&text, '\n', &h);
   clib_assert(t1 == true, "");
+  clib_assert(str_eq(h, STR("Hello")), "");
+
   Str rest = {0};
   bool t2 = str_try_chop_by_predicate(&text, sep, &rest);
   clib_assert(t2 == true, "");
+  clib_assert(str_eq(rest, STR("This")), STR_FMT, STR_ARG(rest));
 
-  clib_assert(str_eq(h, STR("Hello")), "");
-  clib_assert(str_eq(rest, STR("This")), "");
-  clib_assert(str_eq(text, STR("is text")), "");
+  t2 = str_try_chop_by_predicate(&text, sep, &rest);
+  clib_assert(t2 == true, "");
+  clib_assert(str_eq(rest, STR("is")), STR_FMT, STR_ARG(rest));
+
+  t2 = str_try_chop_by_predicate(&text, sep, &rest);
+  clib_assert(t2 == true, STR_FMT, STR_ARG(rest));
+  clib_assert(str_eq(rest, STR("text")), STR_FMT, STR_ARG(rest));
 
   bool t3 = str_try_chop_by_delim(&text, '\n', &rest);
-  clib_assert(t3 == false, "");
+  clib_assert(t3 == false, STR_FMT, STR_ARG(rest));
 }
 
 static void test_chop_right(void) {
@@ -104,10 +115,12 @@ static void test_chop_right(void) {
   Str t = str_chop_right_by_predicate(&text, sep);
   Str rest = str_chop_right_by_delim(&text, '\n');
   Str rest2 = str_chop_right_by_delim(&text, '\n');
+  Str rest3 = str_chop_right_by_delim(&text, '\n');
 
   clib_assert(str_eq(t, STR("text")), "");
   clib_assert(str_eq(rest, STR("This is")), "");
   clib_assert(str_eq(rest2, STR("Hello")), "");
+  clib_assert(str_eq(rest3, STR("")), "");
 }
 
 static void test_u64(void) {
