@@ -87,17 +87,28 @@ Utf8 utf8_next(Utf8 *str) {
 }
 
 Utf8 utf8_copy(Utf8 str, Arena *arena) {
-  char *buffer = arena_calloc(arena, str.size + 1);
+  char *buffer = arena_alloc(arena, str.size + 1);
+  buffer[str.size] = '\0';
   memcpy(buffer, str.data, str.size);
   return (Utf8){.len = str.len, .size = str.size, .data = buffer};
 }
 
-Utf8 utf8_concat(Utf8 s1, Utf8 s2, Arena *arena) {
-  const usize new_size = s1.size + s2.size;
-  char *buffer = arena_calloc(arena, new_size + 1);
-  memcpy(&buffer[0], s1.data, s1.size);
-  memcpy(&buffer[s1.size], s2.data, s2.size);
-  return (Utf8){.len = s1.len + s2.len, .size = new_size, .data = buffer};
+Utf8 utf8_append(Utf8 s, Utf8 suffix, Arena *arena) {
+  const usize new_size = s.size + suffix.size;
+  char *buffer = arena_alloc(arena, new_size + 1);
+  buffer[new_size] = '\0';
+  memcpy(&buffer[0], s.data, s.size);
+  memcpy(&buffer[s.size], suffix.data, suffix.size);
+  return (Utf8){.len = s.len + suffix.len, .size = new_size, .data = buffer};
+}
+
+Utf8 utf8_prepend(Utf8 s, Utf8 prefix, Arena *arena) {
+  const usize new_size = s.size + prefix.size;
+  char *buffer = arena_alloc(arena, new_size + 1);
+  buffer[new_size] = '\0';
+  memcpy(&buffer[0], prefix.data, prefix.size);
+  memcpy(&buffer[prefix.size], s.data, s.size);
+  return (Utf8){.len = s.len + prefix.len, .size = new_size, .data = buffer};
 }
 
 Utf8 utf8_join(Utf8 sep, usize count, Utf8 s[count], Arena *arena) {

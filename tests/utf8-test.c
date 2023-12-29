@@ -62,11 +62,14 @@ static void test_copy(void) {
   arena_free(&arena);
 }
 
-static void test_concat(void) {
+static void test_append(void) {
   Arena arena = {0};
 
-  Utf8 res = utf8_concat(UTF8("🎉✅😁"), UTF8(" 💩"), &arena);
-  clib_assert(utf8_eq(res, UTF8("🎉✅😁 💩")), "Did not concat correctly");
+  Utf8 res = utf8_append(UTF8("🎉✅😁"), UTF8(" 💩"), &arena);
+  clib_assert(utf8_eq(res, UTF8("🎉✅😁 💩")), "Did not append correctly");
+
+  Utf8 res1 = utf8_prepend(UTF8("🎉✅😁"), UTF8("💩 "), &arena);
+  clib_assert(utf8_eq(res1, UTF8("💩 🎉✅😁")), "Did not prepend correctly");
 
   arena_free(&arena);
 }
@@ -110,7 +113,7 @@ int main(void) {
   test_creation();
   test_cmp();
   test_copy();
-  test_concat();
+  test_append();
   test_join();
   test_next();
 }
