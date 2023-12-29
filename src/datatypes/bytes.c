@@ -1,5 +1,6 @@
 #include "bytes.h"
 #include "datatypes/integers.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -36,13 +37,48 @@ Bytes bytes_take(Bytes *bytes, usize count) {
 }
 
 Str bytes_hex(Bytes bytes, Arena *arena) {
-  char *buffer = arena_calloc(arena, bytes.size * 2 + 1);
+  const usize padded_size = bytes.size + (8 - (bytes.size % 8));
+  const usize lines = usize_max(padded_size / 8, 1);
+  const usize bytes_count = 8;
+  const usize between_size = 8;
+  const usize bytes_per_line =
+      (bytes_count * 2) + (bytes_count - 1) + between_size + (bytes_count);
+  const usize new_size = lines * bytes_per_line;
+
+  char *buffer = arena_calloc(arena, new_size + 1);
   usize b_idx = 0;
-  for (usize i = 0; i < bytes.size; i++) {
-    if (i == 0) {
-      b_idx += snprintf(&buffer[b_idx], 3, "%x", bytes.data[i]);
-    } else {
-      b_idx += snprintf(&buffer[b_idx], 3, "%02x", bytes.data[i]);
+  for (usize i = 0; (i * bytes_count) < bytes.size; i++) {
+    if (i != 0) {
+      buffer[b_idx++] = '\n';
+    }
+    for (usize j = 0; j < bytes_count; j++) {
+      usize idx = (i * bytes_count) + j;
+      if (j != 0) {
+        buffer[b_idx++] = ' ';
+      }
+      if (idx < bytes.size) {
+        b_idx += snprintf(&buffer[b_idx], 3, "%02x", bytes.data[(i * 8) + j]);
+      } else {
+        buffer[b_idx++] = ' ';
+        buffer[b_idx++] = ' ';
+      }
+    }
+
+    b_idx += snprintf(&buffer[b_idx], between_size + 1, " |%-4zu| ",
+                      (i + 1) * bytes_count < bytes.size ? (i + 1) * bytes_count
+                                                         : bytes.size);
+
+    for (size_t j = 0; j < bytes_count; j++) {
+      usize idx = (i * bytes_count) + j;
+      if (idx < bytes.size) {
+        if (isprint(bytes.data[idx])) {
+          buffer[b_idx++] = bytes.data[idx];
+        } else {
+          buffer[b_idx++] = '.';
+        }
+      } else {
+        buffer[b_idx++] = ' ';
+      }
     }
   }
   return (Str){.len = b_idx, .data = buffer};

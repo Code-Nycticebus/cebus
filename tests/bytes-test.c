@@ -4,26 +4,41 @@
 
 static void test_bytes(void) {
   Arena arena = {0};
-  Bytes b = BYTES(0x02, 0xFF, 0xAA, 0xBB);
+  Bytes b = BYTES(0x02, 0xFF, 0xAA, 0xBB, 0x41, 0x41, 0x41);
   clib_assert(b.data[0] == 0x02, "Bytes are not initialized correctly");
   clib_assert(b.data[1] == 0xff, "Bytes are not initialized correctly");
   clib_assert(b.data[2] == 0xaa, "Bytes are not initialized correctly");
   clib_assert(b.data[3] == 0xbb, "Bytes are not initialized correctly");
-
-  Str s = bytes_hex(b, &arena);
-  clib_assert(str_eq(s, STR("2ffaabb")), "String conversion was not correct!");
   arena_free(&arena);
 }
 
 static void test_bytes_str(void) {
-  Arena arena = {0};
   Bytes b = BYTES_STR("ABC");
   clib_assert(b.data[0] == 0x41, "Bytes are not initialized correctly");
   clib_assert(b.data[1] == 0x42, "Bytes are not initialized correctly");
   clib_assert(b.data[2] == 0x43, "Bytes are not initialized correctly");
+}
 
+static void test_to_hex(void) {
+  Arena arena = {0};
+  Bytes b = BYTES(0x41, 0x42, 0x43);
   Str s = bytes_hex(b, &arena);
-  clib_assert(str_eq(s, STR("414243")), "String conversion was not correct!");
+  clib_assert(str_eq(s, STR("41 42 43                |3   | ABC     ")),
+              "String conversion was not correct: '" STR_FMT "'", STR_ARG(s));
+
+  Bytes b2 = BYTES(0x02, 0xFF, 0xAA, 0xBB, 0x41, 0x41, 0x41);
+  Str s2 = bytes_hex(b2, &arena);
+  clib_assert(str_eq(s2, STR("02 ff aa bb 41 41 41    |7   | ....AAA ")),
+              "String conversion was not correct: \n'" STR_FMT "'",
+              STR_ARG(s2));
+
+  Bytes b3 = BYTES(0xaa, 0xbb, 0xcc, 0xdd, 0x41, 0x41, 0x41, 0x41, 0x42, 0x42,
+                   0x42, 0x42);
+  Str s3 = bytes_hex(b3, &arena);
+  clib_assert(str_eq(s3, STR("aa bb cc dd 41 41 41 41 |8   | ....AAAA\n"
+                             "42 42 42 42             |12  | BBBB    ")),
+              "String conversion was not correct: \n" STR_FMT "", STR_ARG(s3));
+
   arena_free(&arena);
 }
 
@@ -64,6 +79,7 @@ static void test_bytes_take(void) {
 int main(void) {
   test_bytes();
   test_bytes_str();
+  test_to_hex();
   test_bytes_cmp();
   test_bytes_slice();
   test_bytes_take();
