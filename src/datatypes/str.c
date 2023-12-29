@@ -42,25 +42,25 @@ Str str_trim(Str s) { return str_trim_left(str_trim_right(s)); }
 
 Str str_copy(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
-  strncpy(buffer, s.data, s.len);
+  memcpy(buffer, s.data, s.len);
   buffer[s.len] = '\0';
   return str_from_parts(s.len, buffer);
 }
 
 Str str_append(Str s, Str suffix, Arena *arena) {
   const usize new_size = s.len + suffix.len;
-  char *buffer = arena_calloc(arena, new_size + 1);
-  strncpy(&buffer[0], s.data, s.len);
-  strncpy(&buffer[s.len], suffix.data, suffix.len);
+  char *buffer = arena_alloc(arena, new_size + 1);
+  memcpy(&buffer[0], s.data, s.len);
+  memcpy(&buffer[s.len], suffix.data, suffix.len);
   buffer[new_size] = '\0';
   return str_from_parts(new_size, buffer);
 }
 
 Str str_prepend(Str s, Str prefix, Arena *arena) {
   const usize new_size = s.len + prefix.len;
-  char *buffer = arena_calloc(arena, new_size + 1);
-  strncpy(&buffer[0], prefix.data, prefix.len);
-  strncpy(&buffer[prefix.len], s.data, s.len);
+  char *buffer = arena_alloc(arena, new_size + 1);
+  memcpy(&buffer[0], prefix.data, prefix.len);
+  memcpy(&buffer[prefix.len], s.data, s.len);
   buffer[new_size] = '\0';
   return str_from_parts(new_size, buffer);
 }
@@ -70,19 +70,24 @@ Str str_join(Str sep, usize count, Str s[count], Arena *arena) {
   for (usize i = 0; i < count; i++) {
     size += s[i].len;
   }
-  char *buffer = arena_calloc(arena, size + 1);
+  char *buffer = arena_alloc(arena, size + 1);
+  usize b_idx = 0;
   for (usize i = 0; i < count; i++) {
     if (i != 0) {
-      strncat(buffer, sep.data, sep.len);
+      memcpy(&buffer[b_idx], sep.data, sep.len);
+      b_idx += sep.len;
     }
-    strncat(buffer, s[i].data, s[i].len);
+    memcpy(&buffer[b_idx], s[i].data, s[i].len);
+    b_idx += s[i].len;
   }
+  buffer[size] = '\0';
 
   return str_from_parts(size, buffer);
 }
 
 Str str_upper(Str s, Arena *arena) {
-  char *buffer = arena_calloc(arena, s.len + 1);
+  char *buffer = arena_alloc(arena, s.len + 1);
+  buffer[s.len] = '\0';
   for (usize i = 0; i < s.len; i++) {
     buffer[i] = toupper(s.data[i]);
   }
@@ -90,7 +95,8 @@ Str str_upper(Str s, Arena *arena) {
 }
 
 Str str_lower(Str s, Arena *arena) {
-  char *buffer = arena_calloc(arena, s.len + 1);
+  char *buffer = arena_alloc(arena, s.len + 1);
+  buffer[s.len] = '\0';
   for (usize i = 0; i < s.len; i++) {
     buffer[i] = tolower(s.data[i]);
   }
@@ -100,7 +106,8 @@ Str str_lower(Str s, Arena *arena) {
 Str str_replace(Str s, Str old, Str new, Arena *arena) {
   usize count = str_count(s, old);
   usize new_size = (s.len - (old.len * count) + (count * new.len));
-  char *buffer = arena_calloc(arena, new_size + 1);
+  char *buffer = arena_alloc(arena, new_size + 1);
+  buffer[new_size] = '\0';
 
   for (usize i = 0, j = 0; i < s.len;) {
     if (strncmp(&s.data[i], old.data, old.len) == 0) {
@@ -168,7 +175,8 @@ Str str_rjust(Str s, usize width, char fillchar, Arena *arena) {
 
 Str str_repeat(Str s, usize count, Arena *arena) {
   usize len = s.len * count;
-  char *buffer = arena_calloc(arena, len + 1);
+  char *buffer = arena_alloc(arena, len + 1);
+  buffer[len] = '\0';
 
   usize idx = 0;
   for (usize i = 0; i < count; i++) {
@@ -181,7 +189,8 @@ Str str_repeat(Str s, usize count, Arena *arena) {
 }
 
 Str str_reverse(Str s, Arena *arena) {
-  char *buffer = arena_calloc(arena, s.len + 1);
+  char *buffer = arena_alloc(arena, s.len + 1);
+  buffer[s.len] = '\0';
   for (usize i = 0; i < s.len; i++) {
     buffer[i] = s.data[s.len - i - 1];
   }
