@@ -1,5 +1,6 @@
 #include "utf8.h"
 
+#include <ctype.h>
 #include <string.h>
 
 #include "clib/arena.h"
@@ -129,6 +130,34 @@ Utf8 utf8_join(Utf8 sep, usize count, Utf8 s[count], Arena *arena) {
     b_idx += s[i].size;
   }
   return (Utf8){.len = new_len, .size = new_size, .data = buffer};
+}
+
+Utf8 utf8_upper(Utf8 s, Arena *arena) {
+  char *buffer = arena_alloc(arena, s.size);
+  for (usize i = 0; i < s.size; ++i) {
+    usize bit_count = u8_leading_ones((u8)s.data[i]);
+    if (bit_count == 0) {
+      buffer[i] = toupper(s.data[i]);
+    } else {
+      memcpy(&buffer[i], &s.data[i], bit_count);
+      i += bit_count - 1;
+    }
+  }
+  return (Utf8){.len = s.len, .size = s.size, .data = buffer};
+}
+
+Utf8 utf8_lower(Utf8 s, Arena *arena) {
+  char *buffer = arena_alloc(arena, s.size);
+  for (usize i = 0; i < s.size; ++i) {
+    usize bit_count = u8_leading_ones((u8)s.data[i]);
+    if (bit_count == 0) {
+      buffer[i] = tolower(s.data[i]);
+    } else {
+      memcpy(&buffer[i], &s.data[i], bit_count);
+      i += bit_count - 1;
+    }
+  }
+  return (Utf8){.len = s.len, .size = s.size, .data = buffer};
 }
 
 bool utf8_validate_bytes(Bytes bytes) {

@@ -6,7 +6,9 @@
 
 #include <string.h>
 
-static void test_decode(void) {
+#include "test.h"
+
+TEST(decode) {
   Bytes bytes = BYTES(        //
       0xF0, 0x9F, 0x8E, 0x89, // 🎉
       0xE2, 0x9C, 0x85,       // ✅
@@ -24,13 +26,13 @@ static void test_decode(void) {
   clib_assert(ret == false, "This should not be a valid utf-8 string");
 }
 
-static void test_creation(void) {
+TEST(creation) {
   Utf8 s = UTF8("🎉✅😁 Hellö  Wörld 💩");
   clib_assert(memcmp(s.data, "🎉✅😁 Hellö  Wörld 💩", s.size) == 0,
               "Was not created correctly");
 }
 
-static void test_cmp(void) {
+TEST(cmp) {
   Utf8 s1 = UTF8("🎉✅😁CA");
   Utf8 s2 = UTF8("🎉✅😁CA");
   Utf8 s3 = UTF8("🎉✅✅CA");
@@ -52,41 +54,46 @@ static void test_cmp(void) {
               "Should not end with 😁");
 }
 
-static void test_copy(void) {
-  Arena arena = {0};
+TEST(copy) {
   Utf8 s = UTF8("🎉✅😁 Hellö  Wörld 💩");
-  Utf8 s2 = utf8_copy(s, &arena);
+  Utf8 s2 = utf8_copy(s, arena);
   clib_assert(utf8_eq(s, s2) == true, "Utf8 strings not equal");
   clib_assert(memcmp(s2.data, "🎉✅😁 Hellö  Wörld 💩", s.size) == 0,
               "Was not created correctly");
-  arena_free(&arena);
 }
 
-static void test_append(void) {
-  Arena arena = {0};
+TEST(append) {
 
-  Utf8 res = utf8_append(UTF8("🎉✅😁"), UTF8(" 💩"), &arena);
+  Utf8 res = utf8_append(UTF8("🎉✅😁"), UTF8(" 💩"), arena);
   clib_assert(utf8_eq(res, UTF8("🎉✅😁 💩")), "Did not append correctly");
 
-  Utf8 res1 = utf8_prepend(UTF8("🎉✅😁"), UTF8("💩 "), &arena);
+  Utf8 res1 = utf8_prepend(UTF8("🎉✅😁"), UTF8("💩 "), arena);
   clib_assert(utf8_eq(res1, UTF8("💩 🎉✅😁")), "Did not prepend correctly");
-
-  arena_free(&arena);
 }
 
-static void test_join(void) {
-  Arena arena = {0};
+TEST(join) {
 
   Utf8 res = utf8_join(UTF8(" "), 3,
-                       (Utf8[]){UTF8("🎉"), UTF8("✅"), UTF8("🎉")}, &arena);
+                       (Utf8[]){UTF8("🎉"), UTF8("✅"), UTF8("🎉")}, arena);
 
   clib_assert(utf8_eq(res, UTF8("🎉 ✅ 🎉")),
               "String was not joined correctly");
-
-  arena_free(&arena);
 }
 
-static void test_next(void) {
+TEST(case_transform) {
+
+  Utf8 f = UTF8("Hello, 🌎");
+
+  Utf8 upper = utf8_upper(f, arena);
+  clib_assert(utf8_eq(upper, UTF8("HELLO, 🌎")),
+              "Did not transform correctly: " UTF8_FMT, UTF8_ARG(upper));
+
+  Utf8 lower = utf8_lower(f, arena);
+  clib_assert(utf8_eq(lower, UTF8("hello, 🌎")),
+              "Did not transform correctly: " UTF8_FMT, UTF8_ARG(upper));
+}
+
+TEST(next) {
   Utf8 test = UTF8("🎉✅😁CA");
   Utf8 one = utf8_next(&test);
   clib_assert(utf8_eq(one, UTF8("🎉")), "Utf-8 was not correctly choped!");
@@ -109,11 +116,17 @@ static void test_next(void) {
 int main(void) {
   setlocale(LC_ALL, "");
 
-  test_decode();
-  test_creation();
-  test_cmp();
-  test_copy();
-  test_append();
-  test_join();
-  test_next();
+  Arena arena = {0};
+
+  TEST_RUN(decode, &arena);
+  TEST_RUN(creation, &arena);
+  TEST_RUN(cmp, &arena);
+  TEST_RUN(copy, &arena);
+  TEST_RUN(append, &arena);
+  TEST_RUN(join, &arena);
+  TEST_RUN(case_transform, &arena);
+
+  TEST_RUN(next, &arena);
+
+  arena_free(&arena);
 }
