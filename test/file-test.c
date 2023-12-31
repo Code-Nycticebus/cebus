@@ -11,11 +11,6 @@
 
 #define LINE_MAX 512
 
-typedef struct {
-  FILE *file;
-  Arena arena;
-} FileBuffer;
-
 bool file_try_open(const char *path, const char *mode, FILE **file) {
   Arena arena = {0};
   *file = fopen(path, mode);
