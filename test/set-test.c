@@ -39,6 +39,23 @@ static void test_set_remove(void) {
   arena_free(&arena);
 }
 
+static void test_eq(void) {
+  Arena arena = {0};
+  Set set1 = set_create(&arena, 10);
+  set_add(&set1, 1);
+  set_add(&set1, 2);
+  set_add(&set1, 3);
+
+  Set set2 = set_create(&arena, 10);
+  set_add(&set2, 1);
+  set_add(&set2, 2);
+  set_add(&set2, 3);
+
+  clib_assert(set_eq(&set1, &set2), "Sets should be equal");
+
+  arena_free(&arena);
+}
+
 static void test_subset(void) {
   Arena arena = {0};
 
@@ -132,6 +149,7 @@ static void test_difference(void) {
 int main(void) {
   test_set_insert();
   test_set_remove();
+  test_eq();
   test_subset();
   test_intersection();
   test_difference();

@@ -61,6 +61,20 @@ bool set_contains(Set *set, u64 hash) {
   return false;
 }
 
+bool set_eq(Set *set, Set *other) {
+  if (other->count != set->count) {
+    return false;
+  }
+  for (usize i = 0; i < set->cap; i++) {
+    if (set->items[i].occupied) {
+      if (!set_contains(other, set->items[i].hash)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 bool set_subset(Set *set, Set *other) {
   if (other->count <= set->count) {
     return false;
