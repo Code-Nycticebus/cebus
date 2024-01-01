@@ -64,9 +64,9 @@ typedef struct {
 } Str;
 
 typedef struct {
-  usize len;
   usize size;
   const char *data;
+  usize len;
 } Utf8;
 
 #endif /* !__CLIB_DATATYPES_H__ */
