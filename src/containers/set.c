@@ -1,6 +1,5 @@
 #include "set.h"
 
-#include "clib/asserts.h"
 #include "datatypes/integers.h"
 
 Set set_create(Arena *arena, usize size) {
@@ -11,7 +10,9 @@ Set set_create(Arena *arena, usize size) {
 }
 
 bool set_add(Set *set, u64 hash) {
-  clib_assert_debug(set->count < set->cap, "set full!");
+  if (!(set->count < set->cap))
+    return false;
+
   usize idx = hash % set->cap;
   if (!set->items[idx].occupied || set->items[idx].hash == hash) {
     set->items[idx].occupied = true;
