@@ -81,9 +81,26 @@ static void test_reset(void) { // NOLINT
   arena_free(&arena);
 }
 
+static void test_temp(void) {
+  Arena arena = {0};
+
+  void *data = arena_temp_alloc(&arena, 10);
+
+  clib_assert(data, "Should not be NULL");
+
+  TestChunk *chunk = (TestChunk *)arena.begin;
+  clib_assert(chunk->allocated == chunk->cap, "Did not block the entire chunk");
+
+  arena_temp_free(data);
+  clib_assert(chunk->allocated == 0, "Did not block the entire chunk");
+
+  arena_free(&arena);
+}
+
 int main(void) {
   test_arena();
   test_chunks();
   test_calloc();
   test_reset();
+  test_temp();
 }

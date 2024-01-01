@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "asserts.h"
+#include "datatypes/integers.h"
 
 #define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 
@@ -50,8 +51,7 @@ void *arena_alloc(Arena *arena, usize size) {
     }
   }
   if (chunk == NULL) {
-    const usize chunk_size =
-        size < CHUNK_DEFAULT_SIZE ? CHUNK_DEFAULT_SIZE : size;
+    const usize chunk_size = usize_max(size, CHUNK_DEFAULT_SIZE);
     chunk = chunk_allocate(chunk_size);
     chunk->next = arena->begin;
     arena->begin = chunk;
@@ -65,4 +65,34 @@ void *arena_calloc(Arena *arena, usize size) {
   void *ptr = arena_alloc(arena, size);
   memset(ptr, 0, size);
   return ptr;
+}
+
+void *arena_temp_alloc(Arena *arena, usize size) {
+  Chunk *next = arena->begin;
+  for (; next != NULL; next = next->next) {
+    if (next->allocated == 0 && size <= next->cap) {
+      next->allocated = next->cap;
+      return next->data;
+    }
+  }
+  const usize chunk_size = usize_max(size, CHUNK_DEFAULT_SIZE);
+  Chunk *chunk = chunk_allocate(chunk_size);
+  chunk->allocated = chunk_size;
+  chunk->next = arena->begin;
+  arena->begin = chunk;
+  return &chunk->data[0];
+}
+
+void *arena_temp_calloc(Arena *arena, usize size) {
+  void *data = arena_temp_alloc(arena, size);
+  memset(data, 0, size);
+  return data;
+}
+
+void arena_temp_free(void *ptr) {
+  if (ptr == NULL) {
+    return;
+  }
+  Chunk *chunk = (Chunk *)((char *)ptr - sizeof(Chunk));
+  chunk->allocated = 0;
 }
