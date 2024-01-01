@@ -73,3 +73,10 @@ bool file_stream_bytes(File *file, usize chunk_size,
   arena_free(&arena);
   return true;
 }
+
+void file_write(File *file, Bytes bytes) {
+  clib_assert_debug(file->handle, "Invalid file handle!");
+  fwrite(bytes.data, sizeof(u8), bytes.size, file->handle);
+  clib_assert(!ferror(file->handle), "Could not write file: %s",
+              strerror(errno));
+}

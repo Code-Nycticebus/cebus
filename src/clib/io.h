@@ -32,4 +32,6 @@ Bytes file_read_bytes(File *file, Arena *arena);
 bool file_stream_bytes(File *file, usize chunk_size,
                        void (*stream)(Bytes bytes));
 
+void file_write(File *file, Bytes bytes);
+
 #endif // !__CLIB_IO_H__
