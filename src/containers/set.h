@@ -5,14 +5,12 @@
 #include "datatypes/datatypes.h"
 
 typedef struct {
-  u64 hash;
-  bool occupied;
-} SetNode;
-
-typedef struct {
   usize cap;
   usize count;
-  SetNode *nodes;
+  struct {
+    u64 hash;
+    bool occupied;
+  } *items;
 } Set;
 
 Set set_create(Arena *arena, usize size);
