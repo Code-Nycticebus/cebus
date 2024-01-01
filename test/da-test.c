@@ -1,4 +1,4 @@
-#include "clib/da.h"
+#include "containers/da.h"
 
 #include "clib/asserts.h"
 #include "datatypes/integers.h"
@@ -6,7 +6,6 @@
 static void test_da(void) {
   const usize n = 10;
   DA(usize) list = {0};
-  da_init(&list, 2);
   for (usize i = 0; i < n; ++i) {
     da_push(&list, i + 1);
   }
@@ -25,7 +24,6 @@ usize times_two(usize v) { return v * 2; }
 static void test_map(void) { // NOLINT
   const usize n = 10;
   DA(usize) list = {0};
-  da_init(&list, 2);
   for (usize i = 0; i < n; ++i) {
     da_push(&list, i);
   }
@@ -79,8 +77,8 @@ static void test_extend(void) {
 
 static void test_reserve(void) {
   DA(i32) list = {0};
-  da_reserve(&list, 5);
-  clib_assert(list.cap == 5, "Capacity was not increased");
+  da_reserve(&list, 50);
+  clib_assert(list.cap == 50, "Capacity was not increased");
   da_free(&list);
 }
 
