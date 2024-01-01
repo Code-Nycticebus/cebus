@@ -19,7 +19,7 @@ bool set_add(Set *set, u64 hash);
 bool set_remove(Set *set, u64 hash);
 
 bool set_contains(Set *set, u64 hash);
-bool set_is_subset(Set *subset, Set *off);
+bool set_is_subset(Set *set, Set *other);
 
 Set set_intersection(Set *set, Set *other, Arena *arena);
 Set set_difference(Set *set, Set *other, Arena *arena);
