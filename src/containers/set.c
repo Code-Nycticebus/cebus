@@ -75,3 +75,41 @@ bool set_contains(Set *set, u64 hash) {
   }
   return false;
 }
+
+bool set_is_subset(Set *subset, Set *off) {
+  if (off->count <= subset->count) {
+    return false;
+  }
+  for (usize i = 0; i < subset->cap; i++) {
+    if (subset->nodes[i].occupied) {
+      if (!set_contains(off, subset->nodes[i].hash)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+Set set_intersection(Set *set, Set *other, Arena *arena) {
+  Set intersection = set_create(arena, usize_min(set->count, other->count));
+  for (usize i = 0; i < set->cap; i++) {
+    if (set->nodes[i].occupied) {
+      if (set_contains(other, set->nodes[i].hash)) {
+        set_add(&intersection, set->nodes[i].hash);
+      }
+    }
+  }
+  return intersection;
+}
+
+Set set_difference(Set *set, Set *other, Arena *arena) {
+  Set difference = set_create(arena, usize_min(set->count, other->count));
+  for (usize i = 0; i < set->cap; i++) {
+    if (set->nodes[i].occupied) {
+      if (!set_contains(other, set->nodes[i].hash)) {
+        set_add(&difference, set->nodes[i].hash);
+      }
+    }
+  }
+  return difference;
+}
