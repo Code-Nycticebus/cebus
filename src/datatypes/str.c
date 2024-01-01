@@ -280,12 +280,15 @@ CompareFn str_compare_qsort(CmpOrdering ordering) {
 }
 
 bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {
+  if (s->len == 0) {
+    return false;
+  }
   usize i = 0;
   while (i < s->len && s->data[i] != delim) {
     ++i;
   }
 
-  if (i && i <= s->len) {
+  if (s->len && i <= s->len) {
     if (chunk) {
       *chunk = str_from_parts(i, s->data);
     }
@@ -304,7 +307,7 @@ Str str_chop_by_delim(Str *s, char delim) {
     ++i;
   }
 
-  if (i && i <= s->len) {
+  if (s->len && i <= s->len) {
     Str chunk = str_from_parts(i, s->data);
     const usize new_len = usize_min(s->len, i + 1);
     s->data += new_len;
@@ -316,12 +319,13 @@ Str str_chop_by_delim(Str *s, char delim) {
 }
 
 bool str_try_chop_by_predicate(Str *s, bool (*predicate)(char), Str *chunk) {
+
   usize i = 0;
   while (i < s->len && !predicate(s->data[i])) {
     ++i;
   }
 
-  if (i && i <= s->len) {
+  if (s->len && i <= s->len) {
     if (chunk) {
       *chunk = str_from_parts(i, s->data);
     }
@@ -339,7 +343,7 @@ Str str_chop_by_predicate(Str *s, bool (*predicate)(char)) {
     ++i;
   }
 
-  if (i && i <= s->len) {
+  if (s->len && i <= s->len) {
     Str chunk = str_from_parts(i, s->data);
     const usize new_len = usize_min(s->len, i + 1);
     s->data += new_len;
@@ -355,7 +359,7 @@ Str str_chop_right_by_delim(Str *s, char delim) {
     ++i;
   }
 
-  if (i && i <= s->len) {
+  if (s->len && i <= s->len) {
     Str chunk = str_from_parts(i, &s->data[s->len - i]);
     s->len -= usize_min(s->len, i + 1);
     return chunk;
@@ -369,7 +373,7 @@ Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
     ++i;
   }
 
-  if (i && i <= s->len) {
+  if (s->len && i <= s->len) {
     Str chunk = str_from_parts(i, &s->data[s->len - i]);
     s->len -= usize_min(s->len, i + 1);
     return chunk;
