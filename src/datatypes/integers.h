@@ -26,6 +26,7 @@
   T T##_max(T a, T b);                                                         \
   T T##_min(T a, T b);                                                         \
   T T##_clamp(T min, T max, T value);                                          \
+  u64 T##_hash(T value);                                                       \
   CmpOrdering T##_compare_lt(T a, T b);                                        \
   CmpOrdering T##_compare_gt(T a, T b);                                        \
   CompareFn T##_compare_qsort(CmpOrdering ordering);

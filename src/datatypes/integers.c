@@ -177,6 +177,13 @@
     }                                                                          \
     return T##_to_le_bytes(value, arena);                                      \
   }                                                                            \
+  u64 T##_hash(T value) {                                                      \
+    u64 hash = value;                                                          \
+    hash = (((hash >> 16) ^ hash) % 0x3AA387A8B1) * 0x45d9f3b;                 \
+    hash = (((hash >> 16) ^ hash) % 0x3AA387A8B1) * 0x45d9f3b;                 \
+    hash = (hash >> 16) ^ hash;                                                \
+    return hash;                                                               \
+  }                                                                            \
                                                                                \
   T T##_max(T a, T b) { return a < b ? b : a; }                                \
   T T##_min(T a, T b) { return a > b ? b : a; }                                \
