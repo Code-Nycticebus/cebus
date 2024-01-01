@@ -101,9 +101,40 @@ static void test_intersection(void) {
   arena_free(&arena);
 }
 
+static void test_difference(void) {
+  Arena arena = {0};
+
+  Set set1 = set_create(&arena, 10);
+  set_add(&set1, 2);
+  set_add(&set1, 3);
+  set_add(&set1, 7);
+  set_add(&set1, 8);
+
+  Set big_set = set_create(&arena, 10);
+  for (usize i = 0; i < 20; i++) {
+    if (i % 2 == 0) {
+      set_add(&big_set, i);
+    }
+  }
+
+  Set diff = set_difference(&set1, &big_set, &arena);
+
+  clib_assert(set_is_subset(&diff, &big_set) == false,
+              "inter should not be a subset");
+
+  clib_assert(set_contains(&diff, 2) == false, "diff should not contain 2");
+  clib_assert(set_contains(&diff, 3) == true, "diff should contain 3");
+  clib_assert(set_contains(&diff, 4) == false, "diff should not contain 4");
+  clib_assert(set_contains(&diff, 7) == true, "diff should contain 7");
+  clib_assert(set_contains(&diff, 8) == false, "diff should not contain 8");
+
+  arena_free(&arena);
+}
+
 int main(void) {
   test_set_insert();
   test_set_remove();
   test_subset();
   test_intersection();
+  test_difference();
 }
