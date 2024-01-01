@@ -61,11 +61,10 @@ static void test_subset(void) {
     set_add(&big_set, i);
   }
 
-  clib_assert(set_is_subset(&set1, &big_set) == true,
-              "set1 should be a subset");
-  clib_assert(set_is_subset(&set2, &big_set) == false,
+  clib_assert(set_subset(&set1, &big_set) == true, "set1 should be a subset");
+  clib_assert(set_subset(&set2, &big_set) == false,
               "set2 should not be a subset");
-  clib_assert(set_is_subset(&set3, &big_set) == false,
+  clib_assert(set_subset(&set3, &big_set) == false,
               "set4 should not be a subset");
 
   arena_free(&arena);
@@ -89,8 +88,7 @@ static void test_intersection(void) {
 
   Set inter = set_intersection(&set1, &big_set, &arena);
 
-  clib_assert(set_is_subset(&inter, &big_set) == true,
-              "inter should be a subset");
+  clib_assert(set_subset(&inter, &big_set) == true, "inter should be a subset");
 
   clib_assert(set_contains(&inter, 2) == true, "inter should contain 2");
   clib_assert(set_contains(&inter, 3) == false, "inter should not contain 3");
@@ -119,7 +117,7 @@ static void test_difference(void) {
 
   Set diff = set_difference(&set1, &big_set, &arena);
 
-  clib_assert(set_is_subset(&diff, &big_set) == false,
+  clib_assert(set_subset(&diff, &big_set) == false,
               "inter should not be a subset");
 
   clib_assert(set_contains(&diff, 2) == false, "diff should not contain 2");

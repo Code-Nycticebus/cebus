@@ -61,7 +61,7 @@ bool set_contains(Set *set, u64 hash) {
   return false;
 }
 
-bool set_is_subset(Set *set, Set *other) {
+bool set_subset(Set *set, Set *other) {
   if (other->count <= set->count) {
     return false;
   }
