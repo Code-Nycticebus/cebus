@@ -48,6 +48,14 @@ bool file_try_read_bytes(File *file, Arena *arena, Bytes *bytes) {
   }
   return true;
 }
+
+Bytes file_read_bytes(File *file, Arena *arena) {
+  Bytes bytes = {0};
+  clib_assert(file_try_read_bytes(file, arena, &bytes),
+              "Could not read file: %s\n", strerror(errno));
+  return bytes;
+}
+
 bool file_stream_bytes(File *file, usize chunk_size,
                        void (*stream)(Bytes bytes)) {
   clib_assert_debug(file->handle, "Invalid file handle!");

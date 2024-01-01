@@ -27,6 +27,8 @@ void file_close(File *file);
 void file_rewind(File *file);
 
 bool file_try_read_bytes(File *file, Arena *arena, Bytes *bytes);
+Bytes file_read_bytes(File *file, Arena *arena);
+
 bool file_stream_bytes(File *file, usize chunk_size,
                        void (*stream)(Bytes bytes));
 
