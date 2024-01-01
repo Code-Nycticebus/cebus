@@ -1,6 +1,7 @@
 #ifndef __CLIB_DA_H__
 #define __CLIB_DA_H__
 
+#include "clib/asserts.h"
 #include "clib/defines.h" // IWYU pragma: export
 #include <stdlib.h>       // IWYU pragma: export
 
@@ -23,6 +24,7 @@
 
 #define da_reserve(list, size)                                                 \
   do {                                                                         \
+    clib_assert_debug(size <= SIZE_MAX - (list)->cap, "integer overflow");     \
     if (!((list)->len + size < (list)->cap)) {                                 \
       (list)->cap = usize_max((list)->cap + size, 10);                         \
       (list)->items =                                                          \
