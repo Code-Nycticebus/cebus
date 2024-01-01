@@ -24,7 +24,7 @@
 #define da_reserve(list, size)                                                 \
   do {                                                                         \
     if (!((list)->len + size < (list)->cap)) {                                 \
-      (list)->cap += size;                                                     \
+      (list)->cap += usize_max(size, 10);                                      \
       (list)->items =                                                          \
           arena_temp_realloc(&(list)->arena, (list)->items,                    \
                              (list)->cap * sizeof((list)->items[0]));          \
