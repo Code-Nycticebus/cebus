@@ -10,16 +10,16 @@ typedef struct {
 } SetNode;
 
 typedef struct {
-  Arena arena;
   usize cap;
   usize count;
   SetNode *nodes;
 } Set;
 
-void set_free(Set *set);
+Set set_create(Arena *arena, usize size);
 
-void set_insert(Set *set, u64 hash);
-void set_remove(Set *set, u64 hash);
+bool set_add(Set *set, u64 hash);
+bool set_remove(Set *set, u64 hash);
+
 bool set_contains(Set *set, u64 hash);
 bool set_is_subset(Set *subset, Set *off);
 

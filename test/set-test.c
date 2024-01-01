@@ -3,24 +3,26 @@
 #include "containers/set.h"
 
 static void test_set_insert(void) {
-  Set set = {0};
+  Arena arena = {0};
+  Set set = set_create(&arena, 10);
 
   for (usize i = 0; i < 10; i++) {
-    set_insert(&set, i);
+    set_add(&set, i);
   }
 
   clib_assert(set_contains(&set, 2) == true, "Set should contain this number!");
   clib_assert(set_contains(&set, 4) == true, "Set should contain this number!");
   clib_assert(set_contains(&set, 5) == true, "Set should contain this number!");
 
-  set_free(&set);
+  arena_free(&arena);
 }
 
 static void test_set_remove(void) {
-  Set set = {0};
+  Arena arena = {0};
+  Set set = set_create(&arena, 10);
 
   for (usize i = 0; i < 10; i++) {
-    set_insert(&set, i);
+    set_add(&set, i);
   }
 
   set_remove(&set, 2);
