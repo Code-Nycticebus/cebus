@@ -28,6 +28,8 @@
 #define STR_WHITESPACE STR(" \t\n\r\x0b\x0c")
 
 Str str_from_parts(usize size, const char *cstr);
+Str str_from_bytes(Bytes bytes);
+Bytes str_to_bytes(Str s);
 Str str_from_cstr(const char *cstr);
 
 char str_getc(Str s, usize idx);
@@ -76,7 +78,5 @@ u64 str_chop_u64(Str *s);
 usize str_find(Str haystack, Str needle);
 usize str_find_last(Str haystack, Str needle);
 usize str_count(Str haystack, Str needle);
-
-Bytes str_to_bytes(Str s);
 
 #endif /* !__CLIB_STR_H__ */

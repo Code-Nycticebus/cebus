@@ -11,6 +11,10 @@ Str str_from_parts(usize size, const char *cstr) {
   return (Str){.len = size, .data = cstr};
 }
 
+Str str_from_bytes(Bytes bytes) { return *(Str *)&bytes; }
+
+Bytes str_to_bytes(Str s) { return *(Bytes *)&s; }
+
 Str str_from_cstr(const char *cstr) {
   return (Str){.len = strlen(cstr), .data = cstr};
 }
