@@ -5,35 +5,31 @@
 
 Set set_create(Arena *arena, usize size) {
   Set set = {0};
-  set.arena = arena;
   set.cap = size;
   set.items = arena_calloc(arena, size * sizeof(set.items[0]));
   return set;
 }
 
 bool set_add(Set *set, u64 hash) {
+  clib_assert(hash, "Hash invalid: %lx", hash);
   clib_assert(set->count < set->cap, "Table full");
-
   usize idx = hash % set->cap;
-  if (!set->items[idx].occupied || set->items[idx].hash == hash) {
-    set->items[idx].occupied = true;
-    set->items[idx].hash = hash;
+  if (!set->items[idx] || set->items[idx] == hash) {
+    set->items[idx] = hash;
     set->count++;
     return true;
   }
   for (usize i = 0; i < set->cap; i++) {
     idx = (idx + i * i) % set->cap;
-    if (!set->items[idx].occupied || set->items[idx].hash == hash) {
-      set->items[idx].occupied = true;
-      set->items[idx].hash = hash;
+    if (!set->items[idx] || set->items[idx] == hash) {
+      set->items[idx] = hash;
       set->count++;
       return true;
     }
   }
   for (usize i = 0; i < set->cap; i++) {
-    if (!set->items[i].occupied || set->items[i].hash == hash) {
-      set->items[i].occupied = true;
-      set->items[i].hash = hash;
+    if (!set->items[i] || set->items[i] == hash) {
+      set->items[i] = hash;
       set->count++;
       return true;
     }
@@ -44,22 +40,22 @@ bool set_add(Set *set, u64 hash) {
 
 bool set_remove(Set *set, u64 hash) {
   usize idx = hash % set->cap;
-  if (set->items[idx].occupied && set->items[idx].hash == hash) {
-    set->items[idx].occupied = false;
+  if (set->items[idx] && set->items[idx] == hash) {
+    set->items[idx] = 0;
     set->count--;
     return true;
   }
   for (usize i = 0; i < set->cap; i++) {
     idx = (idx + i * i) % set->cap;
-    if (set->items[idx].occupied && set->items[idx].hash == hash) {
-      set->items[idx].occupied = false;
+    if (set->items[idx] && set->items[idx] == hash) {
+      set->items[idx] = 0;
       set->count--;
       return true;
     }
   }
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i].occupied && set->items[i].hash == hash) {
-      set->items[i].occupied = false;
+    if (set->items[i] && set->items[i] == hash) {
+      set->items[i] = 0;
       set->count--;
       return true;
     }
@@ -69,17 +65,17 @@ bool set_remove(Set *set, u64 hash) {
 
 bool set_contains(Set *set, u64 hash) {
   usize idx = hash % set->cap;
-  if (set->items[idx].occupied && set->items[idx].hash == hash) {
+  if (set->items[idx] && set->items[idx] == hash) {
     return true;
   }
   for (usize i = 0; i < set->cap; i++) {
     idx = (idx + i * i) % set->cap;
-    if (set->items[idx].occupied && set->items[idx].hash == hash) {
+    if (set->items[idx] && set->items[idx] == hash) {
       return true;
     }
   }
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i].occupied && set->items[i].hash == hash) {
+    if (set->items[i] && set->items[i] == hash) {
       return true;
     }
   }
@@ -91,8 +87,8 @@ bool set_eq(Set *set, Set *other) {
     return false;
   }
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i].occupied) {
-      if (!set_contains(other, set->items[i].hash)) {
+    if (set->items[i]) {
+      if (!set_contains(other, set->items[i])) {
         return false;
       }
     }
@@ -105,8 +101,8 @@ bool set_subset(Set *set, Set *other) {
     return false;
   }
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i].occupied) {
-      if (!set_contains(other, set->items[i].hash)) {
+    if (set->items[i]) {
+      if (!set_contains(other, set->items[i])) {
         return false;
       }
     }
@@ -117,9 +113,9 @@ bool set_subset(Set *set, Set *other) {
 Set set_intersection(Set *set, Set *other, Arena *arena) {
   Set intersection = set_create(arena, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i].occupied) {
-      if (set_contains(other, set->items[i].hash)) {
-        set_add(&intersection, set->items[i].hash);
+    if (set->items[i]) {
+      if (set_contains(other, set->items[i])) {
+        set_add(&intersection, set->items[i]);
       }
     }
   }
@@ -129,9 +125,9 @@ Set set_intersection(Set *set, Set *other, Arena *arena) {
 Set set_difference(Set *set, Set *other, Arena *arena) {
   Set difference = set_create(arena, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i].occupied) {
-      if (!set_contains(other, set->items[i].hash)) {
-        set_add(&difference, set->items[i].hash);
+    if (set->items[i]) {
+      if (!set_contains(other, set->items[i])) {
+        set_add(&difference, set->items[i]);
       }
     }
   }

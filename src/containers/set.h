@@ -5,13 +5,9 @@
 #include "datatypes/datatypes.h"
 
 typedef struct {
-  Arena *arena;
   usize cap;
   usize count;
-  struct {
-    u64 hash;
-    bool occupied;
-  } *items;
+  u64 *items;
 } Set;
 
 Set set_create(Arena *arena, usize size);

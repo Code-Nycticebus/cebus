@@ -9,10 +9,6 @@
   typedef char static_assertion_##MSG[(COND) ? 1 : -1]
 
 typedef union {
-  struct {
-    u16 size : 16;
-    u64 data : 48;
-  } bytes;
   u64 u64;
   void *ptr;
 } HashValue;
