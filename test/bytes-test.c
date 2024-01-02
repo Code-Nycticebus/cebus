@@ -23,20 +23,20 @@ static void test_to_hex(void) {
   Arena arena = {0};
   Bytes b = BYTES(0x41, 0x42, 0x43);
   Str s = bytes_hex(b, &arena);
-  clib_assert(str_eq(s, STR("41 42 43                |3   | ABC     ")),
+  clib_assert(str_eq(s, STR("| 3 | 41 42 43                | ABC     ")),
               "String conversion was not correct: '" STR_FMT "'", STR_ARG(s));
 
   Bytes b2 = BYTES(0x02, 0xFF, 0xAA, 0xBB, 0x41, 0x41, 0x41);
   Str s2 = bytes_hex(b2, &arena);
-  clib_assert(str_eq(s2, STR("02 ff aa bb 41 41 41    |7   | ....AAA ")),
+  clib_assert(str_eq(s2, STR("| 7 | 02 ff aa bb 41 41 41    | ....AAA ")),
               "String conversion was not correct: \n'" STR_FMT "'",
               STR_ARG(s2));
 
   Bytes b3 = BYTES(0xaa, 0xbb, 0xcc, 0xdd, 0x41, 0x41, 0x41, 0x41, 0x42, 0x42,
                    0x42, 0x42);
   Str s3 = bytes_hex(b3, &arena);
-  clib_assert(str_eq(s3, STR("aa bb cc dd 41 41 41 41 |8   | ....AAAA\n"
-                             "42 42 42 42             |12  | BBBB    ")),
+  clib_assert(str_eq(s3, STR("|  8 | aa bb cc dd 41 41 41 41 | ....AAAA\n"
+                             "| 12 | 42 42 42 42             | BBBB    ")),
               "String conversion was not correct: \n" STR_FMT "", STR_ARG(s3));
 
   arena_free(&arena);
