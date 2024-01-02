@@ -33,15 +33,16 @@ static void test_ht(void) {
   HashTable ht = ht_create(&arena, 10000);
 
   for (size_t i = 0; i < 10000; i++) {
-    if (i % 1000 == 0)
-      printf("%zu\n", i);
     ht_insert(&ht, usize_hash(i), (HashValue){.u64 = i * 4});
   }
-  printf("elements: %zu -> %zu kb\n", ht.count,
-         ht.count * sizeof(HashNode) / 1000);
+  clib_assert(ht.count == 10000, "Hash table should be at this size");
 
-  printf("Fast math: 100*4 == %" U64_FMT "\n",
-         ht_get(&ht, usize_hash(100))->value.u64);
+  clib_assert(ht_get(&ht, usize_hash(10))->value.u64 == 40,
+              "Hashing was wrong");
+  clib_assert(ht_get(&ht, usize_hash(20))->value.u64 == 80,
+              "Hashing was wrong");
+  clib_assert(ht_get(&ht, usize_hash(30))->value.u64 == 120,
+              "Hashing was wrong");
 
   arena_free(&arena);
 }
