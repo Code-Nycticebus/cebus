@@ -3,7 +3,7 @@
 
 #include "clib/platform.h"
 #include <stdbool.h>
-#include <stddef.h>
+#include <stddef.h> // IWYU pragma: export
 #include <stdint.h>
 
 typedef uint8_t u8;
