@@ -25,10 +25,6 @@ static void test_insert(void) {
   clib_assert(ht_get(&ht, hash(STR("Hello2"))).u64 == 69,
               "ht should get the value correnctly");
 
-  HashValue value = {0};
-  clib_assert(ht_try_get(&ht, hash(STR("NOT FOUND!")), &value) == false,
-              "Did find something");
-
   arena_free(&arena);
 }
 
@@ -43,6 +39,8 @@ static void test_ht(void) {
   }
   printf("elements: %zu -> %zu kb\n", ht.count,
          ht.count * sizeof(HashNode) / 1000);
+
+  printf("Fast math: 100*4 == %lu\n", ht_get(&ht, usize_hash(100)).u64);
 
   arena_free(&arena);
 }

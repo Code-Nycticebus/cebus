@@ -36,12 +36,7 @@ typedef struct {
 HashTable ht_create(Arena *arena, usize size);
 
 void ht_insert(HashTable *ht, u64 hash, HashValue value);
-void ht_insert_bytes(HashTable *ht, u64 hash, Bytes bytes);
-void ht_insert_copy(HashTable *ht, u64 hash, usize size, const void *value);
-
 bool ht_try_get(HashTable *ht, u64 hash, HashValue *value);
 HashValue ht_get(HashTable *ht, u64 hash);
-bool ht_try_get_bytes(HashTable *ht, u64 hash, Bytes *slice);
-Bytes ht_get_bytes(HashTable *ht, u64 hash);
 
 #endif // !__CLIB_HT_H__
