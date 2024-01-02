@@ -30,22 +30,36 @@ bool set_add(Set *set, u64 hash) {
       return true;
     }
   }
-
+  for (usize i = 0; i < set->cap; i++) {
+    if (!set->items[i].occupied || set->items[i].hash == hash) {
+      set->items[i].occupied = true;
+      set->items[i].hash = hash;
+      set->count++;
+      return true;
+    }
+  }
   clib_assert(false, "Unreachable: table overrun!");
   return false;
 }
 
 bool set_remove(Set *set, u64 hash) {
   usize idx = hash % set->cap;
-  if (!set->items[idx].occupied || set->items[idx].hash == hash) {
+  if (set->items[idx].occupied && set->items[idx].hash == hash) {
     set->items[idx].occupied = false;
     set->count--;
     return true;
   }
   for (usize i = 0; i < set->cap; i++) {
     idx = (idx + i * i) % set->cap;
-    if (!set->items[idx].occupied || set->items[idx].hash == hash) {
+    if (set->items[idx].occupied && set->items[idx].hash == hash) {
       set->items[idx].occupied = false;
+      set->count--;
+      return true;
+    }
+  }
+  for (usize i = 0; i < set->cap; i++) {
+    if (set->items[i].occupied && set->items[i].hash == hash) {
+      set->items[i].occupied = false;
       set->count--;
       return true;
     }
@@ -61,6 +75,11 @@ bool set_contains(Set *set, u64 hash) {
   for (usize i = 0; i < set->cap; i++) {
     idx = (idx + i * i) % set->cap;
     if (set->items[idx].occupied && set->items[idx].hash == hash) {
+      return true;
+    }
+  }
+  for (usize i = 0; i < set->cap; i++) {
+    if (set->items[i].occupied && set->items[i].hash == hash) {
       return true;
     }
   }
