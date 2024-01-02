@@ -4,7 +4,6 @@
 
 HashTable ht_create(Arena *arena, usize size) {
   HashTable ht = {0};
-  ht.arena = arena;
   ht.cap = size;
   ht.nodes = arena_calloc(arena, size * sizeof(ht.nodes[0]));
   return ht;
@@ -39,31 +38,21 @@ void ht_insert(HashTable *ht, u64 hash, HashValue value) {
   clib_assert(false, "Unreachable: table overrun: %zu elements", ht->cap);
 }
 
-bool ht_try_get(HashTable *ht, u64 hash, HashValue *value) {
+HashNode *ht_get(HashTable *ht, u64 hash) {
   usize idx = hash % ht->cap;
   if (ht->nodes[idx].key && ht->nodes[idx].key == hash) {
-    *value = ht->nodes[idx].value;
-    return true;
+    return &ht->nodes[idx];
   }
   for (usize i = 0; i < ht->cap; i++) {
     idx = (idx + i * i) % ht->cap;
     if (ht->nodes[idx].key && ht->nodes[idx].key == hash) {
-      *value = ht->nodes[idx].value;
-      return true;
+      return &ht->nodes[idx];
     }
   }
   for (usize i = 0; i < ht->cap; i++) {
     if (ht->nodes[i].key || ht->nodes[i].key == hash) {
-      *value = ht->nodes[idx].value;
-      return true;
+      return &ht->nodes[idx];
     }
   }
-  return false;
-}
-
-HashValue ht_get(HashTable *ht, u64 hash) {
-  HashValue value = {0};
-  clib_assert(ht_try_get(ht, hash, &value), "Value was not in hashtable: %lx",
-              hash);
-  return value;
+  return NULL;
 }
