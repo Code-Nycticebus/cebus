@@ -178,7 +178,7 @@
     return T##_to_le_bytes(value, arena);                                      \
   }                                                                            \
   u64 T##_hash(T value) {                                                      \
-    u64 hash = value;                                                          \
+    u64 hash = ((u64)value) + 1;                                               \
     hash = (((hash >> 16) ^ hash) % 0x3AA387A8B1) * 0x45d9f3b;                 \
     hash = (((hash >> 16) ^ hash) % 0x3AA387A8B1) * 0x45d9f3b;                 \
     hash = (hash >> 16) ^ hash;                                                \
