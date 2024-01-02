@@ -5,6 +5,7 @@
 #include "datatypes/datatypes.h"
 
 typedef struct {
+  Arena *arena;
   usize cap;
   usize count;
   struct {
@@ -14,6 +15,8 @@ typedef struct {
 } Set;
 
 Set set_create(Arena *arena, usize size);
+
+void set_reserve(Set *set, usize size);
 
 bool set_add(Set *set, u64 hash);
 bool set_remove(Set *set, u64 hash);

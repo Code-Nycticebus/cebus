@@ -70,7 +70,7 @@ void *arena_calloc(Arena *arena, usize size) {
 void *arena_temp_alloc(Arena *arena, usize size) {
   Chunk *next = arena->begin;
   for (; next != NULL; next = next->next) {
-    if (next->allocated == 0 && size <= next->cap) {
+    if (next->allocated == 0 && size < next->cap) {
       next->allocated = next->cap;
       return next->data;
     }

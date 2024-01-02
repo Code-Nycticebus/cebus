@@ -10,7 +10,7 @@
 
 typedef union {
   struct {
-    u16 size;
+    u16 size : 16;
     u64 data : 48;
   } bytes;
   u64 u64;
@@ -22,17 +22,18 @@ _Static_assert(sizeof(HashValue) == 8, "HashValue is too big");
 typedef struct {
   u64 key;
   HashValue value;
-  bool occupied;
 } HashNode;
 
+_Static_assert(sizeof(HashNode) == 16, "HashValue is too big");
+
 typedef struct {
-  Arena arena;
+  Arena *arena;
   usize cap;
   usize count;
   HashNode *nodes;
 } HashTable;
 
-void ht_free(HashTable *ht);
+HashTable ht_create(Arena *arena, usize size);
 
 void ht_insert(HashTable *ht, u64 hash, HashValue value);
 void ht_insert_bytes(HashTable *ht, u64 hash, Bytes bytes);

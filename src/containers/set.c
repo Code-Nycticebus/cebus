@@ -1,17 +1,18 @@
 #include "set.h"
 
+#include "clib/asserts.h"
 #include "datatypes/integers.h"
 
 Set set_create(Arena *arena, usize size) {
   Set set = {0};
+  set.arena = arena;
   set.cap = size;
-  set.items = arena_calloc(arena, sizeof(set.items[0]) * size);
+  set.items = arena_calloc(arena, size * sizeof(set.items[0]));
   return set;
 }
 
 bool set_add(Set *set, u64 hash) {
-  if (!(set->count < set->cap))
-    return false;
+  clib_assert(set->count < set->cap, "Table full");
 
   usize idx = hash % set->cap;
   if (!set->items[idx].occupied || set->items[idx].hash == hash) {
@@ -29,6 +30,8 @@ bool set_add(Set *set, u64 hash) {
       return true;
     }
   }
+
+  clib_assert(false, "Unreachable: table overrun!");
   return false;
 }
 
@@ -93,7 +96,7 @@ bool set_subset(Set *set, Set *other) {
 }
 
 Set set_intersection(Set *set, Set *other, Arena *arena) {
-  Set intersection = set_create(arena, usize_min(set->count, other->count));
+  Set intersection = set_create(arena, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i].occupied) {
       if (set_contains(other, set->items[i].hash)) {
@@ -105,7 +108,7 @@ Set set_intersection(Set *set, Set *other, Arena *arena) {
 }
 
 Set set_difference(Set *set, Set *other, Arena *arena) {
-  Set difference = set_create(arena, usize_min(set->count, other->count));
+  Set difference = set_create(arena, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i].occupied) {
       if (!set_contains(other, set->items[i].hash)) {
