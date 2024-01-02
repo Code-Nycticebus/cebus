@@ -11,8 +11,6 @@
 #elif defined(WINDOWS)
 #include <io.h>
 #define isatty(...) _isatty(__VA_ARGS__)
-#define STDOUT_FILENO 0
-#define STDERR_FILENO 2
 #else
 #define isatty(...) false
 #endif

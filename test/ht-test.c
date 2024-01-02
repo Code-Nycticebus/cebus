@@ -7,7 +7,7 @@
 u64 hash(Str s) {
   u64 hash = 0x5432;
   for (usize i = 0; i < s.len; i++) {
-    hash &= ~(0x1fUL << 58);
+    hash &= ~(0x1fULL << 58);
     hash = (hash << 5) + hash + s.data[i];
   }
   return hash;
@@ -40,7 +40,8 @@ static void test_ht(void) {
   printf("elements: %zu -> %zu kb\n", ht.count,
          ht.count * sizeof(HashNode) / 1000);
 
-  printf("Fast math: 100*4 == %lu\n", ht_get(&ht, usize_hash(100))->value.u64);
+  printf("Fast math: 100*4 == %" U64_FMT "\n",
+         ht_get(&ht, usize_hash(100))->value.u64);
 
   arena_free(&arena);
 }

@@ -54,9 +54,9 @@ static void test_u8_to_bytes(void) {
 }
 
 static void test_u8_hash(void) {
-  clib_assert(u8_hash(0) == 0x130f353e031ba7, "0x%lx", u8_hash(0));
-  clib_assert(u8_hash(69) == 0x53620494cc400a2, "0x%lx", u8_hash(69));
-  clib_assert(u8_hash(42) == 0x333883cd70fb570, "0x%lx", u8_hash(42));
+  clib_assert(u8_hash(0) == 0x130f353e031ba7, "0x%" U64_HEX, u8_hash(0));
+  clib_assert(u8_hash(69) == 0x53620494cc400a2, "0x%" U64_HEX, u8_hash(69));
+  clib_assert(u8_hash(42) == 0x333883cd70fb570, "0x%" U64_HEX, u8_hash(42));
 }
 /* u8 */
 
@@ -111,10 +111,10 @@ static void test_i8_to_bytes(void) {
 }
 
 static void test_i8_hash(void) {
-  clib_assert(i8_hash(0) == 0x130f353e031ba7, "0x%lx", i8_hash(0));
-  clib_assert(i8_hash(69) == 0x53620494cc400a2, "0x%lx", i8_hash(69));
-  clib_assert(i8_hash(-69) == 0xe8a748836a8337d1, "0x%lx", i8_hash(-69));
-  clib_assert(i8_hash(42) == 0x333883cd70fb570, "0x%lx", i8_hash(42));
+  clib_assert(i8_hash(0) == 0x130f353e031ba7, "0x%" U64_HEX, i8_hash(0));
+  clib_assert(i8_hash(69) == 0x53620494cc400a2, "0x%" U64_HEX, i8_hash(69));
+  clib_assert(i8_hash(-69) == 0xe8a748836a8337d1, "0x%" U64_HEX, i8_hash(-69));
+  clib_assert(i8_hash(42) == 0x333883cd70fb570, "0x%" U64_HEX, i8_hash(42));
 }
 /* i8 */
 
@@ -177,9 +177,9 @@ static void test_u16_to_bytes(void) {
 }
 
 static void test_u16_hash(void) {
-  clib_assert(u16_hash(0) == 0x130f353e031ba7, "0x%lx", u16_hash(0));
-  clib_assert(u16_hash(69) == 0x53620494cc400a2, "0x%lx", u16_hash(69));
-  clib_assert(u16_hash(42) == 0x333883cd70fb570, "0x%lx", u16_hash(42));
+  clib_assert(u16_hash(0) == 0x130f353e031ba7, "0x%" U64_HEX, u16_hash(0));
+  clib_assert(u16_hash(69) == 0x53620494cc400a2, "0x%" U64_HEX, u16_hash(69));
+  clib_assert(u16_hash(42) == 0x333883cd70fb570, "0x%" U64_HEX, u16_hash(42));
 }
 /* u16 */
 
@@ -242,9 +242,9 @@ static void test_i16_to_bytes(void) {
 }
 
 static void test_i16_hash(void) {
-  clib_assert(i16_hash(0) == 0x130f353e031ba7, "0x%lx", i16_hash(0));
-  clib_assert(i16_hash(69) == 0x53620494cc400a2, "0x%lx", i16_hash(69));
-  clib_assert(i16_hash(42) == 0x333883cd70fb570, "0x%lx", i16_hash(42));
+  clib_assert(i16_hash(0) == 0x130f353e031ba7, "0x%" U64_HEX, i16_hash(0));
+  clib_assert(i16_hash(69) == 0x53620494cc400a2, "0x%" U64_HEX, i16_hash(69));
+  clib_assert(i16_hash(42) == 0x333883cd70fb570, "0x%" U64_HEX, i16_hash(42));
 }
 /* i16 */
 
@@ -317,9 +317,9 @@ static void test_u32_to_bytes(void) {
 }
 
 static void test_u32_hash(void) {
-  clib_assert(u32_hash(0) == 0x130f353e031ba7, "0x%lx", u32_hash(0));
-  clib_assert(u32_hash(69) == 0x53620494cc400a2, "0x%lx", u32_hash(69));
-  clib_assert(u32_hash(42) == 0x333883cd70fb570, "0x%lx", u32_hash(42));
+  clib_assert(u32_hash(0) == 0x130f353e031ba7, "0x%" U64_HEX, u32_hash(0));
+  clib_assert(u32_hash(69) == 0x53620494cc400a2, "0x%" U64_HEX, u32_hash(69));
+  clib_assert(u32_hash(42) == 0x333883cd70fb570, "0x%" U64_HEX, u32_hash(42));
 }
 /* u32 */
 
@@ -396,9 +396,9 @@ static void test_i32_to_bytes(void) {
 }
 
 static void test_i32_hash(void) {
-  clib_assert(i32_hash(0) == 0x130f353e031ba7, "0x%lx", i32_hash(0));
-  clib_assert(i32_hash(69) == 0x53620494cc400a2, "0x%lx", i32_hash(69));
-  clib_assert(i32_hash(42) == 0x333883cd70fb570, "0x%lx", i32_hash(42));
+  clib_assert(i32_hash(0) == 0x130f353e031ba7, "0x%" U64_HEX, i32_hash(0));
+  clib_assert(i32_hash(69) == 0x53620494cc400a2, "0x%" U64_HEX, i32_hash(69));
+  clib_assert(i32_hash(42) == 0x333883cd70fb570, "0x%" U64_HEX, i32_hash(42));
 }
 /* i32 */
 
@@ -479,9 +479,9 @@ static void test_u64_to_bytes(void) {
 }
 
 static void test_u64_hash(void) {
-  clib_assert(u64_hash(0) == 0x130f353e031ba7, "0x%lx", u64_hash(0));
-  clib_assert(u64_hash(69) == 0x53620494cc400a2, "0x%lx", u64_hash(69));
-  clib_assert(u64_hash(42) == 0x333883cd70fb570, "0x%lx", u64_hash(42));
+  clib_assert(u64_hash(0) == 0x130f353e031ba7, "0x%" U64_HEX, u64_hash(0));
+  clib_assert(u64_hash(69) == 0x53620494cc400a2, "0x%" U64_HEX, u64_hash(69));
+  clib_assert(u64_hash(42) == 0x333883cd70fb570, "0x%" U64_HEX, u64_hash(42));
 }
 /* u64 */
 
@@ -562,9 +562,9 @@ static void test_i64_to_bytes(void) {
 }
 
 static void test_i64_hash(void) {
-  clib_assert(i64_hash(0) == 0x130f353e031ba7, "0x%lx", i64_hash(0));
-  clib_assert(i64_hash(69) == 0x53620494cc400a2, "0x%lx", i64_hash(69));
-  clib_assert(i64_hash(42) == 0x333883cd70fb570, "0x%lx", i64_hash(42));
+  clib_assert(i64_hash(0) == 0x130f353e031ba7, "0x%" U64_HEX, i64_hash(0));
+  clib_assert(i64_hash(69) == 0x53620494cc400a2, "0x%" U64_HEX, i64_hash(69));
+  clib_assert(i64_hash(42) == 0x333883cd70fb570, "0x%" U64_HEX, i64_hash(42));
 }
 /* i64 */
 

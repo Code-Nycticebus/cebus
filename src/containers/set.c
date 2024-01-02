@@ -11,7 +11,7 @@ Set set_create(Arena *arena, usize size) {
 }
 
 bool set_add(Set *set, u64 hash) {
-  clib_assert(hash, "Hash invalid: %lx", hash);
+  clib_assert(hash, "Hash invalid: %" U64_HEX, hash);
   clib_assert(set->count < set->cap, "Table full");
   usize idx = hash % set->cap;
   if (!set->items[idx] || set->items[idx] == hash) {

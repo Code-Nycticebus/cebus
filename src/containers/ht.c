@@ -10,7 +10,7 @@ HashTable ht_create(Arena *arena, usize size) {
 }
 
 void ht_insert(HashTable *ht, u64 hash, HashValue value) {
-  clib_assert(hash, "Invalid hash: 0x%lx", hash);
+  clib_assert(hash, "Invalid hash: 0x%" U64_HEX, hash);
   clib_assert(ht->count < ht->cap, "Table full!");
   usize idx = hash % ht->cap;
   if (!ht->nodes[idx].key || ht->nodes[idx].key == hash) {
@@ -35,7 +35,8 @@ void ht_insert(HashTable *ht, u64 hash, HashValue value) {
       return;
     }
   }
-  clib_assert(false, "Unreachable: table overrun: %zu elements", ht->cap);
+  clib_assert(false, "Unreachable: table overrun: %" USIZE_FMT " elements",
+              ht->cap);
 }
 
 HashNode *ht_get(HashTable *ht, u64 hash) {

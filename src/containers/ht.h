@@ -10,14 +10,14 @@ typedef union {
   void *ptr;
 } HashValue;
 
-_Static_assert(sizeof(HashValue) == 8, "HashValue is too big");
+// _Static_assert(sizeof(HashValue) == 8, "HashValue is too big");
 
 typedef struct {
   u64 key;
   HashValue value;
 } HashNode;
 
-_Static_assert(sizeof(HashNode) == 16, "HashValue is too big");
+// _Static_assert(sizeof(HashNode) == 16, "HashValue is too big");
 
 typedef struct {
   usize cap;

@@ -7,8 +7,9 @@
 
 #if defined(LINUX)
 #include <bits/types/FILE.h>
-#else
-#error "Not on windows right now"
+#elif defined(WINDOWS)
+#define _FILE_DEFINED
+typedef struct _iobuf FILE;
 #endif
 
 typedef enum {

@@ -42,10 +42,10 @@ bool file_try_read_bytes(File *file, Arena *arena, Bytes *bytes) {
   const usize size = file_size(file);
   u8 *buffer = arena_alloc(arena, size);
   const usize bytes_read = fread(buffer, sizeof(u8), size, file->handle);
-  *bytes = bytes_from_parts(size, buffer);
-  if (bytes_read < size) {
+  if (ferror(file->handle)) {
     return false;
   }
+  *bytes = bytes_from_parts(bytes_read, buffer);
   return true;
 }
 
