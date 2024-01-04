@@ -1,7 +1,7 @@
 #ifndef __CLIB_LOGGING_H__
 #define __CLIB_LOGGING_H__
 
-#include "platform.h"
+#include "core/platform.h"
 
 #include <stdio.h> // IWYU pragma: export
 
@@ -20,7 +20,6 @@ typedef enum {
 #elif defined(MSVC)
 #define CLIB_FMT(__fmt_arg, __var_args) _Printf_format_string_ __fmt_arg
 #else
-#error WDWA
 #define CLIB_FMT(...)
 #endif
 

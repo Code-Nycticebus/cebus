@@ -2,8 +2,8 @@
 #define __CLIB_IO_H__
 
 #include "clib/arena.h"
-#include "clib/platform.h"
-#include "datatypes/datatypes.h"
+#include "core/defines.h"
+#include "core/platform.h"
 
 #if defined(LINUX)
 #include <bits/types/FILE.h>

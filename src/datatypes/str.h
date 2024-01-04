@@ -3,9 +3,7 @@
 
 #include "clib/arena.h"
 
-#include "datatypes.h" // IWYU pragma: private: include "str.h"
-
-#include "clib/defines.h"
+#include "core/defines.h" // IWYU pragma: private: include "str.h"
 
 // TODO add all these
 //      "https://docs.python.org/3/library/stdtypes.html#str.isalnum"

@@ -1,8 +1,8 @@
 #ifndef __CLIB_ASSERTS_H__
 #define __CLIB_ASSERTS_H__
 
+#include "core/platform.h"
 #include "logging.h" // IWYU pragma: export
-#include "platform.h"
 
 #if defined(LINUX)
 #include <signal.h> // IWYU pragma: export

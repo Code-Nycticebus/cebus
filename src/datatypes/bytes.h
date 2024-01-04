@@ -2,8 +2,7 @@
 #define __CLIB_BYTES_H__
 
 #include "clib/arena.h"
-#include "clib/defines.h"
-#include "datatypes.h" // IWYU pragma: private: include "bytes.h"
+#include "core/defines.h"
 
 #define BYTES(...)                                                             \
   (Bytes) {                                                                    \

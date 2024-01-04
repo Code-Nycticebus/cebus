@@ -1,7 +1,7 @@
 #include "integers.h" // IWYU pragma: keep
 
 #include "clib/asserts.h"
-#include "clib/platform.h"
+#include "core/platform.h"
 #include "datatypes/bytes.h"
 
 #define INTEGER_IMPL(T, BITS)                                                  \

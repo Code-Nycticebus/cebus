@@ -2,7 +2,7 @@
 #define __CLIB_INTEGERS_H__
 
 #include "clib/arena.h"
-#include "datatypes.h"
+#include "core/defines.h"
 
 #define INTEGER_DECL(T)                                                        \
   T T##_reverse_bits(T value);                                                 \

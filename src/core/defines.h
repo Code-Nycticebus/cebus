@@ -1,10 +1,22 @@
-#ifndef __CLIB_DATATYPES_H__
-#define __CLIB_DATATYPES_H__
+#ifndef __CLIB_DEFINES_H__
+#define __CLIB_DEFINES_H__
 
-#include "clib/platform.h"
+#include "platform.h"
 #include <stdbool.h>
 #include <stddef.h> // IWYU pragma: export
 #include <stdint.h>
+
+#define KILOBYTES(s) ((usize)(s) * (usize)1e+3)
+#define MEGABYTES(s) ((usize)(s) * (usize)1e+6)
+#define GIGABYTES(s) ((usize)(s) * (usize)1e+9)
+
+typedef enum {
+  CMP_LESS = -1,
+  CMP_EQUAL = 0,
+  CMP_GREATER = 1,
+} CmpOrdering;
+
+typedef CmpOrdering (*CompareFn)(const void *, const void *);
 
 typedef uint8_t u8;
 #define U8_MAX UINT8_MAX
@@ -95,4 +107,4 @@ typedef struct {
   usize len;
 } Utf8;
 
-#endif /* !__CLIB_DATATYPES_H__ */
+#endif /* !__CLIB_DEFINES_H__ */

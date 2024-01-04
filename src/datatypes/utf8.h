@@ -2,7 +2,7 @@
 #define __CLIB_UTF8_H__
 
 #include "clib/arena.h"
-#include "datatypes.h" // IWYU pragma: private: include "utf8.h"
+#include "core/defines.h" // IWYU pragma: private: include "utf8.h"
 
 #define UTF8(s) utf8_decode(BYTES_STR(s))
 #define UTF8_FMT "%.*s"

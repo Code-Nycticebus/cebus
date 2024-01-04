@@ -2,7 +2,7 @@
 #define __CLIB_SET_H__
 
 #include "clib/arena.h"
-#include "datatypes/datatypes.h"
+#include "core/defines.h"
 
 typedef struct {
   usize cap;

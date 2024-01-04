@@ -1,10 +1,8 @@
 #include "logging.h"
 
-#include "defines.h" // IWYU pragma: export
+#include "core/defines.h" // IWYU pragma: export
 #include <stdarg.h>
 #include <stdio.h>
-
-#include "platform.h"
 
 #if defined(LINUX)
 #include <unistd.h>

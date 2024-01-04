@@ -1,7 +1,7 @@
 #ifndef __CLIB_ARENA_H__
 #define __CLIB_ARENA_H__
 
-#include "defines.h"
+#include "core/defines.h"
 
 typedef struct Chunk Chunk;
 

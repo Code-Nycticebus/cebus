@@ -2,7 +2,7 @@
 #define __CLIB_HT_H__
 
 #include "clib/arena.h"
-#include "datatypes/datatypes.h"
+#include "core/defines.h"
 #include <sys/cdefs.h>
 
 typedef union {
