@@ -1,5 +1,6 @@
 #include "str.h"
 #include "clib/arena.h"
+#include "clib/asserts.h"
 #include "datatypes/integers.h"
 
 #include <ctype.h>
@@ -94,7 +95,7 @@ Str str_upper(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
   buffer[s.len] = '\0';
   for (usize i = 0; i < s.len; i++) {
-    buffer[i] = toupper(s.data[i]);
+    buffer[i] = (char)toupper(s.data[i]);
   }
   return str_from_parts(s.len, buffer);
 }
@@ -103,7 +104,7 @@ Str str_lower(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
   buffer[s.len] = '\0';
   for (usize i = 0; i < s.len; i++) {
-    buffer[i] = tolower(s.data[i]);
+    buffer[i] = (char)tolower(s.data[i]);
   }
   return str_from_parts(s.len, buffer);
 }
@@ -268,11 +269,11 @@ CmpOrdering str_compare_gt(Str s1, Str s2) {
 CmpOrdering str_compare_lt(Str s1, Str s2) { return str_compare_gt(s2, s1); }
 
 static CmpOrdering _str_cmp_gt(const void *s1, const void *s2) {
-  return str_compare_gt(*(Str *)s1, *(Str *)s2);
+  return str_compare_gt(*(const Str *)s1, *(const Str *)s2);
 }
 
 static CmpOrdering _str_cmp_lt(const void *s1, const void *s2) {
-  return str_compare_gt(*(Str *)s2, *(Str *)s1);
+  return str_compare_gt(*(const Str *)s2, *(const Str *)s1);
 }
 
 CompareFn str_compare_qsort(CmpOrdering ordering) {
@@ -384,8 +385,9 @@ Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
 Str str_u64(Arena *arena, u64 n) {
   const usize number_max_chars = 21;
   char *buffer = arena_alloc(arena, number_max_chars);
-  usize len = snprintf(buffer, number_max_chars, "%" PRIu64, n);
-  return str_from_parts(len, buffer);
+  int len = snprintf(buffer, number_max_chars, "%" PRIu64, n);
+  clib_assert(0 < len, "Parsing failed");
+  return str_from_parts((usize)len, buffer);
 }
 
 u64 str_to_u64(Str s) {

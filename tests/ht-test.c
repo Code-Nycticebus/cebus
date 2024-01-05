@@ -1,14 +1,14 @@
 #include "clib/asserts.h"
-#include "containers/ht.h"
+#include "collections/ht.h"
 
 #include "datatypes/integers.h"
 #include "datatypes/str.h"
 
-u64 hash(Str s) {
+static u64 hash(Str s) {
   u64 hash = 0x5432;
   for (usize i = 0; i < s.len; i++) {
     hash &= ~(0x1fULL << 58);
-    hash = (hash << 5) + hash + s.data[i];
+    hash = (hash << 5) + hash + (u64)s.data[i];
   }
   return hash;
 }

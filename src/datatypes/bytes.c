@@ -62,10 +62,11 @@ Str bytes_hex(Bytes bytes, Arena *arena) {
       buffer[b_idx++] = '\n';
     }
 
-    b_idx += snprintf(&buffer[b_idx], starting_size + 1, "|%*." USIZE_FMT " | ",
-                      (int)number_size,
-                      (i + 1) * bytes_count < bytes.size ? (i + 1) * bytes_count
-                                                         : bytes.size);
+    b_idx += (usize)snprintf(&buffer[b_idx], starting_size + 1,
+                             "|%*." USIZE_FMT " | ", (int)number_size,
+                             (i + 1) * bytes_count < bytes.size
+                                 ? (i + 1) * bytes_count
+                                 : bytes.size);
 
     for (usize j = 0; j < bytes_count; j++) {
       usize idx = (i * bytes_count) + j;
@@ -73,20 +74,21 @@ Str bytes_hex(Bytes bytes, Arena *arena) {
         buffer[b_idx++] = ' ';
       }
       if (idx < bytes.size) {
-        b_idx += snprintf(&buffer[b_idx], 3, "%02x", bytes.data[(i * 8) + j]);
+        b_idx +=
+            (usize)snprintf(&buffer[b_idx], 3, "%02x", bytes.data[(i * 8) + j]);
       } else {
         buffer[b_idx++] = ' ';
         buffer[b_idx++] = ' ';
       }
     }
 
-    b_idx += snprintf(&buffer[b_idx], between_size + 1, " | ");
+    b_idx += (usize)snprintf(&buffer[b_idx], between_size + 1, " | ");
 
     for (size_t j = 0; j < bytes_count; j++) {
       usize idx = (i * bytes_count) + j;
       if (idx < bytes.size) {
         if (isprint(bytes.data[idx])) {
-          buffer[b_idx++] = bytes.data[idx];
+          buffer[b_idx++] = (char)bytes.data[idx];
         } else {
           buffer[b_idx++] = '.';
         }

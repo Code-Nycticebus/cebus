@@ -8,7 +8,7 @@
   T T##_reverse_bits(T value) {                                                \
     T reversed = 0;                                                            \
     for (usize i = 0; i < BITS; i++) {                                         \
-      reversed = reversed << 1;                                                \
+      reversed = (T)(reversed << 1);                                           \
       if (value & 1) {                                                         \
         reversed = reversed | 1;                                               \
       }                                                                        \
@@ -112,9 +112,9 @@
                 "expected %" U64_HEX " bytes but got %" U64_HEX, sizeof(T),    \
                 bytes.size);                                                   \
     if (CLIB_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
-      return T##_swap_bytes(*(T *)bytes.data);                                 \
+      return T##_swap_bytes(*(const T *)bytes.data);                           \
     }                                                                          \
-    return *(T *)bytes.data;                                                   \
+    return *(const T *)bytes.data;                                             \
   }                                                                            \
                                                                                \
   Bytes T##_to_be_bytes(T value, Arena *arena) {                               \
@@ -149,9 +149,9 @@
                 "expected %" U64_HEX " bytes but got %" U64_HEX, sizeof(T),    \
                 bytes.size);                                                   \
     if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                       \
-      return T##_swap_bytes(*(T *)bytes.data);                                 \
+      return T##_swap_bytes(*(const T *)bytes.data);                           \
     }                                                                          \
-    return *(T *)bytes.data;                                                   \
+    return *(const T *)bytes.data;                                             \
   }                                                                            \
                                                                                \
   Bytes T##_to_le_bytes(T value, Arena *arena) {                               \
@@ -171,7 +171,7 @@
     clib_assert(sizeof(T) == bytes.size,                                       \
                 "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
                 sizeof(T), bytes.size);                                        \
-    return *(T *)bytes.data;                                                   \
+    return *(const T *)bytes.data;                                             \
   }                                                                            \
                                                                                \
   Bytes T##_to_ne_bytes(T value, Arena *arena) {                               \
@@ -203,16 +203,20 @@
   }                                                                            \
                                                                                \
   static CmpOrdering _##T##_cmp_gt(const void *a, const void *b) {             \
-    return T##_compare_gt(*(T *)a, *(T *)b);                                   \
+    return T##_compare_gt(*(const T *)a, *(const T *)b);                       \
   }                                                                            \
                                                                                \
   static CmpOrdering _##T##_cmp_lt(const void *a, const void *b) {             \
-    return T##_compare_lt(*(T *)a, *(T *)b);                                   \
+    return T##_compare_lt(*(const T *)a, *(const T *)b);                       \
   }                                                                            \
                                                                                \
   CompareFn T##_compare_qsort(CmpOrdering ordering) {                          \
     return ordering == CMP_LESS ? _##T##_cmp_lt : _##T##_cmp_gt;               \
   }
+
+// These are needed because i want to cast a u8[4] to a i32*
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
 
 INTEGER_IMPL(u8, U8_BITS)
 INTEGER_IMPL(i8, I8_BITS)

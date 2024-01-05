@@ -30,11 +30,12 @@ void file_rewind(File *file) {
 }
 
 usize file_size(File *file) {
-  const usize current = ftell(file->handle);
+  const long current = ftell(file->handle);
   fseek(file->handle, 0, SEEK_END);
-  const usize size = ftell(file->handle);
+  const long size = ftell(file->handle);
   fseek(file->handle, current, SEEK_SET);
-  return size;
+  clib_assert(0 < size, "Could not get file size: %s", strerror(errno));
+  return (usize)size;
 }
 
 bool file_try_read_bytes(File *file, Arena *arena, Bytes *bytes) {

@@ -1,6 +1,6 @@
 #include "clib/io.h"
+#include "core/defines.h"
 #include "datatypes/bytes.h"
-#include "datatypes/datatypes.h"
 #include "datatypes/str.h"
 
 int main(void) {

@@ -6,11 +6,11 @@
 
 #define BYTES(...)                                                             \
   (Bytes) {                                                                    \
-    sizeof((u8[]){__VA_ARGS__}), (u8[]) { __VA_ARGS__ }                        \
+    sizeof((const u8[]){__VA_ARGS__}), (const u8[]) { __VA_ARGS__ }            \
   }
 
 #define BYTES_STR(s)                                                           \
-  (Bytes) { sizeof(s) - 1, (u8 *)(s) }
+  (Bytes) { sizeof(s) - 1, (const u8 *)(s) }
 
 Bytes bytes_from_parts(usize size, const u8 *data);
 Bytes bytes_copy(Bytes bytes, Arena *arena);

@@ -1,6 +1,6 @@
 
 #include "clib/asserts.h"
-#include "containers/set.h"
+#include "collections/set.h"
 #include "datatypes/integers.h"
 
 static void test_set_insert(void) {

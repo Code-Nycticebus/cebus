@@ -5,7 +5,7 @@
 
 #include "clib/asserts.h"
 
-bool sep(char c) { return isspace(c) || isblank(c); }
+static bool sep(char c) { return isspace(c) || isblank(c); }
 
 static void test_compare(void) {
   Str s = STR("Hello, World");

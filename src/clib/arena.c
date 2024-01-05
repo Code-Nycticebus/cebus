@@ -93,7 +93,7 @@ void *arena_temp_realloc(Arena *arena, void *ptr, usize size) {
   if (ptr == NULL) {
     return arena_temp_alloc(arena, size);
   }
-  Chunk *chunk = (Chunk *)((char *)ptr - sizeof(Chunk));
+  Chunk *chunk = (Chunk *)((uintptr_t)ptr - sizeof(Chunk));
   if (size < chunk->cap) {
     return &chunk->data[0];
   }
@@ -107,6 +107,6 @@ void arena_temp_free(void *ptr) {
   if (ptr == NULL) {
     return;
   }
-  Chunk *chunk = (Chunk *)((char *)ptr - sizeof(Chunk));
+  Chunk *chunk = (Chunk *)((uintptr_t)ptr - sizeof(Chunk));
   chunk->allocated = 0;
 }

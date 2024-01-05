@@ -22,7 +22,7 @@ bool utf8_try_decode(Bytes bytes, Utf8 *out) {
   }
   out->len = len;
   out->size = bytes.size;
-  out->data = (char *)bytes.data;
+  out->data = (const char *)bytes.data;
   return true;
 }
 
@@ -36,14 +36,14 @@ Utf8 utf8_decode(Bytes bytes) {
 bool utf8_try_encode(Utf8 s, Bytes *out) {
   bool ret = utf8_validate(s);
   clib_assert_return(ret, false);
-  *out = bytes_from_parts(s.size, (uint8_t *)s.data);
+  *out = bytes_from_parts(s.size, (const u8 *)s.data);
   return true;
 }
 
 Bytes utf8_encode(Utf8 s) {
   bool ret = utf8_validate(s);
   clib_assert(ret, "Encoding Utf8 failed");
-  return bytes_from_parts(s.size, (uint8_t *)s.data);
+  return bytes_from_parts(s.size, (const u8 *)s.data);
 }
 
 bool utf8_eq(Utf8 s1, Utf8 s2) {
@@ -137,7 +137,7 @@ Utf8 utf8_upper(Utf8 s, Arena *arena) {
   for (usize i = 0; i < s.size; ++i) {
     usize bit_count = u8_leading_ones((u8)s.data[i]);
     if (bit_count == 0) {
-      buffer[i] = toupper(s.data[i]);
+      buffer[i] = (char)toupper(s.data[i]);
     } else {
       memcpy(&buffer[i], &s.data[i], bit_count);
       i += bit_count - 1;
@@ -151,7 +151,7 @@ Utf8 utf8_lower(Utf8 s, Arena *arena) {
   for (usize i = 0; i < s.size; ++i) {
     usize bit_count = u8_leading_ones((u8)s.data[i]);
     if (bit_count == 0) {
-      buffer[i] = tolower(s.data[i]);
+      buffer[i] = (char)tolower(s.data[i]);
     } else {
       memcpy(&buffer[i], &s.data[i], bit_count);
       i += bit_count - 1;
@@ -174,5 +174,5 @@ bool utf8_validate_bytes(Bytes bytes) {
 }
 
 bool utf8_validate(Utf8 s) {
-  return utf8_validate_bytes(bytes_from_parts(s.size, (uint8_t *)s.data));
+  return utf8_validate_bytes(bytes_from_parts(s.size, (const u8 *)s.data));
 }

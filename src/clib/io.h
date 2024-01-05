@@ -25,6 +25,7 @@ bool file_try_open(const char *filename, const char *mode, File *file);
 File file_open(const char *filename, const char *mode);
 void file_close(File *file);
 
+usize file_size(File *file);
 void file_rewind(File *file);
 
 bool file_try_read_bytes(File *file, Arena *arena, Bytes *bytes);

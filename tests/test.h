@@ -2,7 +2,7 @@
 #define __TEST_H__
 
 #include "clib/arena.h" // IWYU pragma: export
-#include "clib/platform.h"
+#include "core/platform.h"
 
 #if defined(CLANG) || defined(GCC)
 #define UNUSED __attribute((unused))
