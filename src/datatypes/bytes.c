@@ -2,6 +2,7 @@
 #include "core/defines.h"
 #include "datatypes/integers.h"
 #include "datatypes/str.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,7 +26,7 @@ bool bytes_eq(Bytes b1, Bytes b2) {
 
 Bytes bytes_slice(Bytes bytes, usize idx1, usize idx2) {
   if (idx2 <= idx1 || bytes.size <= idx1 || bytes.size < idx2) {
-    return bytes_from_parts(0, &bytes.data[bytes.size - 1]);
+    return bytes_from_parts(0, bytes.data);
   }
   return bytes_from_parts(idx2 - idx1, &bytes.data[idx1]);
 }
