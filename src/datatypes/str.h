@@ -69,6 +69,9 @@ Str str_chop_by_predicate(Str *s, bool (*predicate)(char));
 Str str_chop_right_by_delim(Str *s, char delim);
 Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char));
 
+Str str_take(Str *s, usize n);
+bool str_try_take(Str *s, usize n, Str *chunk);
+
 Str str_u64(Arena *arena, u64 n);
 u64 str_to_u64(Str s);
 u64 str_chop_u64(Str *s);

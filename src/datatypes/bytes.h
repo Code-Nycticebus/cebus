@@ -21,5 +21,6 @@ Bytes bytes_take(Bytes *bytes, usize count);
 bool bytes_eq(Bytes b1, Bytes b2);
 
 Str bytes_hex(Bytes bytes, Arena *arena);
+Bytes bytes_from_hex(Str s, Arena *arena);
 
 #endif /* !__CLIB_BYTES_H__ */

@@ -382,6 +382,25 @@ Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
   return *s;
 }
 
+Str str_take(Str *s, usize count) {
+  count = usize_min(s->len, count);
+  Str ret = str_from_parts(count, s->data);
+  s->len -= count;
+  s->data += count;
+  return ret;
+}
+
+bool str_try_take(Str *s, usize count, Str *chunk) {
+  count = usize_min(s->len, count);
+  if (s->len == 0) {
+    return false;
+  }
+  *chunk = str_from_parts(count, s->data);
+  s->len -= count;
+  s->data += count;
+  return true;
+}
+
 Str str_u64(Arena *arena, u64 n) {
   const usize number_max_chars = 21;
   char *buffer = arena_alloc(arena, number_max_chars);
