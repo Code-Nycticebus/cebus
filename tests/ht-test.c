@@ -20,13 +20,14 @@ static void test_insert(void) {
 }
 
 static void test_ht(void) {
+  const usize test_count = 10000;
   Arena arena = {0};
-  HashTable ht = ht_create(&arena, 10000);
+  HashTable ht = ht_create(&arena, test_count);
 
-  for (size_t i = 0; i < 10000; i++) {
+  for (size_t i = 0; i < test_count; i++) {
     ht_insert(&ht, usize_hash(i), (HashValue){.u64 = i * 4});
   }
-  clib_assert(ht.count == 10000, "Hash table should be at this size");
+  clib_assert(ht.count == test_count, "Hash table should be at this size");
 
   clib_assert(ht_get(&ht, usize_hash(10))->value.u64 == 40,
               "Hashing was wrong");
