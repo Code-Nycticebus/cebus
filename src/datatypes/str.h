@@ -80,4 +80,6 @@ usize str_find(Str haystack, Str needle);
 usize str_find_last(Str haystack, Str needle);
 usize str_count(Str haystack, Str needle);
 
+u64 str_hash(Str s);
+
 #endif /* !__CLIB_STR_H__ */

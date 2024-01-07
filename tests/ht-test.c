@@ -4,25 +4,16 @@
 #include "datatypes/integers.h"
 #include "datatypes/str.h"
 
-static u64 hash(Str s) {
-  u64 hash = 0x5432;
-  for (usize i = 0; i < s.len; i++) {
-    hash &= ~(0x1fULL << 58);
-    hash = (hash << 5) + hash + (u64)s.data[i];
-  }
-  return hash;
-}
-
 static void test_insert(void) {
   Arena arena = {0};
   HashTable ht = ht_create(&arena, 10);
 
-  ht_insert(&ht, hash(STR("Hello")), (HashValue){.u64 = 420});
-  ht_insert(&ht, hash(STR("Hello2")), (HashValue){.u64 = 69});
+  ht_insert(&ht, str_hash(STR("Hello")), (HashValue){.u64 = 420});
+  ht_insert(&ht, str_hash(STR("Hello2")), (HashValue){.i64 = -69});
 
-  clib_assert(ht_get(&ht, hash(STR("Hello")))->value.u64 == 420,
+  clib_assert(ht_get(&ht, str_hash(STR("Hello")))->value.u64 == 420,
               "ht should get the value correnctly");
-  clib_assert(ht_get(&ht, hash(STR("Hello2")))->value.u64 == 69,
+  clib_assert(ht_get(&ht, str_hash(STR("Hello2")))->value.i64 == -69,
               "ht should get the value correnctly");
 
   arena_free(&arena);

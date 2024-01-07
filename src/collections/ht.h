@@ -6,18 +6,19 @@
 #include <sys/cdefs.h>
 
 typedef union {
+  f32 f32;
+  f64 f64;
+  i32 i32;
+  u32 u32;
+  i64 i64;
   u64 u64;
   void *ptr;
 } HashValue;
-
-// _Static_assert(sizeof(HashValue) == 8, "HashValue is too big");
 
 typedef struct {
   u64 key;
   HashValue value;
 } HashNode;
-
-// _Static_assert(sizeof(HashNode) == 16, "HashValue is too big");
 
 typedef struct {
   usize cap;
