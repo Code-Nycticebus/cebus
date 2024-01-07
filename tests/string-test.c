@@ -244,6 +244,25 @@ static void test_reverse(void) {
   arena_free(&arena);
 }
 
+static void test_hash(void) {
+  struct {
+    Str s;
+    u64 hash;
+  } tests[] = {
+      {STR("Hello"), 0x63f0bfacf2c00f6b},
+      {STR("THis is a very long string"), 0xfa5ff93beffa9c0b},
+      {STR("Another"), 0x90c0e53673f3e9f4},
+      {STR("Hello"), 0x63f0bfacf2c00f6b},
+  };
+
+  for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
+    const u64 hash = str_hash(tests[i].s);
+    clib_assert(hash == tests[i].hash,
+                "'" STR_FMT "': has 0x%" U64_HEX " expected 0x%" U64_HEX,
+                STR_ARG(tests[i].s), hash, tests[i].hash);
+  }
+}
+
 int main(void) {
   test_compare();
   test_transform();
@@ -263,4 +282,5 @@ int main(void) {
   test_cmp();
   test_repeat();
   test_reverse();
+  test_hash();
 }

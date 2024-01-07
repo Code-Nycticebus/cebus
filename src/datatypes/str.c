@@ -467,10 +467,10 @@ usize str_count(Str haystack, Str needle) {
 }
 
 u64 str_hash(Str s) {
-  const u64 magic_prime = 0x00000100000001b3;
-  u64 hash = 0xcbf29ce484222325;
-  for (usize i = 0; i < s.len; i++) {
-    hash = hash ^ ((u64)s.data[i] * magic_prime);
+  const uint64_t magic_prime = 0x00000100000001b3;
+  uint64_t hash = 0xcbf29ce484222325;
+  for (usize i = 0; i < s.len; ++i) {
+    hash = (hash ^ (u64)s.data[i]) * magic_prime;
   }
   return hash;
 }

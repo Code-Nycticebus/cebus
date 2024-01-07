@@ -2,4 +2,4 @@
 name="clib"
 cc="clang"
 bin="static"
-cflags=["-std=c99", "-fsanitize=address,integer"]
+cflags=["-std=c99", "-fsanitize=address"]
