@@ -10,7 +10,7 @@ HashTable ht_create(Arena *arena, usize size) {
 }
 
 void ht_insert(HashTable *ht, u64 hash, HashValue value) {
-  clib_assert(hash, "Invalid hash: 0x%" U64_HEX, hash);
+  clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
   clib_assert(ht->count < ht->cap, "Table full!");
   usize idx = hash % ht->cap;
   if (!ht->nodes[idx].key || ht->nodes[idx].key == hash) {
