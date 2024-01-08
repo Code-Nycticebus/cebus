@@ -87,12 +87,10 @@ static void test_temp(void) {
   void *data = arena_temp_alloc(&arena, 10);
 
   clib_assert(data, "Should not be NULL");
+  clib_assert(arena.begin, "Should not be NULL");
 
   TestChunk *chunk = (TestChunk *)arena.begin;
   clib_assert(chunk->allocated == chunk->cap, "Did not block the entire chunk");
-
-  arena_temp_free(data);
-  clib_assert(chunk->allocated == 0, "Did not block the entire chunk");
 
   arena_free(&arena);
 }

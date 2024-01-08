@@ -68,45 +68,19 @@ void *arena_calloc(Arena *arena, usize size) {
 }
 
 void *arena_temp_alloc(Arena *arena, usize size) {
-  Chunk *next = arena->begin;
-  for (; next != NULL; next = next->next) {
-    if (next->allocated == 0 && size < next->cap) {
-      next->allocated = next->cap;
-      return next->data;
-    }
-  }
-  const usize chunk_size = usize_max(size, CHUNK_DEFAULT_SIZE);
+  usize chunk_size = usize_max(size, CHUNK_DEFAULT_SIZE);
   Chunk *chunk = chunk_allocate(chunk_size);
   chunk->allocated = chunk_size;
   chunk->next = arena->begin;
   arena->begin = chunk;
-  return &chunk->data[0];
+  return chunk->data;
 }
 
-void *arena_temp_calloc(Arena *arena, usize size) {
-  void *data = arena_temp_alloc(arena, size);
-  memset(data, 0, size);
-  return data;
-}
-
-void *arena_temp_realloc(Arena *arena, void *ptr, usize size) {
-  if (ptr == NULL) {
-    return arena_temp_alloc(arena, size);
-  }
+void *arena_temp_realloc(void *ptr, usize size) {
   Chunk *chunk = (Chunk *)((uintptr_t)ptr - sizeof(Chunk));
-  if (size < chunk->cap) {
-    return &chunk->data[0];
+  if (size < chunk->allocated) {
+    return chunk->data;
   }
-  void *data = arena_temp_alloc(arena, size);
-  memcpy(data, chunk->data, size);
-  arena_temp_free(ptr);
-  return data;
-}
-
-void arena_temp_free(void *ptr) {
-  if (ptr == NULL) {
-    return;
-  }
-  Chunk *chunk = (Chunk *)((uintptr_t)ptr - sizeof(Chunk));
-  chunk->allocated = 0;
+  Chunk *new_chunk = realloc(chunk, sizeof(Chunk) + size);
+  return new_chunk->data;
 }

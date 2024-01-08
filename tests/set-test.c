@@ -165,6 +165,7 @@ static void test_difference(void) {
 
 static void test_example_duplicates(void) {
   Arena arena = {0};
+
   Set unique = set_create(&arena, 10);
   Set duplicates = set_create(&arena, 10);
 
@@ -183,6 +184,8 @@ static void test_example_duplicates(void) {
   }
 
   VEC(Str) unique_strings = {0};
+  vec_init(&unique_strings, 5, &arena);
+
   for (usize i = 0; i < count; i++) {
     u64 hash = str_hash(list[i]);
     if (!set_contains(&duplicates, hash)) {
@@ -195,7 +198,6 @@ static void test_example_duplicates(void) {
   clib_assert(str_eq(unique_strings.items[1], STR("Cherry")),
               "Did not filter out correctly");
 
-  vec_free(&unique_strings);
   arena_free(&arena);
 }
 
@@ -225,6 +227,7 @@ static void test_example_intersection(void) {
 
   Set inter = set_intersection(&s1, &s2, &arena);
   VEC(Str) intersecting = {0};
+  vec_init(&intersecting, 5, &arena);
 
   for (usize i = 0; i < count; ++i) {
     if (set_contains(&inter, str_hash(list1[i]))) {
@@ -241,7 +244,6 @@ static void test_example_intersection(void) {
   clib_assert(str_eq(intersecting.items[3], STR("Pear")),
               "Did not filter out correctly");
 
-  vec_free(&intersecting);
   arena_free(&arena);
 }
 

@@ -7,11 +7,17 @@
 
 #define VEC(T)                                                                 \
   struct {                                                                     \
-    Arena arena;                                                               \
     usize cap;                                                                 \
     usize len;                                                                 \
     T *items;                                                                  \
   }
+
+#define vec_init(list, _cap, _arena)                                           \
+  do {                                                                         \
+    (list)->len = 0;                                                           \
+    (list)->cap = _cap;                                                        \
+    (list)->items = arena_temp_alloc(_arena, _cap * sizeof((list)->items[0])); \
+  } while (0)
 
 #define vec_first(list) (list)->items[0]
 #define vec_last(list) (list)->items[(list)->len - 1]
@@ -27,9 +33,8 @@
     clib_assert_debug(size <= SIZE_MAX - (list)->cap, "integer overflow");     \
     if (!((list)->len + size < (list)->cap)) {                                 \
       (list)->cap = usize_max((list)->cap + size, 10);                         \
-      (list)->items =                                                          \
-          arena_temp_realloc(&(list)->arena, (list)->items,                    \
-                             (list)->cap * sizeof((list)->items[0]));          \
+      (list)->items = arena_temp_realloc(                                      \
+          (list)->items, (list)->cap * sizeof((list)->items[0]));              \
     }                                                                          \
   } while (0)
 
@@ -47,13 +52,6 @@
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[(list)->len + __e_i] = (_items)[__e_i];                    \
     }                                                                          \
-  } while (0)
-
-#define vec_free(list)                                                         \
-  do {                                                                         \
-    arena_free(&(list)->arena);                                                \
-    (list)->len = 0;                                                           \
-    (list)->cap = 1;                                                           \
   } while (0)
 
 #define vec_map(src, dest, map)                                                \
