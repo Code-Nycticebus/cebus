@@ -1,7 +1,8 @@
-
 #include "clib/asserts.h"
 #include "collections/set.h"
+#include "collections/vec.h"
 #include "datatypes/integers.h"
+#include "datatypes/str.h"
 
 static void test_set_insert(void) {
   Arena arena = {0};
@@ -162,6 +163,88 @@ static void test_difference(void) {
   arena_free(&arena);
 }
 
+static void test_example_duplicates(void) {
+  Arena arena = {0};
+  Set unique = set_create(&arena, 10);
+  Set duplicates = set_create(&arena, 10);
+
+  Str list[] = {
+      STR("Apple"), STR("Banana"), STR("Apple"), STR("Cherry"), STR("Apple"),
+  };
+  const usize count = sizeof(list) / sizeof(list[0]);
+
+  for (usize i = 0; i < count; i++) {
+    u64 hash = str_hash(list[i]);
+    if (set_contains(&unique, hash)) {
+      set_add(&duplicates, hash);
+    } else {
+      set_add(&unique, hash);
+    }
+  }
+
+  VEC(Str) unique_strings = {0};
+  for (usize i = 0; i < count; i++) {
+    u64 hash = str_hash(list[i]);
+    if (!set_contains(&duplicates, hash)) {
+      vec_push(&unique_strings, list[i]);
+    }
+  }
+
+  clib_assert(str_eq(unique_strings.items[0], STR("Banana")),
+              "Did not filter out correctly");
+  clib_assert(str_eq(unique_strings.items[1], STR("Cherry")),
+              "Did not filter out correctly");
+
+  vec_free(&unique_strings);
+  arena_free(&arena);
+}
+
+static void test_example_intersection(void) {
+  Arena arena = {0};
+
+  Str list1[] = {
+      STR("Apple"), STR("Banana"), STR("Cherry"), STR("Pomegrade"),
+      STR("Grape"), STR("Orange"), STR("Pear"),
+  };
+  const usize count = sizeof(list1) / sizeof(list1[0]);
+  Set s1 = set_create(&arena, count * 2);
+  for (size_t i = 0; i < count; i++) {
+    set_add(&s1, str_hash(list1[i]));
+  }
+
+  Str list2[] = {
+      STR("Apple"),  STR("Strawberry"), STR("Blueberry"), STR("Banana"),
+      STR("Cherry"), STR("Lemon"),      STR("Pear"),
+  };
+  const usize count2 = sizeof(list2) / sizeof(list2[0]);
+
+  Set s2 = set_create(&arena, count2 * 2);
+  for (size_t i = 0; i < count2; i++) {
+    set_add(&s2, str_hash(list2[i]));
+  }
+
+  Set inter = set_intersection(&s1, &s2, &arena);
+  VEC(Str) intersecting = {0};
+
+  for (usize i = 0; i < count; ++i) {
+    if (set_contains(&inter, str_hash(list1[i]))) {
+      vec_push(&intersecting, list1[i]);
+    }
+  }
+
+  clib_assert(str_eq(intersecting.items[0], STR("Apple")),
+              "Did not filter out correctly");
+  clib_assert(str_eq(intersecting.items[1], STR("Banana")),
+              "Did not filter out correctly");
+  clib_assert(str_eq(intersecting.items[2], STR("Cherry")),
+              "Did not filter out correctly");
+  clib_assert(str_eq(intersecting.items[3], STR("Pear")),
+              "Did not filter out correctly");
+
+  vec_free(&intersecting);
+  arena_free(&arena);
+}
+
 int main(void) {
   test_set_insert();
   test_set_remove();
@@ -169,4 +252,7 @@ int main(void) {
   test_subset();
   test_intersection();
   test_difference();
+
+  test_example_duplicates();
+  test_example_intersection();
 }

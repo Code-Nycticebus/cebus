@@ -10,32 +10,37 @@ Set set_create(Arena *arena, usize size) {
   return set;
 }
 
-bool set_add(Set *set, u64 hash) {
+void set_add(Set *set, u64 hash) {
   clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
   clib_assert(set->count < set->cap, "Table full");
   usize idx = hash % set->cap;
   if (!set->items[idx] || set->items[idx] == hash) {
     set->items[idx] = hash;
     set->count++;
-    return true;
+    return;
   }
   for (usize i = 0; i < set->cap; i++) {
     idx = (idx + i * i) % set->cap;
     if (!set->items[idx] || set->items[idx] == hash) {
       set->items[idx] = hash;
       set->count++;
-      return true;
+      return;
     }
   }
   for (usize i = 0; i < set->cap; i++) {
     if (!set->items[i] || set->items[i] == hash) {
       set->items[i] = hash;
       set->count++;
-      return true;
+      return;
     }
   }
   clib_assert(false, "Unreachable: table overrun!");
-  return false;
+}
+
+void set_extend(Set *set, usize count, u64 hashes[count]) {
+  for (usize i = 0; i < count; i++) {
+    set_add(set, hashes[i]);
+  }
 }
 
 bool set_remove(Set *set, u64 hash) {
