@@ -142,4 +142,13 @@
 #define CLIB_CROSS_COMPILATION
 #endif
 
+#if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
+#define CLIB_FMT(__fmt_arg, __var_args)                                        \
+  __attribute__((format(printf, __fmt_arg, __var_args)))
+#elif defined(MSVC)
+#define CLIB_FMT(__fmt_arg, __var_args) _Printf_format_string_ __fmt_arg
+#else
+#define CLIB_FMT(...)
+#endif
+
 #endif /*  !__CLIB_PLATFORM_H__ */
