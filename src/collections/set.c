@@ -1,7 +1,7 @@
 #include "set.h"
 
 #include "clib/asserts.h"
-#include "datatypes/integers.h"
+#include "types/integers.h"
 
 Set set_create(Arena *arena, usize size) {
   Set set = {0};

@@ -1,7 +1,7 @@
-#include "datatypes/integers.h"
+#include "types/integers.h"
 
 #include "clib/asserts.h"
-#include "datatypes/bytes.h"
+#include "types/bytes.h"
 
 /* u8 */
 static void test_u8_leading_bits(void) {

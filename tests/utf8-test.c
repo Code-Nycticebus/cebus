@@ -1,8 +1,8 @@
 #include <locale.h>
 
 #include "clib/asserts.h"
-#include "datatypes/bytes.h"
-#include "datatypes/utf8.h"
+#include "types/bytes.h"
+#include "types/utf8.h"
 
 #include <string.h>
 

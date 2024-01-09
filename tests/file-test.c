@@ -1,7 +1,7 @@
 #include "clib/io.h"
 #include "core/defines.h"
-#include "datatypes/bytes.h"
-#include "datatypes/str.h"
+#include "types/bytes.h"
+#include "types/str.h"
 
 int main(void) {
   Arena arena = {0};

@@ -1,6 +1,6 @@
 #include "io.h"
 #include "clib/asserts.h"
-#include "datatypes/bytes.h"
+#include "types/bytes.h"
 
 #include <errno.h>
 #include <stdio.h>

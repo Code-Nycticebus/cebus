@@ -1,6 +1,6 @@
 #include "clib/asserts.h"
-#include "datatypes/bytes.h"
-#include "datatypes/str.h"
+#include "types/bytes.h"
+#include "types/str.h"
 
 static void test_bytes(void) {
   Arena arena = {0};

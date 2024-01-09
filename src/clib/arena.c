@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "asserts.h"
-#include "datatypes/integers.h"
+#include "types/integers.h"
 
 #define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 

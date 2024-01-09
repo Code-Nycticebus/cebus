@@ -2,7 +2,7 @@
 
 #include "clib/asserts.h"
 #include "core/platform.h"
-#include "datatypes/bytes.h"
+#include "types/bytes.h"
 
 #define INTEGER_IMPL(T, BITS)                                                  \
   T T##_reverse_bits(T value) {                                                \

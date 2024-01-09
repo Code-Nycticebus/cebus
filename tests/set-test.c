@@ -1,8 +1,8 @@
 #include "clib/asserts.h"
 #include "collections/set.h"
 #include "collections/vec.h"
-#include "datatypes/integers.h"
-#include "datatypes/str.h"
+#include "types/integers.h"
+#include "types/str.h"
 
 static void test_set_insert(void) {
   Arena arena = {0};

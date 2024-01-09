@@ -1,7 +1,7 @@
 #include "str.h"
 #include "clib/arena.h"
 #include "clib/asserts.h"
-#include "datatypes/integers.h"
+#include "types/integers.h"
 
 #include <ctype.h>
 #include <inttypes.h>

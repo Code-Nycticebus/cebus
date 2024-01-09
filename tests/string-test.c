@@ -1,4 +1,4 @@
-#include "datatypes/str.h"
+#include "types/str.h"
 
 #include <ctype.h>
 #include <stdlib.h>

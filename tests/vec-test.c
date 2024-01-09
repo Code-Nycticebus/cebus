@@ -1,7 +1,7 @@
 #include "collections/vec.h"
 
 #include "clib/asserts.h"
-#include "datatypes/integers.h"
+#include "types/integers.h"
 
 static void test_vec(void) {
   Arena arena = {0};

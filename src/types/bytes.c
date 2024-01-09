@@ -1,7 +1,7 @@
 #include "bytes.h"
 #include "core/defines.h"
-#include "datatypes/integers.h"
-#include "datatypes/str.h"
+#include "types/integers.h"
+#include "types/str.h"
 
 #include <ctype.h>
 #include <stdio.h>

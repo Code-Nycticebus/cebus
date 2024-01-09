@@ -5,8 +5,8 @@
 
 #include "clib/arena.h"
 #include "clib/asserts.h"
-#include "datatypes/bytes.h"
-#include "datatypes/integers.h"
+#include "types/bytes.h"
+#include "types/integers.h"
 
 bool utf8_try_decode(Bytes bytes, Utf8 *out) {
   usize len = 0;
