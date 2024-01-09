@@ -11,6 +11,7 @@
 - [x] Bytes
 - [x] Integers
 - [ ] UTF-8
+- [ ] Errors
 - [ ] Paths
 - [ ] Localization
 - [ ] DateTime
