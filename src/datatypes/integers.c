@@ -189,6 +189,12 @@
     return hash;                                                               \
   }                                                                            \
                                                                                \
+  void T##_swap(T *v1, T *v2) {                                                \
+    T temp = *v1;                                                              \
+    *v1 = *v2;                                                                 \
+    *v2 = temp;                                                                \
+  }                                                                            \
+                                                                               \
   T T##_max(T a, T b) { return a < b ? b : a; }                                \
   T T##_min(T a, T b) { return a > b ? b : a; }                                \
   T T##_clamp(T min, T max, T value) {                                         \
