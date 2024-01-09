@@ -193,6 +193,8 @@ static void test_example_duplicates(void) {
     }
   }
 
+  clib_assert(unique_strings.len == 2,
+              "Did not find the unique strings correctly");
   clib_assert(str_eq(unique_strings.items[0], STR("Banana")),
               "Did not filter out correctly");
   clib_assert(str_eq(unique_strings.items[1], STR("Cherry")),
@@ -235,6 +237,7 @@ static void test_example_intersection(void) {
     }
   }
 
+  clib_assert(intersecting.len == 4, "Did not find the intersection correctly");
   clib_assert(str_eq(intersecting.items[0], STR("Apple")),
               "Did not filter out correctly");
   clib_assert(str_eq(intersecting.items[1], STR("Banana")),
