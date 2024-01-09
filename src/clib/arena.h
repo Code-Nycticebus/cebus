@@ -15,7 +15,7 @@ void *arena_alloc(Arena *arena, usize size);
 void *arena_calloc(Arena *arena, usize size);
 void arena_reset(Arena *arena);
 
-void *arena_temp_alloc(Arena *arena, usize size);
-void *arena_temp_realloc(void *ptr, usize size);
+void *arena_alloc_chunk(Arena *arena, usize size);
+void *arena_realloc_chunk(void *ptr, usize size);
 
 #endif /* !__CLIB_ARENA_H__ */

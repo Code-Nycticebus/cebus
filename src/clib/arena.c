@@ -67,7 +67,7 @@ void *arena_calloc(Arena *arena, usize size) {
   return ptr;
 }
 
-void *arena_temp_alloc(Arena *arena, usize size) {
+void *arena_alloc_chunk(Arena *arena, usize size) {
   usize chunk_size = usize_max(size, CHUNK_DEFAULT_SIZE);
   Chunk *chunk = chunk_allocate(chunk_size);
   chunk->allocated = chunk_size;
@@ -76,7 +76,7 @@ void *arena_temp_alloc(Arena *arena, usize size) {
   return chunk->data;
 }
 
-void *arena_temp_realloc(void *ptr, usize size) {
+void *arena_realloc_chunk(void *ptr, usize size) {
   Chunk *chunk = (Chunk *)((uintptr_t)ptr - sizeof(Chunk));
   if (size < chunk->allocated) {
     return chunk->data;

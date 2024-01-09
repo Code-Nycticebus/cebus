@@ -16,7 +16,8 @@
   do {                                                                         \
     (list)->len = 0;                                                           \
     (list)->cap = _cap;                                                        \
-    (list)->items = arena_temp_alloc(_arena, _cap * sizeof((list)->items[0])); \
+    (list)->items =                                                            \
+        arena_alloc_chunk(_arena, _cap * sizeof((list)->items[0]));            \
   } while (0)
 
 #define vec_first(list) (list)->items[0]
@@ -33,7 +34,7 @@
     clib_assert_debug(size <= SIZE_MAX - (list)->cap, "integer overflow");     \
     if (!((list)->len + size < (list)->cap)) {                                 \
       (list)->cap = usize_max((list)->cap + size, 10);                         \
-      (list)->items = arena_temp_realloc(                                      \
+      (list)->items = arena_realloc_chunk(                                     \
           (list)->items, (list)->cap * sizeof((list)->items[0]));              \
     }                                                                          \
   } while (0)
