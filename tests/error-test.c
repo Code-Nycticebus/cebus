@@ -2,7 +2,9 @@
 
 #include "clib/asserts.h"
 
-static u64 fn_that_fails(bool fail, Error *error) {
+u64 fn_that_fails(bool fail, Error *error);
+
+u64 fn_that_fails(bool fail, Error *error) {
   if (fail) {
     Err(error, 69, "fn_that_fails(): function that fails failed °-°. %p",
         (void *)error);

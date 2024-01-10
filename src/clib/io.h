@@ -3,6 +3,7 @@
 
 #include "clib/arena.h"
 #include "core/defines.h"
+#include "core/error.h"
 #include "core/platform.h"
 
 #if defined(LINUX)
@@ -12,28 +13,31 @@
 typedef struct _iobuf FILE;
 #endif
 
+#include <errno.h>
+
 typedef enum {
   FILE_OK,
-  FILE_OPEN,
+  FILE_PERMISSION = EACCES,
+  FILE_NOT_FOUND = ENOENT,
+  FILE_READ,
+  FILE_WRITE,
 } FileError;
 
 typedef struct {
   FILE *handle;
 } File;
 
-bool file_try_open(const char *filename, const char *mode, File *file);
-File file_open(const char *filename, const char *mode);
+File file_open(const char *filename, const char *mode, Error *error);
 void file_close(File *file);
 
 usize file_size(File *file);
 void file_rewind(File *file);
 
-bool file_try_read_bytes(File *file, Arena *arena, Bytes *bytes);
-Bytes file_read_bytes(File *file, Arena *arena);
+Bytes file_read_bytes(File *file, Arena *arena, Error *error);
 
 bool file_stream_bytes(File *file, usize chunk_size,
                        void (*stream)(Bytes bytes));
 
-void file_write(File *file, Bytes bytes);
+void file_write(File *file, Bytes bytes, Error *error);
 
 #endif // !__CLIB_IO_H__

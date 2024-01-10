@@ -5,7 +5,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-void error_init(Error *err, const char *file, int line, u32 error,
+void error_init(Error *err, const char *file, int line, i32 error,
                 const char *fmt, ...) {
   err->failure = true;
   err->file = file;

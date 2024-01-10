@@ -6,16 +6,13 @@
 #include <stdio.h>
 #include <string.h>
 
-bool file_try_open(const char *filename, const char *mode, File *file) {
-  file->handle = fopen(filename, mode);
-  clib_assert_return(file->handle, false);
-  return true;
-}
-
-File file_open(const char *filename, const char *mode) {
+File file_open(const char *filename, const char *mode, Error *error) {
   File file = {0};
-  clib_assert(file_try_open(filename, mode, &file),
-              "Could not open file: %s: %s", filename, strerror(errno));
+  errno = 0;
+  file.handle = fopen(filename, mode);
+  if (file.handle == NULL) {
+    Err(error, errno, "Could not open file: %s: %s", filename, strerror(errno));
+  }
   return file;
 }
 
@@ -38,23 +35,17 @@ usize file_size(File *file) {
   return (usize)size;
 }
 
-bool file_try_read_bytes(File *file, Arena *arena, Bytes *bytes) {
+Bytes file_read_bytes(File *file, Arena *arena, Error *error) {
   clib_assert_debug(file->handle, "Invalid file handle!");
   const usize size = file_size(file);
   u8 *buffer = arena_alloc(arena, size);
+  clearerr(file->handle);
   const usize bytes_read = fread(buffer, sizeof(u8), size, file->handle);
   if (ferror(file->handle)) {
-    return false;
+    Err(error, FILE_READ, "Could not read file\n");
+    return (Bytes){0};
   }
-  *bytes = bytes_from_parts(bytes_read, buffer);
-  return true;
-}
-
-Bytes file_read_bytes(File *file, Arena *arena) {
-  Bytes bytes = {0};
-  clib_assert(file_try_read_bytes(file, arena, &bytes),
-              "Could not read file: %s\n", strerror(errno));
-  return bytes;
+  return bytes_from_parts(bytes_read, buffer);
 }
 
 bool file_stream_bytes(File *file, usize chunk_size,
@@ -75,9 +66,10 @@ bool file_stream_bytes(File *file, usize chunk_size,
   return true;
 }
 
-void file_write(File *file, Bytes bytes) {
+void file_write(File *file, Bytes bytes, Error *error) {
   clib_assert_debug(file->handle, "Invalid file handle!");
   fwrite(bytes.data, sizeof(u8), bytes.size, file->handle);
-  clib_assert(!ferror(file->handle), "Could not write file: %s",
-              strerror(errno));
+  if (ferror(file->handle)) {
+    Err(error, FILE_WRITE, "Could not write file");
+  }
 }

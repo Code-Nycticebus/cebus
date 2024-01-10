@@ -12,7 +12,7 @@ typedef struct {
   bool failure;
   const char *file;
   i32 line;
-  u32 error;
+  i32 error;
   char message[ERROR_MESSAGE_MAX];
 } Error;
 
@@ -33,7 +33,7 @@ typedef struct {
     abort();                                                                   \
   } while (0)
 
-void error_init(Error *err, const char *file, int line, u32 error,
+void error_init(Error *err, const char *file, int line, i32 error,
                 const char *fmt, ...) CLIB_FMT(5, 6);
 void error_dump(Error *err);
 
