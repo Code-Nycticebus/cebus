@@ -16,14 +16,14 @@ TEST(decode) {
       0x43,                   // C
       0x41                    // A
   );
-  Utf8 s3 = utf8_decode(bytes);
+  Utf8 s3 = utf8_decode(bytes, NULL);
   clib_assert(memcmp(s3.data, "🎉✅😁CA", s3.size) == 0,
               "Was not decoded correctly");
 
   Bytes garbage = BYTES(0xF0, 0x01);
-  Utf8 res = {0};
-  bool ret = utf8_try_decode(garbage, &res);
-  clib_assert(ret == false, "This should not be a valid utf-8 string");
+  Error error = {0};
+  utf8_decode(garbage, &error);
+  clib_assert(error.failure == true, "This should be a invalid utf-8");
 }
 
 TEST(creation) {

@@ -3,16 +3,20 @@
 
 #include "clib/arena.h"
 #include "core/defines.h" // IWYU pragma: private: include "utf8.h"
+#include "core/error.h"
 
-#define UTF8(s) utf8_decode(BYTES_STR(s))
+#define UTF8(s) utf8_decode(BYTES_STR(s), NULL)
 #define UTF8_FMT "%.*s"
 #define UTF8_ARG(s) (i32)(s).size, (s).data
 
-bool utf8_try_decode(Bytes bytes, Utf8 *out);
-Utf8 utf8_decode(Bytes bytes);
+typedef enum {
+  UTF8_OK,
+  UTF8_DECODE,
+  UTF8_ENCODE,
+} Utf8Error;
 
-bool utf8_try_encode(Utf8 s, Bytes *out);
-Bytes utf8_encode(Utf8 s);
+Utf8 utf8_decode(Bytes bytes, Error *error);
+Bytes utf8_encode(Utf8 s, Error *error);
 
 bool utf8_eq(Utf8 s1, Utf8 s2);
 bool utf8_starts_with(Utf8 s, Utf8 prefix);

@@ -8,46 +8,47 @@
 #include "types/bytes.h"
 #include "types/integers.h"
 
-bool utf8_try_decode(Bytes bytes, Utf8 *out) {
+Utf8 utf8_decode(Bytes bytes, Error *error) {
+  Utf8 str = {0};
   usize len = 0;
   for (usize i = 0; i < bytes.size; i++) {
     usize bit_count = u8_leading_ones(bytes.data[i]);
-    clib_assert_return(bit_count <= 4, false);
+    if (!(bit_count <= 4)) {
+      Err(error, UTF8_DECODE,
+          "Decoding utf-8 failed: too many starting bits at %" USIZE_FMT
+          ": found %" USIZE_FMT,
+          i, bit_count);
+      return str;
+    }
     usize idx = i;
     for (usize j = 1; j < bit_count; j++) {
-      clib_assert_return(u8_leading_ones(bytes.data[idx + j]) == 1, false);
+      if (!(u8_leading_ones(bytes.data[idx + j]) == 1)) {
+        Err(error, UTF8_DECODE,
+            "Decoding utf-8 failed: wrong bits in between at %" USIZE_FMT,
+            idx + j);
+        return str;
+      }
       i++;
     }
     len++;
   }
-  out->len = len;
-  out->size = bytes.size;
-  out->data = (const char *)bytes.data;
-  return true;
-}
-
-Utf8 utf8_decode(Bytes bytes) {
-  Utf8 str = {0};
-  bool ret = utf8_try_decode(bytes, &str);
-  clib_assert(ret, "Decoding Utf-8 failed");
+  str.len = len;
+  str.size = bytes.size;
+  str.data = (const char *)bytes.data;
   return str;
 }
 
-bool utf8_try_encode(Utf8 s, Bytes *out) {
+Bytes utf8_encode(Utf8 s, Error *error) {
   bool ret = utf8_validate(s);
-  clib_assert_return(ret, false);
-  *out = bytes_from_parts(s.size, (const u8 *)s.data);
-  return true;
-}
-
-Bytes utf8_encode(Utf8 s) {
-  bool ret = utf8_validate(s);
-  clib_assert(ret, "Encoding Utf8 failed");
+  if (ret == false) {
+    Err(error, UTF8_ENCODE, "Encoding utf-8 failed");
+    return (Bytes){0};
+  }
   return bytes_from_parts(s.size, (const u8 *)s.data);
 }
 
 bool utf8_eq(Utf8 s1, Utf8 s2) {
-  if (s1.size != s2.size) {
+  if (s1.size != s2.size || s1.len != s2.len) {
     return false;
   }
   return memcmp(s1.data, s2.data, s1.size) == 0;
