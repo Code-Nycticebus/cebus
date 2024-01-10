@@ -221,9 +221,6 @@
     return ordering == CMP_LESS ? _##T##_cmp_lt : _##T##_cmp_gt;               \
   }
 
-// These are needed because i want to cast a u8[4] to a i32*
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wcast-align"
 
 INTEGER_IMPL(u8, U8_BITS)
 INTEGER_IMPL(i8, I8_BITS)

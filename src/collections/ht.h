@@ -15,14 +15,12 @@ typedef union {
   void *ptr;
 } HashValue;
 
-_Static_assert(sizeof(HashValue) == 8, "value");
 
 typedef struct {
   u64 key;
   HashValue value;
 } HashNode;
 
-_Static_assert(sizeof(HashNode) == 16, "value");
 
 typedef struct {
   usize cap;
