@@ -42,7 +42,7 @@ Bytes file_read_bytes(File *file, Arena *arena, Error *error) {
   clearerr(file->handle);
   const usize bytes_read = fread(buffer, sizeof(u8), size, file->handle);
   if (ferror(file->handle)) {
-    Err(error, FILE_READ, "Could not read file\n");
+    Err(error, FILE_READ, "Could not read file");
     return (Bytes){0};
   }
   return bytes_from_parts(bytes_read, buffer);
