@@ -109,8 +109,8 @@
                                                                                \
   T T##_from_be_bytes(Bytes bytes) {                                           \
     clib_assert(sizeof(T) == bytes.size,                                       \
-                "expected %" U64_HEX " bytes but got %" U64_HEX, sizeof(T),    \
-                bytes.size);                                                   \
+                "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
+                sizeof(T), bytes.size);                                        \
     if (CLIB_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
       return T##_swap_bytes(*(const T *)bytes.data);                           \
     }                                                                          \
@@ -146,8 +146,8 @@
                                                                                \
   T T##_from_le_bytes(Bytes bytes) {                                           \
     clib_assert(sizeof(T) == bytes.size,                                       \
-                "expected %" U64_HEX " bytes but got %" U64_HEX, sizeof(T),    \
-                bytes.size);                                                   \
+                "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
+                sizeof(T), bytes.size);                                        \
     if (CLIB_BYTE_ORDER == ENDIAN_BIG) {                                       \
       return T##_swap_bytes(*(const T *)bytes.data);                           \
     }                                                                          \
