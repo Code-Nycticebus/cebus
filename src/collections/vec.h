@@ -22,6 +22,7 @@
 
 #define vec_first(list) (list)->items[0]
 #define vec_last(list) (list)->items[(list)->len - 1]
+#define vec_pop(list) (list)->items[--(list)->len]
 #define vec_empty(list) (!(list)->len)
 
 #define vec_clear(list)                                                        \
@@ -44,8 +45,6 @@
     vec_reserve((list), 1);                                                    \
     (list)->items[(list)->len++] = (item);                                     \
   } while (0)
-
-#define vec_pop(list) (list)->items[--(list)->len]
 
 #define vec_extend(list, count, _items)                                        \
   do {                                                                         \
