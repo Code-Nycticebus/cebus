@@ -134,6 +134,30 @@ static void test_filter(void) {
   arena_free(&arena);
 }
 
+typedef struct {
+  usize a;
+} Ctx;
+static bool filter_with_context(Ctx *ctx, usize a) { return ctx->a < a; }
+
+static void test_filter_ctx(void) {
+  Arena arena = {0};
+  VEC(usize) list = {0};
+  vec_init(&list, 5, &arena);
+  const usize n = 10;
+  for (usize i = 0; i < n; i++) {
+    vec_push(&list, i);
+  }
+
+  Ctx ctx = {.a = 4};
+  vec_filter_ctx(&list, &list, filter_with_context, &ctx);
+
+  clib_assert(list.items[0] == 5, "list was not filtered correctly");
+  clib_assert(list.items[1] == 6, "list was not filtered correctly");
+  clib_assert(list.items[2] == 7, "list was not filtered correctly");
+
+  arena_free(&arena);
+}
+
 static void test_copy(void) {
   Arena arena = {0};
   VEC(usize) l1 = {0};
@@ -181,6 +205,7 @@ int main(void) {
   test_sort();
   test_last();
   test_filter();
+  test_filter_ctx();
   test_copy();
   test_pop();
 }

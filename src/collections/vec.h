@@ -75,6 +75,18 @@
     (dest)->len = __f_count;                                                   \
   } while (0)
 
+#define vec_filter_ctx(src, dest, filter, ctx)                                 \
+  do {                                                                         \
+    vec_reserve((dest), (src)->len);                                           \
+    usize __f_count = 0;                                                       \
+    for (usize __f_i = 0; __f_i < (src)->len; __f_i++) {                       \
+      if (filter((ctx), (src)->items[__f_i])) {                                \
+        (dest)->items[__f_count++] = (src)->items[__f_i];                      \
+      }                                                                        \
+    }                                                                          \
+    (dest)->len = __f_count;                                                   \
+  } while (0)
+
 #define vec_sort(list, sort)                                                   \
   do {                                                                         \
     qsort((list)->items, (list)->len, sizeof((list)->items[0]), sort);         \
