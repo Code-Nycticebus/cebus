@@ -1,14 +1,15 @@
 #include "clib/asserts.h"
 #include "collections/set.h"
 #include "collections/vec.h"
+#include "core/defines.h"
 #include "types/integers.h"
 #include "types/str.h"
 
 static void test_set_insert(void) {
   Arena arena = {0};
-  Set set = set_create(&arena, 10);
+  Set set = set_create(&arena, 10); // NOLINT
 
-  for (usize i = 0; i < 10; i++) {
+  for (usize i = 0; i < 10; i++) { // NOLINT
     set_add(&set, usize_hash(i));
   }
 
@@ -24,15 +25,15 @@ static void test_set_insert(void) {
 
 static void test_set_remove(void) {
   Arena arena = {0};
-  Set set = set_create(&arena, 10);
+  Set set = set_create(&arena, 10); // NOLINT
 
-  for (usize i = 0; i < 10; i++) {
+  for (usize i = 0; i < 10; i++) { // NOLINT
     set_add(&set, usize_hash(i));
   }
 
   set_remove(&set, usize_hash(2));
   set_remove(&set, usize_hash(4));
-  set_remove(&set, usize_hash(5));
+  set_remove(&set, usize_hash(5)); // NOLINT
 
   clib_assert(set_contains(&set, usize_hash(2)) == false,
               "Set should not contain this number!");
@@ -48,12 +49,12 @@ static void test_set_remove(void) {
 
 static void test_eq(void) {
   Arena arena = {0};
-  Set set1 = set_create(&arena, 10);
+  Set set1 = set_create(&arena, 10); // NOLINT
   set_add(&set1, usize_hash(1));
   set_add(&set1, usize_hash(2));
   set_add(&set1, usize_hash(3));
 
-  Set set2 = set_create(&arena, 10);
+  Set set2 = set_create(&arena, 10); // NOLINT
   set_add(&set2, usize_hash(1));
   set_add(&set2, usize_hash(2));
   set_add(&set2, usize_hash(3));
@@ -66,22 +67,22 @@ static void test_eq(void) {
 static void test_subset(void) {
   Arena arena = {0};
 
-  Set set1 = set_create(&arena, 10);
-  for (usize i = 0; i < 10; i++) {
+  Set set1 = set_create(&arena, 10); // NOLINT
+  for (usize i = 0; i < 10; i++) {   // NOLINT
     set_add(&set1, usize_hash(i));
   }
 
-  Set set2 = set_create(&arena, 10);
-  for (usize i = 15; i < 25; i++) {
+  Set set2 = set_create(&arena, 10); // NOLINT
+  for (usize i = 15; i < 25; i++) {  // NOLINT
     set_add(&set2, usize_hash(i));
   }
-  Set set3 = set_create(&arena, 20);
-  for (usize i = 0; i < 20; i++) {
+  Set set3 = set_create(&arena, 20); // NOLINT
+  for (usize i = 0; i < 20; i++) {   // NOLINT
     set_add(&set3, usize_hash(i));
   }
 
-  Set big_set = set_create(&arena, 20);
-  for (usize i = 0; i < 20; i++) {
+  Set big_set = set_create(&arena, 20); // NOLINT
+  for (usize i = 0; i < 20; i++) {      // NOLINT
     set_add(&big_set, usize_hash(i));
   }
 
@@ -97,14 +98,16 @@ static void test_subset(void) {
 static void test_intersection(void) {
   Arena arena = {0};
 
-  Set set1 = set_create(&arena, 10);
-  set_add(&set1, usize_hash(2));
-  set_add(&set1, usize_hash(3));
-  set_add(&set1, usize_hash(7));
-  set_add(&set1, usize_hash(8));
+  const usize test_numbers[] = {2, 3, 7, 8};
+  const usize count = sizeof(test_numbers) / sizeof(test_numbers[0]);
 
-  Set big_set = set_create(&arena, 10);
-  for (usize i = 0; i < 20; i++) {
+  Set set1 = set_create(&arena, count * 2);
+  for (usize i = 0; i < count; i++) {
+    set_add(&set1, usize_hash(test_numbers[i]));
+  }
+
+  Set big_set = set_create(&arena, count * 4);
+  for (usize i = 0; i < count * 4; i++) {
     if (i % 2 == 0) {
       set_add(&big_set, usize_hash(i));
     }
@@ -114,16 +117,11 @@ static void test_intersection(void) {
 
   clib_assert(set_subset(&inter, &big_set) == true, "inter should be a subset");
 
-  clib_assert(set_contains(&inter, usize_hash(2)) == true,
-              "inter should contain 2");
-  clib_assert(set_contains(&inter, usize_hash(3)) == false,
-              "inter should not contain 3");
-  clib_assert(set_contains(&inter, usize_hash(4)) == false,
-              "inter should not contain 4");
-  clib_assert(set_contains(&inter, usize_hash(7)) == false,
-              "inter should not contain 7");
-  clib_assert(set_contains(&inter, usize_hash(8)) == true,
-              "inter should contain 8");
+  for (usize i = 0; i < count; i++) {
+    clib_assert(set_contains(&inter, usize_hash(test_numbers[i])) ==
+                    (test_numbers[i] % 2 == 0),
+                "diff: %" USIZE_FMT, test_numbers[i]);
+  }
 
   arena_free(&arena);
 }
@@ -135,14 +133,16 @@ static bool filter_with_set(Set *intersection, Str s) {
 static void test_difference(void) {
   Arena arena = {0};
 
-  Set set1 = set_create(&arena, 10);
-  set_add(&set1, usize_hash(2));
-  set_add(&set1, usize_hash(3));
-  set_add(&set1, usize_hash(7));
-  set_add(&set1, usize_hash(8));
+  const usize test_numbers[] = {2, 3, 7, 8};
+  const usize count = sizeof(test_numbers) / sizeof(test_numbers[0]);
 
-  Set big_set = set_create(&arena, 10);
-  for (usize i = 0; i < 20; i++) {
+  Set set1 = set_create(&arena, count * 2);
+  for (usize i = 0; i < count; i++) {
+    set_add(&set1, usize_hash(test_numbers[i]));
+  }
+
+  Set big_set = set_create(&arena, count * 4);
+  for (usize i = 0; i < count * 4; i++) {
     if (i % 2 == 0) {
       set_add(&big_set, usize_hash(i));
     }
@@ -151,18 +151,13 @@ static void test_difference(void) {
   Set diff = set_difference(&set1, &big_set, &arena);
 
   clib_assert(set_subset(&diff, &big_set) == false,
-              "inter should not be a subset");
+              "diff should not be a subset");
 
-  clib_assert(set_contains(&diff, usize_hash(2)) == false,
-              "diff should not contain 2");
-  clib_assert(set_contains(&diff, usize_hash(3)) == true,
-              "diff should contain 3");
-  clib_assert(set_contains(&diff, usize_hash(4)) == false,
-              "diff should not contain 4");
-  clib_assert(set_contains(&diff, usize_hash(7)) == true,
-              "diff should contain 7");
-  clib_assert(set_contains(&diff, usize_hash(8)) == false,
-              "diff should not contain 8");
+  for (usize i = 0; i < count; i++) {
+    clib_assert(set_contains(&diff, usize_hash(test_numbers[i])) ==
+                    (test_numbers[i] % 2 != 0),
+                "diff: %" USIZE_FMT, test_numbers[i]);
+  }
 
   arena_free(&arena);
 }
