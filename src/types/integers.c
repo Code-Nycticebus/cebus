@@ -221,7 +221,6 @@
     return ordering == CMP_LESS ? _##T##_cmp_lt : _##T##_cmp_gt;               \
   }
 
-
 INTEGER_IMPL(u8, U8_BITS)
 INTEGER_IMPL(i8, I8_BITS)
 INTEGER_IMPL(u16, U16_BITS)
