@@ -117,6 +117,12 @@ bool set_subset(Set *set, Set *other) {
 
 Set set_intersection(Set *set, Set *other, Arena *arena) {
   Set intersection = set_create(arena, usize_min(set->count, other->count) * 2);
+  if (other->count < set->count) {
+    Set *temp = set;
+    set = other;
+    other = temp;
+  }
+
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i]) {
       if (set_contains(other, set->items[i])) {
