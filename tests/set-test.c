@@ -5,11 +5,13 @@
 #include "types/integers.h"
 #include "types/str.h"
 
+#define TEST_SET_DEFAULT_SIZE 10
+
 static void test_set_insert(void) {
   Arena arena = {0};
-  Set set = set_create(&arena, 10); // NOLINT
+  Set set = set_create(&arena, TEST_SET_DEFAULT_SIZE);
 
-  for (usize i = 0; i < 10; i++) { // NOLINT
+  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE; i++) {
     set_add(&set, usize_hash(i));
   }
 
@@ -25,9 +27,9 @@ static void test_set_insert(void) {
 
 static void test_set_remove(void) {
   Arena arena = {0};
-  Set set = set_create(&arena, 10); // NOLINT
+  Set set = set_create(&arena, TEST_SET_DEFAULT_SIZE);
 
-  for (usize i = 0; i < 10; i++) { // NOLINT
+  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE; i++) {
     set_add(&set, usize_hash(i));
   }
 
@@ -49,12 +51,12 @@ static void test_set_remove(void) {
 
 static void test_eq(void) {
   Arena arena = {0};
-  Set set1 = set_create(&arena, 10); // NOLINT
+  Set set1 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
   set_add(&set1, usize_hash(1));
   set_add(&set1, usize_hash(2));
   set_add(&set1, usize_hash(3));
 
-  Set set2 = set_create(&arena, 10); // NOLINT
+  Set set2 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
   set_add(&set2, usize_hash(1));
   set_add(&set2, usize_hash(2));
   set_add(&set2, usize_hash(3));
@@ -67,22 +69,22 @@ static void test_eq(void) {
 static void test_subset(void) {
   Arena arena = {0};
 
-  Set set1 = set_create(&arena, 10); // NOLINT
-  for (usize i = 0; i < 10; i++) {   // NOLINT
+  Set set1 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
+  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE; i++) {
     set_add(&set1, usize_hash(i));
   }
 
-  Set set2 = set_create(&arena, 10); // NOLINT
-  for (usize i = 15; i < 25; i++) {  // NOLINT
+  Set set2 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
+  for (usize i = 15; i < 25; i++) { // NOLINT
     set_add(&set2, usize_hash(i));
   }
-  Set set3 = set_create(&arena, 20); // NOLINT
-  for (usize i = 0; i < 20; i++) {   // NOLINT
+  Set set3 = set_create(&arena, TEST_SET_DEFAULT_SIZE * 2);
+  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&set3, usize_hash(i));
   }
 
-  Set big_set = set_create(&arena, 20); // NOLINT
-  for (usize i = 0; i < 20; i++) {      // NOLINT
+  Set big_set = set_create(&arena, TEST_SET_DEFAULT_SIZE * 2);
+  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&big_set, usize_hash(i));
   }
 

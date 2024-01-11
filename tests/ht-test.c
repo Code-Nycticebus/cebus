@@ -4,12 +4,14 @@
 #include "types/integers.h"
 #include "types/str.h"
 
+#define TEST_HT_DEFAULT_SIZE 10
+
 static void test_insert(void) {
   Arena arena = {0};
-  HashTable ht = ht_create(&arena, 10);
+  HashTable ht = ht_create(&arena, TEST_HT_DEFAULT_SIZE);
 
-  ht_insert(&ht, str_hash(STR("Hello")), (HashValue){.u64 = 420});
-  ht_insert(&ht, str_hash(STR("Hello2")), (HashValue){.i64 = -69});
+  ht_insert(&ht, str_hash(STR("Hello")), (HashValue){.u64 = 420});  // NOLINT
+  ht_insert(&ht, str_hash(STR("Hello2")), (HashValue){.i64 = -69}); // NOLINT
 
   clib_assert(ht_get(&ht, str_hash(STR("Hello")))->value.u64 == 420,
               "ht should get the value correnctly");
