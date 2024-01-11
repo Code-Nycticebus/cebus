@@ -52,6 +52,7 @@
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[(list)->len + __e_i] = (_items)[__e_i];                    \
     }                                                                          \
+    (list)->len = count;                                                       \
   } while (0)
 
 #define vec_map(src, dest, map)                                                \
