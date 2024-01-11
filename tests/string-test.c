@@ -250,7 +250,7 @@ static void test_hash(void) {
     u64 hash;
   } tests[] = {
       {STR("Hello"), 0x63f0bfacf2c00f6b},
-      {STR("THis is a very long string"), 0xfa5ff93beffa9c0b},
+      {STR("This is a very long string"), 0xfa5ff93beffa9c0b},
       {STR("Another"), 0x90c0e53673f3e9f4},
       {STR("Hello"), 0x63f0bfacf2c00f6b},
   };
