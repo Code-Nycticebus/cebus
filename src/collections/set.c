@@ -2,12 +2,22 @@
 
 #include "clib/asserts.h"
 #include "types/integers.h"
+#include <string.h>
 
 Set set_create(Arena *arena, usize size) {
   Set set = {0};
   set.cap = size;
   set.items = arena_calloc(arena, size * sizeof(set.items[0]));
   return set;
+}
+
+Set set_copy(Arena *arena, Set *set) {
+  Set new_set = {0};
+  new_set.count = set->count;
+  new_set.cap = set->cap;
+  new_set.items = arena_alloc(arena, set->cap * sizeof(set->items[0]));
+  memcpy(new_set.items, set->items, set->cap * sizeof(set->items[0]));
+  return new_set;
 }
 
 void set_add(Set *set, u64 hash) {
