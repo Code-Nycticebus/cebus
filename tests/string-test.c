@@ -245,7 +245,7 @@ static void test_reverse(void) {
 }
 
 static void test_hash(void) {
-  struct {
+  const struct {
     Str s;
     u64 hash;
   } tests[] = {
