@@ -43,9 +43,8 @@
 
 #define vec_reserve(list, size)                                                \
   do {                                                                         \
-    clib_assert_debug(size <= SIZE_MAX - (list)->cap, "integer overflow");     \
-    if (!((list)->len + size < (list)->cap)) {                                 \
-      (list)->cap = usize_max((list)->cap + size, 10);                         \
+    if (!(size < (list)->cap)) {                                               \
+      (list)->cap = usize_max(size, 10);                                       \
       (list)->items = arena_realloc_chunk(                                     \
           (list)->items, (list)->cap * sizeof((list)->items[0]));              \
     }                                                                          \
@@ -53,7 +52,7 @@
 
 #define vec_push(list, item)                                                   \
   do {                                                                         \
-    vec_reserve((list), 1);                                                    \
+    vec_reserve((list), (list)->len + 1);                                      \
     (list)->items[(list)->len++] = (item);                                     \
   } while (0)
 

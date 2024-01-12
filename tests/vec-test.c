@@ -141,7 +141,7 @@ static void test_reserve(void) {
   VEC(i32) list = {0};
   vec_init(&list, 20, &arena);
   vec_reserve(&list, 50);
-  clib_assert(list.cap == 70, "Capacity was not increased: %" USIZE_FMT,
+  clib_assert(list.cap == 50, "Capacity was not increased: %" USIZE_FMT,
               list.cap);
   arena_free(&arena);
 }
