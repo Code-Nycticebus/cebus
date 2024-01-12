@@ -32,10 +32,10 @@ static void _quicksort(void *base, size_t size, usize low, usize high,
   }
 }
 
-void quicksort(void *arr, void *dest, usize size, usize nelem,
+void quicksort(const void *src, void *dest, usize size, usize nelem,
                CompareFn compare) {
-  if (dest != arr) {
-    memcpy(dest, arr, size * nelem);
+  if (dest != src) {
+    memcpy(dest, src, size * nelem);
   }
   _quicksort(dest, size, 0, nelem - 1, compare);
 }
@@ -63,10 +63,10 @@ static void _quicksort_ctx(void *base, size_t size, usize low, usize high,
   }
 }
 
-void quicksort_ctx(void *arr, void *dest, usize size, usize nelem,
+void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
                    CompareCtxFn compare, const void *ctx) {
-  if (dest != arr) {
-    memcpy(dest, arr, size * nelem);
+  if (dest != src) {
+    memcpy(dest, src, size * nelem);
   }
   _quicksort_ctx(dest, size, 0, nelem - 1, compare, ctx);
 }
