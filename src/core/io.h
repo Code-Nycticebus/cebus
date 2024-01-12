@@ -40,4 +40,6 @@ bool file_stream_bytes(File *file, usize chunk_size,
 
 void file_write(File *file, Bytes bytes, Error *error);
 
+Str input(Str prefix, usize max, char *buffer);
+
 #endif // !__CLIB_IO_H__

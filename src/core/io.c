@@ -1,6 +1,7 @@
 #include "io.h"
 #include "core/asserts.h"
 #include "types/bytes.h"
+#include "types/str.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -72,4 +73,11 @@ void file_write(File *file, Bytes bytes, Error *error) {
   if (ferror(file->handle)) {
     Err(error, FILE_WRITE, "Could not write file");
   }
+}
+
+Str input(Str prefix, usize max, char *buffer) {
+  printf(STR_FMT, STR_ARG(prefix));
+  fflush(stdout);
+  fgets(buffer, (int)max, stdin);
+  return str_from_cstr(buffer);
 }

@@ -1,4 +1,3 @@
-
 #include "core/logging.h"
 #include "core/platform.h"
 
