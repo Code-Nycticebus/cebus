@@ -15,12 +15,10 @@ typedef union {
   void *ptr;
 } HashValue;
 
-
 typedef struct {
   u64 key;
   HashValue value;
 } HashNode;
-
 
 typedef struct {
   usize cap;
