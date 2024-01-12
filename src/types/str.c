@@ -233,15 +233,17 @@ bool str_startswith(Str s1, Str prefix) {
   if (s1.len < prefix.len) {
     return false;
   }
-  return strncmp(s1.data, prefix.data, prefix.len) == 0;
+  return s1.data[0] == prefix.data[0] &&
+         strncmp(s1.data, prefix.data, prefix.len) == 0;
 }
 
 bool str_endswith(Str s1, Str suffix) {
   if (s1.len < suffix.len) {
     return false;
   }
-  usize idx = s1.len - suffix.len;
-  return strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
+  const usize idx = s1.len - suffix.len;
+  return s1.data[idx] == suffix.data[0] &&
+         strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
 }
 
 bool str_contains(Str haystack, Str needle) {
