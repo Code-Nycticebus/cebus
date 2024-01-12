@@ -4,14 +4,16 @@
 #include "core/arena.h"
 #include "core/defines.h"
 
-typedef union {
-  f32 f32;
-  f64 f64;
-  i32 i32;
-  u32 u32;
-  i64 i64;
-  u64 u64;
-  void *ptr;
+typedef struct {
+  union {
+    f32 f32;
+    f64 f64;
+    i32 i32;
+    u32 u32;
+    i64 i64;
+    u64 u64;
+    void *ptr;
+  } as;
 } HashValue;
 
 typedef struct {
