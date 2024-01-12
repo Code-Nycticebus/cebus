@@ -256,6 +256,18 @@ bool str_contains(Str haystack, Str needle) {
   return false;
 }
 
+bool str_includes(Str haystack, char needle) {
+  if (haystack.len == 0) {
+    return false;
+  }
+  for (usize i = 0; i < haystack.len; i++) {
+    if (haystack.data[i] == needle) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool str_empty(Str s) { return s.len == 0; }
 
 CmpOrdering str_compare_gt(Str s1, Str s2) {
