@@ -10,8 +10,8 @@
 - [x] Platform
 - [x] Bytes
 - [x] Integers
+- [x] Errors
 - [ ] UTF-8
-- [ ] Errors
 - [ ] Paths
 - [ ] Localization
 - [ ] DateTime
