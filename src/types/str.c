@@ -249,7 +249,7 @@ bool str_contains(Str haystack, Str needle) {
     return false;
   }
   for (usize i = 0; i < haystack.len - needle.len + 1; i++) {
-    if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
+    if (memcmp(&haystack.data[i], needle.data, needle.len) == 0) {
       return true;
     }
   }

@@ -18,6 +18,9 @@ static void test_compare(void) {
   clib_assert(str_contains(s, STR("Hell")) == true, "");
   clib_assert(str_contains(s, STR("TEST")) == false, "");
 
+  clib_assert(str_contains(s, STR("H")) == true, "");
+  clib_assert(str_contains(s, STR("")) == true, "");
+
   clib_assert(str_empty(s) == false, "string should not be empty");
   clib_assert(str_empty(STR("")) == true, "string should be empty");
 }
