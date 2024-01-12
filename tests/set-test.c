@@ -167,16 +167,17 @@ static void test_difference(void) {
 static void test_example_duplicates(void) {
   Arena arena = {0};
 
-  Str list[] = {
+  Str strings[] = {
       STR("Apple"), STR("Banana"), STR("Apple"), STR("Cherry"), STR("Apple"),
   };
-  const usize count = sizeof(list) / sizeof(list[0]);
+  VEC(Str) list = {0};
+  vec_init_list(&list, &arena, ARRAY_SIZE(strings), strings);
 
-  Set unique = set_create(&arena, count * 2);
-  Set duplicates = set_create(&arena, count * 2);
+  Set unique = set_create(&arena, list.len * 2);
+  Set duplicates = set_create(&arena, list.len * 2);
 
-  for (usize i = 0; i < count; i++) {
-    u64 hash = str_hash(list[i]);
+  for (usize i = 0; i < list.len; i++) {
+    u64 hash = str_hash(list.items[i]);
     if (set_contains(&unique, hash)) {
       set_add(&duplicates, hash);
     } else {
@@ -186,10 +187,7 @@ static void test_example_duplicates(void) {
 
   VEC(Str) unique_strings = {0};
   vec_init(&unique_strings, 5, &arena);
-  vec_extend(&unique_strings, count, list);
-
-  vec_filter_ctx(&unique_strings, &unique_strings, !filter_with_set,
-                 &duplicates);
+  vec_filter_ctx(&list, &unique_strings, !filter_with_set, &duplicates);
 
   clib_assert(unique_strings.len == 2,
               "Did not find the unique strings correctly");
@@ -204,43 +202,43 @@ static void test_example_duplicates(void) {
 static void test_example_intersection(void) {
   Arena arena = {0};
 
-  Str strings1[] = {
+  const Str strings1[] = {
       STR("Apple"), STR("Banana"), STR("Cherry"), STR("Pomegrade"),
       STR("Grape"), STR("Orange"), STR("Pear"),
   };
-  const usize count = sizeof(strings1) / sizeof(strings1[0]);
-  Set s1 = set_create(&arena, count * 2);
-  for (size_t i = 0; i < count; i++) {
-    set_add(&s1, str_hash(strings1[i]));
+  VEC(Str) first = {0};
+  vec_init_list(&first, &arena, ARRAY_SIZE(strings1), strings1);
+
+  Set s1 = set_create(&arena, first.len * 2);
+  for (size_t i = 0; i < first.len; i++) {
+    set_add(&s1, str_hash(first.items[i]));
   }
 
-  Str strings2[] = {
+  const Str strings2[] = {
       STR("Apple"),  STR("Strawberry"), STR("Blueberry"), STR("Banana"),
       STR("Cherry"), STR("Lemon"),      STR("Pear"),
   };
-  const usize count2 = sizeof(strings2) / sizeof(strings2[0]);
-
+  const usize count2 = ARRAY_SIZE(strings2);
   Set s2 = set_create(&arena, count2 * 2);
   for (size_t i = 0; i < count2; i++) {
     set_add(&s2, str_hash(strings2[i]));
   }
 
-  Set inter = set_intersection(&s1, &s2, &arena);
-  VEC(Str) intersecting = {0};
-  vec_init(&intersecting, 5, &arena);
-  vec_extend(&intersecting, count, strings1);
-  vec_filter_ctx(&intersecting, &intersecting, filter_with_set, &inter);
+  Set intersection = set_intersection(&s1, &s2, &arena);
+  VEC(Str) common = {0};
+  vec_init(&common, 5, &arena);
+  vec_filter_ctx(&first, &common, filter_with_set, &intersection);
 
-  clib_assert(intersecting.len == 4,
+  clib_assert(common.len == 4,
               "Did not find the intersection correctly: %" USIZE_FMT,
-              intersecting.len);
-  clib_assert(str_eq(intersecting.items[0], STR("Apple")),
+              common.len);
+  clib_assert(str_eq(common.items[0], STR("Apple")),
               "Did not filter out correctly");
-  clib_assert(str_eq(intersecting.items[1], STR("Banana")),
+  clib_assert(str_eq(common.items[1], STR("Banana")),
               "Did not filter out correctly");
-  clib_assert(str_eq(intersecting.items[2], STR("Cherry")),
+  clib_assert(str_eq(common.items[2], STR("Cherry")),
               "Did not filter out correctly");
-  clib_assert(str_eq(intersecting.items[3], STR("Pear")),
+  clib_assert(str_eq(common.items[3], STR("Pear")),
               "Did not filter out correctly");
 
   arena_free(&arena);

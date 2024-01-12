@@ -10,6 +10,8 @@
 #define MEGABYTES(s) ((usize)(s) * (usize)1e+6)
 #define GIGABYTES(s) ((usize)(s) * (usize)1e+9)
 
+#define ARRAY_SIZE(A) (sizeof((A)) / sizeof((A)[0]))
+
 typedef enum {
   CMP_LESS = -1,
   CMP_EQUAL = 0,

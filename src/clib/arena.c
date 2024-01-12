@@ -77,6 +77,7 @@ void *arena_alloc_chunk(Arena *arena, usize size) {
 }
 
 void *arena_realloc_chunk(void *ptr, usize size) {
+  clib_assert(ptr, "can't realloc NULL pointer");
   Chunk *chunk = (Chunk *)((uintptr_t)ptr - sizeof(Chunk));
   if (size < chunk->allocated) {
     return chunk->data;

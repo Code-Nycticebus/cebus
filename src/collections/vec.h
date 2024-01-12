@@ -12,12 +12,23 @@
     T *items;                                                                  \
   }
 
-#define vec_init(list, _cap, _arena)                                           \
+#define vec_init(list, capacity, arena)                                        \
   do {                                                                         \
     (list)->len = 0;                                                           \
-    (list)->cap = _cap;                                                        \
+    (list)->cap = capacity;                                                    \
     (list)->items =                                                            \
-        arena_alloc_chunk(_arena, _cap * sizeof((list)->items[0]));            \
+        arena_alloc_chunk(arena, capacity * sizeof((list)->items[0]));         \
+  } while (0)
+
+#define vec_init_list(list, arena, count, array)                               \
+  do {                                                                         \
+    (list)->len = count;                                                       \
+    (list)->cap = count;                                                       \
+    (list)->items =                                                            \
+        arena_alloc_chunk(arena, count * sizeof((list)->items[0]));            \
+    for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
+      (list)->items[__e_i] = (array)[__e_i];                                   \
+    }                                                                          \
   } while (0)
 
 #define vec_first(list) (list)->items[0]
@@ -52,7 +63,7 @@
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[(list)->len + __e_i] = (_items)[__e_i];                    \
     }                                                                          \
-    (list)->len = count;                                                       \
+    (list)->len += count;                                                      \
   } while (0)
 
 #define vec_map(src, dest, map)                                                \

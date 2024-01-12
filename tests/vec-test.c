@@ -22,6 +22,22 @@ static void test_vec(void) {
   arena_free(&arena);
 }
 
+static void test_vec_init(void) {
+  Arena arena = {0};
+  const usize array[] = {1, 2, 3, 4, 5};
+  VEC(usize) list = {0};
+  vec_init_list(&list, &arena, ARRAY_SIZE(array), array);
+
+  clib_assert(list.len == 5, "Did not set len correctly");
+  clib_assert(list.cap == 5, "Did not set cap correctly");
+
+  clib_assert(list.items[0] == 1, "Did not init correctly");
+  clib_assert(list.items[2] == 3, "Did not init correctly");
+  clib_assert(list.items[4] == 5, "Did not init correctly");
+
+  arena_free(&arena);
+}
+
 static usize times_two(usize v) { return v * 2; }
 
 static void test_map(void) { // NOLINT
@@ -82,6 +98,7 @@ static void test_extend(void) {
   vec_init(&list, 5, &arena);
 
   vec_extend(&list, 3, ((int[]){1, 2, 3}));
+  clib_assert(list.len == 3, "List did not extend correctly");
   clib_assert(list.items[0] == 1 && list.items[1] == 2 && list.items[2] == 3,
               "List did not extend correctly");
 
@@ -198,6 +215,7 @@ static void test_pop(void) {
 
 int main(void) {
   test_vec();
+  test_vec_init();
   test_map();
   test_extend();
   test_reserve();
