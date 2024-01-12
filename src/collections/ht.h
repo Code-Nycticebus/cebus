@@ -3,7 +3,6 @@
 
 #include "clib/arena.h"
 #include "core/defines.h"
-#include <sys/cdefs.h>
 
 typedef union {
   f32 f32;
