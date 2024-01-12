@@ -67,11 +67,42 @@ static void test_sort(void) {
     vec_push(&list, n - i - 1);
   }
 
-  vec_sort(&list, usize_compare_qsort(CMP_LESS));
+  vec_sort(&list, &list, usize_compare_qsort(CMP_LESS));
 
   for (usize i = 0; i < list.len; ++i) {
     clib_assert(list.items[i] == i, "sorting did not work correctly");
   }
+
+  arena_free(&arena);
+}
+
+typedef struct {
+  usize smallest;
+} SortCtx;
+
+static CmpOrdering sort_smallest(const void *_ctx, const void *a,
+                                 const void *b) {
+  const SortCtx *ctx = _ctx;
+  if (*(const usize *)a == ctx->smallest) {
+    return CMP_LESS;
+  }
+  return usize_compare_lt(*(const usize *)a, *(const usize *)b);
+}
+
+static void test_sort_ctx(void) {
+  Arena arena = {0};
+  const usize n = 10;
+  VEC(usize) list = {0};
+  vec_init(&list, 5, &arena);
+  for (usize i = 0; i < n; ++i) {
+    vec_push(&list, n - i - 1);
+  }
+
+  SortCtx ctx = {.smallest = 5};
+  vec_sort_ctx(&list, &list, sort_smallest, &ctx);
+
+  clib_assert(list.items[0] == 5, "sorting did not work correctly");
+  clib_assert(list.items[1] == 0, "sorting did not work correctly");
 
   arena_free(&arena);
 }
@@ -221,6 +252,7 @@ int main(void) {
   test_reserve();
   test_reverse();
   test_sort();
+  test_sort_ctx();
   test_last();
   test_filter();
   test_filter_ctx();

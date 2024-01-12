@@ -3,7 +3,7 @@
 
 #include "core/asserts.h"
 #include "core/defines.h" // IWYU pragma: export
-#include <stdlib.h>       // IWYU pragma: export
+#include "core/sorting.h" // IWYU pragma: export
 
 #define VEC(T)                                                                 \
   struct {                                                                     \
@@ -99,9 +99,18 @@
     (dest)->len = __f_count;                                                   \
   } while (0)
 
-#define vec_sort(list, sort)                                                   \
+#define vec_sort(src, dest, sort)                                              \
   do {                                                                         \
-    qsort((list)->items, (list)->len, sizeof((list)->items[0]), sort);         \
+    vec_reserve((dest), (src)->len);                                           \
+    quicksort((src)->items, (dest)->items, sizeof((src)->items[0]),            \
+              (src)->len, sort);                                               \
+  } while (0)
+
+#define vec_sort_ctx(src, dest, sort, ctx)                                     \
+  do {                                                                         \
+    vec_reserve((dest), (src)->len);                                           \
+    quicksort_ctx((src)->items, (dest)->items, sizeof((src)->items[0]),        \
+                  (src)->len, sort, ctx);                                      \
   } while (0)
 
 #define vec_reverse(list)                                                      \

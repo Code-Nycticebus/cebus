@@ -19,6 +19,7 @@ typedef enum {
 } CmpOrdering;
 
 typedef CmpOrdering (*CompareFn)(const void *, const void *);
+typedef CmpOrdering (*CompareCtxFn)(const void *, const void *, const void *);
 
 typedef uint8_t u8;
 #define U8_MAX UINT8_MAX
