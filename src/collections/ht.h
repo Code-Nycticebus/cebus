@@ -28,6 +28,6 @@ typedef struct {
 HashTable ht_create(Arena *arena, usize size);
 
 void ht_insert(HashTable *ht, u64 hash, HashValue value);
-HashNode *ht_get(HashTable *ht, u64 hash);
+HashValue *ht_get(const HashTable *ht, u64 hash);
 
 #endif // !__CLIB_HT_H__

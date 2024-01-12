@@ -1,6 +1,7 @@
 #include "ht.h"
 
 #include "core/asserts.h"
+#include <stdio.h>
 
 HashTable ht_create(Arena *arena, usize size) {
   HashTable ht = {0};
@@ -39,20 +40,20 @@ void ht_insert(HashTable *ht, u64 hash, HashValue value) {
               ht->cap);
 }
 
-HashNode *ht_get(HashTable *ht, u64 hash) {
+HashValue *ht_get(const HashTable *ht, u64 hash) {
   usize idx = hash % ht->cap;
   if (ht->nodes[idx].key && ht->nodes[idx].key == hash) {
-    return &ht->nodes[idx];
+    return &ht->nodes[idx].value;
   }
   for (usize i = 0; i < ht->cap; i++) {
     idx = (idx + i * i) % ht->cap;
     if (ht->nodes[idx].key && ht->nodes[idx].key == hash) {
-      return &ht->nodes[idx];
+      return &ht->nodes[idx].value;
     }
   }
   for (usize i = 0; i < ht->cap; i++) {
-    if (ht->nodes[i].key || ht->nodes[i].key == hash) {
-      return &ht->nodes[idx];
+    if (ht->nodes[i].key && ht->nodes[i].key == hash) {
+      return &ht->nodes[idx].value;
     }
   }
   return NULL;
