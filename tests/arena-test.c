@@ -1,6 +1,6 @@
-#include "clib/arena.h"
+#include "core/arena.h"
 
-#include "clib/asserts.h"
+#include "core/asserts.h"
 
 typedef struct TestChunk {
   struct TestChunk *next;

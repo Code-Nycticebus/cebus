@@ -1,7 +1,7 @@
 #ifndef __TEST_H__
 #define __TEST_H__
 
-#include "clib/arena.h" // IWYU pragma: export
+#include "core/arena.h" // IWYU pragma: export
 #include "core/platform.h"
 
 #if defined(CLANG) || defined(GCC)

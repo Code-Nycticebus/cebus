@@ -1,5 +1,5 @@
 
-#include "clib/logging.h"
+#include "core/logging.h"
 #include "core/platform.h"
 
 int main(void) {

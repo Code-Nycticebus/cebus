@@ -1,6 +1,6 @@
 #include "ht.h"
 
-#include "clib/asserts.h"
+#include "core/asserts.h"
 
 HashTable ht_create(Arena *arena, usize size) {
   HashTable ht = {0};

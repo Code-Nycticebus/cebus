@@ -1,5 +1,5 @@
-#include "clib/asserts.h"
 #include "collections/ht.h"
+#include "core/asserts.h"
 
 #include "types/integers.h"
 #include "types/str.h"

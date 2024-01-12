@@ -3,8 +3,8 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "clib/arena.h"
-#include "clib/asserts.h"
+#include "core/arena.h"
+#include "core/asserts.h"
 #include "types/bytes.h"
 #include "types/integers.h"
 

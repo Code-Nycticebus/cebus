@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#include "clib/asserts.h"
+#include "core/asserts.h"
 
 static bool sep(char c) { return isspace(c) || isblank(c); }
 

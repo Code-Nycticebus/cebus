@@ -1,6 +1,6 @@
 #include "collections/vec.h"
 
-#include "clib/asserts.h"
+#include "core/asserts.h"
 #include "types/integers.h"
 
 static void test_vec(void) {

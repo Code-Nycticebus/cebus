@@ -1,6 +1,6 @@
 #include "types/integers.h"
 
-#include "clib/asserts.h"
+#include "core/asserts.h"
 #include "types/bytes.h"
 
 /* u8 */

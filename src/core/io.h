@@ -1,7 +1,7 @@
 #ifndef __CLIB_IO_H__
 #define __CLIB_IO_H__
 
-#include "clib/arena.h"
+#include "core/arena.h"
 #include "core/defines.h"
 #include "core/error.h"
 #include "core/platform.h"

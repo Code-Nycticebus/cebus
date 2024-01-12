@@ -1,7 +1,7 @@
 #ifndef __CLIB_INTEGERS_H__
 #define __CLIB_INTEGERS_H__
 
-#include "clib/arena.h"
+#include "core/arena.h"
 #include "core/defines.h"
 
 #define INTEGER_DECL(T)                                                        \

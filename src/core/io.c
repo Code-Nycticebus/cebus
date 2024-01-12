@@ -1,5 +1,5 @@
 #include "io.h"
-#include "clib/asserts.h"
+#include "core/asserts.h"
 #include "types/bytes.h"
 
 #include <errno.h>

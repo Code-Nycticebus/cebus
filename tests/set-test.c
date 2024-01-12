@@ -1,6 +1,6 @@
-#include "clib/asserts.h"
 #include "collections/set.h"
 #include "collections/vec.h"
+#include "core/asserts.h"
 #include "core/defines.h"
 #include "types/integers.h"
 #include "types/str.h"
@@ -128,10 +128,6 @@ static void test_intersection(void) {
   arena_free(&arena);
 }
 
-static bool filter_with_set(Set *intersection, Str s) {
-  return set_contains(intersection, str_hash(s));
-}
-
 static void test_difference(void) {
   Arena arena = {0};
 
@@ -162,6 +158,10 @@ static void test_difference(void) {
   }
 
   arena_free(&arena);
+}
+
+static bool filter_with_set(Set *intersection, Str s) {
+  return set_contains(intersection, str_hash(s));
 }
 
 static void test_example_duplicates(void) {

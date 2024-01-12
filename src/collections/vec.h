@@ -1,7 +1,7 @@
 #ifndef __CLIB_DA_H__
 #define __CLIB_DA_H__
 
-#include "clib/asserts.h"
+#include "core/asserts.h"
 #include "core/defines.h" // IWYU pragma: export
 #include <stdlib.h>       // IWYU pragma: export
 

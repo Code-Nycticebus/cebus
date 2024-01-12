@@ -1,7 +1,7 @@
 #ifndef __CLIB_STR_H__
 #define __CLIB_STR_H__
 
-#include "clib/arena.h"
+#include "core/arena.h"
 
 #include "core/defines.h" // IWYU pragma: private: include "str.h"
 
