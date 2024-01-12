@@ -1,7 +1,6 @@
 #ifndef __CLIB_DA_H__
 #define __CLIB_DA_H__
 
-#include "core/asserts.h"
 #include "core/defines.h" // IWYU pragma: export
 #include "core/sorting.h" // IWYU pragma: export
 
@@ -44,7 +43,7 @@
 #define vec_reserve(list, size)                                                \
   do {                                                                         \
     if (!(size < (list)->cap)) {                                               \
-      (list)->cap = usize_max(size, 10);                                       \
+      (list)->cap = size;                                                      \
       (list)->items = arena_realloc_chunk(                                     \
           (list)->items, (list)->cap * sizeof((list)->items[0]));              \
     }                                                                          \
