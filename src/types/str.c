@@ -214,7 +214,7 @@ bool str_eq(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;
   }
-  return s1.data[0] == s2.data[0] && strncmp(s1.data, s2.data, s1.len) == 0;
+  return strncmp(s1.data, s2.data, s1.len) == 0;
 }
 
 bool str_eq_ignorecase(Str s1, Str s2) {
@@ -233,8 +233,7 @@ bool str_startswith(Str s1, Str prefix) {
   if (s1.len < prefix.len) {
     return false;
   }
-  return s1.data[0] == prefix.data[0] &&
-         strncmp(s1.data, prefix.data, prefix.len) == 0;
+  return strncmp(s1.data, prefix.data, prefix.len) == 0;
 }
 
 bool str_endswith(Str s1, Str suffix) {
@@ -242,8 +241,7 @@ bool str_endswith(Str s1, Str suffix) {
     return false;
   }
   const usize idx = s1.len - suffix.len;
-  return s1.data[idx] == suffix.data[0] &&
-         strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
+  return strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
 }
 
 bool str_contains(Str haystack, Str needle) {
