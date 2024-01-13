@@ -5,10 +5,6 @@
 #include "core/defines.h" // IWYU pragma: private: include "utf8.h"
 #include "core/error.h"
 
-#define UTF8(s) utf8_decode(BYTES_STR(s), NULL)
-#define UTF8_FMT "%.*s"
-#define UTF8_ARG(s) (i32)(s).size, (s).data
-
 typedef enum {
   UTF8_OK,
   UTF8_DECODE,

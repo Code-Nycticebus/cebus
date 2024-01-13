@@ -10,11 +10,6 @@
 // TODO str_insert(Str s, usize idx, Str src, Arena* arena);
 // TODO str_replace_at(Str s, usize idx, Str new, Arena* arena);
 
-#define STR_FMT "%.*s"
-#define STR_ARG(str) (i32)(str).len, (str).data
-
-#define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
-
 #define STR_NOT_FOUND SIZE_MAX
 
 #define STR_LETTERS STR("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")

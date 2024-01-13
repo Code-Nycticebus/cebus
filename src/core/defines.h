@@ -113,10 +113,18 @@ typedef struct {
   const u8 *data;
 } Bytes;
 
+#define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
+#define STR_FMT "%.*s"
+#define STR_ARG(str) (i32)(str).len, (str).data
+
 typedef struct {
   usize len;
   const char *data;
 } Str;
+
+#define UTF8(s) utf8_decode(BYTES_STR(s), NULL)
+#define UTF8_FMT "%.*s"
+#define UTF8_ARG(s) (i32)(s).size, (s).data
 
 typedef struct {
   usize size;
