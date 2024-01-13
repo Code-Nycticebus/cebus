@@ -1,6 +1,6 @@
 #include "collections/vec.h"
 #include "core/defines.h"
-#include "os/files.h"
+#include "os/io.h"
 #include "types/str.h"
 
 int main(void) {
