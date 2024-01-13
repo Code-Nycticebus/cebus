@@ -1,7 +1,6 @@
 #include <locale.h>
 
 #include "core/asserts.h"
-#include "types/bytes.h"
 #include "types/utf8.h"
 
 #include <string.h>

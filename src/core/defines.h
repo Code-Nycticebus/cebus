@@ -108,6 +108,14 @@ typedef double f64;
 #define PI 3.14159265358979323846
 #define E 2.71828182845904523536
 
+#define BYTES(...)                                                             \
+  (Bytes) {                                                                    \
+    sizeof((const u8[]){__VA_ARGS__}), (const u8[]) { __VA_ARGS__ }            \
+  }
+
+#define BYTES_STR(s)                                                           \
+  (Bytes) { sizeof(s) - 1, (const u8 *)(s) }
+
 typedef struct {
   usize size;
   const u8 *data;
