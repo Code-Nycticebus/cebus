@@ -2,6 +2,7 @@
 #define __CLIB_DEFINES_H__
 
 #include "platform.h"
+#include <float.h>
 #include <stdbool.h>
 #include <stddef.h> // IWYU pragma: export
 #include <stdint.h>
@@ -92,7 +93,20 @@ typedef size_t usize;
 #endif
 
 typedef float f32;
+#define F32_MAX FLT_MAX
+#define F32_MIN FLT_MIN
+#define F32_EPSILON FLT_EPSILON
+
 typedef double f64;
+#define F64_MAX DBL_MAX
+#define F64_MIN DBL_MIN
+#define F64_EPSILON DBL_EPSILON
+
+#define F32_INF (*(const f32 *)(const u32[]){0x7F800000})
+#define F64_INF (*(const f64 *)(const u64[]){0x7FF0000000000000})
+#define NAN (0.0 / 0.0)
+#define PI 3.14159265358979323846
+#define E 2.71828182845904523536
 
 typedef struct {
   usize size;
