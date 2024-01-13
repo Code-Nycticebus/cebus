@@ -26,4 +26,4 @@ f32 f32_clamp(f32 min, f32 max, f32 value) {
 }
 f32 f32_lerp(f32 min, f32 max, f32 value) { return min + value * (max - min); }
 
-f32 f32_rad(f32 deg) { return deg * ((float)PI / 180.0f); } // NOLINT
+f32 f32_rad(f32 deg) { return deg * ((f32)PI / 180.0f); } // NOLINT

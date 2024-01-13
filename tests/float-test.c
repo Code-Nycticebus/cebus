@@ -34,7 +34,7 @@ static void test_f32_math(void) {
   clib_assert(f32_eq(lerp, 15.f), "Did not lerp correctly"); // NOLINT
 
   const f32 rad = f32_rad(90.f);
-  clib_assert(f32_eq(rad, 1.57079632679f), "Rad was not correct"); // NOLINT
+  clib_assert(f32_eq(rad, 1.570796371f), "Rad was not correct"); // NOLINT
 }
 
 int main(void) {
