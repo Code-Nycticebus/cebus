@@ -14,7 +14,7 @@ typedef enum {
   CLIB_LOG_TRACE,
 } LogLevel;
 
-void clib_log(FILE *f, LogLevel log_level, const char *fmt, ...) CLIB_FMT(3, 4);
+void clib_log(LogLevel log_level, const char *fmt, ...) CLIB_FMT(2, 3);
 void clib_log_fatal(const char *fmt, ...) CLIB_FMT(1, 2);
 void clib_log_error(const char *fmt, ...) CLIB_FMT(1, 2);
 void clib_log_warning(const char *fmt, ...) CLIB_FMT(1, 2);

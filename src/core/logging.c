@@ -16,63 +16,67 @@
 struct CmLogLevelPrefix {
   const char *prefix;
   const char *color;
+  int file;
+};
+
+static const struct CmLogLevelPrefix log_level_str[] = {
+    [CLIB_LOG_FATAL] = {"FATAL", "\033[1m\033[91m", STDERR_FILENO},
+    [CLIB_LOG_ERROR] = {"ERROR", "\033[91m", STDERR_FILENO},
+    [CLIB_LOG_WARNING] = {"WARNING", "\033[33m", STDERR_FILENO},
+    [CLIB_LOG_INFO] = {"INFO", "\033[34m", STDOUT_FILENO},
+    [CLIB_LOG_DEBUG] = {"DEBUG", "\033[1m\033[95m", STDOUT_FILENO},
+    [CLIB_LOG_TRACE] = {"TRACE", "\033[97m", STDOUT_FILENO},
 };
 
 #define FMT_RESET "\033[0m"
 
-#define _LOG(__log_level, __file, __fmt)                                       \
-  _clib_log(__log_level, __file);                                              \
+#define _LOG(__log_level, __fmt)                                               \
+  _clib_log(__log_level);                                                      \
   va_list __args;                                                              \
   va_start(__args, __fmt);                                                     \
-  vfprintf(__file, __fmt, __args);                                             \
+  vfprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout, \
+           __fmt, __args);                                                     \
   va_end(__args);                                                              \
-  fprintf(__file, "%s\n", display_colors ? FMT_RESET : "");
+  fprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout,  \
+          "%s\n", display_colors ? FMT_RESET : "");
 
 static bool display_colors = false;
 static bool tty_checked = false;
 
-static void _clib_log(LogLevel log_level, FILE *file) {
+static void _clib_log(LogLevel log_level) {
   if (!tty_checked) {
     tty_checked = true;
     display_colors = isatty(STDOUT_FILENO) && isatty(STDERR_FILENO);
   }
-  static const struct CmLogLevelPrefix log_level_str[] = {
-      [CLIB_LOG_FATAL] = {"FATAL", "\033[1m\033[91m"},
-      [CLIB_LOG_ERROR] = {"ERROR", "\033[91m"},
-      [CLIB_LOG_WARNING] = {"WARNING", "\033[33m"},
-      [CLIB_LOG_INFO] = {"INFO", "\033[34m"},
-      [CLIB_LOG_DEBUG] = {"DEBUG", "\033[1m\033[95m"},
-      [CLIB_LOG_TRACE] = {"TRACE", "\033[97m"},
-  };
 
-  fprintf(file,
+  fprintf(log_level_str[log_level].file == STDERR_FILENO ? stderr : stdout,
           "%s[%s]: ", display_colors ? log_level_str[log_level].color : "",
           log_level_str[log_level].prefix);
 }
 
-CLIB_FMT(3, 4)
-void clib_log(FILE *f, LogLevel log_level, const char *fmt, ...) {
-  _LOG(log_level, f, fmt);
+CLIB_FMT(2, 3)
+void clib_log(LogLevel log_level, const char *fmt, ...) {
+  _LOG(log_level, fmt);
 }
 
 CLIB_FMT(1, 2) void clib_log_fatal(const char *fmt, ...) {
-  _LOG(CLIB_LOG_FATAL, stderr, fmt);
+  _LOG(CLIB_LOG_FATAL, fmt);
 }
 CLIB_FMT(1, 2) void clib_log_error(const char *fmt, ...) {
-  _LOG(CLIB_LOG_ERROR, stderr, fmt);
+  _LOG(CLIB_LOG_ERROR, fmt);
 }
 CLIB_FMT(1, 2) void clib_log_warning(const char *fmt, ...) {
-  _LOG(CLIB_LOG_WARNING, stderr, fmt);
+  _LOG(CLIB_LOG_WARNING, fmt);
 }
 CLIB_FMT(1, 2) void clib_log_info(const char *fmt, ...) {
-  _LOG(CLIB_LOG_INFO, stdout, fmt);
+  _LOG(CLIB_LOG_INFO, fmt);
 }
 
 #ifndef NDEBUG
 CLIB_FMT(1, 2) void clib_log_debug(const char *fmt, ...) {
-  _LOG(CLIB_LOG_DEBUG, stdout, fmt);
+  _LOG(CLIB_LOG_DEBUG, fmt);
 }
 CLIB_FMT(1, 2) void clib_log_trace(const char *fmt, ...) {
-  _LOG(CLIB_LOG_TRACE, stdout, fmt);
+  _LOG(CLIB_LOG_TRACE, fmt);
 }
 #endif

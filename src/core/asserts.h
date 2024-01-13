@@ -16,9 +16,8 @@
 #endif
 
 #define _clib_assert_print(level, expr, ...)                                   \
-  clib_log(stderr, level, "%s:%d: assert '%s' failed", __FILE__, __LINE__,     \
-           expr);                                                              \
-  clib_log(stderr, level, "Description: "__VA_ARGS__)
+  clib_log(level, "%s:%d: assert '%s' failed", __FILE__, __LINE__, expr);      \
+  clib_log(level, "Description: "__VA_ARGS__)
 
 #define clib_assert(expression, ...)                                           \
   do {                                                                         \
