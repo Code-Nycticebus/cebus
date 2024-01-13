@@ -1,22 +1,22 @@
+#include "collections/vec.h"
 #include "core/defines.h"
 #include "core/io.h"
-#include "types/bytes.h"
 #include "types/str.h"
 
 int main(void) {
   Arena arena = {0};
+  Bytes content = file_read_bytes(STR(__FILE__), &arena, NULL);
 
-  File file = file_open(__FILE__, "r", NULL);
-  Bytes content = file_read_bytes(&file, &arena, NULL);
-  file_close(&file);
-
-  File same_file = file_open(__FILE__, "w", NULL);
+  VEC(Str) list = {0};
+  vec_init(&list, 10, &arena);
   for (Str line = {0}, s = str_from_bytes(content);
        str_try_chop_by_delim(&s, '\n', &line);) {
-    file_write(&same_file, str_to_bytes(line), NULL);
-    file_write(&same_file, BYTES_STR("\n"), NULL);
+    vec_push(&list, line);
   }
-  file_close(&same_file);
+
+  Str new = str_join(STR("\n"), list.len, list.items, &arena);
+  new = str_append(new, STR("\n"), &arena);
+  file_write(STR(__FILE__), str_to_bytes(new), NULL);
 
   arena_free(&arena);
 }

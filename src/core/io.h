@@ -23,22 +23,10 @@ typedef enum {
   FILE_WRITE,
 } FileError;
 
-typedef struct {
-  FILE *handle;
-} File;
-
-File file_open(const char *filename, const char *mode, Error *error);
-void file_close(File *file);
-
-usize file_size(File *file);
-void file_rewind(File *file);
-
-Bytes file_read_bytes(File *file, Arena *arena, Error *error);
-
-bool file_stream_bytes(File *file, usize chunk_size,
+Bytes file_read_bytes(Str filename, Arena *arena, Error *error);
+bool file_stream_bytes(Str filename, usize chunk_size,
                        void (*stream)(Bytes bytes));
-
-void file_write(File *file, Bytes bytes, Error *error);
+void file_write(Str filename, Bytes bytes, Error *error);
 
 Str input(Str prefix, usize max, char *buffer);
 
