@@ -14,8 +14,7 @@ int main(void) {
     vec_push(&list, line);
   }
 
-  Str new = str_join(STR("\n"), list.len, list.items, &arena);
-  new = str_append(new, STR("\n"), &arena);
+  Str new = str_join_suffix(STR("\n"), list.len, list.items, &arena);
   file_write(STR(__FILE__), str_to_bytes(new), NULL);
 
   arena_free(&arena);

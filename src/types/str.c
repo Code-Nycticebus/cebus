@@ -91,6 +91,24 @@ Str str_join(Str sep, usize count, Str s[count], Arena *arena) {
   return str_from_parts(size, buffer);
 }
 
+Str str_join_suffix(Str sep, usize count, Str s[count], Arena *arena) {
+  usize size = sep.len * count;
+  for (usize i = 0; i < count; i++) {
+    size += s[i].len;
+  }
+  char *buffer = arena_alloc(arena, size + 1);
+  usize b_idx = 0;
+  for (usize i = 0; i < count; i++) {
+    memcpy(&buffer[b_idx], s[i].data, s[i].len);
+    b_idx += s[i].len;
+    memcpy(&buffer[b_idx], sep.data, sep.len);
+    b_idx += sep.len;
+  }
+  buffer[size] = '\0';
+
+  return str_from_parts(size, buffer);
+}
+
 Str str_upper(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
   buffer[s.len] = '\0';
