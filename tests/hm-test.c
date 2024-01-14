@@ -11,14 +11,14 @@
 
 static void test_insert(void) {
   Arena arena = {0};
-  HashMap ht = hm_create(&arena, TEST_HT_DEFAULT_SIZE);
+  HashMap hm = hm_create(&arena, TEST_HT_DEFAULT_SIZE);
 
-  hm_insert(&ht, str_hash(STR("Hello")), (HashValue){.as.u64 = 420});  // NOLINT
-  hm_insert(&ht, str_hash(STR("Hello2")), (HashValue){.as.i64 = -69}); // NOLINT
+  hm_insert(&hm, str_hash(STR("Hello")), (HashValue){.as.u64 = 420});  // NOLINT
+  hm_insert(&hm, str_hash(STR("Hello2")), (HashValue){.as.i64 = -69}); // NOLINT
 
-  clib_assert(hm_get(&ht, str_hash(STR("Hello")))->as.u64 == 420,
+  clib_assert(hm_get(&hm, str_hash(STR("Hello")))->as.u64 == 420,
               "ht should get the value correnctly");
-  clib_assert(hm_get(&ht, str_hash(STR("Hello2")))->as.i64 == -69,
+  clib_assert(hm_get(&hm, str_hash(STR("Hello2")))->as.i64 == -69,
               "ht should get the value correnctly");
 
   arena_free(&arena);
@@ -27,16 +27,16 @@ static void test_insert(void) {
 static void test_hm(void) {
   const usize test_count = 10000;
   Arena arena = {0};
-  HashMap ht = hm_create(&arena, test_count);
+  HashMap hm = hm_create(&arena, test_count);
 
   for (size_t i = 0; i < test_count; i++) {
-    hm_insert(&ht, usize_hash(i), (HashValue){.as.u64 = i * 4});
+    hm_insert(&hm, usize_hash(i), (HashValue){.as.u64 = i * 4});
   }
-  clib_assert(ht.count == test_count, "Hash table should be at this size");
+  clib_assert(hm.count == test_count, "Hash table should be at this size");
 
-  clib_assert(hm_get(&ht, usize_hash(10))->as.u64 == 40, "Hashing was wrong");
-  clib_assert(hm_get(&ht, usize_hash(20))->as.u64 == 80, "Hashing was wrong");
-  clib_assert(hm_get(&ht, usize_hash(30))->as.u64 == 120, "Hashing was wrong");
+  clib_assert(hm_get(&hm, usize_hash(10))->as.u64 == 40, "Hashing was wrong");
+  clib_assert(hm_get(&hm, usize_hash(20))->as.u64 == 80, "Hashing was wrong");
+  clib_assert(hm_get(&hm, usize_hash(30))->as.u64 == 120, "Hashing was wrong");
 
   arena_free(&arena);
 }
@@ -59,19 +59,19 @@ static void test_example(void) {
   VEC(Str) text = {0};
   vec_init(&text, 4, &arena);
 
-  HashMap ht = hm_create(&arena, 10); // NOLINT
+  HashMap hm = hm_create(&arena, 10); // NOLINT
   for (usize i = 0; i < list.len; i++) {
     u64 hash = str_hash(list.items[i]);
-    HashValue *value = hm_get(&ht, hash);
+    HashValue *value = hm_get(&hm, hash);
     if (value == NULL) {
       vec_push(&text, list.items[i]);
-      hm_insert(&ht, hash, (HashValue){.as.u64 = 1});
+      hm_insert(&hm, hash, (HashValue){.as.u64 = 1});
     } else {
       value->as.u64++;
     }
   }
 
-  vec_sort_ctx(&text, &text, sort_by_occurence, &ht);
+  vec_sort_ctx(&text, &text, sort_by_occurence, &hm);
 
   clib_assert(str_eq(text.items[0], STR("Apple")),
               "Apple does occure the most");
