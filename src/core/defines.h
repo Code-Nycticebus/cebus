@@ -140,4 +140,11 @@ typedef struct {
   usize len;
 } Utf8;
 
+#if defined(LINUX)
+#include <bits/types/FILE.h>
+#elif defined(WINDOWS)
+#define _FILE_DEFINED
+typedef struct _iobuf FILE;
+#endif
+
 #endif /* !__CLIB_DEFINES_H__ */

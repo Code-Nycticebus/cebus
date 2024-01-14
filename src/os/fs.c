@@ -20,12 +20,12 @@ static FILE *file_open(Str filename, const char *mode, Error *error) {
 }
 
 static usize file_size(FILE *handle, Error *error) {
-  const long current = ftell(handle);
   fseek(handle, 0, SEEK_END);
   const long size = ftell(handle);
-  fseek(handle, current, SEEK_SET);
+  fseek(handle, 0, SEEK_SET);
   if (size < 0) {
     Err(error, errno, "Could not get file size: %s", strerror(errno));
+    return 0;
   }
   return (usize)size;
 }
