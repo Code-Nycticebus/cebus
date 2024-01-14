@@ -42,9 +42,3 @@
 - Threads 
 - Time
 
-
-
-## Types
-
-### Bytes
-
