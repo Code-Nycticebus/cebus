@@ -22,6 +22,7 @@
 
 ### Os Layer
 - [ ] Paths
-- [ ] File IO (Best async)
+- [ ] IO 
+- [ ] File System Operations
 - [ ] Dynamic Library loading
 - [ ] Threads 

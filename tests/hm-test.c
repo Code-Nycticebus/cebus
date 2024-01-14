@@ -1,4 +1,4 @@
-#include "collections/ht.h"
+#include "collections/hm.h"
 #include "collections/vec.h"
 #include "core/asserts.h"
 #include "core/logging.h"
@@ -11,40 +11,40 @@
 
 static void test_insert(void) {
   Arena arena = {0};
-  HashTable ht = ht_create(&arena, TEST_HT_DEFAULT_SIZE);
+  HashMap ht = hm_create(&arena, TEST_HT_DEFAULT_SIZE);
 
-  ht_insert(&ht, str_hash(STR("Hello")), (HashValue){.as.u64 = 420});  // NOLINT
-  ht_insert(&ht, str_hash(STR("Hello2")), (HashValue){.as.i64 = -69}); // NOLINT
+  hm_insert(&ht, str_hash(STR("Hello")), (HashValue){.as.u64 = 420});  // NOLINT
+  hm_insert(&ht, str_hash(STR("Hello2")), (HashValue){.as.i64 = -69}); // NOLINT
 
-  clib_assert(ht_get(&ht, str_hash(STR("Hello")))->as.u64 == 420,
+  clib_assert(hm_get(&ht, str_hash(STR("Hello")))->as.u64 == 420,
               "ht should get the value correnctly");
-  clib_assert(ht_get(&ht, str_hash(STR("Hello2")))->as.i64 == -69,
+  clib_assert(hm_get(&ht, str_hash(STR("Hello2")))->as.i64 == -69,
               "ht should get the value correnctly");
 
   arena_free(&arena);
 }
 
-static void test_ht(void) {
+static void test_hm(void) {
   const usize test_count = 10000;
   Arena arena = {0};
-  HashTable ht = ht_create(&arena, test_count);
+  HashMap ht = hm_create(&arena, test_count);
 
   for (size_t i = 0; i < test_count; i++) {
-    ht_insert(&ht, usize_hash(i), (HashValue){.as.u64 = i * 4});
+    hm_insert(&ht, usize_hash(i), (HashValue){.as.u64 = i * 4});
   }
   clib_assert(ht.count == test_count, "Hash table should be at this size");
 
-  clib_assert(ht_get(&ht, usize_hash(10))->as.u64 == 40, "Hashing was wrong");
-  clib_assert(ht_get(&ht, usize_hash(20))->as.u64 == 80, "Hashing was wrong");
-  clib_assert(ht_get(&ht, usize_hash(30))->as.u64 == 120, "Hashing was wrong");
+  clib_assert(hm_get(&ht, usize_hash(10))->as.u64 == 40, "Hashing was wrong");
+  clib_assert(hm_get(&ht, usize_hash(20))->as.u64 == 80, "Hashing was wrong");
+  clib_assert(hm_get(&ht, usize_hash(30))->as.u64 == 120, "Hashing was wrong");
 
   arena_free(&arena);
 }
 
 static CmpOrdering sort_by_occurence(const void *ctx, const void *a,
                                      const void *b) {
-  return u64_compare_gt(ht_get(ctx, str_hash(*(const Str *)a))->as.u64,
-                        ht_get(ctx, str_hash(*(const Str *)b))->as.u64);
+  return u64_compare_gt(hm_get(ctx, str_hash(*(const Str *)a))->as.u64,
+                        hm_get(ctx, str_hash(*(const Str *)b))->as.u64);
 }
 
 static void test_example(void) {
@@ -59,13 +59,13 @@ static void test_example(void) {
   VEC(Str) text = {0};
   vec_init(&text, 4, &arena);
 
-  HashTable ht = ht_create(&arena, 10);
+  HashMap ht = hm_create(&arena, 10); // NOLINT
   for (usize i = 0; i < list.len; i++) {
     u64 hash = str_hash(list.items[i]);
-    HashValue *value = ht_get(&ht, hash);
+    HashValue *value = hm_get(&ht, hash);
     if (value == NULL) {
       vec_push(&text, list.items[i]);
-      ht_insert(&ht, hash, (HashValue){.as.u64 = 1});
+      hm_insert(&ht, hash, (HashValue){.as.u64 = 1});
     } else {
       value->as.u64++;
     }
@@ -85,6 +85,6 @@ static void test_example(void) {
 
 int main(void) {
   test_insert();
-  test_ht();
+  test_hm();
   test_example();
 }

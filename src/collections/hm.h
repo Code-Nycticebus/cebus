@@ -25,11 +25,11 @@ typedef struct {
   usize cap;
   usize count;
   HashNode *nodes;
-} HashTable;
+} HashMap;
 
-HashTable ht_create(Arena *arena, usize size);
+HashMap hm_create(Arena *arena, usize size);
 
-void ht_insert(HashTable *ht, u64 hash, HashValue value);
-HashValue *ht_get(const HashTable *ht, u64 hash);
+void hm_insert(HashMap *hm, u64 hash, HashValue value);
+HashValue *hm_get(const HashMap *hm, u64 hash);
 
 #endif // !__CLIB_HT_H__
