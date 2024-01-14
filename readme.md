@@ -2,7 +2,7 @@
 
 ## Features
 ### Data Types
-- Strings 
+- [Strings](#Strings) 
 - Bytes
 - Integers
 - Floats
@@ -27,3 +27,12 @@
 - Dynamic Library loading
 - Threads 
 - Time
+
+
+
+## DataTypes
+### Strings [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h)
+String operations modeled after python. 
+
+### Bytes
+
