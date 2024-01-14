@@ -221,11 +221,11 @@ Str str_reverse(Str s, Arena *arena) {
   return str_from_parts(s.len, buffer);
 }
 
-Str str_substring(Str s, usize idx1, usize idx2) {
-  if (idx2 <= idx1 || s.len <= idx1 || s.len < idx2) {
+Str str_substring(Str s, usize start, usize end) {
+  if (end <= start || s.len <= start || s.len < end) {
     return STR("");
   }
-  return str_from_parts(idx2 - idx1, &s.data[idx1]);
+  return str_from_parts(end - start, &s.data[start]);
 }
 
 bool str_eq(Str s1, Str s2) {
@@ -498,7 +498,7 @@ usize str_count(Str haystack, Str needle) {
 
 u64 str_hash(Str s) {
   const uint64_t magic_prime = 0x00000100000001b3;
-  uint64_t hash = 0xcbf29ce484222325;
+  uint64_t hash = 0xcbf29ce484222325; // NOLINT
   for (usize i = 0; i < s.len; ++i) {
     hash = (hash ^ (u64)s.data[i]) * magic_prime;
   }

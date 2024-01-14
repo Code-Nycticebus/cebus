@@ -32,8 +32,8 @@ Str str_trim_right(Str s);
 Str str_trim(Str s);
 
 Str str_copy(Str s, Arena *arena);
-Str str_append(Str s1, Str s2, Arena *arena);
-Str str_prepend(Str s1, Str s2, Arena *arena);
+Str str_append(Str s1, Str suffix, Arena *arena);
+Str str_prepend(Str s1, Str prefix, Arena *arena);
 Str str_join(Str sep, usize count, Str s[count], Arena *arena);
 Str str_join_suffix(Str sep, usize count, Str s[count], Arena *arena);
 Str str_upper(Str s, Arena *arena);
@@ -45,7 +45,7 @@ Str str_rjust(Str s, usize width, char fillchar, Arena *arena);
 Str str_repeat(Str s, usize count, Arena *arena);
 Str str_reverse(Str s, Arena *arena);
 
-Str str_substring(Str s, usize idx1, usize idx2);
+Str str_substring(Str s, usize start, usize end);
 
 bool str_eq(Str s1, Str s2);
 bool str_eq_ignorecase(Str s1, Str s2);
@@ -66,7 +66,7 @@ Str str_chop_by_predicate(Str *s, bool (*predicate)(char));
 Str str_chop_right_by_delim(Str *s, char delim);
 Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char));
 
-Str str_take(Str *s, usize n);
+Str str_take(Str *s, usize count);
 bool str_try_take(Str *s, usize n, Str *chunk);
 
 Str str_u64(Arena *arena, u64 n);
