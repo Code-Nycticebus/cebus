@@ -5,12 +5,11 @@
 
 int main(void) {
   Arena arena = {0};
-  Bytes content = file_read_bytes(STR(__FILE__), &arena, NULL);
+  Str content = file_read_content(STR(__FILE__), &arena, NULL);
 
   VEC(Str) list = {0};
   vec_init(&list, 10, &arena);
-  for (Str line = {0}, s = str_from_bytes(content);
-       str_try_chop_by_delim(&s, '\n', &line);) {
+  for (Str line = {0}; str_try_chop_by_delim(&content, '\n', &line);) {
     vec_push(&list, line);
   }
 

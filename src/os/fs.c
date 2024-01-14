@@ -2,6 +2,7 @@
 
 #include "io.h"
 #include "types/bytes.h"
+#include "types/str.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -42,6 +43,10 @@ Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
   u8 *buffer = arena_alloc(arena, size);
   io_read(handle, size, buffer, error);
   return bytes_from_parts(size, buffer);
+}
+
+Str file_read_content(Str filename, Arena *arena, Error *error) {
+  return str_from_bytes(file_read_bytes(filename, arena, error));
 }
 
 void file_write(Str filename, Bytes bytes, Error *error) {

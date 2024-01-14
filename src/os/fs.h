@@ -18,6 +18,7 @@ typedef struct {
 } FileInfo;
 
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error);
+Str file_read_content(Str filename, Arena *arena, Error *error);
 // void file_stream_bytes(Str name, void (*stream)(void*, Bytes), void* ctx);
 void file_write(Str filename, Bytes bytes, Error *error);
 
