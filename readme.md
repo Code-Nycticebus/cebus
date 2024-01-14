@@ -26,3 +26,4 @@
 - [ ] File System Operations
 - [ ] Dynamic Library loading
 - [ ] Threads 
+- [ ] Time
