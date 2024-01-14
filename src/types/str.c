@@ -27,25 +27,6 @@ char str_getc(Str s, usize idx) {
   return s.data[idx];
 }
 
-Str str_trim_left(Str s) {
-  Str result = s;
-  for (usize i = 0; i < s.len && isspace(s.data[i]); ++i) {
-    result.data++;
-    result.len--;
-  }
-  return result;
-}
-
-Str str_trim_right(Str s) {
-  Str result = s;
-  for (usize i = 0; i < s.len && isspace(s.data[s.len - i - 1]); ++i) {
-    result.len--;
-  }
-  return result;
-}
-
-Str str_trim(Str s) { return str_trim_left(str_trim_right(s)); }
-
 Str str_copy(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
   memcpy(buffer, s.data, s.len);
@@ -221,13 +202,6 @@ Str str_reverse(Str s, Arena *arena) {
   return str_from_parts(s.len, buffer);
 }
 
-Str str_substring(Str s, usize start, usize end) {
-  if (end <= start || s.len <= start || s.len < end) {
-    return STR("");
-  }
-  return str_from_parts(end - start, &s.data[start]);
-}
-
 bool str_eq(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;
@@ -309,6 +283,25 @@ static CmpOrdering _str_cmp_lt(const void *s1, const void *s2) {
 CompareFn str_compare_qsort(CmpOrdering ordering) {
   return ordering == CMP_LESS ? _str_cmp_lt : _str_cmp_gt;
 }
+
+Str str_trim_left(Str s) {
+  Str result = s;
+  for (usize i = 0; i < s.len && isspace(s.data[i]); ++i) {
+    result.data++;
+    result.len--;
+  }
+  return result;
+}
+
+Str str_trim_right(Str s) {
+  Str result = s;
+  for (usize i = 0; i < s.len && isspace(s.data[s.len - i - 1]); ++i) {
+    result.len--;
+  }
+  return result;
+}
+
+Str str_trim(Str s) { return str_trim_left(str_trim_right(s)); }
 
 bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {
   if (s->len == 0) {
@@ -410,6 +403,13 @@ Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
     return chunk;
   }
   return *s;
+}
+
+Str str_substring(Str s, usize start, usize end) {
+  if (end <= start || s.len <= start || s.len < end) {
+    return STR("");
+  }
+  return str_from_parts(end - start, &s.data[start]);
 }
 
 Str str_take(Str *s, usize count) {
