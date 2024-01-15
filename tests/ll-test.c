@@ -7,7 +7,6 @@ typedef struct LLNode {
 } LLNode;
 
 #define Node(N) (&(N)->head)
-#define Node(N) (&(N)->head)
 
 #define NODE(T)                                                                \
   struct {                                                                     \
