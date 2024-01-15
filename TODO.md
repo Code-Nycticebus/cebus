@@ -7,11 +7,13 @@
 - [x] Integers
 - [x] Floats
 - [ ] UTF-8
+- [ ] Datetime
 
 ### Collections
 - [x] Dynamic array
 - [ ] HashMap
 - [ ] Set
+- [ ] Linked List
 
 ### Base
 - [x] Arena allocator
