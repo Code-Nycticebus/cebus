@@ -42,6 +42,7 @@ Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
   }
   u8 *buffer = arena_alloc(arena, size);
   io_read(handle, size, buffer, error);
+  fclose(handle);
   return bytes_from_parts(size, buffer);
 }
 
@@ -52,4 +53,5 @@ Str file_read_content(Str filename, Arena *arena, Error *error) {
 void file_write(Str filename, Bytes bytes, Error *error) {
   FILE *handle = file_open(filename, "w", error);
   io_write(handle, bytes, error);
+  fclose(handle);
 }
