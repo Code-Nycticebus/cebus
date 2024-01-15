@@ -21,6 +21,7 @@
 - [x] Asserts
 - [x] Platform
 - [x] Errors
+- [ ] Random 
 
 ### Os
 - [ ] Paths
