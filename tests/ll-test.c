@@ -6,7 +6,8 @@ typedef struct LLNode {
   struct LLNode *next, *prev;
 } LLNode;
 
-#define Node(N) (&(N)->head)
+#define NodeHead(N) (&(N)->head)
+#define NodeValue(N, node) (&((N *)(node))->value)
 
 #define NODE(T)                                                                \
   struct {                                                                     \
@@ -39,14 +40,14 @@ int main(void) {
   Arena arena = {0};
   LinkedList ll = {0};
 
-  ll_append(&ll, Node(cn_init(&arena, 420)));
-  ll_append(&ll, Node(cn_init(&arena, 69)));
-  ll_append(&ll, Node(cn_init(&arena, 23)));
-  ll_append(&ll, Node(cn_init(&arena, 31)));
+  ll_append(&ll, NodeHead(cn_init(&arena, 420)));
+  ll_append(&ll, NodeHead(cn_init(&arena, 69)));
+  ll_append(&ll, NodeHead(cn_init(&arena, 23)));
+  ll_append(&ll, NodeHead(cn_init(&arena, 31)));
 
   LLNode *next = ll.begin;
   while (next != NULL) {
-    int *node = &((NODE(int) *)next)->value;
+    int *node = NodeValue(NODE(int), next);
     printf("%d\n", *node);
     next = next->next;
   }
