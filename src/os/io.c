@@ -17,7 +17,7 @@ void io_write(FILE *file, Bytes bytes, Error *error) {
   }
 }
 
-Bytes io_read(FILE *file, usize size, u8 *buffer, Error *error) {
+Bytes io_read(FILE *file, usize size, u8 buffer[size], Error *error) {
   errno = 0;
   const usize bytes_read = fread(buffer, sizeof(u8), size, file);
   if (ferror(file)) {
@@ -27,7 +27,7 @@ Bytes io_read(FILE *file, usize size, u8 *buffer, Error *error) {
   return bytes_from_parts(bytes_read, buffer);
 }
 
-Str io_read_line(FILE *file, usize size, char *buffer, Error *error) {
+Str io_read_line(FILE *file, usize size, char buffer[size], Error *error) {
   fgets(buffer, (int)size, file);
   if (ferror(file)) {
     Err(error, errno, "Could not read line: %s", strerror(errno));
