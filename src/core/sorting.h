@@ -3,9 +3,9 @@
 
 #include "core/defines.h"
 
-void quicksort(const void *src, void *dest, usize size, usize nmem,
+void quicksort(const void *src, void *dest, usize size, usize nelem,
                CompareFn compare);
-void quicksort_ctx(const void *src, void *dest, usize size, usize nmem,
+void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
                    CompareCtxFn compare, const void *ctx);
 
 #endif // !__CLIB_SORTING_H__
