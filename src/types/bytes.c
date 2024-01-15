@@ -62,7 +62,7 @@ Bytes bytes_from_hex(Str s, Arena *arena) {
         buffer[idx] |= (u8)(chunk.data[i] - '0');
       } else if (isxdigit(chunk.data[i])) {
         const char d = (char)tolower(chunk.data[i]);
-        buffer[idx] = 10 + (u8)(d - 'a');
+        buffer[idx] = 10 + (u8)(d - 'a'); // NOLINT
       }
     }
     idx++;
