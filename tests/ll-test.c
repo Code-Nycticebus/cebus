@@ -45,11 +45,9 @@ int main(void) {
   ll_append(&ll, NodeHead(cn_init(&arena, 23)));
   ll_append(&ll, NodeHead(cn_init(&arena, 31)));
 
-  LLNode *next = ll.begin;
-  while (next != NULL) {
+  for (LLNode *next = ll.begin; next != NULL; next = next->next) {
     int *node = NodeValue(NODE(int), next);
     printf("%d\n", *node);
-    next = next->next;
   }
 
   arena_free(&arena);
