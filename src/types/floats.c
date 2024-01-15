@@ -1,29 +1,20 @@
-#include "floats.h"
+#include "floats.h" // IWYU pragma: keep
 
-// For bit manipulation
-typedef union {
-  f32 f;
-  u32 i;
-} f32_bits;
+#define FLOAT_IMPL(T, BITS)                                                    \
+  bool T##_eq(T a, T b) { return T##_abs(a - b) < F##BITS##_EPSILON; }         \
+  bool T##_isnan(T value) { return value != value; }                           \
+  T T##_abs(T value) {                                                         \
+    u##BITS *i = (u##BITS *)&value;                                            \
+    *i &= ~((u##BITS)0x8 << (BITS - 1 - 3));                                   \
+    return value;                                                              \
+  }                                                                            \
+  T T##_min(T a, T b) { return a < b ? a : b; }                                \
+  T T##_max(T a, T b) { return a > b ? a : b; }                                \
+  T T##_clamp(T min, T max, T value) {                                         \
+    return value < min ? min : value > max ? max : value;                      \
+  }                                                                            \
+  T T##_lerp(T min, T max, T value) { return min + value * (max - min); }      \
+  T T##_rad(T deg) { return deg * ((T)PI / 180.0f); }
 
-bool f32_eq(f32 a, f32 b) { return f32_abs(a - b) < F32_EPSILON; }
-
-bool f32_isnan(f32 value) {
-  f32_bits u = {.f = value};
-  return ((u.i >> 23) & 0xFF) == 0xFF && (u.i & 0x7FFFFF) != 0; // NOLINT
-}
-
-f32 f32_abs(f32 value) {
-  f32_bits u = {.f = value};
-  u.i &= 0x7FFFFFFF; // NOLINT
-  return u.f;
-}
-
-f32 f32_min(f32 a, f32 b) { return a < b ? a : b; }
-f32 f32_max(f32 a, f32 b) { return a > b ? a : b; }
-f32 f32_clamp(f32 min, f32 max, f32 value) {
-  return value < min ? min : value > max ? max : value;
-}
-f32 f32_lerp(f32 min, f32 max, f32 value) { return min + value * (max - min); }
-
-f32 f32_rad(f32 deg) { return deg * ((f32)PI / 180.0f); } // NOLINT
+FLOAT_IMPL(f32, 32)
+FLOAT_IMPL(f64, 64)

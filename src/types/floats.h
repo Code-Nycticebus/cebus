@@ -3,16 +3,17 @@
 
 #include "core/defines.h"
 
-bool f32_eq(f32 a, f32 b);
-bool f32_isnan(f32 value);
+#define FLOAT_DECL(T)                                                          \
+  bool T##_eq(T a, T b);                                                       \
+  bool T##_isnan(T value);                                                     \
+  T T##_abs(T value);                                                          \
+  T T##_min(T a, T b);                                                         \
+  T T##_max(T a, T b);                                                         \
+  T T##_clamp(T min, T max, T value);                                          \
+  T T##_lerp(T min, T max, T value);                                           \
+  T T##_rad(T deg);
 
-f32 f32_abs(f32 value);
-
-f32 f32_min(f32 a, f32 b);
-f32 f32_max(f32 a, f32 b);
-f32 f32_clamp(f32 min, f32 max, f32 value);
-f32 f32_lerp(f32 min, f32 max, f32 value);
-
-f32 f32_rad(f32 deg);
+FLOAT_DECL(f32)
+FLOAT_DECL(f64)
 
 #endif /* ifndef __CLIB_FLOATS_H__ */
