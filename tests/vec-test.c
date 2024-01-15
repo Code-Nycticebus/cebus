@@ -98,10 +98,10 @@ static void test_sort_ctx(void) {
     vec_push(&list, n - i - 1);
   }
 
-  SortCtx ctx = {.smallest = 5};
+  SortCtx ctx = {.smallest = 4};
   vec_sort_ctx(&list, &list, sort_smallest, &ctx);
 
-  clib_assert(list.items[0] == 5, "sorting did not work correctly");
+  clib_assert(list.items[0] == 4, "sorting did not work correctly");
   clib_assert(list.items[1] == 0, "sorting did not work correctly");
 
   arena_free(&arena);
