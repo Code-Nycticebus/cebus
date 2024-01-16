@@ -28,6 +28,7 @@ Bytes io_read(FILE *file, usize size, u8 buffer[size], Error *error) {
 }
 
 Str io_read_line(FILE *file, usize size, char buffer[size], Error *error) {
+  clearerr(file);
   fgets(buffer, (int)size, file);
   if (ferror(file)) {
     Err(error, errno, "Could not read line: %s", strerror(errno));
