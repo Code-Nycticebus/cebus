@@ -3,6 +3,7 @@
 #include "io.h"
 #include "types/bytes.h"
 #include "types/str.h"
+#include "types/utf8.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -46,8 +47,12 @@ Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
   return bytes_from_parts(size, buffer);
 }
 
-Str file_read_content(Str filename, Arena *arena, Error *error) {
+Str file_read_str(Str filename, Arena *arena, Error *error) {
   return str_from_bytes(file_read_bytes(filename, arena, error));
+}
+
+Utf8 file_read_utf8(Str filename, Arena *arena, Error *error) {
+  return utf8_decode(file_read_bytes(filename, arena, error), error);
 }
 
 void file_write(Str filename, Bytes bytes, Error *error) {

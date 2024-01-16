@@ -5,7 +5,7 @@
 
 int main(void) {
   Arena arena = {0};
-  Str content = file_read_content(STR(__FILE__), &arena, NULL);
+  Str content = file_read_str(STR(__FILE__), &arena, NULL);
 
   VEC(Str) list = {0};
   vec_init(&list, 10, &arena);
