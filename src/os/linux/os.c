@@ -4,6 +4,7 @@
 
 #include "core/asserts.h"
 #include "types/str.h"
+#include "types/integers.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -11,7 +12,7 @@
 
 void os_chdir(Str path) {
   char pathname[FILENAME_MAX] = {0};
-  memcpy(pathname, path.data, path.len);
+  memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
   chdir(pathname);
 }
 
