@@ -15,11 +15,13 @@ static void test_bytes(void) {
 
 static void test_bytes_str(void) {
   Bytes b = BYTES_STR("ABC");
+  clib_assert(b.size == 3, "Size is not correct");
   clib_assert(b.data[0] == 0x41, "Bytes are not initialized correctly");
   clib_assert(b.data[1] == 0x42, "Bytes are not initialized correctly");
   clib_assert(b.data[2] == 0x43, "Bytes are not initialized correctly");
 
-  Bytes b2 = BYTES_STR("\x41\x42\x42");
+  Bytes b2 = BYTES_STR("\x41\x42\x43");
+  clib_assert(b2.size == 3, "Size is not correct");
   clib_assert(b2.data[0] == 0x41, "Bytes are not initialized correctly");
   clib_assert(b2.data[1] == 0x42, "Bytes are not initialized correctly");
   clib_assert(b2.data[2] == 0x43, "Bytes are not initialized correctly");
