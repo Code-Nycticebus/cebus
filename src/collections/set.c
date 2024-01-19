@@ -85,11 +85,6 @@ bool set_contains(Set *set, u64 hash) {
       return true;
     }
   }
-  for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i] && set->items[i] == hash) {
-      return true;
-    }
-  }
   return false;
 }
 
