@@ -77,8 +77,17 @@ void *arena_alloc_chunk(Arena *arena, usize size) {
   Chunk *chunk = chunk_allocate(chunk_size);
   chunk->allocated = chunk_size;
   chunk->next = arena->begin;
+  if (arena->begin) {
+    arena->begin->prev = chunk;
+  }
   arena->begin = chunk;
   return chunk->data;
+}
+
+void *arena_calloc_chunk(Arena *arena, usize size) {
+  void *data = arena_alloc_chunk(arena, size);
+  memset(data, 0, size);
+  return data;
 }
 
 void *arena_realloc_chunk(Arena *arena, void *ptr, usize size) {
