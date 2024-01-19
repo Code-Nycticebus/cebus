@@ -69,7 +69,7 @@ void set_extend(Set *set, usize count, u64 hashes[count]) {
   }
 }
 
-bool set_contains(Set *set, u64 hash) {
+bool set_contains(const Set *set, u64 hash) {
   usize idx = hash % set->cap;
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[idx] && set->items[idx] == hash) {
@@ -80,10 +80,15 @@ bool set_contains(Set *set, u64 hash) {
   return false;
 }
 
-bool set_eq(Set *set, Set *other) {
-  // TODO make the set iterate over the smallest set
+bool set_eq(const Set *set, const Set *other) {
   if (other->count != set->count) {
     return false;
+  }
+
+  if (other->cap < set->cap) {
+    const Set *temp = set;
+    set = other;
+    other = temp;
   }
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i]) {
@@ -95,7 +100,7 @@ bool set_eq(Set *set, Set *other) {
   return true;
 }
 
-bool set_subset(Set *set, Set *other) {
+bool set_subset(const Set *set, const Set *other) {
   if (other->count <= set->count) {
     return false;
   }
@@ -109,14 +114,14 @@ bool set_subset(Set *set, Set *other) {
   return true;
 }
 
-Set set_intersection(Set *set, Set *other, Arena *arena) {
-  Set intersection = set_create(arena, usize_min(set->count, other->count) * 2);
-  if (other->count < set->count) {
-    Set *temp = set;
+Set set_intersection(const Set *set, const Set *other, Arena *arena) {
+  if (other->cap < set->cap) {
+    const Set *temp = set;
     set = other;
     other = temp;
   }
 
+  Set intersection = set_create(arena, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i]) {
       if (set_contains(other, set->items[i])) {
@@ -127,7 +132,12 @@ Set set_intersection(Set *set, Set *other, Arena *arena) {
   return intersection;
 }
 
-Set set_difference(Set *set, Set *other, Arena *arena) {
+Set set_difference(const Set *set, const Set *other, Arena *arena) {
+  if (other->cap < set->cap) {
+    const Set *temp = set;
+    set = other;
+    other = temp;
+  }
   Set difference = set_create(arena, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i]) {
