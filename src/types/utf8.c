@@ -1,12 +1,12 @@
 #include "utf8.h"
 
-#include <ctype.h>
-#include <string.h>
-
 #include "core/arena.h"
 #include "core/asserts.h"
 #include "types/bytes.h"
 #include "types/integers.h"
+
+#include <ctype.h>
+#include <string.h>
 
 Utf8 utf8_decode(Bytes bytes, Error *error) {
   Utf8 str = {0};

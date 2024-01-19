@@ -1,11 +1,10 @@
-#include <locale.h>
-
-#include "core/asserts.h"
 #include "types/utf8.h"
 
-#include <string.h>
-
+#include "core/asserts.h"
 #include "test.h"
+
+#include <locale.h>
+#include <string.h>
 
 TEST(decode) {
   Bytes bytes = BYTES(        //

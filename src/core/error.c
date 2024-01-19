@@ -1,9 +1,9 @@
 #include "error.h"
 
-#include "core/logging.h"
-
 #include <stdarg.h>
 #include <stdio.h>
+
+#include "core/logging.h"
 
 void error_add_note(Error *err, const char *fmt, ...) {
   va_list va;

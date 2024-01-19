@@ -2,6 +2,7 @@
 
 #include "core/asserts.h"
 #include "types/integers.h"
+
 #include <string.h>
 
 static void set_resize(Set *set, usize new_size) {

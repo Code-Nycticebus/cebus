@@ -1,6 +1,7 @@
+#include "os/fs.h"
+
 #include "collections/vec.h"
 #include "core/defines.h"
-#include "os/fs.h"
 #include "types/str.h"
 
 int main(void) {

@@ -1,9 +1,9 @@
 #include "collections/hm.h"
+
 #include "collections/vec.h"
 #include "core/asserts.h"
-#include "core/logging.h"
-
 #include "core/defines.h"
+#include "core/logging.h"
 #include "types/integers.h"
 #include "types/str.h"
 

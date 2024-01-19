@@ -1,6 +1,7 @@
 #include "logging.h"
 
 #include "core/defines.h" // IWYU pragma: export
+
 #include <stdarg.h>
 #include <stdio.h>
 

@@ -1,12 +1,12 @@
 #include "arena.h"
 
+#include "asserts.h"
+#include "types/integers.h"
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "asserts.h"
-#include "types/integers.h"
 
 #define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 

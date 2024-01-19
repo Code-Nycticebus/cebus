@@ -2,6 +2,7 @@
 #define __CLIB_DEFINES_H__
 
 #include "platform.h"
+
 #include <float.h>
 #include <stdbool.h>
 #include <stddef.h> // IWYU pragma: export

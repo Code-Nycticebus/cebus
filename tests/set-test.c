@@ -1,4 +1,5 @@
 #include "collections/set.h"
+
 #include "collections/vec.h"
 #include "core/asserts.h"
 #include "core/defines.h"
