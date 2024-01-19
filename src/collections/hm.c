@@ -59,19 +59,11 @@ bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
 
 HashValue *hm_get(const HashMap *hm, u64 hash) {
   usize idx = hash % hm->cap;
-  if (hm->nodes[idx].key && hm->nodes[idx].key == hash) {
-    return &hm->nodes[idx].value;
-  }
   for (usize i = 0; i < hm->cap; i++) {
-    idx = (idx + i * i) % hm->cap;
     if (hm->nodes[idx].key && hm->nodes[idx].key == hash) {
       return &hm->nodes[idx].value;
     }
-  }
-  for (usize i = 0; i < hm->cap; i++) {
-    if (hm->nodes[i].key && hm->nodes[i].key == hash) {
-      return &hm->nodes[idx].value;
-    }
+    idx = (idx + i * i) % hm->cap;
   }
   return NULL;
 }

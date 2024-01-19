@@ -71,14 +71,11 @@ void set_extend(Set *set, usize count, u64 hashes[count]) {
 
 bool set_contains(Set *set, u64 hash) {
   usize idx = hash % set->cap;
-  if (set->items[idx] && set->items[idx] == hash) {
-    return true;
-  }
   for (usize i = 0; i < set->cap; i++) {
-    idx = (idx + i * i) % set->cap;
     if (set->items[idx] && set->items[idx] == hash) {
       return true;
     }
+    idx = (idx + i * i) % set->cap;
   }
   return false;
 }
