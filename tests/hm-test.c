@@ -11,7 +11,7 @@
 
 static void test_insert(void) {
   Arena arena = {0};
-  HashMap hm = hm_create(&arena, TEST_HT_DEFAULT_SIZE);
+  HashMap hm = hm_create(&arena, 1);
 
   hm_insert(&hm, str_hash(STR("Hello")), (HashValue){.as.u64 = 420});  // NOLINT
   hm_insert(&hm, str_hash(STR("Hello2")), (HashValue){.as.i64 = -69}); // NOLINT
@@ -59,7 +59,7 @@ static void test_example(void) {
   VEC(Str) text = {0};
   vec_init(&text, &arena);
 
-  HashMap hm = hm_create(&arena, 10); // NOLINT
+  HashMap hm = hm_create(&arena, TEST_HT_DEFAULT_SIZE);
   for (usize i = 0; i < list.len; i++) {
     u64 hash = str_hash(list.items[i]);
     HashValue *value = hm_get(&hm, hash);

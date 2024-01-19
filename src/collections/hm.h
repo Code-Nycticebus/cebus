@@ -24,6 +24,7 @@ typedef struct {
 typedef struct {
   usize cap;
   usize count;
+  Arena *arena;
   HashNode *nodes;
 } HashMap;
 
