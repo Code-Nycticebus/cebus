@@ -1,7 +1,6 @@
 #include "fs.h"
 
 #include "io.h"
-#include "types/bytes.h"
 #include "types/str.h"
 #include "types/utf8.h"
 
@@ -33,18 +32,24 @@ static usize file_size(FILE *handle, Error *error) {
 }
 
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
+  Bytes result = {0};
   FILE *handle = file_open(filename, "r", error);
   if (error && error->failure) {
-    return (Bytes){0};
+    goto defer;
   }
   usize size = file_size(handle, error);
   if (error && error->failure) {
-    return (Bytes){0};
+    goto defer;
   }
+
   u8 *buffer = arena_alloc(arena, size);
-  io_read(handle, size, buffer, error);
-  fclose(handle);
-  return bytes_from_parts(size, buffer);
+  result = io_read(handle, size, buffer, error);
+
+defer:
+  if (handle) {
+    fclose(handle);
+  }
+  return result;
 }
 
 Str file_read_str(Str filename, Arena *arena, Error *error) {
@@ -57,6 +62,13 @@ Utf8 file_read_utf8(Str filename, Arena *arena, Error *error) {
 
 void file_write(Str filename, Bytes bytes, Error *error) {
   FILE *handle = file_open(filename, "w", error);
+  if (error && error->failure) {
+    goto defer;
+  }
   io_write(handle, bytes, error);
-  fclose(handle);
+defer:
+  if (handle) {
+    fclose(handle);
+  }
+  return;
 }
