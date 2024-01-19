@@ -1,30 +1,34 @@
 #ifndef __CLIB_DA_H__
 #define __CLIB_DA_H__
 
-#include "core/defines.h" // IWYU pragma: export
-#include "core/sorting.h" // IWYU pragma: export
+#include "core/arena.h"     // IWYU pragma: export
+#include "core/defines.h"   // IWYU pragma: export
+#include "core/sorting.h"   // IWYU pragma: export
+#include "types/integers.h" // IWYU pragma: export
 
 #define VEC(T)                                                                 \
   struct {                                                                     \
     usize cap;                                                                 \
     usize len;                                                                 \
+    Arena *arena;                                                              \
     T *items;                                                                  \
   }
 
-#define vec_init(list, capacity, arena)                                        \
+#define vec_init(list, _arena)                                                 \
   do {                                                                         \
     (list)->len = 0;                                                           \
-    (list)->cap = capacity;                                                    \
-    (list)->items =                                                            \
-        arena_alloc_chunk(arena, capacity * sizeof((list)->items[0]));         \
+    (list)->cap = 0;                                                           \
+    (list)->arena = _arena;                                                    \
+    (list)->items = NULL;                                                      \
   } while (0)
 
-#define vec_init_list(list, arena, count, array)                               \
+#define vec_init_list(list, _arena, count, array)                              \
   do {                                                                         \
     (list)->len = count;                                                       \
     (list)->cap = count;                                                       \
+    (list)->arena = _arena;                                                    \
     (list)->items =                                                            \
-        arena_alloc_chunk(arena, count * sizeof((list)->items[0]));            \
+        arena_alloc_chunk(_arena, count * sizeof((list)->items[0]));           \
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[__e_i] = (array)[__e_i];                                   \
     }                                                                          \
@@ -43,9 +47,10 @@
 #define vec_reserve(list, size)                                                \
   do {                                                                         \
     if (!(size < (list)->cap)) {                                               \
-      (list)->cap = size;                                                      \
-      (list)->items = arena_realloc_chunk(                                     \
-          (list)->items, (list)->cap * sizeof((list)->items[0]));              \
+      (list)->cap = usize_max(size, 10);                                       \
+      (list)->items =                                                          \
+          arena_realloc_chunk((list)->arena, (list)->items,                    \
+                              (list)->cap * sizeof((list)->items[0]));         \
     }                                                                          \
   } while (0)
 

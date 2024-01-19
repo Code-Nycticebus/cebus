@@ -57,7 +57,7 @@ static void test_example(void) {
   vec_init_list(&list, &arena, ARRAY_SIZE(strings), strings);
 
   VEC(Str) text = {0};
-  vec_init(&text, 4, &arena);
+  vec_init(&text, &arena);
 
   HashMap hm = hm_create(&arena, 10); // NOLINT
   for (usize i = 0; i < list.len; i++) {

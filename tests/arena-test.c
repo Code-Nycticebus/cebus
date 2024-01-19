@@ -3,7 +3,7 @@
 #include "core/asserts.h"
 
 typedef struct TestChunk {
-  struct TestChunk *next;
+  struct TestChunk *next, *prev;
   usize cap;
   usize allocated;
   u8 data[];
@@ -97,6 +97,8 @@ static void test_temp(void) {
 
   TestChunk *chunk2 = (TestChunk *)arena.begin;
   clib_assert(chunk2->allocated == 100, "Did not block the entire chunk");
+
+  arena_free_chunk(&arena, data);
 
   arena_free(&arena);
 }

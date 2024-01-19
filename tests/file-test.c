@@ -8,7 +8,7 @@ int main(void) {
   Str content = file_read_str(STR(__FILE__), &arena, NULL);
 
   VEC(Str) list = {0};
-  vec_init(&list, 10, &arena);
+  vec_init(&list, &arena);
   for (Str line = {0}; str_try_chop_by_delim(&content, '\n', &line);) {
     vec_push(&list, line);
   }

@@ -1,6 +1,7 @@
 #include "arena.h"
 
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,7 +11,7 @@
 #define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 
 struct Chunk {
-  Chunk *next;
+  Chunk *next, *prev;
   usize cap;
   usize allocated;
   u8 data[];
@@ -21,6 +22,7 @@ static Chunk *chunk_allocate(usize size) {
   clib_assert(chunk != NULL, "Memory allocation failed: %s", strerror(errno));
   chunk->cap = size;
   chunk->allocated = 0;
+  chunk->next = chunk->prev = 0;
   return chunk;
 }
 
@@ -54,6 +56,9 @@ void *arena_alloc(Arena *arena, usize size) {
     const usize chunk_size = usize_max(size, CHUNK_DEFAULT_SIZE);
     chunk = chunk_allocate(chunk_size);
     chunk->next = arena->begin;
+    if (arena->begin) {
+      arena->begin->prev = chunk;
+    }
     arena->begin = chunk;
   }
   void *ptr = &chunk->data[chunk->allocated];
@@ -76,12 +81,28 @@ void *arena_alloc_chunk(Arena *arena, usize size) {
   return chunk->data;
 }
 
-void *arena_realloc_chunk(void *ptr, usize size) {
-  clib_assert(ptr, "can't realloc NULL pointer");
+void *arena_realloc_chunk(Arena *arena, void *ptr, usize size) {
+  if (ptr == NULL) {
+    return arena_alloc_chunk(arena, size);
+  }
   Chunk *chunk = (Chunk *)((u8 *)ptr - sizeof(Chunk));
   if (size < chunk->allocated) {
     return chunk->data;
   }
   Chunk *new_chunk = realloc(chunk, sizeof(Chunk) + size);
   return new_chunk->data;
+}
+
+void arena_free_chunk(Arena *arena, void *ptr) {
+  Chunk *chunk = (Chunk *)((u8 *)ptr - sizeof(Chunk));
+  if (chunk == arena->begin) {
+    arena->begin = chunk->next;
+  }
+  if (chunk->prev) {
+    chunk->prev->next = chunk->next;
+  }
+  if (chunk->next) {
+    chunk->next->prev = chunk->prev;
+  }
+  free(chunk);
 }

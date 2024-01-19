@@ -186,7 +186,7 @@ static void test_example_duplicates(void) {
   }
 
   VEC(Str) unique_strings = {0};
-  vec_init(&unique_strings, 5, &arena);
+  vec_init(&unique_strings, &arena);
   vec_filter_ctx(&list, &unique_strings, !filter_with_set, &duplicates);
 
   clib_assert(unique_strings.len == 2,
@@ -226,7 +226,7 @@ static void test_example_intersection(void) {
 
   Set intersection = set_intersection(&s1, &s2, &arena);
   VEC(Str) common = {0};
-  vec_init(&common, 5, &arena);
+  vec_init(&common, &arena);
   vec_filter_ctx(&first, &common, filter_with_set, &intersection);
 
   clib_assert(common.len == 4,

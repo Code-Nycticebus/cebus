@@ -16,4 +16,5 @@ int main(void) {
   printf("%u\n", random_u32());
   printf("%u\n", random_u16());
   printf("%u\n", random_u8());
+  printf("\n");
 }
