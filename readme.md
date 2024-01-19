@@ -8,7 +8,7 @@
   
 - [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h)
 
-  Byte operations to work with generic chunks of bytes. 
+  Byte operations for working with generic chunks of bytes. 
 
 - [integer.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/integer.h)
 
