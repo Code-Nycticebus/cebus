@@ -46,17 +46,8 @@ bool set_add(Set *set, u64 hash) {
 
   while (true) {
     usize idx = hash % set->cap;
-    if (!set->items[idx]) {
-      set->items[idx] = hash;
-      set->count++;
-      return true;
-    }
-    if (set->items[idx] == hash) {
-      return false;
-    }
 
     for (usize i = 0; i < set->cap; i++) {
-      idx = (idx + i * i) % set->cap;
       if (!set->items[idx]) {
         set->items[idx] = hash;
         set->count++;
@@ -65,6 +56,7 @@ bool set_add(Set *set, u64 hash) {
       if (set->items[idx] == hash) {
         return false;
       }
+      idx = (idx + i * i) % set->cap;
     }
 
     set_resize(set);

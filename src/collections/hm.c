@@ -40,18 +40,7 @@ bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
   while (true) {
     usize idx = hash % hm->cap;
 
-    if (!hm->nodes[idx].key) {
-      hm->nodes[idx] = (HashNode){.key = hash, .value = value};
-      hm->count++;
-      return true;
-    }
-    if (hm->nodes[idx].key == hash) {
-      hm->nodes[idx].value = value;
-      return false;
-    }
-
     for (usize i = 0; i < hm->cap; i++) {
-      idx = (idx + i * i) % hm->cap;
       if (!hm->nodes[idx].key) {
         hm->nodes[idx] = (HashNode){.key = hash, .value = value};
         hm->count++;
@@ -61,6 +50,7 @@ bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
         hm->nodes[idx].value = value;
         return false;
       }
+      idx = (idx + i * i) % hm->cap;
     }
 
     hm_resize(hm);
