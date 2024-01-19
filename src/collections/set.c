@@ -4,10 +4,27 @@
 #include "types/integers.h"
 #include <string.h>
 
+static void set_resize(Set *set) {
+  usize old_cap = set->cap;
+  u64 *old_items = set->items;
+
+  set->cap *= 2;
+  set->items = arena_calloc_chunk(set->arena, set->cap * sizeof(set->items[0]));
+  set->count = 0;
+  for (usize i = 0; i < old_cap; ++i) {
+    if (old_items[i]) {
+      set_add(set, old_items[i]);
+    }
+  }
+
+  arena_free_chunk(set->arena, old_items);
+}
+
 Set set_create(Arena *arena, usize size) {
   Set set = {0};
   set.cap = size;
-  set.items = arena_calloc(arena, size * sizeof(set.items[0]));
+  set.arena = arena;
+  set.items = arena_calloc_chunk(arena, size * sizeof(set.items[0]));
   return set;
 }
 
@@ -15,36 +32,43 @@ Set set_copy(Arena *arena, Set *set) {
   Set new_set = {0};
   new_set.count = set->count;
   new_set.cap = set->cap;
-  new_set.items = arena_alloc(arena, set->cap * sizeof(set->items[0]));
+  set->arena = arena;
+  new_set.items = arena_alloc_chunk(arena, set->cap * sizeof(set->items[0]));
   memcpy(new_set.items, set->items, set->cap * sizeof(set->items[0]));
   return new_set;
 }
 
 void set_add(Set *set, u64 hash) {
   clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
-  clib_assert(set->count < set->cap, "Table full");
+  if (set->cap <= set->count) {
+    set_resize(set);
+  }
+
+try_again:;
   usize idx = hash % set->cap;
-  if (!set->items[idx] || set->items[idx] == hash) {
+  if (!set->items[idx]) {
     set->items[idx] = hash;
     set->count++;
     return;
   }
+  if (set->items[idx] == hash) {
+    return;
+  }
+
   for (usize i = 0; i < set->cap; i++) {
     idx = (idx + i * i) % set->cap;
-    if (!set->items[idx] || set->items[idx] == hash) {
+    if (!set->items[idx]) {
       set->items[idx] = hash;
       set->count++;
       return;
     }
-  }
-  for (usize i = 0; i < set->cap; i++) {
-    if (!set->items[i] || set->items[i] == hash) {
-      set->items[i] = hash;
-      set->count++;
+    if (set->items[idx] == hash) {
       return;
     }
   }
-  clib_assert(false, "Unreachable: table overrun!");
+
+  set_resize(set);
+  goto try_again;
 }
 
 void set_extend(Set *set, usize count, u64 hashes[count]) {

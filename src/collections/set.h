@@ -7,6 +7,7 @@
 typedef struct {
   usize cap;
   usize count;
+  Arena *arena;
   u64 *items;
 } Set;
 

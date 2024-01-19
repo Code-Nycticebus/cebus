@@ -11,7 +11,7 @@ static void test_set_insert(void) {
   Arena arena = {0};
   Set set = set_create(&arena, TEST_SET_DEFAULT_SIZE);
 
-  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE; i++) {
+  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&set, usize_hash(i));
   }
 
