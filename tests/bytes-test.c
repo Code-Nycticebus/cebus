@@ -94,6 +94,11 @@ static void test_bytes_from_hex(void) {
   clib_assert(b2.data[0] == 0xa0, "conversion was not correct: %x", b2.data[0]);
   clib_assert(b2.data[1] == 0xb1, "conversion was not correct: %x", b2.data[1]);
   clib_assert(b2.data[2] == 0xc2, "conversion was not correct: %x", b2.data[2]);
+
+  Bytes b3 = bytes_from_hex(STR("0x101"), &arena);
+  clib_assert(b3.size == 2, "conversion was not done correctly");
+  clib_assert(b3.data[0] == 0x1, "conversion was not correct: %x", b1.data[0]);
+  clib_assert(b3.data[1] == 0x01, "conversion was not correct: %x", b1.data[1]);
 }
 
 int main(void) {

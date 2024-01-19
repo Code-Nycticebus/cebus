@@ -41,12 +41,12 @@ Bytes bytes_take(Bytes *bytes, usize count) {
 }
 
 Str bytes_hex(Bytes bytes, Arena *arena) {
-  char *buffer = arena_calloc(arena, bytes.size * 2 + 1);
-  usize b_idx = 0;
+  char *buf = arena_calloc(arena, bytes.size * 2 + 1);
+  usize idx = 0;
   for (usize i = 0; i < bytes.size; i++) {
-    b_idx += (usize)snprintf(&buffer[b_idx], 3, "%02x", bytes.data[i]);
+    idx += (usize)snprintf(&buf[idx], 3, "%0*x", (i != 0) + 1, bytes.data[i]);
   }
-  return (Str){.len = b_idx, .data = buffer};
+  return (Str){.len = idx, .data = buf};
 }
 
 Bytes bytes_from_hex(Str s, Arena *arena) {
@@ -56,14 +56,18 @@ Bytes bytes_from_hex(Str s, Arena *arena) {
 
   u8 *buffer = arena_calloc(arena, s.len);
   usize idx = 0;
-  for (Str chunk = {0}; str_try_take(&s, 2, &chunk);) {
+  for (Str chunk = {0};
+       str_try_take(&s,
+                    // to correctly convert strings like "0x101"
+                    idx != 0 ? 2 : 2 - s.len % 2, // This is cursed
+                    &chunk);) {
     for (usize i = 0; i < chunk.len; i++) {
       buffer[idx] <<= 4;
       if (isdigit(chunk.data[i])) {
         buffer[idx] |= (u8)(chunk.data[i] - '0');
       } else if (isxdigit(chunk.data[i])) {
         const char d = (char)tolower(chunk.data[i]);
-        buffer[idx] = 10 + (u8)(d - 'a'); // NOLINT
+        buffer[idx] |= 10 + (u8)(d - 'a'); // NOLINT
       }
     }
     idx++;
