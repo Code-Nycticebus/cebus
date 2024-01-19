@@ -20,13 +20,14 @@ typedef struct {
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error);
 Str file_read_str(Str filename, Arena *arena, Error *error);
 Utf8 file_read_utf8(Str filename, Arena *arena, Error *error);
-// void file_stream_bytes(Str name, void (*stream)(void*, Bytes), void* ctx);
+// TODO void file_stream_bytes(Str name, void (*stream)(void*, Bytes), void*
+// ctx);
 void file_write(Str filename, Bytes bytes, Error *error);
 
-// FileInfo file_info(Str filename);
-// bool file_exists(Str filename);
+// TODO FileInfo file_info(Str filename);
+// TODO bool file_exists(Str filename);
 
-// void file_rename(Str old_name, Str new_name);
-// void file_remove(Str filename);
+// TODO void file_rename(Str old_name, Str new_name);
+// TODO void file_remove(Str filename);
 
 #endif // !__CLIB_FS_H__
