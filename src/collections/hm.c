@@ -33,6 +33,9 @@ HashMap hm_create(Arena *arena, usize size) {
 
 bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
   clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
+  if (hm->cap <= hm->count) {
+    hm_resize(hm);
+  }
 
   while (true) {
     usize idx = hash % hm->cap;

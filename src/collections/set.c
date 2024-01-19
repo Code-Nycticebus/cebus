@@ -40,6 +40,9 @@ Set set_copy(Arena *arena, Set *set) {
 
 bool set_add(Set *set, u64 hash) {
   clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
+  if (set->cap <= set->count) {
+    set_resize(set);
+  }
 
   while (true) {
     usize idx = hash % set->cap;
