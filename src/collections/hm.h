@@ -28,7 +28,8 @@ typedef struct {
   HashNode *nodes;
 } HashMap;
 
-HashMap hm_create(Arena *arena, usize size);
+HashMap hm_create(Arena *arena);
+void hm_reserve(HashMap *hm, usize size);
 
 bool hm_insert(HashMap *hm, u64 hash, HashValue value);
 // FIXME it is dangerous to return a pointer here

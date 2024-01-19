@@ -10,8 +10,9 @@ static void set_resize(Set *set, usize new_size) {
 
   set->cap = usize_max(new_size, 10);
   set->items = arena_calloc_chunk(set->arena, set->cap * sizeof(set->items[0]));
-  set->count = 0;
+
   if (old_items) {
+    set->count = 0;
     for (usize i = 0; i < old_cap; ++i) {
       if (old_items[i]) {
         set_add(set, old_items[i]);

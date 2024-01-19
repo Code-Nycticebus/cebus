@@ -7,11 +7,9 @@
 #include "types/integers.h"
 #include "types/str.h"
 
-#define TEST_HT_DEFAULT_SIZE 10
-
 static void test_insert(void) {
   Arena arena = {0};
-  HashMap hm = hm_create(&arena, 1);
+  HashMap hm = hm_create(&arena);
 
   hm_insert(&hm, str_hash(STR("Hello")), (HashValue){.as.u64 = 420});  // NOLINT
   hm_insert(&hm, str_hash(STR("Hello2")), (HashValue){.as.i64 = -69}); // NOLINT
@@ -27,7 +25,8 @@ static void test_insert(void) {
 static void test_hm(void) {
   const usize test_count = 10000;
   Arena arena = {0};
-  HashMap hm = hm_create(&arena, test_count);
+  HashMap hm = hm_create(&arena);
+  hm_reserve(&hm, test_count * 2);
 
   for (size_t i = 0; i < test_count; i++) {
     hm_insert(&hm, usize_hash(i), (HashValue){.as.u64 = i * 4});
@@ -59,7 +58,7 @@ static void test_example(void) {
   VEC(Str) text = {0};
   vec_init(&text, &arena);
 
-  HashMap hm = hm_create(&arena, TEST_HT_DEFAULT_SIZE);
+  HashMap hm = hm_create(&arena);
   for (usize i = 0; i < list.len; i++) {
     u64 hash = str_hash(list.items[i]);
     HashValue *value = hm_get(&hm, hash);
