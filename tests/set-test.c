@@ -25,30 +25,6 @@ static void test_set_insert(void) {
   arena_free(&arena);
 }
 
-static void test_set_remove(void) {
-  Arena arena = {0};
-  Set set = set_create(&arena, TEST_SET_DEFAULT_SIZE);
-
-  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE; i++) {
-    set_add(&set, usize_hash(i));
-  }
-
-  set_remove(&set, usize_hash(2));
-  set_remove(&set, usize_hash(4));
-  set_remove(&set, usize_hash(5)); // NOLINT
-
-  clib_assert(set_contains(&set, usize_hash(2)) == false,
-              "Set should not contain this number!");
-  clib_assert(set_contains(&set, usize_hash(3)) == true,
-              "Set should still contain this number!");
-  clib_assert(set_contains(&set, usize_hash(4)) == false,
-              "Set should not contain this number!");
-  clib_assert(set_contains(&set, usize_hash(5)) == false,
-              "Set should not contain this number!");
-
-  arena_free(&arena);
-}
-
 static void test_eq(void) {
   Arena arena = {0};
   Set set1 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
@@ -246,7 +222,6 @@ static void test_example_intersection(void) {
 
 int main(void) {
   test_set_insert();
-  test_set_remove();
   test_eq();
   test_subset();
   test_intersection();

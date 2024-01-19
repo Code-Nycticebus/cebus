@@ -77,31 +77,6 @@ void set_extend(Set *set, usize count, u64 hashes[count]) {
   }
 }
 
-bool set_remove(Set *set, u64 hash) {
-  usize idx = hash % set->cap;
-  if (set->items[idx] && set->items[idx] == hash) {
-    set->items[idx] = 0;
-    set->count--;
-    return true;
-  }
-  for (usize i = 0; i < set->cap; i++) {
-    idx = (idx + i * i) % set->cap;
-    if (set->items[idx] && set->items[idx] == hash) {
-      set->items[idx] = 0;
-      set->count--;
-      return true;
-    }
-  }
-  for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i] && set->items[i] == hash) {
-      set->items[i] = 0;
-      set->count--;
-      return true;
-    }
-  }
-  return false;
-}
-
 bool set_contains(Set *set, u64 hash) {
   usize idx = hash % set->cap;
   if (set->items[idx] && set->items[idx] == hash) {
@@ -122,6 +97,7 @@ bool set_contains(Set *set, u64 hash) {
 }
 
 bool set_eq(Set *set, Set *other) {
+  // TODO make the set iterate over the smallest set
   if (other->count != set->count) {
     return false;
   }
