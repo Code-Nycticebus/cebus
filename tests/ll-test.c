@@ -6,12 +6,12 @@ typedef struct LLNode {
   struct LLNode *next, *prev;
 } LLNode;
 
-#define NodeHead(N) (&(N)->head)
-#define NodeValue(N, node) (&((N *)(node))->value)
+#define LL_NODE(N) (&(N)->node)
+#define LL_VALUE(N, node) (&((N *)(node))->value)
 
 #define NODE(T)                                                                \
   struct {                                                                     \
-    LLNode head;                                                               \
+    LLNode node;                                                               \
     T value;                                                                   \
   }
 
@@ -30,23 +30,25 @@ static void ll_append(LinkedList *ll, LLNode *node) {
   ll->end = node;
 }
 
-static NODE(int) * cn_init(Arena *arena, int value) {
-  NODE(int) *node = arena_calloc(arena, sizeof(NODE(int)));
+typedef NODE(int) IntNode;
+
+static IntNode *cn_init(Arena *arena, int value) {
+  IntNode *node = arena_calloc(arena, sizeof(IntNode));
   node->value = value;
-  return (void *)node;
+  return node;
 }
 
 int main(void) {
   Arena arena = {0};
   LinkedList ll = {0};
 
-  ll_append(&ll, NodeHead(cn_init(&arena, 420)));
-  ll_append(&ll, NodeHead(cn_init(&arena, 69)));
-  ll_append(&ll, NodeHead(cn_init(&arena, 23)));
-  ll_append(&ll, NodeHead(cn_init(&arena, 31)));
+  ll_append(&ll, LL_NODE(cn_init(&arena, 420)));
+  ll_append(&ll, LL_NODE(cn_init(&arena, 69)));
+  ll_append(&ll, LL_NODE(cn_init(&arena, 23)));
+  ll_append(&ll, LL_NODE(cn_init(&arena, 31)));
 
   for (LLNode *next = ll.begin; next != NULL; next = next->next) {
-    int *node = NodeValue(NODE(int), next);
+    int *node = LL_VALUE(IntNode, next);
     printf("%d\n", *node);
   }
 
