@@ -34,9 +34,9 @@ static void test_to_hex(void) {
   clib_assert(str_eq(s, STR("414243")),
               "String conversion was not correct: '" STR_FMT "'", STR_ARG(s));
 
-  Bytes b2 = BYTES(0x02, 0xFF, 0xAA, 0xBB, 0x41, 0x41, 0x41);
+  Bytes b2 = BYTES(0x02, 0xFF, 0xAA, 0xBB, 0x01, 0x02, 0x03);
   Str s2 = bytes_hex(b2, &arena);
-  clib_assert(str_eq(s2, STR("02ffaabb414141")),
+  clib_assert(str_eq(s2, STR("2ffaabb010203")),
               "String conversion was not correct: \n'" STR_FMT "'",
               STR_ARG(s2));
 
