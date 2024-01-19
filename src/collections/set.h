@@ -16,7 +16,7 @@ Set set_copy(Arena *arena, Set *set);
 
 void set_reserve(Set *set, usize size);
 
-void set_add(Set *set, u64 hash);
+bool set_add(Set *set, u64 hash);
 void set_extend(Set *set, usize count, u64 hashes[count]);
 
 bool set_contains(Set *set, u64 hash);

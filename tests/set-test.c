@@ -154,10 +154,8 @@ static void test_example_duplicates(void) {
 
   for (usize i = 0; i < list.len; i++) {
     u64 hash = str_hash(list.items[i]);
-    if (set_contains(&unique, hash)) {
+    if (set_add(&unique, hash) == false) {
       set_add(&duplicates, hash);
-    } else {
-      set_add(&unique, hash);
     }
   }
 

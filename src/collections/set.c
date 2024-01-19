@@ -38,21 +38,18 @@ Set set_copy(Arena *arena, Set *set) {
   return new_set;
 }
 
-void set_add(Set *set, u64 hash) {
+bool set_add(Set *set, u64 hash) {
   clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
-  if (set->cap <= set->count) {
-    set_resize(set);
-  }
 
 try_again:;
   usize idx = hash % set->cap;
   if (!set->items[idx]) {
     set->items[idx] = hash;
     set->count++;
-    return;
+    return true;
   }
   if (set->items[idx] == hash) {
-    return;
+    return false;
   }
 
   for (usize i = 0; i < set->cap; i++) {
@@ -60,10 +57,10 @@ try_again:;
     if (!set->items[idx]) {
       set->items[idx] = hash;
       set->count++;
-      return;
+      return true;
     }
     if (set->items[idx] == hash) {
-      return;
+      return false;
     }
   }
 
