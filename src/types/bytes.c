@@ -40,7 +40,7 @@ Bytes bytes_take(Bytes *bytes, usize count) {
   return ret;
 }
 
-Str bytes_hex(Bytes bytes, Arena *arena) {
+Str bytes_to_hex(Bytes bytes, Arena *arena) {
   char *buf = arena_calloc(arena, bytes.size * 2 + 1);
   usize idx = 0;
   for (usize i = 0; i < bytes.size; i++) {
