@@ -4,27 +4,26 @@
 #include "types/integers.h"
 #include <string.h>
 
-static void set_resize(Set *set) {
+static void set_resize(Set *set, usize new_size) {
   usize old_cap = set->cap;
   u64 *old_items = set->items;
 
-  set->cap *= 2;
+  set->cap = usize_max(new_size, 10);
   set->items = arena_calloc_chunk(set->arena, set->cap * sizeof(set->items[0]));
   set->count = 0;
-  for (usize i = 0; i < old_cap; ++i) {
-    if (old_items[i]) {
-      set_add(set, old_items[i]);
+  if (old_items) {
+    for (usize i = 0; i < old_cap; ++i) {
+      if (old_items[i]) {
+        set_add(set, old_items[i]);
+      }
     }
+    arena_free_chunk(set->arena, old_items);
   }
-
-  arena_free_chunk(set->arena, old_items);
 }
 
-Set set_create(Arena *arena, usize size) {
+Set set_create(Arena *arena) {
   Set set = {0};
-  set.cap = size;
   set.arena = arena;
-  set.items = arena_calloc_chunk(arena, size * sizeof(set.items[0]));
   return set;
 }
 
@@ -38,10 +37,17 @@ Set set_copy(Arena *arena, Set *set) {
   return new_set;
 }
 
+void set_reserve(Set *set, usize size) {
+  if (size < set->cap) {
+    return;
+  }
+  set_resize(set, size);
+}
+
 bool set_add(Set *set, u64 hash) {
   clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
   if (set->cap <= set->count) {
-    set_resize(set);
+    set_resize(set, set->cap * 2);
   }
 
   while (true) {
@@ -59,11 +65,12 @@ bool set_add(Set *set, u64 hash) {
       idx = (idx + i * i) % set->cap;
     }
 
-    set_resize(set);
+    set_resize(set, set->cap * 2);
   }
 }
 
 void set_extend(Set *set, usize count, u64 hashes[count]) {
+  set_reserve(set, count);
   for (usize i = 0; i < count; i++) {
     set_add(set, hashes[i]);
   }
@@ -121,7 +128,8 @@ Set set_intersection(const Set *set, const Set *other, Arena *arena) {
     other = temp;
   }
 
-  Set intersection = set_create(arena, usize_min(set->count, other->count) * 2);
+  Set intersection = set_create(arena);
+  set_reserve(&intersection, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i]) {
       if (set_contains(other, set->items[i])) {
@@ -138,7 +146,8 @@ Set set_difference(const Set *set, const Set *other, Arena *arena) {
     set = other;
     other = temp;
   }
-  Set difference = set_create(arena, usize_min(set->count, other->count) * 2);
+  Set difference = set_create(arena);
+  set_reserve(&difference, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i]) {
       if (!set_contains(other, set->items[i])) {

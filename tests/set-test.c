@@ -9,7 +9,7 @@
 
 static void test_set_insert(void) {
   Arena arena = {0};
-  Set set = set_create(&arena, TEST_SET_DEFAULT_SIZE);
+  Set set = set_create(&arena);
 
   for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&set, usize_hash(i));
@@ -27,12 +27,12 @@ static void test_set_insert(void) {
 
 static void test_eq(void) {
   Arena arena = {0};
-  Set set1 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
+  Set set1 = set_create(&arena);
   set_add(&set1, usize_hash(1));
   set_add(&set1, usize_hash(2));
   set_add(&set1, usize_hash(3));
 
-  Set set2 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
+  Set set2 = set_create(&arena);
   set_add(&set2, usize_hash(1));
   set_add(&set2, usize_hash(2));
   set_add(&set2, usize_hash(3));
@@ -45,21 +45,21 @@ static void test_eq(void) {
 static void test_subset(void) {
   Arena arena = {0};
 
-  Set set1 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
+  Set set1 = set_create(&arena);
   for (usize i = 0; i < TEST_SET_DEFAULT_SIZE; i++) {
     set_add(&set1, usize_hash(i));
   }
 
-  Set set2 = set_create(&arena, TEST_SET_DEFAULT_SIZE);
+  Set set2 = set_create(&arena);
   for (usize i = 15; i < 25; i++) { // NOLINT
     set_add(&set2, usize_hash(i));
   }
-  Set set3 = set_create(&arena, TEST_SET_DEFAULT_SIZE * 2);
+  Set set3 = set_create(&arena);
   for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&set3, usize_hash(i));
   }
 
-  Set big_set = set_create(&arena, TEST_SET_DEFAULT_SIZE * 2);
+  Set big_set = set_create(&arena);
   for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&big_set, usize_hash(i));
   }
@@ -79,12 +79,12 @@ static void test_intersection(void) {
   const usize test_numbers[] = {2, 3, 7, 8};
   const usize count = sizeof(test_numbers) / sizeof(test_numbers[0]);
 
-  Set set1 = set_create(&arena, count * 2);
+  Set set1 = set_create(&arena);
   for (usize i = 0; i < count; i++) {
     set_add(&set1, usize_hash(test_numbers[i]));
   }
 
-  Set big_set = set_create(&arena, count * 4);
+  Set big_set = set_create(&arena);
   for (usize i = 0; i < count * 4; i++) {
     if (i % 2 == 0) {
       set_add(&big_set, usize_hash(i));
@@ -110,12 +110,12 @@ static void test_difference(void) {
   const usize test_numbers[] = {2, 3, 7, 8};
   const usize count = sizeof(test_numbers) / sizeof(test_numbers[0]);
 
-  Set set1 = set_create(&arena, count * 2);
+  Set set1 = set_create(&arena);
   for (usize i = 0; i < count; i++) {
     set_add(&set1, usize_hash(test_numbers[i]));
   }
 
-  Set big_set = set_create(&arena, count * 4);
+  Set big_set = set_create(&arena);
   for (usize i = 0; i < count * 4; i++) {
     if (i % 2 == 0) {
       set_add(&big_set, usize_hash(i));
@@ -149,8 +149,8 @@ static void test_example_duplicates(void) {
   VEC(Str) list = {0};
   vec_init_list(&list, &arena, ARRAY_SIZE(strings), strings);
 
-  Set unique = set_create(&arena, list.len * 2);
-  Set duplicates = set_create(&arena, list.len * 2);
+  Set unique = set_create(&arena);
+  Set duplicates = set_create(&arena);
 
   for (usize i = 0; i < list.len; i++) {
     u64 hash = str_hash(list.items[i]);
@@ -183,7 +183,7 @@ static void test_example_intersection(void) {
   VEC(Str) first = {0};
   vec_init_list(&first, &arena, ARRAY_SIZE(strings1), strings1);
 
-  Set s1 = set_create(&arena, first.len * 2);
+  Set s1 = set_create(&arena);
   for (size_t i = 0; i < first.len; i++) {
     set_add(&s1, str_hash(first.items[i]));
   }
@@ -193,7 +193,7 @@ static void test_example_intersection(void) {
       STR("Cherry"), STR("Lemon"),      STR("Pear"),
   };
   const usize count2 = ARRAY_SIZE(strings2);
-  Set s2 = set_create(&arena, count2 * 2);
+  Set s2 = set_create(&arena);
   for (size_t i = 0; i < count2; i++) {
     set_add(&s2, str_hash(strings2[i]));
   }

@@ -11,7 +11,7 @@ typedef struct {
   u64 *items;
 } Set;
 
-Set set_create(Arena *arena, usize size);
+Set set_create(Arena *arena);
 Set set_copy(Arena *arena, Set *set);
 
 void set_reserve(Set *set, usize size);
