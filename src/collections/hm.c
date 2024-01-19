@@ -31,40 +31,37 @@ HashMap hm_create(Arena *arena, usize size) {
   return hm;
 }
 
-void hm_insert(HashMap *hm, u64 hash, HashValue value) {
+bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
   clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
-  if (hm->cap <= hm->count) {
-    hm_resize(hm);
-  }
 
-try_again:;
-  usize idx = hash % hm->cap;
+  while (true) {
+    usize idx = hash % hm->cap;
 
-  if (!hm->nodes[idx].key) {
-    hm->nodes[idx] = (HashNode){.key = hash, .value = value};
-    hm->count++;
-    return;
-  }
-  if (hm->nodes[idx].key == hash) {
-    hm->nodes[idx].value = value;
-    return;
-  }
-
-  for (usize i = 0; i < hm->cap; i++) {
-    idx = (idx + i * i) % hm->cap;
     if (!hm->nodes[idx].key) {
       hm->nodes[idx] = (HashNode){.key = hash, .value = value};
       hm->count++;
-      return;
+      return true;
     }
     if (hm->nodes[idx].key == hash) {
       hm->nodes[idx].value = value;
-      return;
+      return false;
     }
-  }
 
-  hm_resize(hm);
-  goto try_again;
+    for (usize i = 0; i < hm->cap; i++) {
+      idx = (idx + i * i) % hm->cap;
+      if (!hm->nodes[idx].key) {
+        hm->nodes[idx] = (HashNode){.key = hash, .value = value};
+        hm->count++;
+        return true;
+      }
+      if (hm->nodes[idx].key == hash) {
+        hm->nodes[idx].value = value;
+        return false;
+      }
+    }
+
+    hm_resize(hm);
+  }
 }
 
 HashValue *hm_get(const HashMap *hm, u64 hash) {
