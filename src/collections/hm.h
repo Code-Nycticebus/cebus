@@ -31,7 +31,7 @@ typedef struct {
 HashMap hm_create(Arena *arena, usize size);
 
 void hm_insert(HashMap *hm, u64 hash, HashValue value);
-// TODO it is dangerous to return a pointer here
+// FIXME it is dangerous to return a pointer here
 HashValue *hm_get(const HashMap *hm, u64 hash);
 
 #endif // !__CLIB_HT_H__
