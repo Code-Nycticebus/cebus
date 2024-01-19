@@ -2,11 +2,11 @@
 
 #if defined(WINDOWS)
 
-#include "types/str.h"
 #include "types/integers.h"
+#include "types/str.h"
+#include <direct.h>
 #include <string.h>
 #include <windows.h>
-#include <direct.h>
 
 void os_chdir(Str path) {
   char buffer[MAX_PATH] = {0};
@@ -21,6 +21,5 @@ Str os_getcwd(Arena *arena) {
   // TODO error handling
   return str_from_parts(size, buf);
 }
-
 
 #endif
