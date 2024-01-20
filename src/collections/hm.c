@@ -8,12 +8,33 @@
 #include <stdio.h>
 #include <string.h>
 
-static void hm_resize(HashMap *hm, Arena *arena, usize size) {
+#define HM_DEFAULT_SIZE 10
+
+HashMap hm_create(Arena *arena) {
+  HashMap hm = {0};
+  hm.arena = arena;
+  hm.cap = HM_DEFAULT_SIZE;
+  hm.nodes = arena_calloc_chunk(arena, hm.cap * sizeof(hm.nodes[0]));
+  return hm;
+}
+
+HashMap hm_with_size(Arena *arena, usize size) {
+  HashMap hm = {0};
+  hm.arena = arena;
+  hm.cap = usize_max(size, HM_DEFAULT_SIZE);
+  hm.nodes = arena_calloc_chunk(arena, hm.cap * sizeof(hm.nodes[0]));
+  return hm;
+}
+
+void hm_resize(HashMap *hm, usize size) {
+  if (size < hm->cap) {
+    return;
+  }
   usize old_cap = hm->cap;
   HashNode *old_nodes = hm->nodes;
 
   hm->cap = size;
-  hm->nodes = arena_calloc_chunk(arena, hm->cap * sizeof(hm->nodes[0]));
+  hm->nodes = arena_calloc_chunk(hm->arena, hm->cap * sizeof(hm->nodes[0]));
 
   hm->count = 0;
   for (usize i = 0; i < old_cap; ++i) {
@@ -21,15 +42,7 @@ static void hm_resize(HashMap *hm, Arena *arena, usize size) {
       hm_insert(hm, old_nodes[i].key, old_nodes[i].value);
     }
   }
-  arena_free_chunk(arena, old_nodes);
-}
-
-HashMap hm_create(Arena *arena) {
-  HashMap hm = {0};
-  hm.arena = arena;
-  hm.cap = 10;
-  hm.nodes = arena_calloc_chunk(arena, hm.cap * sizeof(hm.nodes[0]));
-  return hm;
+  arena_free_chunk(hm->arena, old_nodes);
 }
 
 void hm_reserve(HashMap *hm, usize size) {
@@ -41,7 +54,7 @@ void hm_reserve(HashMap *hm, usize size) {
   while (new_size < required_size) {
     new_size *= 2;
   }
-  hm_resize(hm, hm->arena, new_size);
+  hm_resize(hm, new_size);
 }
 
 bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
@@ -49,7 +62,7 @@ bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
     hash = u64_hash(hash);
   }
   if (hm->cap <= hm->count) {
-    hm_resize(hm, hm->arena, hm->cap * 2);
+    hm_resize(hm, hm->cap * 2);
   }
 
   while (true) {
@@ -68,7 +81,7 @@ bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
       idx = (idx + i * i) % hm->cap;
     }
 
-    hm_resize(hm, hm->arena, hm->cap * 2);
+    hm_resize(hm, hm->cap * 2);
   }
 }
 

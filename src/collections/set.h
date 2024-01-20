@@ -33,8 +33,10 @@ typedef struct {
 } Set;
 
 Set set_create(Arena *arena);
+Set set_with_size(Arena *arena, usize size);
 Set set_copy(Arena *arena, Set *set);
 
+void set_resize(Set *set, usize size);
 void set_reserve(Set *set, usize size);
 
 bool set_add(Set *set, u64 hash);

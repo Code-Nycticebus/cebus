@@ -4,7 +4,38 @@
 
 #include <string.h>
 
-static void set_resize(Set *set, usize new_size) {
+#define SET_DEFAULT_SIZE 10
+
+Set set_create(Arena *arena) {
+  Set set = {0};
+  set.arena = arena;
+  set.cap = SET_DEFAULT_SIZE;
+  set.items = arena_calloc_chunk(arena, set.cap * sizeof(set.items[0]));
+  return set;
+}
+
+Set set_with_size(Arena *arena, usize size) {
+  Set set = {0};
+  set.arena = arena;
+  set.cap = usize_max(size, SET_DEFAULT_SIZE);
+  set.items = arena_calloc_chunk(arena, set.cap * sizeof(set.items[0]));
+  return set;
+}
+
+Set set_copy(Arena *arena, Set *set) {
+  Set new_set = {0};
+  new_set.count = set->count;
+  new_set.cap = set->cap;
+  set->arena = arena;
+  new_set.items = arena_alloc_chunk(arena, set->cap * sizeof(set->items[0]));
+  memcpy(new_set.items, set->items, set->cap * sizeof(set->items[0]));
+  return new_set;
+}
+
+void set_resize(Set *set, usize new_size) {
+  if (new_size < set->cap) {
+    return;
+  }
   usize old_cap = set->cap;
   u64 *old_items = set->items;
 
@@ -18,24 +49,6 @@ static void set_resize(Set *set, usize new_size) {
     }
   }
   arena_free_chunk(set->arena, old_items);
-}
-
-Set set_create(Arena *arena) {
-  Set set = {0};
-  set.arena = arena;
-  set.cap = 10;
-  set.items = arena_calloc_chunk(arena, set.cap * sizeof(set.items[0]));
-  return set;
-}
-
-Set set_copy(Arena *arena, Set *set) {
-  Set new_set = {0};
-  new_set.count = set->count;
-  new_set.cap = set->cap;
-  set->arena = arena;
-  new_set.items = arena_alloc_chunk(arena, set->cap * sizeof(set->items[0]));
-  memcpy(new_set.items, set->items, set->cap * sizeof(set->items[0]));
-  return new_set;
 }
 
 void set_reserve(Set *set, usize size) {
