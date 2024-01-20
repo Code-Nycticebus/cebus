@@ -34,9 +34,9 @@ static void test_hm(void) {
   }
   clib_assert(hm.count == test_count, "Hash table should be at this size");
 
-  clib_assert(hm_get(&hm, 10)->as.u64 == 40, "Hashing was wrong");
-  clib_assert(hm_get(&hm, 20)->as.u64 == 80, "Hashing was wrong");
-  clib_assert(hm_get(&hm, 30)->as.u64 == 120, "Hashing was wrong");
+  for (size_t i = 0; i < test_count; i++) {
+    clib_assert(hm_get(&hm, i)->as.u64 == i * 4, "Hashing was wrong");
+  }
 
   arena_free(&arena);
 }
@@ -53,32 +53,38 @@ static void test_example(void) {
       STR("Apple"),      STR("Banana"), STR("Apple"),
       STR("Strawberry"), STR("Apple"),  STR("Banana"),
   };
-  VEC(Str) list = {0};
-  vec_init_list(&list, &arena, ARRAY_SIZE(strings), strings);
 
-  VEC(Str) text = {0};
-  vec_init(&text, &arena);
+  VEC(Str) keys = {0};
+  vec_init(&keys, &arena);
 
   HashMap hm = hm_create(&arena);
-  for (usize i = 0; i < list.len; i++) {
-    u64 hash = str_hash(list.items[i]);
+  for (usize i = 0; i < ARRAY_SIZE(strings); i++) {
+    u64 hash = str_hash(strings[i]);
     HashValue *value = hm_get(&hm, hash);
     if (value == NULL) {
-      vec_push(&text, list.items[i]);
+      vec_push(&keys, strings[i]);
       hm_insert(&hm, hash, HashValue(u64, 1));
     } else {
       value->as.u64++;
     }
   }
 
-  vec_sort_ctx(&text, &text, sort_by_occurence, &hm);
+  vec_sort_ctx(&keys, &keys, sort_by_occurence, &hm);
 
-  clib_assert(str_eq(text.items[0], STR("Apple")),
+  clib_assert(str_eq(keys.items[0], STR("Apple")),
               "Apple does occure the most");
-  clib_assert(str_eq(text.items[1], STR("Banana")),
+  clib_assert(hm_get(&hm, str_hash(keys.items[0]))->as.u64 == 3,
+              "Apple should occure 3 times");
+
+  clib_assert(str_eq(keys.items[1], STR("Banana")),
               "Banana does occure the second most");
-  clib_assert(str_eq(text.items[2], STR("Strawberry")),
+  clib_assert(hm_get(&hm, str_hash(keys.items[1]))->as.u64 == 2,
+              "Banana should occure 2 times");
+
+  clib_assert(str_eq(keys.items[2], STR("Strawberry")),
               "Strawberry does occure the least");
+  clib_assert(hm_get(&hm, str_hash(keys.items[2]))->as.u64 == 1,
+              "Strawberry should occure 1 time");
 
   arena_free(&arena);
 }
