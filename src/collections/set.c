@@ -147,13 +147,8 @@ Set set_intersection(const Set *set, const Set *other, Arena *arena) {
 }
 
 Set set_difference(const Set *set, const Set *other, Arena *arena) {
-  if (other->cap < set->cap) {
-    const Set *temp = set;
-    set = other;
-    other = temp;
-  }
   Set difference = set_create(arena);
-  set_reserve(&difference, usize_min(set->count, other->count) * 2);
+  set_reserve(&difference, set->count * 2);
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[i]) {
       if (!set_contains(other, set->items[i])) {

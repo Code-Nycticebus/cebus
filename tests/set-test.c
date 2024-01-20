@@ -108,7 +108,7 @@ static void test_intersection(void) {
 static void test_difference(void) {
   Arena arena = {0};
 
-  const usize test_numbers[] = {2, 3, 7, 8};
+  const usize test_numbers[] = {1, 2, 3};
   const usize count = sizeof(test_numbers) / sizeof(test_numbers[0]);
 
   Set set1 = set_create(&arena);
@@ -116,23 +116,21 @@ static void test_difference(void) {
     set_add(&set1, usize_hash(test_numbers[i]));
   }
 
-  Set big_set = set_create(&arena);
-  for (usize i = 0; i < count * 4; i++) {
-    if (i % 2 == 0) {
-      set_add(&big_set, usize_hash(i));
-    }
+  const usize test_numbers2[] = {3, 4, 5};
+  const usize count2 = sizeof(test_numbers2) / sizeof(test_numbers2[0]);
+
+  Set set2 = set_create(&arena);
+  for (usize i = 0; i < count2; i++) {
+    set_add(&set2, usize_hash(test_numbers2[i]));
   }
 
-  Set diff = set_difference(&set1, &big_set, &arena);
+  Set diff = set_difference(&set1, &set2, &arena);
 
-  clib_assert(set_subset(&diff, &big_set) == false,
-              "diff should not be a subset");
-
-  for (usize i = 0; i < count; i++) {
-    clib_assert(set_contains(&diff, usize_hash(test_numbers[i])) ==
-                    (test_numbers[i] % 2 != 0),
-                "diff: %" USIZE_FMT, test_numbers[i]);
-  }
+  clib_assert(set_contains(&diff, usize_hash(1)) == true, "");
+  clib_assert(set_contains(&diff, usize_hash(2)) == true, "");
+  clib_assert(set_contains(&diff, usize_hash(3)) == false, "");
+  clib_assert(set_contains(&diff, usize_hash(4)) == false, "");
+  clib_assert(set_contains(&diff, usize_hash(5)) == false, "");
 
   arena_free(&arena);
 }
