@@ -16,4 +16,4 @@
   name##_test((arena));                                                        \
   arena_reset((arena))
 
-#endif // !__TEST_H__
+#endif /* !__TEST_H__ */

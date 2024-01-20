@@ -78,4 +78,4 @@ void error_add_note(Error *err, const char *fmt, ...) CLIB_FMT(2, 3);
 void _error_init(Error *err, i32 error, const char *fmt, ...) CLIB_FMT(3, 4);
 void _error_dump(Error *err);
 
-#endif // !__CLIB_ERROR_H__
+#endif /* !__CLIB_ERROR_H__ */

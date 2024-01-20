@@ -18,4 +18,4 @@ void quicksort(const void *src, void *dest, usize size, usize nelem,
 void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
                    CompareCtxFn compare, const void *ctx);
 
-#endif // !__CLIB_SORTING_H__
+#endif /* !__CLIB_SORTING_H__ */
