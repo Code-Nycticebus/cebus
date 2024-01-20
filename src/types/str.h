@@ -1,8 +1,20 @@
 #ifndef __CLIB_STR_H__
 #define __CLIB_STR_H__
 
-#include "core/arena.h"
+/* DOCUMENTATION
+## Usage
+Create a new Str wiht:
+```c
+Str str = STR("Hello World");
+```
 
+You can print the strings using the STR_FMT and STR_ARG() macro:
+```c
+printf(STR_FMT"\n", STR_ARG(str));
+```
+*/
+
+#include "core/arena.h"
 #include "core/defines.h" // IWYU pragma: private: include "str.h"
 
 // CONSTANTS ///////////////////////////////////////
