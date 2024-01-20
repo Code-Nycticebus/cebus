@@ -1,9 +1,9 @@
 #include "hm.h"
 
 #include "core/arena.h"
-#include "core/asserts.h"
 #include "core/defines.h"
 #include "core/logging.h"
+#include "types/integers.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -44,7 +44,9 @@ void hm_reserve(HashMap *hm, usize size) {
 }
 
 bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
-  clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
+  if (hash == 0) {
+    hash = u64_hash(hash);
+  }
   if (hm->cap <= hm->count) {
     hm_resize(hm, hm->arena, hm->cap * 2);
   }
@@ -73,6 +75,10 @@ HashValue *hm_get(const HashMap *hm, u64 hash) {
   if (hm->count == 0) {
     return NULL;
   }
+  if (hash == 0) {
+    hash = u64_hash(hash);
+  }
+
   usize idx = hash % hm->cap;
   for (usize i = 0; i < hm->cap; i++) {
     if (hm->nodes[idx].key && hm->nodes[idx].key == hash) {

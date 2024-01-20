@@ -30,13 +30,13 @@ static void test_hm(void) {
   hm_reserve(&hm, test_count * 2);
 
   for (size_t i = 0; i < test_count; i++) {
-    hm_insert(&hm, usize_hash(i), (HashValue){.as.u64 = i * 4});
+    hm_insert(&hm, i, (HashValue){.as.u64 = i * 4});
   }
   clib_assert(hm.count == test_count, "Hash table should be at this size");
 
-  clib_assert(hm_get(&hm, usize_hash(10))->as.u64 == 40, "Hashing was wrong");
-  clib_assert(hm_get(&hm, usize_hash(20))->as.u64 == 80, "Hashing was wrong");
-  clib_assert(hm_get(&hm, usize_hash(30))->as.u64 == 120, "Hashing was wrong");
+  clib_assert(hm_get(&hm, 10)->as.u64 == 40, "Hashing was wrong");
+  clib_assert(hm_get(&hm, 20)->as.u64 == 80, "Hashing was wrong");
+  clib_assert(hm_get(&hm, 30)->as.u64 == 120, "Hashing was wrong");
 
   arena_free(&arena);
 }

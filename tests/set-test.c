@@ -3,7 +3,6 @@
 #include "collections/vec.h"
 #include "core/asserts.h"
 #include "core/defines.h"
-#include "types/integers.h"
 #include "types/str.h"
 
 #define TEST_SET_DEFAULT_SIZE 10
@@ -12,28 +11,32 @@ static void test_set_insert(void) {
   Arena arena = {0};
   Set set = set_create(&arena);
 
-  const u64 numbers[] = {
-      usize_hash(1),
-      usize_hash(2),
-      usize_hash(3),
-  };
-  set_extend(&set, 3, numbers);
-
   set_reserve(&set, TEST_SET_DEFAULT_SIZE * 2);
-  for (usize i = 4; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
-    set_add(&set, usize_hash(i));
+  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
+    set_add(&set, i);
   }
 
-  clib_assert(set_contains(&set, usize_hash(1)) == true,
-              "Set should contain this number!");
-  clib_assert(set_contains(&set, usize_hash(2)) == true,
-              "Set should contain this number!");
-  clib_assert(set_contains(&set, usize_hash(3)) == true,
-              "Set should contain this number!");
-  clib_assert(set_contains(&set, usize_hash(4)) == true,
-              "Set should contain this number!");
-  clib_assert(set_contains(&set, usize_hash(5)) == true,
-              "Set should contain this number!");
+  clib_assert(set_contains(&set, 0) == true, "Set should contain this number!");
+  clib_assert(set_contains(&set, 1) == true, "Set should contain this number!");
+  clib_assert(set_contains(&set, 2) == true, "Set should contain this number!");
+  clib_assert(set_contains(&set, 3) == true, "Set should contain this number!");
+  clib_assert(set_contains(&set, 4) == true, "Set should contain this number!");
+  clib_assert(set_contains(&set, 5) == true, "Set should contain this number!");
+
+  arena_free(&arena);
+}
+
+static void test_set_extend(void) {
+  Arena arena = {0};
+
+  const u64 n1[] = {1, 2, 3, 4, 5, 6};
+  const u64 n2[] = {7, 8, 9, 10, 11, 12};
+
+  Set set = set_create(&arena);
+  set_extend(&set, 6, n1);
+  set_extend(&set, 6, n2);
+
+  clib_assert(set.cap == 20, "Did not increase size the proper way");
 
   arena_free(&arena);
 }
@@ -42,19 +45,19 @@ static void test_eq(void) {
   Arena arena = {0};
 
   Set set1 = set_create(&arena);
-  set_add(&set1, usize_hash(1));
-  set_add(&set1, usize_hash(2));
-  set_add(&set1, usize_hash(3));
+  set_add(&set1, 1);
+  set_add(&set1, 2);
+  set_add(&set1, 3);
 
   Set set2 = set_create(&arena);
-  set_add(&set2, usize_hash(1));
-  set_add(&set2, usize_hash(2));
-  set_add(&set2, usize_hash(3));
+  set_add(&set2, 1);
+  set_add(&set2, 2);
+  set_add(&set2, 3);
 
   Set set3 = set_create(&arena);
-  set_add(&set3, usize_hash(2));
-  set_add(&set3, usize_hash(3));
-  set_add(&set3, usize_hash(4));
+  set_add(&set3, 2);
+  set_add(&set3, 3);
+  set_add(&set3, 4);
 
   clib_assert(set_eq(&set1, &set2) == true, "'set1' should be equal to 'set2'");
 
@@ -224,6 +227,7 @@ static void test_example_intersection(void) {
 
 int main(void) {
   test_set_insert();
+  test_set_extend();
   test_eq();
   test_subset();
   test_intersection();

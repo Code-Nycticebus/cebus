@@ -1,6 +1,5 @@
 #include "set.h"
 
-#include "core/asserts.h"
 #include "types/integers.h"
 
 #include <string.h>
@@ -51,7 +50,9 @@ void set_reserve(Set *set, usize size) {
 }
 
 bool set_add(Set *set, u64 hash) {
-  clib_assert(hash != 0, "Hash should not be zero: %" U64_HEX, hash);
+  if (hash == 0) {
+    hash = u64_hash(hash);
+  }
   if (set->cap <= set->count) {
     set_resize(set, set->cap * 2);
   }
@@ -83,6 +84,10 @@ void set_extend(Set *set, usize count, const u64 hashes[count]) {
 }
 
 bool set_contains(const Set *set, u64 hash) {
+  if (hash == 0) {
+    hash = u64_hash(hash);
+  }
+
   usize idx = hash % set->cap;
   for (usize i = 0; i < set->cap; i++) {
     if (set->items[idx] && set->items[idx] == hash) {
