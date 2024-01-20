@@ -1,4 +1,4 @@
-# [vec.h](src/collections/vec.h)
+# [vec.h](clib/src/collections/vec.h)
 ## Usage:
 Create a new Vec with:
 ```c
@@ -12,7 +12,7 @@ Then you can push elements to the vector.
 vec_push(&vec, 69);
 vec_push(&vec, 420);
 ```
-# [hm.h](src/collections/hm.h)
+# [hm.h](clib/src/collections/hm.h)
 ## Usage
 Create a new HashMap with:
 ```c
@@ -32,7 +32,7 @@ Now you can get the values by passing in the hash of the element.
 hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
-# [set.h](src/collections/set.h)
+# [set.h](clib/src/collections/set.h)
 ## Usage
 Create a new Set with:
 ```c

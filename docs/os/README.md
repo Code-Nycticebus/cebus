@@ -1,4 +1,4 @@
-# [io.h](src/os/io.h)
+# [io.h](clib/src/os/io.h)
 ## Usage
 Use the functions:
 ```c
@@ -16,5 +16,5 @@ Outputs:
 :> name
 input: 'name'
 ```
-# [os.h](src/os/os.h)
-# [fs.h](src/os/fs.h)
+# [os.h](clib/src/os/os.h)
+# [fs.h](clib/src/os/fs.h)

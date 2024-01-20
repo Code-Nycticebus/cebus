@@ -1,12 +1,12 @@
-# [utf8.h](src/types/utf8.h)
-# [bytes.h](src/types/bytes.h)
+# [utf8.h](clib/src/types/utf8.h)
+# [bytes.h](clib/src/types/bytes.h)
 ## Usage
 Create new Bytes with:
 ```c
 Bytes bytes = BYTES(0xff, 0x11);
 Bytes bytes_str = BYTES_STR("Bytes from a string");
 ```
-# [str.h](src/types/str.h)
+# [str.h](clib/src/types/str.h)
 ## Usage
 Create a new Str with:
 ```c
@@ -43,7 +43,7 @@ LINE: "This is a line"
 LINE: "This is another line"
 LINE: "This is the Last Line"
 ```
-# [floats.h](src/types/floats.h)
-# [integers.h](src/types/integers.h)
+# [floats.h](clib/src/types/floats.h)
+# [integers.h](clib/src/types/integers.h)
 ## Usage
 Just use the functions.
