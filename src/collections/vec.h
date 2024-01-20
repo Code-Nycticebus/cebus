@@ -21,6 +21,8 @@ vec_push(&vec, 420);
 #include "core/defines.h" // IWYU pragma: export
 #include "core/sorting.h" // IWYU pragma: export
 
+///////////////////////////////////////////////////////////////////////////////
+
 #define VEC(T)                                                                 \
   struct {                                                                     \
     usize cap;                                                                 \
@@ -28,6 +30,14 @@ vec_push(&vec, 420);
     Arena *arena;                                                              \
     T *items;                                                                  \
   }
+
+#define vec_first(list) (list)->items[0]
+#define vec_last(list) (list)->items[(list)->len - 1]
+#define vec_pop(list) (list)->items[--(list)->len]
+#define vec_empty(list) (!(list)->len)
+#define vec_clear(list) ((list)->len = 0)
+
+///////////////////////////////////////////////////////////////////////////////
 
 #define vec_init(list, _arena)                                                 \
   do {                                                                         \
@@ -50,11 +60,16 @@ vec_push(&vec, 420);
     }                                                                          \
   } while (0)
 
-#define vec_first(list) (list)->items[0]
-#define vec_last(list) (list)->items[(list)->len - 1]
-#define vec_pop(list) (list)->items[--(list)->len]
-#define vec_empty(list) (!(list)->len)
-#define vec_clear(list) ((list)->len = 0)
+#define vec_copy(src, dest)                                                    \
+  do {                                                                         \
+    vec_resize((dest), (src)->len);                                            \
+    for (usize __c_i = 0; __c_i < (src)->len; __c_i++) {                       \
+      (dest)->items[__c_i] = (src)->items[__c_i];                              \
+    }                                                                          \
+    (dest)->len = (src)->len;                                                  \
+  } while (0)
+
+///////////////////////////////////////////////////////////////////////////////
 
 #define vec_resize(list, size)                                                 \
   do {                                                                         \
@@ -79,6 +94,8 @@ vec_push(&vec, 420);
     vec_resize(list, __ns);                                                    \
   } while (0)
 
+///////////////////////////////////////////////////////////////////////////////
+
 #define vec_push(list, item)                                                   \
   do {                                                                         \
     vec_reserve((list), (list)->len + 1);                                      \
@@ -93,6 +110,8 @@ vec_push(&vec, 420);
     }                                                                          \
     (list)->len += count;                                                      \
   } while (0)
+
+///////////////////////////////////////////////////////////////////////////////
 
 #define vec_map(src, dest, map)                                                \
   do {                                                                         \
@@ -151,13 +170,6 @@ vec_push(&vec, 420);
     }                                                                          \
   } while (0)
 
-#define vec_copy(src, dest)                                                    \
-  do {                                                                         \
-    vec_reserve((dest), (src)->len);                                           \
-    for (usize __c_i = 0; __c_i < (src)->len; __c_i++) {                       \
-      (dest)->items[__c_i] = (src)->items[__c_i];                              \
-    }                                                                          \
-    (dest)->len = (src)->len;                                                  \
-  } while (0)
+///////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CLIB_DA_H__ */

@@ -32,12 +32,16 @@ typedef struct {
   u64 *items;
 } Set;
 
+///////////////////////////////////////////////////////////////////////////////
+
 Set set_create(Arena *arena);
 Set set_with_size(Arena *arena, usize size);
 Set set_copy(Arena *arena, Set *set);
 
 void set_resize(Set *set, usize size);
 void set_reserve(Set *set, usize size);
+
+///////////////////////////////////////////////////////////////////////////////
 
 bool set_add(Set *set, u64 hash);
 void set_extend(Set *set, usize count, const u64 hashes[count]);
@@ -46,7 +50,11 @@ bool set_contains(const Set *set, u64 hash);
 bool set_eq(const Set *set, const Set *other);
 bool set_subset(const Set *set, const Set *other);
 
+///////////////////////////////////////////////////////////////////////////////
+
 Set set_intersection(const Set *set, const Set *other, Arena *arena);
 Set set_difference(const Set *set, const Set *other, Arena *arena);
+
+///////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CLIB_SET_H__ */

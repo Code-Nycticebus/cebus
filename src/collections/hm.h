@@ -53,13 +53,19 @@ typedef struct {
   HashNode *nodes;
 } HashMap;
 
+///////////////////////////////////////////////////////////////////////////////
+
 HashMap hm_create(Arena *arena);
 HashMap hm_with_size(Arena *arena, usize size);
 void hm_resize(HashMap *hm, usize size);
 void hm_reserve(HashMap *hm, usize size);
 
+///////////////////////////////////////////////////////////////////////////////
+
 bool hm_insert(HashMap *hm, u64 hash, HashValue value);
 // FIXME it is dangerous to return a pointer here
 HashValue *hm_get(const HashMap *hm, u64 hash);
+
+///////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CLIB_HT_H__ */
