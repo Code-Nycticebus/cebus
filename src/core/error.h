@@ -1,6 +1,41 @@
 #ifndef __CLIB_ERROR_H__
 #define __CLIB_ERROR_H__
 
+/* DOCUMENTATION
+## Usage
+If you have a function that can fail it should take an Error as parameter.
+It then sets the error at Error*.
+```c
+void function_that_can_fail(Error* error)
+  int ret = -1; // Function returns a bad value
+  if (ret == -1) {
+    Err(error, errno, "function_that_can_fail(): encountered error: %d", errno);
+    return;
+  }
+  // Further processing
+  return;
+```
+
+Create a new Error with:
+```c
+Error error = ErrCreate;
+```
+
+Now you can pass the error to a function that takes an Error.
+```c
+function_that_can_fail(&error);
+if (error.failure) {
+  // error occured
+}
+```
+
+You can also pass a NULL pointer to that
+function.It will abort if it encouters an error.
+```c
+function_that_can_fail(NULL); // abort() if it encouters an error
+```
+*/
+
 #include "core/defines.h"
 #include "core/platform.h"
 

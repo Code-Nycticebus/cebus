@@ -1,6 +1,23 @@
 #ifndef __CLIB_ASSERTS_H__
 #define __CLIB_ASSERTS_H__
 
+/* DOCUMENTATION
+## Usage
+You can assert if something is true with:
+```c
+clib_assert(1 == 1, "One should be one");
+clib_assert(2 == 2, "It can even handle arguments: %d", 420);
+```
+
+Here are all the available macros
+```c
+clib_assert(EXPR, FMT, ...);
+clib_assert_warn(EXPR, FMT, ...);
+clib_assert_debug(EXPR, FMT, ...);
+clib_assert_return(EXPR, RETURN_VALUE);
+```
+*/
+
 #include "core/platform.h"
 #include "logging.h" // IWYU pragma: export
 

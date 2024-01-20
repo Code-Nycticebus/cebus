@@ -1,6 +1,24 @@
 #ifndef __CLIB_ARENA_H__
 #define __CLIB_ARENA_H__
 
+/* DOCUMENTATION
+## Usage
+Create a new Arena with:
+```c
+Arena arena = {0};
+```
+
+Now you can allocate from this arena.
+```c
+int* i = arena_alloc(&arena, sizeof(int));
+```
+
+Don't forget to free the arena once you're done.
+```c
+arena_free(&arena);
+```
+*/
+
 #include "core/defines.h"
 
 typedef struct Chunk Chunk;

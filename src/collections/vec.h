@@ -1,6 +1,22 @@
 #ifndef __CLIB_DA_H__
 #define __CLIB_DA_H__
 
+/* DOCUMENTATION
+## Usage:
+Create a new Vec with:
+```c
+Arena arena = {0};
+VEC(int) vec = {0};
+vec_init(&vec, &arena);
+```
+
+Then you can push elements to the vector.
+```c
+vec_push(&vec, 69);
+vec_push(&vec, 420);
+```
+*/
+
 #include "core/arena.h"     // IWYU pragma: export
 #include "core/defines.h"   // IWYU pragma: export
 #include "core/sorting.h"   // IWYU pragma: export

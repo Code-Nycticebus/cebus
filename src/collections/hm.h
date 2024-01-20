@@ -1,6 +1,28 @@
 #ifndef __CLIB_HT_H__
 #define __CLIB_HT_H__
 
+/* DOCUMENTATION
+## Usage
+Create a new HashMap with:
+```c
+Arena arena = {0};
+HashMap hm = hm_create(&arena);
+hm_reserve(&hm, 10); // optional
+```
+
+Then you can add elements by hash to the HashMap.
+```c
+hm_insert(&set, str_hash(STR("Hello")), (HashValue){.as.i64=69});
+hm_insert(&set, str_hash(STR("World")), (HashValue){.as.i64=420});
+```
+
+Now you can get the values by passing in the hash of the element.
+```c
+hm_get(&set, str_hash(STR("Hello")))->as.i64;
+hm_get(&set, str_hash(STR("World")))->as.i64;
+```
+*/
+
 #include "core/arena.h"
 #include "core/defines.h"
 

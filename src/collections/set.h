@@ -1,6 +1,27 @@
 #ifndef __CLIB_SET_H__
 #define __CLIB_SET_H__
 
+/* DOCUMENTATION
+## Usage
+Create a new Set with:
+```c
+Arena arena = {0};
+Set set = set_create(&arena);
+```
+
+Then you can add elements by hash to the Set.
+```c
+set_add(&set, str_hash(STR("Hello")));
+set_add(&set, str_hash(STR("World")));
+```
+
+Then you can test if an element is in the Set.
+```c
+set_contains(&set, str_hash(STR("Hello"))) == true;
+set_contains(&set, str_hash(STR("World"))) == true;
+```
+*/
+
 #include "core/arena.h"
 #include "core/defines.h"
 
