@@ -12,13 +12,25 @@ static void test_set_insert(void) {
   Arena arena = {0};
   Set set = set_create(&arena);
 
-  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
+  const u64 numbers[] = {
+      usize_hash(1),
+      usize_hash(2),
+      usize_hash(3),
+  };
+  set_extend(&set, 3, numbers);
+
+  set_reserve(&set, TEST_SET_DEFAULT_SIZE * 2);
+  for (usize i = 4; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&set, usize_hash(i));
   }
 
+  clib_assert(set_contains(&set, usize_hash(1)) == true,
+              "Set should contain this number!");
   clib_assert(set_contains(&set, usize_hash(2)) == true,
               "Set should contain this number!");
   clib_assert(set_contains(&set, usize_hash(3)) == true,
+              "Set should contain this number!");
+  clib_assert(set_contains(&set, usize_hash(4)) == true,
               "Set should contain this number!");
   clib_assert(set_contains(&set, usize_hash(5)) == true,
               "Set should contain this number!");
@@ -108,29 +120,25 @@ static void test_intersection(void) {
 static void test_difference(void) {
   Arena arena = {0};
 
-  const usize test_numbers[] = {1, 2, 3};
+  const u64 test_numbers[] = {1, 2, 3};
   const usize count = sizeof(test_numbers) / sizeof(test_numbers[0]);
 
   Set set1 = set_create(&arena);
-  for (usize i = 0; i < count; i++) {
-    set_add(&set1, usize_hash(test_numbers[i]));
-  }
+  set_extend(&set1, count, test_numbers);
 
-  const usize test_numbers2[] = {3, 4, 5};
+  const u64 test_numbers2[] = {3, 4, 5};
   const usize count2 = sizeof(test_numbers2) / sizeof(test_numbers2[0]);
 
   Set set2 = set_create(&arena);
-  for (usize i = 0; i < count2; i++) {
-    set_add(&set2, usize_hash(test_numbers2[i]));
-  }
+  set_extend(&set2, count2, test_numbers2);
 
   Set diff = set_difference(&set1, &set2, &arena);
 
-  clib_assert(set_contains(&diff, usize_hash(1)) == true, "");
-  clib_assert(set_contains(&diff, usize_hash(2)) == true, "");
-  clib_assert(set_contains(&diff, usize_hash(3)) == false, "");
-  clib_assert(set_contains(&diff, usize_hash(4)) == false, "");
-  clib_assert(set_contains(&diff, usize_hash(5)) == false, "");
+  clib_assert(set_contains(&diff, 1) == true, "");
+  clib_assert(set_contains(&diff, 2) == true, "");
+  clib_assert(set_contains(&diff, 3) == false, "");
+  clib_assert(set_contains(&diff, 4) == false, "");
+  clib_assert(set_contains(&diff, 5) == false, "");
 
   arena_free(&arena);
 }
