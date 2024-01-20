@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 
+// CONSTRUCTORS ///////////////////////////////////////
+
 Str str_from_parts(usize size, const char *cstr) {
   return (Str){.len = size, .data = cstr};
 }
@@ -21,12 +23,9 @@ Str str_from_cstr(const char *cstr) {
   return (Str){.len = strlen(cstr), .data = cstr};
 }
 
-char str_getc(Str s, usize idx) {
-  if (s.len <= idx) {
-    return '\0';
-  }
-  return s.data[idx];
-}
+// CONSTRUCTORS END ///////////////////////////////////////
+
+// MANIPULATION  ///////////////////////////////////////
 
 Str str_copy(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
@@ -203,6 +202,10 @@ Str str_reverse(Str s, Arena *arena) {
   return str_from_parts(s.len, buffer);
 }
 
+// MANIPULATION END  ///////////////////////////////////////
+
+// COMPARING  ///////////////////////////////////////
+
 bool str_eq(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;
@@ -280,6 +283,10 @@ static CmpOrdering _str_cmp_gt(const void *s1, const void *s2) {
 static CmpOrdering _str_cmp_lt(const void *s1, const void *s2) {
   return str_compare_gt(*(const Str *)s2, *(const Str *)s1);
 }
+
+// COMPARING END ///////////////////////////////////////
+
+// CHOPPING ///////////////////////////////////////
 
 CompareFn str_compare_qsort(CmpOrdering ordering) {
   return ordering == CMP_LESS ? _str_cmp_lt : _str_cmp_gt;
@@ -432,6 +439,10 @@ bool str_try_take(Str *s, usize count, Str *chunk) {
   return true;
 }
 
+// CHOPPING END ///////////////////////////////////////
+
+// UTILS ///////////////////////////////////////
+
 Str str_u64(Arena *arena, u64 n) {
   const usize number_max_chars = 21;
   char *buffer = arena_alloc(arena, number_max_chars);
@@ -497,6 +508,13 @@ usize str_count(Str haystack, Str needle) {
   return count;
 }
 
+char str_getc(Str s, usize idx) {
+  if (s.len <= idx) {
+    return '\0';
+  }
+  return s.data[idx];
+}
+
 u64 str_hash(Str s) {
   const uint64_t magic_prime = 0x00000100000001b3;
   uint64_t hash = 0xcbf29ce484222325; // NOLINT
@@ -505,3 +523,5 @@ u64 str_hash(Str s) {
   }
   return hash;
 }
+
+// UTILS END ///////////////////////////////////////
