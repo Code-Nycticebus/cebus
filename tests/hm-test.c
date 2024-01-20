@@ -25,6 +25,7 @@ static void test_insert(void) {
 static void test_hm(void) {
   const usize test_count = 10000;
   Arena arena = {0};
+
   HashMap hm = hm_create(&arena);
   hm_reserve(&hm, test_count * 2);
 
