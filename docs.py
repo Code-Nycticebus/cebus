@@ -1,6 +1,10 @@
 from pathlib import Path
+import subprocess
 
 
+remote = subprocess.check_output(
+    ["git", "config", "--get", "remote.origin.url"]
+).decode()[:-5]
 cwd = Path.cwd()
 src = Path(cwd, "src")
 
@@ -15,9 +19,7 @@ for file in src.rglob("*.h"):
 for file in src.rglob("*.h"):
     docs = cwd / "docs" / file.relative_to(src).parent
     with open(docs / "README.md", "a") as f:
-        f.write(
-            f"# [{file.name}](https://github.com/Code-Nycticebus/clib/blob/main/{file.relative_to(cwd)})\n"
-        )
+        f.write(f"# [{file.name}]({remote}/blob/main/{file.relative_to(cwd)})\n")
 
         writing = False
         with open(file, "r") as d:
