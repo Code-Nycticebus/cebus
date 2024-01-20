@@ -114,7 +114,7 @@ bool set_eq(const Set *set, const Set *other) {
 }
 
 bool set_subset(const Set *set, const Set *other) {
-  if (other->count <= set->count) {
+  if (other->count < set->count) {
     return false;
   }
   for (usize i = 0; i < set->cap; i++) {
