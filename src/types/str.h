@@ -5,6 +5,8 @@
 
 #include "core/defines.h" // IWYU pragma: private: include "str.h"
 
+// CONSTANTS ///////////////////////////////////////
+
 #define STR_NOT_FOUND SIZE_MAX
 
 #define STR_LETTERS STR("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
@@ -14,6 +16,8 @@
 #define STR_HEXDIGITS STR("0123456789abcdefABCDEF")
 #define STR_PUNCTUATION STR("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 #define STR_WHITESPACE STR(" \t\n\r\x0b\x0c")
+
+// CONSTANTS END ///////////////////////////////////////
 
 // CONSTRUCTORS ///////////////////////////////////////
 
@@ -25,12 +29,20 @@ Str str_from_cstr(const char *cstr);
 // CONSTRUCTORS END ///////////////////////////////////////
 
 // MANIPULATION  ///////////////////////////////////////
+/*
+ * I always treat strings as immutable.
+ * These functions allocate a new String inside of the arena.
+ */
 
 Str str_copy(Str s, Arena *arena);
 Str str_append(Str s1, Str suffix, Arena *arena);
 Str str_prepend(Str s1, Str prefix, Arena *arena);
+// Inserts sep in between elements
 Str str_join(Str sep, usize count, Str s[count], Arena *arena);
-Str str_join_suffix(Str sep, usize count, Str s[count], Arena *arena);
+// Appends suffix to every element
+Str str_join_suffix(Str suffix, usize count, Str s[count], Arena *arena);
+// Prepends prefix to every element
+Str str_join_prefix(Str prefix, usize count, Str s[count], Arena *arena);
 Str str_upper(Str s, Arena *arena);
 Str str_lower(Str s, Arena *arena);
 Str str_replace(Str s, Str old, Str new, Arena *arena);
@@ -55,7 +67,7 @@ bool str_empty(Str s);
 CmpOrdering str_compare_gt(Str s1, Str s2);
 CmpOrdering str_compare_lt(Str s1, Str s2);
 
-/* Returns function that you can pass to qsort */
+// Returns function that you can pass to qsort
 CompareFn str_compare_qsort(CmpOrdering ordering);
 
 // COMPARING END ///////////////////////////////////////
@@ -85,15 +97,15 @@ Str str_u64(Arena *arena, u64 n);
 u64 str_to_u64(Str s);
 u64 str_chop_u64(Str *s);
 
-/* Returns 'STR_NOT_FOUND' if 'needle' was not found. */
+// Returns 'STR_NOT_FOUND' if 'needle' was not found.
 usize str_find(Str haystack, Str needle);
-/* Returns 'STR_NOT_FOUND' if 'needle' was not found. */
+// Returns 'STR_NOT_FOUND' if 'needle' was not found.
 usize str_find_last(Str haystack, Str needle);
 usize str_count(Str haystack, Str needle);
-/* Returns '\0' if the index is out of bounds. */
+// Returns '\0' if the index is out of bounds.
 char str_getc(Str s, usize idx);
 
-/* Basic FNV hash. */
+// Basic FNV hash.
 u64 str_hash(Str s);
 
 // UTILS END ///////////////////////////////////////
