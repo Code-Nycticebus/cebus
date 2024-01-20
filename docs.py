@@ -2,9 +2,11 @@ from pathlib import Path
 import subprocess
 
 
-remote = subprocess.check_output(
-    ["git", "config", "--get", "remote.origin.url"]
-).decode()[:-5]
+remote = (
+    subprocess.check_output(["git", "config", "--get", "remote.origin.url"])
+    .decode()
+    .strip()[:-4]
+)
 cwd = Path.cwd()
 src = Path(cwd, "src")
 
