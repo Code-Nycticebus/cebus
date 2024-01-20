@@ -1,5 +1,5 @@
-# [defines.h](clib/src/core/defines.h)
-# [asserts.h](clib/src/core/asserts.h)
+# [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/defines.h)
+# [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
 ## Usage
 You can assert if something is true with:
 ```c
@@ -14,8 +14,8 @@ clib_assert_warn(EXPR, FMT, ...);
 clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
-# [sorting.h](clib/src/core/sorting.h)
-# [error.h](clib/src/core/error.h)
+# [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
+# [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
 ## Usage
 If you have a function that can fail it should take an Error as parameter.
 It then sets the error at Error*.
@@ -48,8 +48,8 @@ function.It will abort if it encouters an error.
 ```c
 function_that_can_fail(NULL); // abort() if it encouters an error
 ```
-# [platform.h](clib/src/core/platform.h)
-# [arena.h](clib/src/core/arena.h)
+# [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
+# [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
 ## Usage
 Create a new Arena with:
 ```c
@@ -65,4 +65,4 @@ Don't forget to free the arena once you're done.
 ```c
 arena_free(&arena);
 ```
-# [logging.h](clib/src/core/logging.h)
+# [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/logging.h)

@@ -1,4 +1,4 @@
-# [io.h](clib/src/os/io.h)
+# [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h)
 ## Usage
 Use the functions:
 ```c
@@ -16,5 +16,5 @@ Outputs:
 :> name
 input: 'name'
 ```
-# [os.h](clib/src/os/os.h)
-# [fs.h](clib/src/os/fs.h)
+# [os.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/os.h)
+# [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
