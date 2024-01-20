@@ -11,7 +11,9 @@ static void test_set_insert(void) {
   Arena arena = {0};
   Set set = set_create(&arena);
 
-  set_reserve(&set, TEST_SET_DEFAULT_SIZE * 2);
+  set_reserve(&set, TEST_SET_DEFAULT_SIZE + 1);
+  clib_assert(set.cap == 20, "Did not increase cap the correct way");
+
   for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&set, i);
   }
@@ -29,8 +31,8 @@ static void test_set_insert(void) {
 static void test_set_extend(void) {
   Arena arena = {0};
 
-  const u64 n1[] = {1, 2, 3, 4, 5, 6};
-  const u64 n2[] = {7, 8, 9, 10, 11, 12};
+  const u64 n1[] = {0, 1, 2, 3, 4, 5};
+  const u64 n2[] = {6, 7, 8, 9, 10, 11};
 
   Set set = set_create(&arena);
   set_extend(&set, 6, n1);
