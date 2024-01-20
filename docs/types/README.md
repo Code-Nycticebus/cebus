@@ -6,7 +6,6 @@ Create new Bytes with:
 Bytes bytes = BYTES(0xff, 0x11);
 Bytes bytes_str = BYTES_STR("Bytes from a string");
 ```
-*/
 # [str.h](src/types/str.h)
 ## Usage
 Create a new Str with:
@@ -44,9 +43,7 @@ LINE: "This is a line"
 LINE: "This is another line"
 LINE: "This is the Last Line"
 ```
-*/
 # [floats.h](src/types/floats.h)
 # [integers.h](src/types/integers.h)
 ## Usage
 Just use the functions.
-*/

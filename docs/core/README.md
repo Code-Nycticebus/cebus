@@ -14,7 +14,6 @@ clib_assert_warn(EXPR, FMT, ...);
 clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
-*/
 # [sorting.h](src/core/sorting.h)
 # [error.h](src/core/error.h)
 ## Usage
@@ -49,7 +48,6 @@ function.It will abort if it encouters an error.
 ```c
 function_that_can_fail(NULL); // abort() if it encouters an error
 ```
-*/
 # [platform.h](src/core/platform.h)
 # [arena.h](src/core/arena.h)
 ## Usage
@@ -67,5 +65,4 @@ Don't forget to free the arena once you're done.
 ```c
 arena_free(&arena);
 ```
-*/
 # [logging.h](src/core/logging.h)

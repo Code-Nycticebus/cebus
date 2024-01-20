@@ -12,7 +12,6 @@ Then you can push elements to the vector.
 vec_push(&vec, 69);
 vec_push(&vec, 420);
 ```
-*/
 # [hm.h](src/collections/hm.h)
 ## Usage
 Create a new HashMap with:
@@ -33,7 +32,6 @@ Now you can get the values by passing in the hash of the element.
 hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
-*/
 # [set.h](src/collections/set.h)
 ## Usage
 Create a new Set with:
@@ -53,4 +51,3 @@ Then you can test if an element is in the Set.
 set_contains(&set, str_hash(STR("Hello"))) == true;
 set_contains(&set, str_hash(STR("World"))) == true;
 ```
-*/
