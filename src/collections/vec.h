@@ -54,11 +54,7 @@ vec_push(&vec, 420);
 #define vec_last(list) (list)->items[(list)->len - 1]
 #define vec_pop(list) (list)->items[--(list)->len]
 #define vec_empty(list) (!(list)->len)
-
-#define vec_clear(list)                                                        \
-  do {                                                                         \
-    (list)->len = 0;                                                           \
-  } while (0)
+#define vec_clear(list) ((list)->len = 0)
 
 #define vec_reserve(list, size)                                                \
   do {                                                                         \
