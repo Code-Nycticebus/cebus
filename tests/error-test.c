@@ -39,4 +39,5 @@ int main(void) {
                      "Note: how did the function that fails, fail! 'true'") ==
                   0,
               "Message is not correct");
+  clib_assert(err2.error == 69, "did not set err2.error correctly");
 }
