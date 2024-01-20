@@ -42,8 +42,8 @@ function_that_can_fail(ErrThrow);
 #define ERROR_MESSAGE_MAX 1024
 
 typedef struct {
-  bool raise;
   bool failure;
+  bool raise;
   const char *file;
   i32 line;
   i32 error;
@@ -51,12 +51,11 @@ typedef struct {
   char message[ERROR_MESSAGE_MAX];
 } Error;
 
-////////////////////////////////////////////////////////////////////////////
-
 #define ErrCreate ((Error){.raise = false, .line = __LINE__, .file = __FILE__})
-
 #define ErrThrow                                                               \
   ((Error[]){{.raise = true, .line = __LINE__, .file = __FILE__}})
+
+////////////////////////////////////////////////////////////////////////////
 
 #define Err(E, error, ...)                                                     \
   do {                                                                         \
