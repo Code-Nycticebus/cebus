@@ -3,3 +3,6 @@ name="clib"
 cc="clang"
 bin="static"
 cflags=["-std=c99", "-fsanitize=address"]
+
+[build.scripts]
+docs = "python3 docs.py"
