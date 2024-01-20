@@ -22,20 +22,21 @@ quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 # [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
 ## Usage
-If you have a function that can fail it should take an Error as parameter.
-It then sets the error at Error*.
+If you have a function that can fail it should take an ```Error*``` as
+parameter.
 ```c
 void function_that_can_fail(Error* error)
-  int ret = -1; // Function returns a bad value
-  if (ret == -1) {
-    Err(error, errno, "function_that_can_fail(): encountered error: %d", errno);
+  int error_code = -1; // Function returns a bad value
+  if (error_code < 0) {
+    Err(error, error_code, "function_that_can_fail(): error: %d", error_code);
     return;
   }
   // Further processing
   return;
+}
 ```
 
-Create a new Error.
+Create a new ```Error```.
 Now you can pass the error to a function that takes an ```Error*```.
 ```c
 Error error = ErrCreate;
@@ -45,10 +46,10 @@ if (error.failure) {
 }
 ```
 
-You can also pass a NULL pointer to that
-function.It will abort if it encouters an error.
+You can also pass a ```ErrThrow``` to that
+function. It will abort if it encouters an error.
 ```c
-function_that_can_fail(NULL); // calls abort() if it encounters an error
+function_that_can_fail(ErrThrow);
 ```
 # [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.
