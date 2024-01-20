@@ -49,4 +49,4 @@ bool set_subset(const Set *set, const Set *other);
 Set set_intersection(const Set *set, const Set *other, Arena *arena);
 Set set_difference(const Set *set, const Set *other, Arena *arena);
 
-#endif // !__CLIB_SET_H__
+#endif /* !__CLIB_SET_H__ */

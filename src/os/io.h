@@ -30,4 +30,4 @@ Str io_read_line(FILE *file, usize size, char buffer[size], Error *error);
 
 Str input(Str prefix);
 
-#endif // !__CLIB_IO_H__
+#endif /* !__CLIB_IO_H__ */

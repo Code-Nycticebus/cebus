@@ -30,4 +30,4 @@ void file_write(Str filename, Bytes bytes, Error *error);
 // TODO void file_rename(Str old_name, Str new_name);
 // TODO void file_remove(Str filename);
 
-#endif // !__CLIB_FS_H__
+#endif /* !__CLIB_FS_H__ */
