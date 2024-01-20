@@ -1,6 +1,0 @@
-# [vec.h](vec.h)
-# [hm.h](hm.h)
-# [set.h](set.h)
-# [vec.h](vec.h)
-# [hm.h](hm.h)
-# [set.h](set.h)
