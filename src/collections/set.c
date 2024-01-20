@@ -9,23 +9,23 @@ static void set_resize(Set *set, usize new_size) {
   usize old_cap = set->cap;
   u64 *old_items = set->items;
 
-  set->cap = usize_max(new_size, 10);
+  set->cap = new_size;
   set->items = arena_calloc_chunk(set->arena, set->cap * sizeof(set->items[0]));
 
-  if (old_items) {
-    set->count = 0;
-    for (usize i = 0; i < old_cap; ++i) {
-      if (old_items[i]) {
-        set_add(set, old_items[i]);
-      }
+  set->count = 0;
+  for (usize i = 0; i < old_cap; ++i) {
+    if (old_items[i]) {
+      set_add(set, old_items[i]);
     }
-    arena_free_chunk(set->arena, old_items);
   }
+  arena_free_chunk(set->arena, old_items);
 }
 
 Set set_create(Arena *arena) {
   Set set = {0};
   set.arena = arena;
+  set.cap = 10;
+  set.items = arena_calloc_chunk(arena, set.cap * sizeof(set.items[0]));
   return set;
 }
 
@@ -43,7 +43,11 @@ void set_reserve(Set *set, usize size) {
   if (size < set->cap) {
     return;
   }
-  set_resize(set, size);
+  usize new_size = set->cap;
+  while (new_size < size) {
+    new_size *= 2;
+  }
+  set_resize(set, new_size);
 }
 
 bool set_add(Set *set, u64 hash) {
