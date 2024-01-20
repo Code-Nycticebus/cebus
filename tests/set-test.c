@@ -40,6 +40,7 @@ static void test_set_insert(void) {
 
 static void test_eq(void) {
   Arena arena = {0};
+
   Set set1 = set_create(&arena);
   set_add(&set1, usize_hash(1));
   set_add(&set1, usize_hash(2));
@@ -50,7 +51,17 @@ static void test_eq(void) {
   set_add(&set2, usize_hash(2));
   set_add(&set2, usize_hash(3));
 
-  clib_assert(set_eq(&set1, &set2), "Sets should be equal");
+  Set set3 = set_create(&arena);
+  set_add(&set3, usize_hash(2));
+  set_add(&set3, usize_hash(3));
+  set_add(&set3, usize_hash(4));
+
+  clib_assert(set_eq(&set1, &set2) == true, "'set1' should be equal to 'set2'");
+
+  clib_assert(set_eq(&set1, &set3) == false,
+              "'set1' should not be equal to 'set3'");
+  clib_assert(set_eq(&set2, &set3) == false,
+              "'set2' should not be equal to 'set2'");
 
   arena_free(&arena);
 }
