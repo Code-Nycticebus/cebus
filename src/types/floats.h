@@ -11,7 +11,8 @@
   T T##_max(T a, T b);                                                         \
   T T##_clamp(T min, T max, T value);                                          \
   T T##_lerp(T min, T max, T value);                                           \
-  T T##_rad(T deg);
+  T T##_rad(T deg);                                                            \
+  T T##_deg(T rad);
 
 FLOAT_DECL(f32)
 FLOAT_DECL(f64)
