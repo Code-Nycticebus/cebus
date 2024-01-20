@@ -3,8 +3,7 @@
 
 /* DOCUMENTATION
 ## Usage
-If you have a function that can fail it should take an ```Error*``` as
-parameter.
+If a function can fail it should take an ```Error*``` as parameter.
 ```c
 void function_that_can_fail(Error* error)
   int error_code = -1; // Function returns a bad value
@@ -17,18 +16,17 @@ void function_that_can_fail(Error* error)
 }
 ```
 
-Create a new ```Error```.
-Now you can pass the error to a function that takes an ```Error*```.
+Create a new ```Error``` to pass it to a function.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
 if (error.failure) {
-  // error occured
+  ErrRaise(&error);
 }
 ```
 
-You can also pass a ```ErrThrow``` to that
-function. It will abort if it encouters an error.
+You can also pass ```ErrThrow``` to that function to automatically call
+```ErrRaise``` if it encouters an error inside the function.
 ```c
 function_that_can_fail(ErrThrow);
 ```
@@ -44,6 +42,7 @@ function_that_can_fail(ErrThrow);
 #define ERROR_MESSAGE_MAX 1024
 
 typedef struct {
+  bool raise;
   bool failure;
   const char *file;
   i32 line;
@@ -54,19 +53,16 @@ typedef struct {
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define ErrCreate                                                              \
-  (Error) { .line = __LINE__, .file = __FILE__ }
+#define ErrCreate ((Error){.raise = false, .line = __LINE__, .file = __FILE__})
 
-#define ErrThrow ((Error *)NULL)
+#define ErrThrow                                                               \
+  ((Error[]){{.raise = true, .line = __LINE__, .file = __FILE__}})
 
 #define Err(E, error, ...)                                                     \
   do {                                                                         \
-    if (E) {                                                                   \
-      _error_init(E, error, __VA_ARGS__);                                      \
-    } else {                                                                   \
-      Error __e = ErrCreate;                                                   \
-      _error_init(&__e, error, __VA_ARGS__);                                   \
-      ErrRaise(&__e);                                                          \
+    _error_init(E, error, __VA_ARGS__);                                        \
+    if ((E)->raise) {                                                          \
+      ErrRaise(E);                                                             \
     }                                                                          \
   } while (0)
 
