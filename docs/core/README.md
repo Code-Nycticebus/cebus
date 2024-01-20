@@ -40,7 +40,6 @@ Create a new ```Error``` to pass it to a function.
 Error error = ErrCreate;
 function_that_can_fail(&error);
 if (error.failure) {
-  // handle error
   error_raise(&error);
 }
 ```
