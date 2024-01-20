@@ -37,6 +37,7 @@ Error error = ErrCreate;
 
 Now you can pass the error to a function that takes an Error.
 ```c
+Error error = ErrCreate;
 function_that_can_fail(&error);
 if (error.failure) {
   // error occured
@@ -46,7 +47,7 @@ if (error.failure) {
 You can also pass a NULL pointer to that
 function.It will abort if it encouters an error.
 ```c
-function_that_can_fail(NULL); // abort() if it encouters an error
+function_that_can_fail(NULL); // calls abort() if it encounters an error
 ```
 # [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 # [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
