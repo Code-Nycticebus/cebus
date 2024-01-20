@@ -21,12 +21,12 @@ Create a new ```Error``` to pass it to a function.
 Error error = ErrCreate;
 function_that_can_fail(&error);
 if (error.failure) {
-  ErrRaise(&error);
+  error_raise(&error);
 }
 ```
 
-You can also pass ```ErrThrow``` to that function to automatically call
-```ErrRaise``` if it encouters an error inside the function.
+Pass ```ErrThrow``` or ```ErrNone``` to that function to automatically call
+```error_raise()``` if it encouters an error inside the function.
 ```c
 function_that_can_fail(ErrThrow);
 ```
@@ -34,8 +34,6 @@ function_that_can_fail(ErrThrow);
 
 #include "core/defines.h"
 #include "core/platform.h"
-
-#include <stdlib.h> // IWYU pragma: export
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -54,31 +52,24 @@ typedef struct {
 #define ErrCreate ((Error){.raise = false, .line = __LINE__, .file = __FILE__})
 #define ErrThrow                                                               \
   ((Error[]){{.raise = true, .line = __LINE__, .file = __FILE__}})
+#define ErrNone ((Error *)NULL)
 
 ////////////////////////////////////////////////////////////////////////////
 
 #define Err(E, error, ...)                                                     \
   do {                                                                         \
-    _error_init(E, error, __VA_ARGS__);                                        \
-    if ((E)->raise) {                                                          \
-      ErrRaise(E);                                                             \
-    }                                                                          \
-  } while (0)
-
-#define ErrRaise(E)                                                            \
-  do {                                                                         \
-    _error_dump(E);                                                            \
-    abort();                                                                   \
+    _error_init(E ? E : ErrThrow, error, __VA_ARGS__);                         \
   } while (0)
 
 ////////////////////////////////////////////////////////////////////////////
 
+void error_raise(Error *err);
+void error_warn(Error *err);
 void error_add_note(Error *err, const char *fmt, ...) CLIB_FMT(2, 3);
 
 ////////////////////////////////////////////////////////////////////////////
 
 void _error_init(Error *err, i32 error, const char *fmt, ...) CLIB_FMT(3, 4);
-void _error_dump(Error *err);
 
 ////////////////////////////////////////////////////////////////////////////
 

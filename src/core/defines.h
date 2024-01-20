@@ -143,7 +143,7 @@ typedef struct {
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define UTF8(s) utf8_decode(BYTES_STR(s), NULL)
+#define UTF8(s) utf8_decode(BYTES_STR(s), ErrThrow)
 #define UTF8_FMT "%.*s"
 #define UTF8_ARG(s) (i32)(s).size, (s).data
 

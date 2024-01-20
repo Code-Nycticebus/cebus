@@ -40,12 +40,13 @@ Create a new ```Error``` to pass it to a function.
 Error error = ErrCreate;
 function_that_can_fail(&error);
 if (error.failure) {
-  ErrRaise(&error);
+  // handle error
+  error_raise(&error);
 }
 ```
 
-You can also pass ```ErrThrow``` to that function to automatically call
-```ErrRaise``` if it encouters an error inside the function.
+Pass ```ErrThrow``` or ```ErrNone``` to that function to automatically call
+```error_raise()``` if it encouters an error inside the function.
 ```c
 function_that_can_fail(ErrThrow);
 ```

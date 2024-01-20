@@ -14,7 +14,7 @@ TEST(decode) {
       0x43,                   // C
       0x41                    // A
   );
-  Utf8 s3 = utf8_decode(bytes, NULL);
+  Utf8 s3 = utf8_decode(bytes, ErrThrow);
   clib_assert(memcmp(s3.data, "🎉✅😁CA", s3.size) == 0,
               "Was not decoded correctly");
 
