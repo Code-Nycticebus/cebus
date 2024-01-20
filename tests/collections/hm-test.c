@@ -24,9 +24,7 @@ static void test_hm(void) {
   const usize test_count = 10000;
   Arena arena = {0};
 
-  HashMap hm = hm_create(&arena);
-  hm_reserve(&hm, test_count * 2);
-
+  HashMap hm = hm_with_size(&arena, test_count * 2);
   for (size_t i = 0; i < test_count; i++) {
     hm_insert(&hm, i, HashValue(u64, i * 4));
   }
