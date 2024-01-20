@@ -18,3 +18,14 @@ input: 'name'
 ```
 # [os.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/os.h)
 # [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
+## Usage
+To read in the entire file as Str
+```c
+Arena arena = {0};
+Error error = ErrCreate;
+Str content = file_read_str(STR("filename.txt"), &arena, &error);
+if (error.failure) {
+  ErrRaise(&error);
+}
+arena_free(&arena);
+```

@@ -1,6 +1,20 @@
 #ifndef __CLIB_FS_H__
 #define __CLIB_FS_H__
 
+/* DOCUMENTATION
+## Usage
+To read in the entire file as Str
+```c
+Arena arena = {0};
+Error error = ErrCreate;
+Str content = file_read_str(STR("filename.txt"), &arena, &error);
+if (error.failure) {
+  ErrRaise(&error);
+}
+arena_free(&arena);
+```
+*/
+
 #include "core/arena.h"
 #include "core/defines.h"
 #include "core/error.h"
