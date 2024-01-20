@@ -33,6 +33,8 @@ static usize file_size(FILE *handle, Error *error) {
   return (usize)size;
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
   Bytes result = {0};
   FILE *handle = file_open(filename, "r", error);
