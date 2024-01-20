@@ -35,12 +35,8 @@ void function_that_can_fail(Error* error)
   return;
 ```
 
-Create a new Error with:
-```c
-Error error = ErrCreate;
-```
-
-Now you can pass the error to a function that takes an Error.
+Create a new Error.
+Now you can pass the error to a function that takes an ```Error*```.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
