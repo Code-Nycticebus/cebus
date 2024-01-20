@@ -125,11 +125,11 @@ static void test_difference(void) {
 
   Set diff = set_difference(&set1, &set2, &arena);
 
-  clib_assert(set_contains(&diff, 1) == true, "");
-  clib_assert(set_contains(&diff, 2) == true, "");
-  clib_assert(set_contains(&diff, 3) == false, "");
-  clib_assert(set_contains(&diff, 4) == false, "");
-  clib_assert(set_contains(&diff, 5) == false, "");
+  clib_assert(set_contains(&diff, 1) == true, "should be different");
+  clib_assert(set_contains(&diff, 2) == true, "should be different");
+  clib_assert(set_contains(&diff, 3) == false, "should not be different");
+  clib_assert(set_contains(&diff, 4) == false, "should not be symetrical");
+  clib_assert(set_contains(&diff, 5) == false, "should not be symetrical");
 
   arena_free(&arena);
 }
