@@ -16,3 +16,13 @@ for file in src.rglob("*.h"):
     docs = cwd / "docs" / file.relative_to(src).parent
     with open(docs / "README.md", "a") as f:
         f.write(f"# [{file.name}]({file.relative_to(cwd)})\n")
+
+        writing = False
+        with open(file, "r") as d:
+            for line in d.readlines():
+                if writing:
+                    f.write(line)
+                if line.startswith("/* DOCUMENTATION"):
+                    writing = True
+                if line.startswith("*/"):
+                    writing = False
