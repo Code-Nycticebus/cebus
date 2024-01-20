@@ -17,13 +17,16 @@ typedef struct {
   char message[ERROR_MESSAGE_MAX];
 } Error;
 
+#define ErrCreate                                                              \
+  (Error) { .line = __LINE__, .file = __FILE__ }
+
 #define Err(E, error, ...)                                                     \
   do {                                                                         \
     if (E) {                                                                   \
-      _error_init(E, __FILE__, __LINE__, error, __VA_ARGS__);                  \
+      _error_init(E, error, __VA_ARGS__);                                      \
     } else {                                                                   \
-      Error __e = {0};                                                         \
-      _error_init(&__e, __FILE__, __LINE__, error, __VA_ARGS__);               \
+      Error __e = ErrCreate;                                                   \
+      _error_init(&__e, error, __VA_ARGS__);                                   \
       ErrRaise(&__e);                                                          \
     }                                                                          \
   } while (0)
@@ -36,8 +39,7 @@ typedef struct {
 
 void error_add_note(Error *err, const char *fmt, ...) CLIB_FMT(2, 3);
 
-void _error_init(Error *err, const char *file, int line, i32 error,
-                 const char *fmt, ...) CLIB_FMT(5, 6);
+void _error_init(Error *err, i32 error, const char *fmt, ...) CLIB_FMT(3, 4);
 void _error_dump(Error *err);
 
 #endif // !__CLIB_ERROR_H__

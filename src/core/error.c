@@ -14,11 +14,8 @@ void error_add_note(Error *err, const char *fmt, ...) {
   va_end(va);
 }
 
-void _error_init(Error *err, const char *file, int line, i32 error,
-                 const char *fmt, ...) {
+void _error_init(Error *err, i32 error, const char *fmt, ...) {
   err->failure = true;
-  err->file = err->file ? err->file : file;
-  err->line = err->line ? err->line : line;
   err->error = error;
   va_list va;
   va_start(va, fmt);
