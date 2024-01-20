@@ -3,7 +3,7 @@
 
 /* DOCUMENTATION
 ## Usage
-Create a new Str wiht:
+Create a new Str with:
 ```c
 Str str = STR("Hello World");
 ```
