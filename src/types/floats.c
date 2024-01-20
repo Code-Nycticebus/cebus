@@ -1,8 +1,11 @@
 #include "floats.h" // IWYU pragma: keep
 
-#define FLOAT_IMPL(T, BITS)                                                    \
+#define FLOAT_IMPL(T, BITS, EXPONENT_MASK, FRACTION_MASK)                      \
   bool T##_eq(T a, T b) { return T##_abs(a - b) < F##BITS##_EPSILON; }         \
-  bool T##_isnan(T value) { return value != value; }                           \
+  bool T##_isnan(T value) {                                                    \
+    u##BITS u = *(u##BITS *)&value;                                            \
+    return (u & EXPONENT_MASK) == EXPONENT_MASK && (u & FRACTION_MASK) != 0;   \
+  }                                                                            \
   T T##_abs(T value) {                                                         \
     u##BITS *i = (u##BITS *)&value;                                            \
     *i &= ~((u##BITS)0x8 << (BITS - 1 - 3));                                   \
@@ -16,5 +19,5 @@
   T T##_lerp(T min, T max, T value) { return min + value * (max - min); }      \
   T T##_rad(T deg) { return deg * ((T)PI / 180.0f); }
 
-FLOAT_IMPL(f32, 32)
-FLOAT_IMPL(f64, 64)
+FLOAT_IMPL(f32, 32, 0x7F800000, 0x007FFFFF)
+FLOAT_IMPL(f64, 64, 0x7FF0000000000000, 0x000FFFFFFFFFFFFF)
