@@ -76,14 +76,10 @@ static void test_sort(void) {
   arena_free(&arena);
 }
 
-typedef struct {
-  usize smallest;
-} SortCtx;
-
 static CmpOrdering sort_smallest(const void *_ctx, const void *a,
                                  const void *b) {
-  const SortCtx *ctx = _ctx;
-  if (*(const usize *)a == ctx->smallest) {
+  const usize *smallest = _ctx;
+  if (*(const usize *)a == *smallest) {
     return CMP_LESS;
   }
   return usize_compare_lt(*(const usize *)a, *(const usize *)b);
@@ -98,8 +94,8 @@ static void test_sort_ctx(void) {
     vec_push(&list, n - i - 1);
   }
 
-  SortCtx ctx = {.smallest = 4};
-  vec_sort_ctx(&list, &list, sort_smallest, &ctx);
+  const usize smallest = 4;
+  vec_sort_ctx(&list, &list, sort_smallest, &smallest);
 
   clib_assert(list.items[0] == 4, "sorting did not work correctly");
   clib_assert(list.items[1] == 0, "sorting did not work correctly");
