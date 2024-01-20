@@ -1,6 +1,10 @@
 #ifndef __CLIB_PLATFORM_H__
 #define __CLIB_PLATFORM_H__
 
+/* DOCUMENTATION
+Here are various macros for figuring out what Platform and compiler is used.
+*/
+
 /* System */
 #if defined(__linux__)
 #define LINUX
