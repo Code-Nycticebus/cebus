@@ -2,7 +2,6 @@
 
 #include "collections/vec.h"
 #include "core/asserts.h"
-#include "core/defines.h"
 #include "types/str.h"
 
 #define TEST_SET_DEFAULT_SIZE 10
