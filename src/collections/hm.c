@@ -33,11 +33,12 @@ HashMap hm_create(Arena *arena) {
 }
 
 void hm_reserve(HashMap *hm, usize size) {
-  if (size < hm->cap) {
+  const usize required_size = hm->count + size;
+  if (required_size < hm->cap) {
     return;
   }
   usize new_size = hm->cap;
-  while (new_size < size) {
+  while (new_size < required_size) {
     new_size *= 2;
   }
   hm_resize(hm, hm->arena, new_size);

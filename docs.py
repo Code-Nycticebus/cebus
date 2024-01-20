@@ -26,9 +26,9 @@ for file in src.rglob("*.h"):
         writing = False
         with open(file, "r") as d:
             for line in d.readlines():
-                if line.startswith("*/"):
+                if "*/" in line:
                     writing = False
                 if writing:
                     f.write(line)
-                if line.startswith("/* DOCUMENTATION"):
+                if "/* DOCUMENTATION" in line:
                     writing = True

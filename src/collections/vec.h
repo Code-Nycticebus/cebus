@@ -17,10 +17,9 @@ vec_push(&vec, 420);
 ```
 */
 
-#include "core/arena.h"     // IWYU pragma: export
-#include "core/defines.h"   // IWYU pragma: export
-#include "core/sorting.h"   // IWYU pragma: export
-#include "types/integers.h" // IWYU pragma: export
+#include "core/arena.h"   // IWYU pragma: export
+#include "core/defines.h" // IWYU pragma: export
+#include "core/sorting.h" // IWYU pragma: export
 
 #define VEC(T)                                                                 \
   struct {                                                                     \
@@ -33,9 +32,10 @@ vec_push(&vec, 420);
 #define vec_init(list, _arena)                                                 \
   do {                                                                         \
     (list)->len = 0;                                                           \
-    (list)->cap = 0;                                                           \
+    (list)->cap = 10;                                                          \
     (list)->arena = _arena;                                                    \
-    (list)->items = NULL;                                                      \
+    (list)->items = arena_alloc_chunk((list)->arena,                           \
+                                      (list)->cap * sizeof((list)->items[0])); \
   } while (0)
 
 #define vec_init_list(list, _arena, count, array)                              \
@@ -56,14 +56,27 @@ vec_push(&vec, 420);
 #define vec_empty(list) (!(list)->len)
 #define vec_clear(list) ((list)->len = 0)
 
+#define vec_resize(list, size)                                                 \
+  do {                                                                         \
+    if (size < (list)->cap) {                                                  \
+      break;                                                                   \
+    }                                                                          \
+    (list)->cap = size;                                                        \
+    (list)->items = arena_realloc_chunk(                                       \
+        (list)->arena, (list)->items, (list)->cap * sizeof((list)->items[0])); \
+  } while (0)
+
 #define vec_reserve(list, size)                                                \
   do {                                                                         \
-    if (!(size < (list)->cap)) {                                               \
-      (list)->cap = usize_max(size, 10);                                       \
-      (list)->items =                                                          \
-          arena_realloc_chunk((list)->arena, (list)->items,                    \
-                              (list)->cap * sizeof((list)->items[0]));         \
+    const usize __rs = (list)->len + size;                                     \
+    if (__rs < (list)->cap) {                                                  \
+      break;                                                                   \
     }                                                                          \
+    usize __ns = (list)->cap;                                                  \
+    while (__ns < __rs) {                                                      \
+      __ns *= 2;                                                               \
+    }                                                                          \
+    vec_resize(list, __ns);                                                    \
   } while (0)
 
 #define vec_push(list, item)                                                   \

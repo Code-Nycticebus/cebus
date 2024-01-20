@@ -1,6 +1,7 @@
 #include "collections/vec.h"
 
 #include "core/asserts.h"
+#include "types/integers.h"
 
 static void test_vec(void) {
   Arena arena = {0};
@@ -135,8 +136,11 @@ static void test_reserve(void) {
   Arena arena = {0};
   VEC(i32) list = {0};
   vec_init(&list, &arena);
+  vec_resize(&list, 20);
+  clib_assert(list.cap == 20, "Capacity was not increased: %" USIZE_FMT,
+              list.cap);
   vec_reserve(&list, 50);
-  clib_assert(list.cap == 50, "Capacity was not increased: %" USIZE_FMT,
+  clib_assert(list.cap == 80, "Capacity was not increased: %" USIZE_FMT,
               list.cap);
   arena_free(&arena);
 }

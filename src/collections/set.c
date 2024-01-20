@@ -39,11 +39,12 @@ Set set_copy(Arena *arena, Set *set) {
 }
 
 void set_reserve(Set *set, usize size) {
-  if (size < set->cap) {
+  const usize required_size = set->count + size;
+  if (required_size < set->cap) {
     return;
   }
   usize new_size = set->cap;
-  while (new_size < size) {
+  while (new_size < required_size) {
     new_size *= 2;
   }
   set_resize(set, new_size);

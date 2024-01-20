@@ -2,6 +2,7 @@
 
 #include "collections/vec.h"
 #include "core/asserts.h"
+#include "types/integers.h"
 #include "types/str.h"
 
 static void test_insert(void) {
