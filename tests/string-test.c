@@ -216,6 +216,10 @@ static void test_join(void) {
   Str res2 = str_join_suffix(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")},
                              &arena);
   clib_assert(str_eq(res2, STR("Hello, World, ")), "");
+
+  Str res3 = str_join_prefix(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")},
+                             &arena);
+  clib_assert(str_eq(res3, STR(", Hello, World")), "");
   arena_free(&arena);
 }
 
