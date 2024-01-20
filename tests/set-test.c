@@ -58,31 +58,26 @@ static void test_eq(void) {
 static void test_subset(void) {
   Arena arena = {0};
 
+  const u64 n1[] = {1, 2, 3};
   Set set1 = set_create(&arena);
-  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE; i++) {
-    set_add(&set1, usize_hash(i));
-  }
+  set_extend(&set1, 3, n1);
 
+  const u64 n2[] = {2, 3, 4};
   Set set2 = set_create(&arena);
-  for (usize i = 15; i < 25; i++) { // NOLINT
-    set_add(&set2, usize_hash(i));
-  }
+  set_extend(&set2, 3, n2);
+
+  const u64 n3[] = {1, 2, 3, 4};
   Set set3 = set_create(&arena);
-  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
-    set_add(&set3, usize_hash(i));
-  }
+  set_extend(&set3, 4, n3);
 
-  Set big_set = set_create(&arena);
-  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
-    set_add(&big_set, usize_hash(i));
-  }
-
-  clib_assert(set_subset(&set1, &big_set) == true, "set1 should be a subset");
-  clib_assert(set_subset(&set2, &big_set) == false,
-              "set2 should not be a subset");
-  clib_assert(set_subset(&set3, &big_set) == true,
-              "set4 should not be a subset");
-
+  clib_assert(set_subset(&set1, &set2) == false,
+              "'set1' should not be a subset of 'set2'");
+  clib_assert(set_subset(&set1, &set1) == true,
+              "'set1' should be a subset of 'set1'");
+  clib_assert(set_subset(&set1, &set3) == true,
+              "'set1' should be a subset of 'set3'");
+  clib_assert(set_subset(&set2, &set3) == true,
+              "'set2' should be a subset of 'set3'");
   arena_free(&arena);
 }
 
