@@ -10,6 +10,8 @@
 #include <string.h>
 #include <unistd.h>
 
+//////////////////////////////////////////////////////////////////////////////
+
 void os_chdir(Str path) {
   char pathname[FILENAME_MAX] = {0};
   memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
@@ -22,5 +24,7 @@ Str os_getcwd(Arena *arena) {
   clib_assert(ret, "Could not get cwd");
   return str_from_cstr(ret);
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 #endif
