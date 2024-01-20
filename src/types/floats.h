@@ -17,4 +17,4 @@
 FLOAT_DECL(f32)
 FLOAT_DECL(f64)
 
-#endif /* ifndef __CLIB_FLOATS_H__ */
+#endif /* !__CLIB_FLOATS_H__ */

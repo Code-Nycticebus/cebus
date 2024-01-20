@@ -53,4 +53,4 @@
 #define clib_assert_debug(...)
 #endif
 
-#endif /* ifndef __CLIB_ASSERTS_H__ */
+#endif /* !__CLIB_ASSERTS_H__ */
