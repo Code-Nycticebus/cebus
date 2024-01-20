@@ -1,7 +1,7 @@
 #include "types/utf8.h"
 
+#include "../test.h"
 #include "core/asserts.h"
-#include "test.h"
 
 #include <locale.h>
 #include <string.h>
