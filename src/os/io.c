@@ -7,7 +7,11 @@
 #include <stdio.h>
 #include <string.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 #define IO_MAX_INPUT 512
+
+////////////////////////////////////////////////////////////////////////////
 
 void io_write(FILE *file, Bytes bytes, Error *error) {
   errno = 0;
@@ -37,6 +41,8 @@ Str io_read_line(FILE *file, usize size, char buffer[size], Error *error) {
   return str_from_cstr(buffer);
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 Str input(Str prefix) {
   static char buffer[IO_MAX_INPUT] = {0};
   printf(STR_FMT, STR_ARG(prefix));
@@ -44,3 +50,5 @@ Str input(Str prefix) {
   Str res = io_read_line(stdin, IO_MAX_INPUT, buffer, NULL);
   return str_substring(res, 0, res.len - 1);
 }
+
+////////////////////////////////////////////////////////////////////////////

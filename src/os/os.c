@@ -4,6 +4,8 @@
 
 #include <stdlib.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 Str os_getenv(const char *env, Error *error) {
   const char *var = getenv(env);
   if (var == NULL) {
@@ -12,3 +14,5 @@ Str os_getenv(const char *env, Error *error) {
   }
   return str_from_cstr(var);
 }
+
+////////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,11 @@
 
 #include <string.h>
 
+//////////////////////////////////////////////////////////////////////////////
+
 #define SET_DEFAULT_SIZE 10
+
+//////////////////////////////////////////////////////////////////////////////
 
 Set set_create(Arena *arena) {
   Set set = {0};
@@ -63,6 +67,8 @@ void set_reserve(Set *set, usize size) {
   set_resize(set, new_size);
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 bool set_add(Set *set, u64 hash) {
   if (hash == 0) {
     hash = u64_hash(hash);
@@ -96,6 +102,8 @@ void set_extend(Set *set, usize count, const u64 hashes[count]) {
     set_add(set, hashes[i]);
   }
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 bool set_contains(const Set *set, u64 hash) {
   if (hash == 0) {
@@ -146,6 +154,8 @@ bool set_subset(const Set *set, const Set *other) {
   return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 Set set_intersection(const Set *set, const Set *other, Arena *arena) {
   if (other->cap < set->cap) {
     const Set *temp = set;
@@ -177,3 +187,5 @@ Set set_difference(const Set *set, const Set *other, Arena *arena) {
   }
   return difference;
 }
+
+//////////////////////////////////////////////////////////////////////////////

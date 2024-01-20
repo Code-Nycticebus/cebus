@@ -10,6 +10,8 @@
 
 #define HM_DEFAULT_SIZE 10
 
+////////////////////////////////////////////////////////////////////////////
+
 HashMap hm_create(Arena *arena) {
   HashMap hm = {0};
   hm.arena = arena;
@@ -57,6 +59,8 @@ void hm_reserve(HashMap *hm, usize size) {
   hm_resize(hm, new_size);
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
   if (hash == 0) {
     hash = u64_hash(hash);
@@ -102,3 +106,5 @@ HashValue *hm_get(const HashMap *hm, u64 hash) {
   }
   return NULL;
 }
+
+////////////////////////////////////////////////////////////////////////////

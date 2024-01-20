@@ -7,15 +7,15 @@
 
 #include <errno.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 typedef enum {
   FILE_OK,
   FILE_PERMISSION = EACCES,
   FILE_NOT_FOUND = ENOENT,
 } FileError;
 
-typedef struct {
-  int TODO;
-} FileInfo;
+////////////////////////////////////////////////////////////////////////////
 
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error);
 Str file_read_str(Str filename, Arena *arena, Error *error);
@@ -24,10 +24,18 @@ Utf8 file_read_utf8(Str filename, Arena *arena, Error *error);
 // ctx);
 void file_write(Str filename, Bytes bytes, Error *error);
 
+////////////////////////////////////////////////////////////////////////////
+
+typedef struct {
+  int TODO;
+} FileInfo;
+
 // TODO FileInfo file_info(Str filename);
 // TODO bool file_exists(Str filename);
 
 // TODO void file_rename(Str old_name, Str new_name);
 // TODO void file_remove(Str filename);
+
+////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CLIB_FS_H__ */

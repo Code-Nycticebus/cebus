@@ -42,6 +42,8 @@ function_that_can_fail(NULL); // calls abort() if it encounters an error
 
 #include <stdlib.h> // IWYU pragma: export
 
+////////////////////////////////////////////////////////////////////////////
+
 #define ERROR_MESSAGE_MAX 1024
 
 typedef struct {
@@ -53,8 +55,12 @@ typedef struct {
   char message[ERROR_MESSAGE_MAX];
 } Error;
 
+////////////////////////////////////////////////////////////////////////////
+
 #define ErrCreate                                                              \
   (Error) { .line = __LINE__, .file = __FILE__ }
+
+#define ErrThrow ((Error *)NULL)
 
 #define Err(E, error, ...)                                                     \
   do {                                                                         \
@@ -73,9 +79,15 @@ typedef struct {
     abort();                                                                   \
   } while (0)
 
+////////////////////////////////////////////////////////////////////////////
+
 void error_add_note(Error *err, const char *fmt, ...) CLIB_FMT(2, 3);
+
+////////////////////////////////////////////////////////////////////////////
 
 void _error_init(Error *err, i32 error, const char *fmt, ...) CLIB_FMT(3, 4);
 void _error_dump(Error *err);
+
+////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CLIB_ERROR_H__ */

@@ -5,6 +5,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 #if defined(LINUX)
 #include <unistd.h>
 #elif defined(WINDOWS)
@@ -13,6 +15,8 @@
 #else
 #define isatty(...) false
 #endif
+
+////////////////////////////////////////////////////////////////////////////
 
 struct CmLogLevelPrefix {
   const char *prefix;
@@ -30,6 +34,8 @@ static const struct CmLogLevelPrefix log_level_str[] = {
 };
 
 #define FMT_RESET "\033[0m"
+
+////////////////////////////////////////////////////////////////////////////
 
 #define _LOG(__log_level, __fmt)                                               \
   _clib_log(__log_level);                                                      \
@@ -55,6 +61,8 @@ static void _clib_log(LogLevel log_level) {
           log_level_str[log_level].prefix);
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 CLIB_FMT(2, 3)
 void clib_log(LogLevel log_level, const char *fmt, ...) {
   _LOG(log_level, fmt);
@@ -73,6 +81,8 @@ CLIB_FMT(1, 2) void clib_log_info(const char *fmt, ...) {
   _LOG(CLIB_LOG_INFO, fmt);
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 #ifndef NDEBUG
 CLIB_FMT(1, 2) void clib_log_debug(const char *fmt, ...) {
   _LOG(CLIB_LOG_DEBUG, fmt);
@@ -81,3 +91,5 @@ CLIB_FMT(1, 2) void clib_log_trace(const char *fmt, ...) {
   _LOG(CLIB_LOG_TRACE, fmt);
 }
 #endif
+
+////////////////////////////////////////////////////////////////////////////

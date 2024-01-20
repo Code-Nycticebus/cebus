@@ -5,6 +5,7 @@
 Here are various macros for figuring out what Platform and compiler is used.
 */
 
+////////////////////////////////////////////////////////////////////////////
 /* System */
 #if defined(__linux__)
 #define LINUX
@@ -17,6 +18,7 @@ Here are various macros for figuring out what Platform and compiler is used.
 #endif
 /* !System */
 
+////////////////////////////////////////////////////////////////////////////
 /* Architecture */
 #if defined(__x86_64__) || defined(_M_X64)
 #define x86_64
@@ -92,6 +94,7 @@ Here are various macros for figuring out what Platform and compiler is used.
 #endif
 /* !Architecture */
 
+////////////////////////////////////////////////////////////////////////////
 /* Compiler */
 #if defined(__GNUC__) && !defined(__clang__)
 #define GCC
@@ -117,6 +120,7 @@ Here are various macros for figuring out what Platform and compiler is used.
 #endif
 /* !Compiler */
 
+////////////////////////////////////////////////////////////////////////////
 /* CPU */
 #if defined(__LP64__) || defined(_LP64)
 #define CLIB_64BIT
@@ -125,6 +129,7 @@ Here are various macros for figuring out what Platform and compiler is used.
 #endif
 /* !CPU */
 
+////////////////////////////////////////////////////////////////////////////
 /* Byte-Order */
 #define ENDIAN_UNKOWN 0x00
 #define ENDIAN_LITTLE 0x01
@@ -142,9 +147,13 @@ Here are various macros for figuring out what Platform and compiler is used.
 #endif
 /* !Byte-Order */
 
+////////////////////////////////////////////////////////////////////////////
+
 #ifdef __cross__
 #define CLIB_CROSS_COMPILATION
 #endif
+
+////////////////////////////////////////////////////////////////////////////
 
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 #define CLIB_FMT(__fmt_arg, __var_args)                                        \
@@ -154,5 +163,7 @@ Here are various macros for figuring out what Platform and compiler is used.
 #else
 #define CLIB_FMT(...)
 #endif
+
+////////////////////////////////////////////////////////////////////////////
 
 #endif /*  !__CLIB_PLATFORM_H__ */

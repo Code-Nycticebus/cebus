@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <string.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 static FILE *file_open(Str filename, const char *mode, Error *error) {
   char _filename[FILENAME_MAX] = {0};
   memcpy(_filename, filename.data, filename.len);
@@ -72,3 +74,5 @@ defer:
   }
   return;
 }
+
+////////////////////////////////////////////////////////////////////////////

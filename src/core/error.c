@@ -5,6 +5,8 @@
 
 #include "core/logging.h"
 
+////////////////////////////////////////////////////////////////////////////
+
 void error_add_note(Error *err, const char *fmt, ...) {
   va_list va;
   va_start(va, fmt);
@@ -13,6 +15,8 @@ void error_add_note(Error *err, const char *fmt, ...) {
                                     ERROR_MESSAGE_MAX - err->msg_size, fmt, va);
   va_end(va);
 }
+
+////////////////////////////////////////////////////////////////////////////
 
 void _error_init(Error *err, i32 error, const char *fmt, ...) {
   err->failure = true;
@@ -26,3 +30,5 @@ void _error_init(Error *err, i32 error, const char *fmt, ...) {
 void _error_dump(Error *err) {
   clib_log_error("%s:%d:\n%s", err->file, err->line, err->message);
 }
+
+////////////////////////////////////////////////////////////////////////////

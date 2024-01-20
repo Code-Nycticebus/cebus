@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 #define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 
 struct Chunk {
@@ -16,6 +18,8 @@ struct Chunk {
   usize allocated;
   u8 data[];
 };
+
+////////////////////////////////////////////////////////////////////////////
 
 static Chunk *chunk_allocate(usize size) {
   Chunk *chunk = malloc(sizeof(Chunk) + size);
@@ -37,6 +41,8 @@ void arena_free(Arena *arena) {
   }
   arena->begin = NULL;
 }
+
+////////////////////////////////////////////////////////////////////////////
 
 void arena_reset(Arena *arena) {
   for (Chunk *next = arena->begin; next != NULL; next = next->next) {
@@ -71,6 +77,8 @@ void *arena_calloc(Arena *arena, usize size) {
   memset(ptr, 0, size);
   return ptr;
 }
+
+////////////////////////////////////////////////////////////////////////////
 
 void *arena_alloc_chunk(Arena *arena, usize size) {
   usize chunk_size = usize_max(size, CHUNK_DEFAULT_SIZE);
@@ -115,3 +123,5 @@ void arena_free_chunk(Arena *arena, void *ptr) {
   }
   free(chunk);
 }
+
+////////////////////////////////////////////////////////////////////////////

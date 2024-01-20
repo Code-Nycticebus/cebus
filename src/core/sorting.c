@@ -2,12 +2,16 @@
 
 #include <string.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 static void swap(void *a, void *b, usize size) {
   u8 temp[size];
   memcpy(temp, a, size);
   memcpy(a, b, size);
   memcpy(b, temp, size);
 }
+
+////////////////////////////////////////////////////////////////////////////
 
 static usize partition(u8 *base, usize size, usize low, usize high,
                        CompareFn compare) {
@@ -40,6 +44,8 @@ void quicksort(const void *src, void *dest, usize size, usize nelem,
   _quicksort(dest, size, 0, nelem - 1, compare);
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 static usize partition_ctx(u8 *base, usize size, usize low, usize high,
                            CompareCtxFn compare, const void *ctx) {
   u8 *pivot = &base[high * size];
@@ -70,3 +76,5 @@ void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
   }
   _quicksort_ctx(dest, size, 0, nelem - 1, compare, ctx);
 }
+
+////////////////////////////////////////////////////////////////////////////

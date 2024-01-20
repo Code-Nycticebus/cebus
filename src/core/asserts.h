@@ -21,6 +21,8 @@ clib_assert_return(EXPR, RETURN_VALUE);
 #include "core/platform.h"
 #include "logging.h" // IWYU pragma: export
 
+////////////////////////////////////////////////////////////////////////////
+
 #if defined(LINUX)
 #include <signal.h> // IWYU pragma: export
 #define debugbreak() raise(SIGTRAP)
@@ -31,6 +33,8 @@ clib_assert_return(EXPR, RETURN_VALUE);
 #include <stdlib.h> // IWYU pragma: export
 #define debugbreak(...) abort()
 #endif
+
+////////////////////////////////////////////////////////////////////////////
 
 #define _clib_assert_print(level, expr, ...)                                   \
   clib_log(level, "%s:%d: assert '%s' failed", __FILE__, __LINE__, expr);      \
@@ -69,5 +73,7 @@ clib_assert_return(EXPR, RETURN_VALUE);
 #else
 #define clib_assert_debug(...)
 #endif
+
+////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CLIB_ASSERTS_H__ */

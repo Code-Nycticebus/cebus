@@ -8,11 +8,15 @@
 #include <stddef.h> // IWYU pragma: export
 #include <stdint.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 #define KILOBYTES(s) ((usize)(s) * (usize)1e+3)
 #define MEGABYTES(s) ((usize)(s) * (usize)1e+6)
 #define GIGABYTES(s) ((usize)(s) * (usize)1e+9)
 
 #define ARRAY_SIZE(A) (sizeof((A)) / sizeof((A)[0]))
+
+////////////////////////////////////////////////////////////////////////////
 
 typedef enum {
   CMP_LESS = -1,
@@ -22,6 +26,8 @@ typedef enum {
 
 typedef CmpOrdering (*CompareFn)(const void *, const void *);
 typedef CmpOrdering (*CompareCtxFn)(const void *, const void *, const void *);
+
+////////////////////////////////////////////////////////////////////////////
 
 typedef uint8_t u8;
 #define U8_MAX UINT8_MAX
@@ -109,6 +115,8 @@ typedef double f64;
 #define PI 3.14159265358979323846
 #define E 2.71828182845904523536
 
+////////////////////////////////////////////////////////////////////////////
+
 #define BYTES(...)                                                             \
   (Bytes) {                                                                    \
     sizeof((const u8[]){__VA_ARGS__}), (const u8[]) { __VA_ARGS__ }            \
@@ -122,6 +130,8 @@ typedef struct {
   const u8 *data;
 } Bytes;
 
+////////////////////////////////////////////////////////////////////////////
+
 #define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
 #define STR_FMT "%.*s"
 #define STR_ARG(str) (i32)(str).len, (str).data
@@ -130,6 +140,8 @@ typedef struct {
   usize len;
   const char *data;
 } Str;
+
+////////////////////////////////////////////////////////////////////////////
 
 #define UTF8(s) utf8_decode(BYTES_STR(s), NULL)
 #define UTF8_FMT "%.*s"
@@ -141,11 +153,15 @@ typedef struct {
   usize len;
 } Utf8;
 
+////////////////////////////////////////////////////////////////////////////
+
 #if defined(LINUX)
 #include <bits/types/FILE.h>
 #elif defined(WINDOWS)
 #define _FILE_DEFINED
 typedef struct _iobuf FILE;
 #endif
+
+////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CLIB_DEFINES_H__ */
