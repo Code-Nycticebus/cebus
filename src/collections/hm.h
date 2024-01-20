@@ -12,8 +12,8 @@ hm_reserve(&hm, 10); // optional
 
 Then you can add elements by hash to the HashMap.
 ```c
-hm_insert(&set, str_hash(STR("Hello")), (HashValue){.as.i64=69});
-hm_insert(&set, str_hash(STR("World")), (HashValue){.as.i64=420});
+hm_insert(&set, str_hash(STR("Hello")), HashValue(i64, 69));
+hm_insert(&set, str_hash(STR("World")), HashValue(i64, 420));
 ```
 
 Now you can get the values by passing in the hash of the element.
@@ -37,6 +37,9 @@ typedef struct {
     void *ptr;
   } as;
 } HashValue;
+
+#define HashValue(T, value)                                                    \
+  (HashValue) { .as.T = value }
 
 typedef struct {
   u64 key;

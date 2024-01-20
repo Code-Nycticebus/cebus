@@ -11,8 +11,8 @@ static void test_insert(void) {
   Arena arena = {0};
   HashMap hm = hm_create(&arena);
 
-  hm_insert(&hm, str_hash(STR("Hello")), (HashValue){.as.u64 = 420});  // NOLINT
-  hm_insert(&hm, str_hash(STR("Hello2")), (HashValue){.as.i64 = -69}); // NOLINT
+  hm_insert(&hm, str_hash(STR("Hello")), HashValue(u64, 420));  // NOLINT
+  hm_insert(&hm, str_hash(STR("Hello2")), HashValue(i64, -69)); // NOLINT
 
   clib_assert(hm_get(&hm, str_hash(STR("Hello")))->as.u64 == 420,
               "ht should get the value correnctly");
@@ -30,7 +30,7 @@ static void test_hm(void) {
   hm_reserve(&hm, test_count * 2);
 
   for (size_t i = 0; i < test_count; i++) {
-    hm_insert(&hm, i, (HashValue){.as.u64 = i * 4});
+    hm_insert(&hm, i, HashValue(u64, i * 4));
   }
   clib_assert(hm.count == test_count, "Hash table should be at this size");
 
@@ -65,7 +65,7 @@ static void test_example(void) {
     HashValue *value = hm_get(&hm, hash);
     if (value == NULL) {
       vec_push(&text, list.items[i]);
-      hm_insert(&hm, hash, (HashValue){.as.u64 = 1});
+      hm_insert(&hm, hash, HashValue(u64, 1));
     } else {
       value->as.u64++;
     }
