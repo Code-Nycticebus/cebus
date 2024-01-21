@@ -64,19 +64,18 @@ Bytes bytes_from_hex(Str s, Arena *arena) {
     s = str_substring(s, 2, s.len);
   }
 
-  u8 *buffer = arena_calloc(arena, s.len);
+  u8 *buffer = arena_calloc(arena, (s.len / 2) + 1);
+  // to convert strings like "0x101".
+  // in the first iteration:
+  // take 1 or 2 chars depending if s.len is even or odd
   usize idx = 0;
-  for (Str chunk = {0};
-       str_try_take(&s,
-                    // to correctly convert strings like "0x101"
-                    idx != 0 ? 2 : 2 - s.len % 2, // This is cursed
-                    &chunk);) {
-    for (usize i = 0; i < chunk.len; i++) {
+  for (Str ch = {0}; str_try_take(&s, idx == 0 ? 2 - s.len % 2 : 2, &ch);) {
+    for (usize i = 0; i < ch.len; i++) {
       buffer[idx] <<= 4;
-      if (isdigit(chunk.data[i])) {
-        buffer[idx] |= (u8)(chunk.data[i] - '0');
-      } else if (isxdigit(chunk.data[i])) {
-        const char d = (char)tolower(chunk.data[i]);
+      if (isdigit(ch.data[i])) {
+        buffer[idx] |= (u8)(ch.data[i] - '0');
+      } else if (isxdigit(ch.data[i])) {
+        const char d = (char)tolower(ch.data[i]);
         buffer[idx] |= 10 + (u8)(d - 'a'); // NOLINT
       }
     }
