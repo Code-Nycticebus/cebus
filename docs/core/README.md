@@ -79,10 +79,13 @@ Arena arena = {0};
 
 Now you can allocate from this arena.
 ```c
-int* i = arena_alloc(&arena, sizeof(int));
+int* i1 = arena_alloc(&arena, sizeof(int));
+int* i2 = arena_alloc(&arena, sizeof(int));
+int* i3 = arena_alloc(&arena, sizeof(int));
 ```
 
-Don't forget to free the arena once you're done.
+Don't forget to free the arena once you're done. This frees all allocated
+integers at once.
 ```c
 arena_free(&arena);
 ```
