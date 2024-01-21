@@ -22,21 +22,19 @@ arena_free(&arena);
 ```
 
 
-Iterating over lines is easy
+Iterating over a string is easy
 ```c
-Str content = STR(
-    "This is a line\n"
-    "This is another line\n"
-    "This is the Last Line");
-for (Str line = {0}; str_try_chop_by_delim(&content, '\n', &line)) {
-  printf("LINE: \""STR_FMT"\"\n", STR_ARG(line));
+Str content = STR("This is a line")
+for (Str word = {0}; str_try_chop_by_delim(&content, ' ', &word)) {
+  printf(STR_FMT"\n", STR_ARG(word));
 }
 ```
 Outputs:
 ```console
-LINE: "This is a line"
-LINE: "This is another line"
-LINE: "This is the Last Line"
+This
+is
+a
+line
 ```
 */
 
