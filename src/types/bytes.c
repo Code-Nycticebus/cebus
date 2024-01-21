@@ -72,11 +72,13 @@ Bytes bytes_from_hex(Str s, Arena *arena) {
   for (Str ch = {0}; str_try_take(&s, idx == 0 ? 2 - s.len % 2 : 2, &ch);) {
     for (usize i = 0; i < ch.len; i++) {
       buffer[idx] <<= 4;
-      if (isdigit(ch.data[i])) {
-        buffer[idx] |= (u8)(ch.data[i] - '0');
-      } else if (isxdigit(ch.data[i])) {
-        const char d = (char)tolower(ch.data[i]);
-        buffer[idx] |= 10 + (u8)(d - 'a'); // NOLINT
+      if (isxdigit(ch.data[i])) {
+        if ('0' <= ch.data[i] && ch.data[i] <= '9') {
+          buffer[idx] |= (u8)(ch.data[i] - '0');
+        } else {
+          const char d = (char)tolower(ch.data[i]);
+          buffer[idx] |= 10 + (u8)(d - 'a'); // NOLINT
+        }
       }
     }
     idx++;
