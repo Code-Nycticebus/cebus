@@ -51,11 +51,11 @@ Just a wrapper around ```#include <ctype.h>```
 
 ```c_is_alnum()```\
 checks for an alphanumeric character; it is equivalent to
-```(c_is_alpha(c) || c_is_digit(c))```.
+```c_is_alpha(c) || c_is_digit(c)```.
 
 ```c_is_alpha()```\
 checks for an alphabetic character; in the standard "C" locale, it is
-equivalent to ```(c_is_upper(c) || c_is_lower(c))```. In some locales, there may
+equivalent to ```c_is_upper(c) || c_is_lower(c)```. In some locales, there may
 be additional characters for which ```c_is_alpha()``` is true-letters which are
 neither upper case nor lower case.
 
