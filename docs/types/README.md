@@ -80,6 +80,7 @@ checks for any printable character including space.
 ```c_is_punct()```\
 checks for any printable character which is not a space or an alphanumeric
 character.
+
 ```c_is_space()```\
 checks for white-space characters. In the "C" and "POSIX"
 locales, these are: space, form-feed ```\f```, newline ```\n```, carriage return
