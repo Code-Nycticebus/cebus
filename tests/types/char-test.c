@@ -54,12 +54,16 @@ static void test_char_convertion(void) {
   clib_assert(c_to_upper('a') == 'A', "should be 'A'");
   clib_assert(c_to_lower('A') == 'a', "should be 'a'");
 
-  clib_assert(c_to_digit('2') == 2, "should be 2");
-  clib_assert(c_to_digit('2') == 2, "should be 2");
+  clib_assert(c_to_u8('2') == 2, "should be 2");
+  clib_assert(c_u8_to_c(2) == '2', "should be '2'");
 
-  clib_assert(c_to_xdigit('2') == 2, "should be 2");
-  clib_assert(c_to_xdigit('a') == 10, "should be 10");
-  clib_assert(c_to_xdigit('A') == 10, "should be 10");
+  clib_assert(c_hex_to_u8('2') == 2, "should be 2");
+  clib_assert(c_hex_to_u8('a') == 10, "should be 10");
+  clib_assert(c_hex_to_u8('A') == 10, "should be 10");
+
+  clib_assert(c_u8_to_hex(2) == '2', "should be '2'");
+  clib_assert(c_u8_to_hex(10) == 'a', "should be 'a'");
+  clib_assert(c_u8_to_HEX(10) == 'A', "should be 'A'");
 }
 
 int main(void) {

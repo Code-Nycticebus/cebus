@@ -73,7 +73,7 @@ Bytes bytes_from_hex(Str s, Arena *arena) {
     for (usize i = 0; i < ch.len; i++) {
       buffer[idx] <<= 4;
       if (c_is_xdigit(ch.data[i])) {
-        buffer[idx] |= c_to_xdigit(ch.data[i]);
+        buffer[idx] |= c_hex_to_u8(ch.data[i]);
       }
     }
     idx++;
