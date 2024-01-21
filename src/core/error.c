@@ -9,16 +9,18 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
+bool error_occured(Error *err) { return err && err->failure; }
+
 void error_raise(Error *err) {
+  clib_assert_debug(err, "Error is 'NULL'!");
   clib_log_fatal("%s:%d:\n%s", err->file, err->line, err->message);
   abort();
 }
 
 void error_warn(Error *err) {
+  clib_assert_debug(err, "Error is 'NULL'!");
   clib_log_warning("%s:%d:\n%s", err->file, err->line, err->message);
 }
-
-bool error_occured(Error *err) { return err && err->failure; }
 
 ////////////////////////////////////////////////////////////////////////////
 

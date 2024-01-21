@@ -17,8 +17,9 @@ void function_that_can_fail(Error* error)
 }
 ```
 
-Create a new ```Error``` to pass it to a function. Always check with
-```error_occured()```.
+Create new ```Error``` with ```ErrorCreate``` to except errors that occure
+inside the function. Always check with ```error_occured()``` before doing any
+calls to the error api.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
@@ -43,8 +44,8 @@ Pass ```ErrRaise``` to that function to automatically call
 function_that_can_fail(ErrRaise);
 ```
 
-Pass ```ErrDefault``` to create a new ```Error``` inside the function. Meaning
-it will show the file and line number where the error occured.
+If the function is called with ```ErrDefault``` a new ```ErrorRaise``` gets
+created at the first occurence of an error and ```error_raise()``` get called.
 ```c
 function_that_can_fail(ErrDefault);
 ```
@@ -86,12 +87,15 @@ typedef struct {
 #define error_init(E, code, ...)                                               \
   _error_init((E) == ErrDefault ? ErrRaise : (E), code, __FILE__, __LINE__,    \
               __VA_ARGS__);
-#define error_add_note(E, ...)                                                 \
-  _error_add_note(E, __FILE__, __LINE__, __VA_ARGS__)
+
+bool error_occured(Error *err);
+
+////////////////////////////////////////////////////////////////////////////
 
 void noreturn error_raise(Error *err);
 void error_warn(Error *err);
-bool error_occured(Error *err);
+#define error_add_note(E, ...)                                                 \
+  _error_add_note(E, __FILE__, __LINE__, __VA_ARGS__)
 
 ////////////////////////////////////////////////////////////////////////////
 
