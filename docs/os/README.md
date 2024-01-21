@@ -24,8 +24,8 @@ To read in the entire file as Str
 Arena arena = {0};
 Error error = ErrCreate;
 Str content = file_read_str(STR("filename.txt"), &arena, &error);
-if (error.failure) {
-  ErrRaise(&error);
+if (error_occured(&error)) {
+  error_raise(&error);
 }
 arena_free(&arena);
 ```
