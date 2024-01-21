@@ -18,12 +18,14 @@ void error_warn(Error *err) {
   clib_log_warning("%s:%d:\n%s", err->file, err->line, err->message);
 }
 
+bool error_occured(Error *err) { return err && err->failure; }
+
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_init(Error *err, i32 error, const char *file, int line,
+void _error_init(Error *err, i32 code, const char *file, int line,
                  const char *fmt, ...) {
   err->failure = true;
-  err->error = error;
+  err->code = code;
   err->msg_size = 0;
   err->msg_size += (usize)snprintf(&err->message[err->msg_size],
                                    ERROR_MESSAGE_MAX - err->msg_size,

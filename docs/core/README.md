@@ -22,12 +22,13 @@ quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 # [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
 ## Usage
-If a function can fail it should take an ```Error*``` as parameter.
+If a function can fail it should take an ```Error*``` as parameter. Initialize
+the Error with ```error_init()```.
 ```c
 void function_that_can_fail(Error* error)
   int error_code = -1; // Function returns a bad value
   if (error_code < 0) {
-    Err(error, error_code, "function_that_can_fail(): error: %d", error_code);
+    error_init(error, error_code, "error: %d", error_code);
     return;
   }
   // Further processing
@@ -35,12 +36,23 @@ void function_that_can_fail(Error* error)
 }
 ```
 
-Create a new ```Error``` to pass it to a function.
+Create a new ```Error``` to pass it to a function. Always check with
+```error_occured()```.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-if (error.failure) {
+if (error_occured(&error)) {
   error_raise(&error);
+}
+```
+
+Add notes to ```Error``` with ```error_add_note()```
+```c
+Error error = ErrCreate;
+function_that_can_fail(&error);
+if (error_occured(&error)) {
+  error_add_note(&error, "Note added to error");
+  return;
 }
 ```
 

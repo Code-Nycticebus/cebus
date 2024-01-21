@@ -16,8 +16,8 @@ static FILE *file_open(Str filename, const char *mode, Error *error) {
   errno = 0;
   FILE *handle = fopen(_filename, mode);
   if (handle == NULL) {
-    Err(error, errno, "Could not open file: %s: %s", _filename,
-        strerror(errno));
+    error_init(error, errno, "Could not open file: %s: %s", _filename,
+               strerror(errno));
   }
   return handle;
 }
@@ -27,7 +27,7 @@ static usize file_size(FILE *handle, Error *error) {
   const long size = ftell(handle);
   fseek(handle, 0, SEEK_SET);
   if (size < 0) {
-    Err(error, errno, "Could not get file size: %s", strerror(errno));
+    error_init(error, errno, "Could not get file size: %s", strerror(errno));
     return 0;
   }
   return (usize)size;
@@ -87,8 +87,8 @@ void file_rename(Str old_name, Str new_name, Error *error) {
   errno = 0;
   int ret = rename(_old_name, _new_name);
   if (ret == -1) {
-    Err(error, errno, "Could not rename the file: " STR_FMT ": %s",
-        STR_ARG(old_name), strerror(errno));
+    error_init(error, errno, "Could not rename the file: " STR_FMT ": %s",
+               STR_ARG(old_name), strerror(errno));
   }
 }
 
@@ -99,8 +99,8 @@ void file_remove(Str filename, Error *error) {
   errno = 0;
   int ret = remove(_filename);
   if (ret == -1) {
-    Err(error, errno, "Could not rename the file: " STR_FMT ": %s",
-        STR_ARG(filename), strerror(errno));
+    error_init(error, errno, "Could not rename the file: " STR_FMT ": %s",
+               STR_ARG(filename), strerror(errno));
   }
 }
 
