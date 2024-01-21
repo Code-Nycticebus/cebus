@@ -64,7 +64,7 @@ Bytes bytes_from_hex(Str s, Arena *arena) {
     s = str_substring(s, 2, s.len);
   }
 
-  u8 *buffer = arena_calloc(arena, (s.len / 2) + 1);
+  u8 *buffer = arena_calloc(arena, (s.len / 2) + (s.len % 2));
   // to convert strings like "0x101".
   // in the first iteration:
   // take 1 or 2 chars depending if s.len is even or odd
