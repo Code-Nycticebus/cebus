@@ -44,10 +44,16 @@ if (error.failure) {
 }
 ```
 
-Pass ```ErrThrow``` or ```ErrNone``` to that function to automatically call
+Pass ```ErrRaise``` to that function to automatically call
 ```error_raise()``` if it encouters an error inside the function.
 ```c
-function_that_can_fail(ErrThrow);
+function_that_can_fail(ErrRaise);
+```
+
+Pass ```ErrDefault``` to create a new ```Error``` inside the function. Meaning
+it will show the file and line number where the error occured.
+```c
+function_that_can_fail(ErrDefault);
 ```
 # [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.

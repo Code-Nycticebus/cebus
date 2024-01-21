@@ -25,10 +25,16 @@ if (error.failure) {
 }
 ```
 
-Pass ```ErrThrow``` or ```ErrNone``` to that function to automatically call
+Pass ```ErrRaise``` to that function to automatically call
 ```error_raise()``` if it encouters an error inside the function.
 ```c
-function_that_can_fail(ErrThrow);
+function_that_can_fail(ErrRaise);
+```
+
+Pass ```ErrDefault``` to create a new ```Error``` inside the function. Meaning
+it will show the file and line number where the error occured.
+```c
+function_that_can_fail(ErrDefault);
 ```
 */
 
@@ -48,27 +54,43 @@ typedef struct {
   char message[ERROR_MESSAGE_MAX];
 } Error;
 
-#define ErrCreate ((Error){.raise = false, .line = __LINE__, .file = __FILE__})
-#define ErrThrow                                                               \
-  ((Error[]){{.raise = true, .line = __LINE__, .file = __FILE__}})
-#define ErrNone ((Error *)NULL)
+#define ErrNew                                                                 \
+  ((Error){                                                                    \
+      .raise = false,                                                          \
+      .line = __LINE__,                                                        \
+      .file = __FILE__,                                                        \
+  })
+#define ErrRaise                                                               \
+  ((Error[]){{                                                                 \
+      .raise = true,                                                           \
+      .line = __LINE__,                                                        \
+      .file = __FILE__,                                                        \
+  }})
+
+#define ErrDefault ((Error *)NULL)
 
 ////////////////////////////////////////////////////////////////////////////
 
 #define Err(E, error, ...)                                                     \
   do {                                                                         \
-    _error_init(E ? E : ErrThrow, error, __VA_ARGS__);                         \
+    _error_init((E) == ErrDefault ? ErrRaise : (E), error, __FILE__, __LINE__, \
+                __VA_ARGS__);                                                  \
   } while (0)
+
+#define ErrFail(E) (E && (E)->failure)
+#define ErrNote(E, ...) _error_add_note(E, __FILE__, __LINE__, __VA_ARGS__)
 
 ////////////////////////////////////////////////////////////////////////////
 
 void noreturn error_raise(Error *err);
 void error_warn(Error *err);
-void fmt_args(2) error_add_note(Error *err, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 
-void fmt_args(3) _error_init(Error *err, i32 error, const char *fmt, ...);
+void fmt_args(5) _error_init(Error *err, i32 error, const char *file, int line,
+                             const char *fmt, ...);
+void fmt_args(4) _error_add_note(Error *err, const char *file, int line,
+                                 const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 
