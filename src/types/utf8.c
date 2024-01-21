@@ -3,9 +3,9 @@
 #include "core/arena.h"
 #include "core/asserts.h"
 #include "types/bytes.h"
+#include "types/char.h"
 #include "types/integers.h"
 
-#include <ctype.h>
 #include <string.h>
 
 Utf8 utf8_decode(Bytes bytes, Error *error) {
@@ -139,7 +139,7 @@ Utf8 utf8_upper(Utf8 s, Arena *arena) {
   for (usize i = 0; i < s.size; ++i) {
     usize bit_count = u8_leading_ones((u8)s.data[i]);
     if (bit_count == 0) {
-      buffer[i] = (char)toupper(s.data[i]);
+      buffer[i] = c_to_upper(s.data[i]);
     } else {
       memcpy(&buffer[i], &s.data[i], bit_count);
       i += bit_count - 1;
@@ -153,7 +153,7 @@ Utf8 utf8_lower(Utf8 s, Arena *arena) {
   for (usize i = 0; i < s.size; ++i) {
     usize bit_count = u8_leading_ones((u8)s.data[i]);
     if (bit_count == 0) {
-      buffer[i] = (char)tolower(s.data[i]);
+      buffer[i] = c_to_upper(s.data[i]);
     } else {
       memcpy(&buffer[i], &s.data[i], bit_count);
       i += bit_count - 1;
