@@ -35,11 +35,13 @@ int main(void) {
   Error err2 = ErrNew;
   fn_that_fails_and_adds_note(true, &err2);
   clib_assert(
-      strcmp(err2.message,
-             "/home/nycticebus/Code/c/clib/tests/core/error-test.c:12:\n"
-             "fn_that_fails(): function that fails failed °-°. 'true'\n"
-             "/home/nycticebus/Code/c/clib/tests/core/error-test.c:22:\n"
-             "Note: how did the function that fails, fail! 'true'") == 0,
+      strcmp(
+          err2.message,
+          "  [ERROR]: "
+          "/home/nycticebus/Code/c/clib/tests/core/error-test.c:12:\n"
+          "fn_that_fails(): function that fails failed °-°. 'true'\n"
+          "  [NOTE]: /home/nycticebus/Code/c/clib/tests/core/error-test.c:22:\n"
+          "Note: how did the function that fails, fail! 'true'") == 0,
       "Message is not correct");
   clib_assert(err2.error == 69, "did not set err2.error correctly");
 }
