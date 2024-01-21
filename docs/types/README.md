@@ -45,3 +45,4 @@ line
 # [integers.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/integers.h)
 ## Usage
 Just use the functions.
+# [char.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/char.h)
