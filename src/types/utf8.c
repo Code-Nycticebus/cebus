@@ -153,7 +153,7 @@ Utf8 utf8_lower(Utf8 s, Arena *arena) {
   for (usize i = 0; i < s.size; ++i) {
     usize bit_count = u8_leading_ones((u8)s.data[i]);
     if (bit_count == 0) {
-      buffer[i] = c_to_upper(s.data[i]);
+      buffer[i] = c_to_lower(s.data[i]);
     } else {
       memcpy(&buffer[i], &s.data[i], bit_count);
       i += bit_count - 1;
