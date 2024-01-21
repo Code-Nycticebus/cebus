@@ -1,4 +1,6 @@
-#include "../os.h"
+#include "core/platform.h" // IWYU pragma: keep always
+#include "fs.h"            // IWYU pragma: keep always
+#include "os.h"            // IWYU pragma: keep always
 
 #if defined(LINUX)
 
@@ -23,6 +25,14 @@ Str os_getcwd(Arena *arena) {
   char *ret = getcwd(buf, FILENAME_MAX);
   clib_assert(ret, "Could not get cwd");
   return str_from_cstr(ret);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+bool file_exists(Str filename) {
+  char _filename[FILENAME_MAX] = {0};
+  memcpy(_filename, filename.data, filename.len);
+  return access(_filename, 0) == 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////

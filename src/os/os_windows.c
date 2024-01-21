@@ -1,4 +1,6 @@
-#include "../os.h"
+#include "core/platform.h" // IWYU pragma: keep always
+#include "fs.h"            // IWYU pragma: keep always
+#include "os.h"            // IWYU pragma: keep always
 
 #if defined(WINDOWS)
 
@@ -22,6 +24,14 @@ Str os_getcwd(Arena *arena) {
   GetCurrentDirectory((DWORD)size, buf);
   // TODO error handling
   return str_from_parts(size, buf);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+bool file_exists(Str filename) {
+  char _filename[FILENAME_MAX] = {0};
+  memcpy(_filename, filename.data, filename.len);
+  return OpenFile(_filename, NULL, OF_EXIST) != HFILE_ERROR;
 }
 
 //////////////////////////////////////////////////////////////////////////////

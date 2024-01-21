@@ -7,7 +7,6 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -103,12 +102,6 @@ void file_remove(Str filename, Error *error) {
     Err(error, errno, "Could not rename the file: " STR_FMT ": %s",
         STR_ARG(filename), strerror(errno));
   }
-}
-
-bool file_exists(Str filename) {
-  char _filename[FILENAME_MAX] = {0};
-  memcpy(_filename, filename.data, filename.len);
-  return access(_filename, 0) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////
