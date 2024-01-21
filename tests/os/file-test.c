@@ -3,33 +3,30 @@
 
 #include "collections/vec.h"
 #include "core/defines.h"
-#include "types/str.h"
 
 int main(void) {
   Arena arena = {0};
 
   clib_assert(file_exists(STR(__FILE__)), "This file should exist");
 
-  file_write(STR("test"), BYTES(0x69, 0x69), ErrThrow);
-  clib_assert(file_exists(STR("test")), "This file should exist");
+  Str filename1 = STR("__test_1_");
+  Str filename2 = STR("__test_2_");
 
-  file_rename(STR("test"), STR("test.2"), ErrThrow);
-  clib_assert(file_exists(STR("test.2")), "This file should exist");
+  file_write(filename1, BYTES(0x69, 0x69), ErrThrow);
+  clib_assert(file_exists(filename1), "This file should exist");
 
-  file_remove(STR("test.2"), ErrThrow);
-  clib_assert(file_exists(STR("test.2")) == false,
-              "This file should not exist");
+  file_rename(filename1, filename2, ErrThrow);
+  clib_assert(file_exists(filename2), "This file should exist");
 
-  Str content = file_read_str(STR(__FILE__), &arena, ErrThrow);
+  Bytes content = file_read_bytes(filename2, &arena, ErrThrow);
 
-  VEC(Str) list = {0};
-  vec_init(&list, &arena);
-  for (Str line = {0}; str_try_chop_by_delim(&content, '\n', &line);) {
-    vec_push(&list, line);
-  }
+  clib_assert(content.data[0] == 0x69, "Did not read the file correctly");
+  clib_assert(content.data[1] == 0x69, "Did not read the file correctly");
 
-  Str new = str_join_suffix(STR("\n"), list.len, list.items, &arena);
-  file_write(STR(__FILE__), str_to_bytes(new), ErrThrow);
+  file_remove(filename2, ErrThrow);
+
+  clib_assert(file_exists(filename2) == false, "This file should not exist");
+  clib_assert(file_exists(filename1) == false, "This file should not exist");
 
   arena_free(&arena);
 }
