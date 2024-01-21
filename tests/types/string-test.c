@@ -1,11 +1,9 @@
+#include "types/char.h"
 #include "types/str.h"
 
 #include "core/asserts.h"
 
-#include <ctype.h>
 #include <stdlib.h>
-
-static bool sep(char c) { return isspace(c) || isblank(c); }
 
 static void test_compare(void) {
   Str s = STR("Hello, World");
@@ -86,13 +84,13 @@ static void test_chop(void) {
   Str h = str_chop_by_delim(&text, '\n');
   clib_assert(str_eq(h, STR("Hello")), "");
 
-  Str rest = str_chop_by_predicate(&text, sep);
+  Str rest = str_chop_by_predicate(&text, c_is_space);
   clib_assert(str_eq(rest, STR("This")), STR_FMT, STR_ARG(rest));
-  rest = str_chop_by_predicate(&text, sep);
+  rest = str_chop_by_predicate(&text, c_is_space);
   clib_assert(str_eq(rest, STR("is")), STR_FMT, STR_ARG(rest));
-  rest = str_chop_by_predicate(&text, sep);
+  rest = str_chop_by_predicate(&text, c_is_space);
   clib_assert(str_eq(rest, STR("")), STR_FMT, STR_ARG(rest));
-  rest = str_chop_by_predicate(&text, sep);
+  rest = str_chop_by_predicate(&text, c_is_space);
   clib_assert(str_eq(rest, STR("text")), STR_FMT, STR_ARG(rest));
 }
 
@@ -104,11 +102,11 @@ static void test_try_chop(void) {
   clib_assert(str_eq(h, STR("Hello")), STR_FMT, STR_ARG(h));
 
   Str rest = {0};
-  bool t2 = str_try_chop_by_predicate(&text, sep, &rest);
+  bool t2 = str_try_chop_by_predicate(&text, c_is_space, &rest);
   clib_assert(t2 == true, "");
   clib_assert(str_eq(rest, STR("This")), STR_FMT, STR_ARG(rest));
 
-  t2 = str_try_chop_by_predicate(&text, sep, &rest);
+  t2 = str_try_chop_by_predicate(&text, c_is_space, &rest);
   clib_assert(t2 == true, "");
   clib_assert(str_eq(rest, STR("is")), STR_FMT, STR_ARG(rest));
 
@@ -116,7 +114,7 @@ static void test_try_chop(void) {
   clib_assert(t2 == true, "");
   clib_assert(str_eq(rest, STR("")), STR_FMT, STR_ARG(rest));
 
-  t2 = str_try_chop_by_predicate(&text, sep, &rest);
+  t2 = str_try_chop_by_predicate(&text, c_is_space, &rest);
   clib_assert(t2 == true, STR_FMT, STR_ARG(rest));
   clib_assert(str_eq(rest, STR("text")), STR_FMT, STR_ARG(rest));
 
@@ -126,7 +124,7 @@ static void test_try_chop(void) {
 
 static void test_chop_right(void) {
   Str text = STR("Hello\nThis is text");
-  Str t = str_chop_right_by_predicate(&text, sep);
+  Str t = str_chop_right_by_predicate(&text, c_is_space);
   Str rest = str_chop_right_by_delim(&text, '\n');
   Str rest2 = str_chop_right_by_delim(&text, '\n');
   Str rest3 = str_chop_right_by_delim(&text, '\n');

@@ -4,6 +4,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 bool c_is_alpha(char c) { return isalpha(c); }
+bool c_is_space(char c) { return isspace(c); }
 bool c_is_digit(char c) { return isdigit(c); }
 bool c_is_xdigit(char c) { return isxdigit(c); }
 

@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 bool c_is_alpha(char c);
+bool c_is_space(char c);
 bool c_is_digit(char c);
 bool c_is_xdigit(char c);
 
