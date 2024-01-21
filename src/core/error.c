@@ -24,6 +24,7 @@ void _error_init(Error *err, i32 error, const char *file, int line,
                  const char *fmt, ...) {
   err->failure = true;
   err->error = error;
+  err->msg_size = 0;
   err->msg_size += (usize)snprintf(&err->message[err->msg_size],
                                    ERROR_MESSAGE_MAX - err->msg_size,
                                    "  [ERROR] %s:%d:\n", file, line);
