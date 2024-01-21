@@ -164,4 +164,51 @@ typedef struct _iobuf FILE;
 
 ////////////////////////////////////////////////////////////////////////////
 
+#if defined(GCC) || defined(CLANG)
+
+#include <sys/cdefs.h>
+#define export
+#if __has_attribute(noreturn)
+#define noreturn __attribute__((noreturn))
+#else
+#define noreturn
+#endif
+#define unused __attribute_maybe_unused__
+#define used __attribute_used__
+#define likely(x) __glibc_likely(x)
+#define unlikely(x) __glibc_unlikely(x)
+#define deprecated __attribute_deprecated__
+#if __has_attribute(format)
+#define fmt_args(__fmt_arg)                                                    \
+  __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
+#else
+#define noreturn
+#endif
+
+#elif defined(MSVC)
+
+#define export __declspec(dllexport)
+#define noreturn __declspec(noreturn)
+#define unused __pragma(warning(suppress : 4100))
+#define used __pragma(warning(suppress : 4100))
+#define likely(x) (x)
+#define unlikely(x) (x)
+#define deprecated __declspec(deprecated)
+#define fmt_args(__fmt_arg) _Printf_format_string_ __fmt_arg
+
+#else
+
+#define export
+#define noreturn
+#define unused
+#define used
+#define likely(x) (x)
+#define unlikely(x) (x)
+#define deprecated
+#define fmt_args(...)
+
+#endif
+
+////////////////////////////////////////////////////////////////////////////
+
 #endif /* !__CLIB_DEFINES_H__ */

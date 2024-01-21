@@ -1,7 +1,7 @@
 #ifndef __CLIB_LOGGING_H__
 #define __CLIB_LOGGING_H__
 
-#include "core/platform.h"
+#include "core/defines.h"
 
 #include <stdio.h> // IWYU pragma: export
 
@@ -18,17 +18,17 @@ typedef enum {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void clib_log(LogLevel log_level, const char *fmt, ...) CLIB_FMT(2, 3);
-void clib_log_fatal(const char *fmt, ...) CLIB_FMT(1, 2);
-void clib_log_error(const char *fmt, ...) CLIB_FMT(1, 2);
-void clib_log_warning(const char *fmt, ...) CLIB_FMT(1, 2);
-void clib_log_info(const char *fmt, ...) CLIB_FMT(1, 2);
+void fmt_args(2) clib_log(LogLevel log_level, const char *fmt, ...);
+void fmt_args(1) clib_log_fatal(const char *fmt, ...);
+void fmt_args(1) clib_log_error(const char *fmt, ...);
+void fmt_args(1) clib_log_warning(const char *fmt, ...);
+void fmt_args(1) clib_log_info(const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 
 #ifndef NDEBUG
-void clib_log_debug(const char *fmt, ...) CLIB_FMT(1, 2);
-void clib_log_trace(const char *fmt, ...) CLIB_FMT(1, 2);
+void fmt_args(1) clib_log_debug(const char *fmt, ...);
+void fmt_args(1) clib_log_trace(const char *fmt, ...);
 #else
 #define clib_log_debug(...)
 #define clib_log_trace(...)

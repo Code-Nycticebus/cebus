@@ -51,7 +51,7 @@ static bool display_colors = false;
 static bool tty_checked = false;
 
 static void _clib_log(LogLevel log_level) {
-  if (!tty_checked) {
+  if (unlikely(!tty_checked)) {
     tty_checked = true;
     display_colors = isatty(STDOUT_FILENO) && isatty(STDERR_FILENO);
   }
@@ -63,33 +63,20 @@ static void _clib_log(LogLevel log_level) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-CLIB_FMT(2, 3)
 void clib_log(LogLevel log_level, const char *fmt, ...) {
   _LOG(log_level, fmt);
 }
 
-CLIB_FMT(1, 2) void clib_log_fatal(const char *fmt, ...) {
-  _LOG(CLIB_LOG_FATAL, fmt);
-}
-CLIB_FMT(1, 2) void clib_log_error(const char *fmt, ...) {
-  _LOG(CLIB_LOG_ERROR, fmt);
-}
-CLIB_FMT(1, 2) void clib_log_warning(const char *fmt, ...) {
-  _LOG(CLIB_LOG_WARNING, fmt);
-}
-CLIB_FMT(1, 2) void clib_log_info(const char *fmt, ...) {
-  _LOG(CLIB_LOG_INFO, fmt);
-}
+void clib_log_fatal(const char *fmt, ...) { _LOG(CLIB_LOG_FATAL, fmt); }
+void clib_log_error(const char *fmt, ...) { _LOG(CLIB_LOG_ERROR, fmt); }
+void clib_log_warning(const char *fmt, ...) { _LOG(CLIB_LOG_WARNING, fmt); }
+void clib_log_info(const char *fmt, ...) { _LOG(CLIB_LOG_INFO, fmt); }
 
 ////////////////////////////////////////////////////////////////////////////
 
 #ifndef NDEBUG
-CLIB_FMT(1, 2) void clib_log_debug(const char *fmt, ...) {
-  _LOG(CLIB_LOG_DEBUG, fmt);
-}
-CLIB_FMT(1, 2) void clib_log_trace(const char *fmt, ...) {
-  _LOG(CLIB_LOG_TRACE, fmt);
-}
+void clib_log_debug(const char *fmt, ...) { _LOG(CLIB_LOG_DEBUG, fmt); }
+void clib_log_trace(const char *fmt, ...) { _LOG(CLIB_LOG_TRACE, fmt); }
 #endif
 
 ////////////////////////////////////////////////////////////////////////////

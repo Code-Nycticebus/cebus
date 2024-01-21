@@ -33,7 +33,6 @@ function_that_can_fail(ErrThrow);
 */
 
 #include "core/defines.h"
-#include "core/platform.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -63,13 +62,13 @@ typedef struct {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void error_raise(Error *err);
+void noreturn error_raise(Error *err);
 void error_warn(Error *err);
-void error_add_note(Error *err, const char *fmt, ...) CLIB_FMT(2, 3);
+void fmt_args(2) error_add_note(Error *err, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_init(Error *err, i32 error, const char *fmt, ...) CLIB_FMT(3, 4);
+void fmt_args(3) _error_init(Error *err, i32 error, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 
