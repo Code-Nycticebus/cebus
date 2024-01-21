@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -75,6 +76,39 @@ defer:
     fclose(handle);
   }
   return;
+}
+
+void file_rename(Str old_name, Str new_name, Error *error) {
+  char _old_name[FILENAME_MAX] = {0};
+  memcpy(_old_name, old_name.data, old_name.len);
+
+  char _new_name[FILENAME_MAX] = {0};
+  memcpy(_new_name, new_name.data, new_name.len);
+
+  errno = 0;
+  int ret = rename(_old_name, _new_name);
+  if (ret == -1) {
+    Err(error, errno, "Could not rename the file: " STR_FMT ": %s",
+        STR_ARG(old_name), strerror(errno));
+  }
+}
+
+void file_remove(Str filename, Error *error) {
+  char _filename[FILENAME_MAX] = {0};
+  memcpy(_filename, filename.data, filename.len);
+
+  errno = 0;
+  int ret = remove(_filename);
+  if (ret == -1) {
+    Err(error, errno, "Could not rename the file: " STR_FMT ": %s",
+        STR_ARG(filename), strerror(errno));
+  }
+}
+
+bool file_exists(Str filename) {
+  char _filename[FILENAME_MAX] = {0};
+  memcpy(_filename, filename.data, filename.len);
+  return access(_filename, 0) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////
