@@ -26,7 +26,7 @@ void _error_init(Error *err, i32 error, const char *file, int line,
   err->error = error;
   err->msg_size += (usize)snprintf(&err->message[err->msg_size],
                                    ERROR_MESSAGE_MAX - err->msg_size,
-                                   "  [ERROR]: %s:%d:\n", file, line);
+                                   "  [ERROR] %s:%d:\n", file, line);
   va_list va;
   va_start(va, fmt);
   err->msg_size += (usize)vsnprintf(&err->message[err->msg_size],
@@ -44,7 +44,7 @@ void _error_add_note(Error *err, const char *file, int line, const char *fmt,
   va_start(va, fmt);
   err->msg_size += (usize)snprintf(&err->message[err->msg_size],
                                    ERROR_MESSAGE_MAX - err->msg_size,
-                                   "\n  [NOTE]: %s:%d:\n", file, line);
+                                   "\n  [NOTE] %s:%d:\n", file, line);
   err->msg_size += (usize)vsnprintf(&err->message[err->msg_size],
                                     ERROR_MESSAGE_MAX - err->msg_size, fmt, va);
   va_end(va);
