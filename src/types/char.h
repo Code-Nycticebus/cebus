@@ -22,7 +22,7 @@ checks for a blank character; that is, a space or a tab.
 checks for a control character.
 
 ```c_is_digit()```\
-checks for a digit (0 through 9).
+checks for a digit (```0``` through ```9```).
 
 ```c_is_graph()```\
 checks for any printable character except space.
@@ -46,8 +46,8 @@ locales, these are: space, form-feed ```\f```, newline ```\n```, carriage return
 checks for an uppercase letter.
 
 ```c_is_xdigit()```\
-checks for a hexadecimal digits, that is, one of 0 1 2 3 4 5 6 7 8 9 a b c d e f
-A B C D E F.
+checks for a hexadecimal digits, that is, one of ```0 1 2 3 4 5 6 7 8 9 a b c d
+e f A B C D E F```.
 
 */
 
