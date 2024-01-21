@@ -1,6 +1,6 @@
 #include "logging.h"
 
-#include "core/defines.h" // IWYU pragma: export
+#include "core/defines.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -63,9 +63,7 @@ static void _clib_log(LogLevel log_level) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void clib_log(LogLevel log_level, const char *fmt, ...) {
-  _LOG(log_level, fmt);
-}
+void clib_log(LogLevel level, const char *fmt, ...) { _LOG(level, fmt); }
 
 void clib_log_fatal(const char *fmt, ...) { _LOG(CLIB_LOG_FATAL, fmt); }
 void clib_log_error(const char *fmt, ...) { _LOG(CLIB_LOG_ERROR, fmt); }

@@ -164,7 +164,7 @@ typedef struct _iobuf FILE;
 
 ////////////////////////////////////////////////////////////////////////////
 
-#if defined(GCC) || defined(CLANG)
+#if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 
 #include <sys/cdefs.h>
 #define export
