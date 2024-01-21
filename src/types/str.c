@@ -441,10 +441,10 @@ Str str_take(Str *s, usize count) {
 }
 
 bool str_try_take(Str *s, usize count, Str *chunk) {
-  count = usize_min(s->len, count);
   if (s->len == 0) {
     return false;
   }
+  count = usize_min(s->len, count);
   *chunk = str_from_parts(count, s->data);
   s->len -= count;
   s->data += count;
