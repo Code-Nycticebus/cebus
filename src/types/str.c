@@ -2,6 +2,7 @@
 
 #include "core/arena.h"
 #include "core/asserts.h"
+#include "types/char.h"
 #include "types/integers.h"
 
 #include <ctype.h>
@@ -464,7 +465,7 @@ Str str_u64(Arena *arena, u64 n) {
 u64 str_to_u64(Str s) {
   u64 result = 0;
   for (usize i = 0; i < s.len && isdigit(s.data[i]); ++i) {
-    result = result * 10 + (u64)s.data[i] - '0'; // NOLINT
+    result = result * 10 + (u64)c_to_digit(s.data[i]); // NOLINT
   }
   return result;
 }
@@ -473,7 +474,7 @@ u64 str_chop_u64(Str *s) {
   u64 result = 0;
   usize i = 0;
   for (; i < s->len && isdigit(s->data[i]); ++i) {
-    result = result * 10 + (u64)s->data[i] - '0'; // NOLINT
+    result = result * 10 + (u64)c_to_digit(s->data[i]); // NOLINT
   }
   s->len -= i;
   s->data += i;
