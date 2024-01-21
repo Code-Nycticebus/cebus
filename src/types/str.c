@@ -5,7 +5,6 @@
 #include "types/char.h"
 #include "types/integers.h"
 
-#include <ctype.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
@@ -111,7 +110,7 @@ Str str_upper(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
   buffer[s.len] = '\0';
   for (usize i = 0; i < s.len; i++) {
-    buffer[i] = (char)toupper(s.data[i]);
+    buffer[i] = c_to_upper(s.data[i]);
   }
   return str_from_parts(s.len, buffer);
 }
@@ -120,7 +119,7 @@ Str str_lower(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
   buffer[s.len] = '\0';
   for (usize i = 0; i < s.len; i++) {
-    buffer[i] = (char)tolower(s.data[i]);
+    buffer[i] = c_to_lower(s.data[i]);
   }
   return str_from_parts(s.len, buffer);
 }
@@ -233,7 +232,7 @@ bool str_eq_ignorecase(Str s1, Str s2) {
     return false;
   }
   for (size_t i = 0; i < s1.len; i++) {
-    if (tolower(s1.data[i]) != tolower(s2.data[i])) {
+    if (c_to_lower(s1.data[i]) != c_to_lower(s2.data[i])) {
       return false;
     }
   }
@@ -307,7 +306,7 @@ CompareFn str_compare_qsort(CmpOrdering ordering) {
 
 Str str_trim_left(Str s) {
   Str result = s;
-  for (usize i = 0; i < s.len && isspace(s.data[i]); ++i) {
+  for (usize i = 0; i < s.len && c_is_space(s.data[i]); ++i) {
     result.data++;
     result.len--;
   }
@@ -316,7 +315,7 @@ Str str_trim_left(Str s) {
 
 Str str_trim_right(Str s) {
   Str result = s;
-  for (usize i = 0; i < s.len && isspace(s.data[s.len - i - 1]); ++i) {
+  for (usize i = 0; i < s.len && c_is_space(s.data[s.len - i - 1]); ++i) {
     result.len--;
   }
   return result;
@@ -464,7 +463,7 @@ Str str_u64(Arena *arena, u64 n) {
 
 u64 str_to_u64(Str s) {
   u64 result = 0;
-  for (usize i = 0; i < s.len && isdigit(s.data[i]); ++i) {
+  for (usize i = 0; i < s.len && c_is_digit(s.data[i]); ++i) {
     result = result * 10 + (u64)c_to_digit(s.data[i]); // NOLINT
   }
   return result;
@@ -473,7 +472,7 @@ u64 str_to_u64(Str s) {
 u64 str_chop_u64(Str *s) {
   u64 result = 0;
   usize i = 0;
-  for (; i < s->len && isdigit(s->data[i]); ++i) {
+  for (; i < s->len && c_is_digit(s->data[i]); ++i) {
     result = result * 10 + (u64)c_to_digit(s->data[i]); // NOLINT
   }
   s->len -= i;
