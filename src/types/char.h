@@ -35,9 +35,11 @@ checks for any printable character including space.
 
 ```c_is_punct()```\
 checks for any printable character which is not a space or an alphanumeric
-character. isspace() checks for white-space characters. In the "C" and "POSIX"
-locales, these are: space, form-feed ('\f'), newline ('\n'), carriage return
-('\r'), horizontal tab ('\t'), and vertical tab ('\v').
+character.
+```c_is_space()```\
+checks for white-space characters. In the "C" and "POSIX"
+locales, these are: space, form-feed ```\f```, newline ```\n```, carriage return
+```\r```, horizontal tab ```\t```, and vertical tab ```\v```.
 
 ```c_is_upper()```\
 checks for an uppercase letter.
