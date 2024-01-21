@@ -50,18 +50,14 @@ Just use the functions.
 Just a wrapper around ```#include <ctype.h>```
 
 ```c_is_alnum()```\
-checks for an alphanumeric character; it is equivalent to (isalpha(c) ||
-isdigit(c)).
+checks for an alphanumeric character; it is equivalent to
+```(c_is_alpha(c) || c_is_digit(c))```.
 
 ```c_is_alpha()```\
 checks for an alphabetic character; in the standard "C" locale, it is
-equivalent to (isupper(c) || islower(c)). In some locales, there may be
-additional characters for which isalpha() is true-letters which are neither
-upper case nor lower case.
-
-```c_is_ascii()```\
-checks whether c is a 7-bit unsigned char value that fits into the ASCII
-character set.
+equivalent to ```(c_is_upper(c) || c_is_lower(c))```. In some locales, there may
+be additional characters for which ```c_is_alpha()``` is true-letters which are
+neither upper case nor lower case.
 
 ```c_is_blank()```\
 checks for a blank character; that is, a space or a tab.
