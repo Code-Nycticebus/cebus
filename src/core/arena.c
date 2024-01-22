@@ -32,6 +32,13 @@ static Chunk *chunk_allocate(usize size) {
 
 static void chunk_free(Chunk *chunk) { free(chunk); }
 
+static const_fn usize align(usize size) {
+  const usize bytes = sizeof(void *);
+  return (size + bytes - 1) / bytes * bytes;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
 void arena_free(Arena *arena) {
   Chunk *next = arena->begin;
   while (next != NULL) {
@@ -42,8 +49,6 @@ void arena_free(Arena *arena) {
   arena->begin = NULL;
 }
 
-////////////////////////////////////////////////////////////////////////////
-
 void arena_reset(Arena *arena) {
   for (Chunk *next = arena->begin; next != NULL; next = next->next) {
     next->allocated = 0;
@@ -51,6 +56,7 @@ void arena_reset(Arena *arena) {
 }
 
 void *arena_alloc(Arena *arena, usize size) {
+  size = align(size);
   Chunk *chunk = arena->begin;
   for (; chunk != NULL; chunk = chunk->next) {
     clib_assert_debug(size <= SIZE_MAX - chunk->allocated, "integer overflow");

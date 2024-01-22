@@ -9,6 +9,11 @@ typedef struct TestChunk {
   u8 data[];
 } TestChunk;
 
+static usize const_fn test_align(usize size) {
+  const usize bytes = sizeof(void *);
+  return (size + bytes - 1) / bytes * bytes;
+}
+
 static void test_arena(void) {
   Arena arena = {0};
 
@@ -18,7 +23,8 @@ static void test_arena(void) {
   clib_assert(arena.begin, "Begin was not set");
 
   TestChunk *tc = (TestChunk *)arena.begin;
-  clib_assert(tc->allocated == n_bytes, "Not enough bytes are allocated");
+  clib_assert(tc->allocated == test_align(n_bytes),
+              "Not enough bytes are allocated");
 
   arena_free(&arena);
 }
@@ -30,7 +36,7 @@ static void test_chunks(void) {
   clib_assert(buffer, "Buffer was not allocated");
 
   char *buffer2 = arena_alloc(&arena, n_bytes);
-  clib_assert(buffer + n_bytes == buffer2,
+  clib_assert(buffer + test_align(n_bytes) == buffer2,
               "'buffer2' was not next to 'buffer'");
 
   TestChunk *tc = (TestChunk *)arena.begin;
@@ -75,7 +81,8 @@ static void test_reset(void) { // NOLINT
 
   char *buffer_after_reset = arena_alloc(&arena, n_bytes);
   clib_assert(buffer_after_reset, "Buffer was not allocated");
-  clib_assert(tc->allocated == n_bytes, "Not enough bytes are allocated");
+  clib_assert(tc->allocated == test_align(n_bytes),
+              "Not enough bytes are allocated");
 
   char *big_buffer_after_reset = arena_alloc(&arena, more_bytes);
   clib_assert(big_buffer_after_reset, "Buffer was not allocated");
@@ -98,7 +105,8 @@ static void test_temp(void) {
   clib_assert(data2, "Should not be NULL");
 
   TestChunk *chunk2 = (TestChunk *)arena.begin;
-  clib_assert(chunk2->allocated == 100, "Did not block the entire chunk");
+  clib_assert(chunk2->allocated == test_align(100),
+              "Did not block the entire chunk");
 
   arena_free_chunk(&arena, data);
 
