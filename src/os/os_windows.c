@@ -7,6 +7,7 @@
 #include "types/integers.h"
 #include "types/str.h"
 #include <direct.h>
+#include <stdio.h>
 #include <string.h>
 #include <windows.h>
 
@@ -31,7 +32,7 @@ Str os_getcwd(Arena *arena) {
 bool file_exists(Str filename) {
   char _filename[FILENAME_MAX] = {0};
   memcpy(_filename, filename.data, filename.len);
-  return OpenFile(_filename, NULL, OF_EXIST) != HFILE_ERROR;
+  return _access(_filename, 0) == 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////

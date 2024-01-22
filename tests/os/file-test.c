@@ -1,4 +1,5 @@
 #include "core/asserts.h"
+#include "core/logging.h"
 #include "os/fs.h"
 
 #include "collections/vec.h"

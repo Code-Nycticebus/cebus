@@ -92,7 +92,7 @@ bool error_occured(Error *err);
 
 ////////////////////////////////////////////////////////////////////////////
 
-void noreturn error_raise(Error *err);
+void no_return error_raise(Error *err);
 void error_warn(Error *err);
 #define error_add_note(E, ...)                                                 \
   _error_add_note(E, __FILE__, __LINE__, __VA_ARGS__)

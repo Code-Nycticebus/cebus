@@ -168,16 +168,13 @@ typedef struct _iobuf FILE;
 
 #include <sys/cdefs.h>
 #define export
-#if __has_attribute(noreturn)
-#define noreturn __attribute__((noreturn))
-#else
-#define noreturn
-#endif
-#define unused __attribute_maybe_unused__
-#define used __attribute_used__
-#define likely(x) __glibc_likely(x)
-#define unlikely(x) __glibc_unlikely(x)
-#define deprecated __attribute_deprecated__
+#define no_return __attribute__((noreturn))
+#define pure __attribute__((pure))
+#define const_fn __attribute__((const))
+#define unused __attribute__((unused))
+#define used __attribute__((used))
+#define likely(exp) __builtin_expect(((exp) != 0), 1)
+#define unlikely(exp) __builtin_expect(((exp) != 0), 0)
 #if __has_attribute(format)
 #define fmt_args(__fmt_arg)                                                    \
   __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
@@ -188,23 +185,23 @@ typedef struct _iobuf FILE;
 #elif defined(MSVC)
 
 #define export __declspec(dllexport)
-#define noreturn __declspec(noreturn)
+#define no_return __declspec(noreturn)
+#define pure
 #define unused __pragma(warning(suppress : 4100))
 #define used __pragma(warning(suppress : 4100))
 #define likely(x) (x)
 #define unlikely(x) (x)
-#define deprecated __declspec(deprecated)
 #define fmt_args(__fmt_arg) _Printf_format_string_ __fmt_arg
 
 #else
 
 #define export
-#define noreturn
+#define no_return
+#define pure
 #define unused
 #define used
-#define likely(x) (x)
-#define unlikely(x) (x)
-#define deprecated
+#define likely(...) (__VA_ARGS__)
+#define unlikely(...) (__VA_ARGS__)
 #define fmt_args(...)
 
 #endif

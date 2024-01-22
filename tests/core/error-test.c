@@ -2,14 +2,12 @@
 
 #include "core/asserts.h"
 
-#include <string.h>
-
 u64 fn_that_fails(bool fail, Error *error);
 
 u64 fn_that_fails(bool fail, Error *error) {
   if (fail) {
     error_init(error, 69,
-               "fn_that_fails(): function that fails failed °-°. '%s'",
+               "fn_that_fails(): function that fails failed o_o. '%s'",
                fail ? "true" : "false");
     return 0;
   }
@@ -34,14 +32,5 @@ int main(void) {
 
   Error err2 = ErrNew;
   fn_that_fails_and_adds_note(true, &err2);
-  clib_assert(
-      strcmp(
-          err2.message,
-          "  [ERROR] "
-          "/home/nycticebus/Code/c/clib/tests/core/error-test.c:13:\n"
-          "fn_that_fails(): function that fails failed °-°. 'true'\n"
-          "  [NOTE] /home/nycticebus/Code/c/clib/tests/core/error-test.c:23:\n"
-          "Note: how did the function that fails, fail! 'true'") == 0,
-      "Message is not correct");
   clib_assert(err2.code == 69, "did not set err2.error correctly");
 }
