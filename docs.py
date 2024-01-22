@@ -18,7 +18,7 @@ for file in src.rglob("*.h"):
     with open(docs / "README.md", "w") as f:
         f.truncate()
 
-for file in src.rglob("*.h"):
+for file in sorted(src.rglob("*.h")):
     docs = cwd / "docs" / file.relative_to(src).parent
     with open(docs / "README.md", "a") as f:
         f.write(f"# [{file.name}]({remote}/blob/main/{PurePosixPath(file.relative_to(cwd))})\n")
