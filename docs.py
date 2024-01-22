@@ -32,7 +32,7 @@ def write_src_to_doc(doc: Path, src: Path):
                     if first:
                         first = False
                         f.write(
-                            f"## [{file.name}]({remote}/blob/main/{PurePosixPath(file.relative_to(cwd))}#L{nr+1})\n"
+                            f"### [{file.name}]({remote}/blob/main/{PurePosixPath(file.relative_to(cwd))}#L{nr+1})\n"
                         )
                     write_mode = True
 
@@ -47,6 +47,6 @@ with open(readme_file, "w") as f:
 
 for docs, files in docs_dict.items():
     with open(readme_file, "a") as f:
-        f.write(f"# {docs.name.title()}\n")
+        f.write(f"## {docs.name.title()}\n")
     for file in files:
         write_src_to_doc(readme_file, file)
