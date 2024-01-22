@@ -14,20 +14,18 @@ void function_that_can_fail(Error* error)
 }
 ```
 
-Create new ```Error``` with ```ErrorCreate``` to except errors that occure
+Create new ```Error``` with ```ErrNew``` to except errors that occure
 inside the function.
 ```c
-Error error = ErrCreate;
+Error error = ErrNew;
 function_that_can_fail(&error);
 ```
 
-Always check with ```error_handle()``` before doing any
-calls to the error api. Or else the ```__error_context_missing``` identifier is
-not specified.
+Work inside of an error context with ```error_context()```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-error_handle(&error, {
+error_context(&error, {
   // Do error handling
 });
 ```
@@ -37,22 +35,22 @@ code with ```error_set_code()```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-error_handle(&error, {
-  error_add_note(&error, "Note added to error");
-  error_set_code(&error, 69);
+error_context(&error, {
+  error_add_note("Note added to error");
+  error_set_code(69);
 });
 ```
 
-Call what you want to do with these errors. ```error_panic()``` panics if it
+```error_panic()``` panics and aborts if it
 encounters an error, ```error_warn()``` just prints a warning message and
 ```error_ignore()``` ignores error completely.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-error_handle(&error, {
-  error_warn(&error);
-  error_ignore(&error);
-  error_panic(&error);
+error_context(&error, {
+  error_warn();
+  error_ignore();
+  error_panic();
 });
 ```
 
@@ -66,6 +64,21 @@ function_that_can_fail(ErrPanic);
 created at the first occurence of an error.
 ```c
 function_that_can_fail(ErrDefault);
+```
+
+Match your error types with ```error_match()``` inside the context.
+```c
+  Error error = ErrNew;
+  function_that_can_fail(true, &err2);
+  error_context(&error, {
+    error_match({
+      case 69:
+        error_panic();
+      case 420: {
+        error_ignore();
+      } break;
+    });
+  });
 ```
 */
 
@@ -107,38 +120,39 @@ typedef struct {
   _error_emit((E) == ErrDefault ? ErrPanic : (E), code, __FILE__, __LINE__,    \
               __VA_ARGS__);
 
-#define error_handle(E, ...)                                                   \
+#define error_context(E, ...)                                                  \
   do {                                                                         \
-    if (_error_occured(E)) {                                                   \
-      unused bool __error_context_missing = true;                              \
-      do {                                                                     \
-        __VA_ARGS__                                                            \
-      } while (0);                                                             \
+    if ((E) && (E)->failure) {                                                 \
+      Error *__error_context__ = (E);                                          \
+      __VA_ARGS__                                                              \
     }                                                                          \
   } while (0)
 
-#define error_panic(E) _error_panic(E, __error_context_missing)
-#define error_warn(E) _error_warn(E, __error_context_missing)
-#define error_ignore(E) _error_ignore(E, __error_context_missing)
-#define error_set_code(E, code)                                                \
-  _error_set_code(E, __error_context_missing, code)
-#define error_add_note(E, ...)                                                 \
-  _error_add_note(E, __error_context_missing, __FILE__, __LINE__, __VA_ARGS__)
+#define error_panic() _error_panic(__error_context__)
+#define error_warn() _error_warn(__error_context__)
+#define error_ignore() _error_ignore(__error_context__)
+
+#define error_set_code(code) _error_set_code(__error_context__, code)
+#define error_add_note(...)                                                    \
+  _error_add_note(__error_context__, __FILE__, __LINE__, __VA_ARGS__)
+
+#define error_match(...)                                                       \
+  do {                                                                         \
+    switch (__error_context__->code) { __VA_ARGS__ }                           \
+  } while (0)
 
 ////////////////////////////////////////////////////////////////////////////
 
 void fmt_args(5) _error_emit(Error *err, i32 code, const char *file, int line,
                              const char *fmt, ...);
 
-bool _error_occured(Error *err);
+void _error_panic(Error *err);
+void _error_warn(Error *err);
+void _error_ignore(Error *err);
 
-void _error_panic(Error *err, bool _err_ctx);
-void _error_warn(Error *err, bool _err_ctx);
-void _error_ignore(Error *err, bool _err_ctx);
-
-void _error_set_code(Error *err, bool _err_ctx, i32 code);
-void fmt_args(5) _error_add_note(Error *err, bool _err_ctx, const char *file,
-                                 int line, const char *fmt, ...);
+void _error_set_code(Error *err, i32 code);
+void fmt_args(4) _error_add_note(Error *err, const char *file, int line,
+                                 const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 ///

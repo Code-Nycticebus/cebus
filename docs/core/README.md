@@ -46,20 +46,18 @@ void function_that_can_fail(Error* error)
 }
 ```
 
-Create new ```Error``` with ```ErrorCreate``` to except errors that occure
+Create new ```Error``` with ```ErrNew``` to except errors that occure
 inside the function.
 ```c
-Error error = ErrCreate;
+Error error = ErrNew;
 function_that_can_fail(&error);
 ```
 
-Always check with ```error_handle()``` before doing any
-calls to the error api. Or else the ```__error_context_missing``` identifier is
-not specified.
+Work inside of an error context with ```error_context()```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-error_handle(&error, {
+error_context(&error, {
   // Do error handling
 });
 ```
@@ -69,22 +67,22 @@ code with ```error_set_code()```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-error_handle(&error, {
-  error_add_note(&error, "Note added to error");
-  error_set_code(&error, 69);
+error_context(&error, {
+  error_add_note("Note added to error");
+  error_set_code(69);
 });
 ```
 
-Call what you want to do with these errors. ```error_panic()``` panics if it
+```error_panic()``` panics and aborts if it
 encounters an error, ```error_warn()``` just prints a warning message and
 ```error_ignore()``` ignores error completely.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-error_handle(&error, {
-  error_warn(&error);
-  error_ignore(&error);
-  error_panic(&error);
+error_context(&error, {
+  error_warn();
+  error_ignore();
+  error_panic();
 });
 ```
 
@@ -98,6 +96,21 @@ function_that_can_fail(ErrPanic);
 created at the first occurence of an error.
 ```c
 function_that_can_fail(ErrDefault);
+```
+
+Match your error types with ```error_match()``` inside the context.
+```c
+  Error error = ErrNew;
+  function_that_can_fail(true, &err2);
+  error_context(&error, {
+    error_match({
+      case 69:
+        error_panic();
+      case 420: {
+        error_ignore();
+      } break;
+    });
+  });
 ```
 # [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/logging.h)
 # [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)

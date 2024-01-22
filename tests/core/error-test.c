@@ -12,9 +12,9 @@ static u64 fn_that_fails(bool fail, Error *error) {
 
 static u64 fn_that_fails_and_adds_note(bool fail, Error *error) {
   u64 res = fn_that_fails(fail, error);
-  error_handle(error, {
-    error_add_note(error, "Note: function failed!");
-    error_set_code(error, 420);
+  error_context(error, {
+    error_add_note("Note: function failed!");
+    error_set_code(420);
   });
 
   return res;
@@ -31,7 +31,17 @@ int main(void) {
   fn_that_fails_and_adds_note(true, &err2);
   clib_assert(err2.code == 420, "did not set err2.error correctly");
 
-  error_handle(&err2, { error_ignore(&err2); });
+  error_context(&err2, {
+    error_match({
+      case 69:
+        error_panic();
+
+      case 420: {
+        error_ignore();
+      } break;
+    });
+  });
+
   clib_assert(err2.failure == false, "Did not ignore correctly");
   clib_assert(err2.msg_size == 0, "Did not ignore correctly");
 }

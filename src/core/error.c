@@ -23,33 +23,29 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
                                     ERROR_MESSAGE_MAX - err->msg_size, fmt, va);
   va_end(va);
   if (err->raise) {
-    _error_panic(err, true);
+    _error_panic(err);
   }
 }
 
-bool _error_occured(Error *err) { return err && err->failure; }
-
-void _error_panic(Error *err, unused bool _err_ctx) {
+void _error_panic(Error *err) {
   clib_log_fatal("%s:%d:\n%s", err->file, err->line, err->message);
   abort();
 }
 
-void _error_warn(Error *err, unused bool _err_ctx) {
+void _error_warn(Error *err) {
   clib_log_warning("%s:%d:\n%s", err->file, err->line, err->message);
-  _error_ignore(err, _err_ctx);
+  _error_ignore(err);
 }
 
-void _error_ignore(Error *err, unused bool _err_ctx) {
+void _error_ignore(Error *err) {
   err->msg_size = 0;
   err->failure = false;
 }
 
-void _error_set_code(Error *err, unused bool _err_ctx, i32 code) {
-  err->code = code;
-}
+void _error_set_code(Error *err, i32 code) { err->code = code; }
 
-void _error_add_note(Error *err, unused bool _err_ctx, const char *file,
-                     int line, const char *fmt, ...) {
+void _error_add_note(Error *err, const char *file, int line, const char *fmt,
+                     ...) {
   va_list va;
   va_start(va, fmt);
   err->msg_size += (usize)snprintf(&err->message[err->msg_size],
