@@ -10,8 +10,8 @@ typedef struct TestChunk {
 } TestChunk;
 
 static usize const_fn test_align(usize size) {
-  const usize bytes = sizeof(void *);
-  return (size + bytes - 1) / bytes * bytes;
+  const usize mask = sizeof(void *) - 1;
+  return (size + mask) & ~mask;
 }
 
 static void test_arena(void) {

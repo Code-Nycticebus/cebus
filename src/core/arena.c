@@ -33,8 +33,8 @@ static Chunk *chunk_allocate(usize size) {
 static void chunk_free(Chunk *chunk) { free(chunk); }
 
 static const_fn usize align(usize size) {
-  const usize bytes = sizeof(void *);
-  return (size + bytes - 1) / bytes * bytes;
+  const usize mask = sizeof(void *) - 1;
+  return (size + mask) & ~mask;
 }
 
 ////////////////////////////////////////////////////////////////////////////
