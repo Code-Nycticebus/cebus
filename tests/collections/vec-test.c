@@ -26,7 +26,7 @@ static void test_vec_init(void) {
   Arena arena = {0};
   const usize array[] = {1, 2, 3, 4, 5};
   VEC(usize) list = {0};
-  vec_init_list(&list, &arena, ARRAY_SIZE(array), array);
+  vec_init_list(&list, &arena, ARRAY_LEN(array), array);
 
   clib_assert(list.len == 5, "Did not set len correctly");
   clib_assert(list.cap == 5, "Did not set cap correctly");

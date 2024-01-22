@@ -54,7 +54,7 @@ static void test_example(void) {
   vec_init(&keys, &arena);
 
   HashMap hm = hm_create(&arena);
-  for (usize i = 0; i < ARRAY_SIZE(strings); i++) {
+  for (usize i = 0; i < ARRAY_LEN(strings); i++) {
     u64 hash = str_hash(strings[i]);
     HashValue *value = hm_get(&hm, hash);
     if (value == NULL) {

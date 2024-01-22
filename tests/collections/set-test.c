@@ -34,8 +34,8 @@ static void test_set_extend(void) {
   const u64 n2[] = {6, 7, 8, 9, 10, 11};
 
   Set set = set_create(&arena);
-  set_extend(&set, ARRAY_SIZE(n1), n1);
-  set_extend(&set, ARRAY_SIZE(n2), n2);
+  set_extend(&set, ARRAY_LEN(n1), n1);
+  set_extend(&set, ARRAY_LEN(n2), n2);
 
   clib_assert(set.cap == 20, "Did not increase size the proper way");
 
@@ -155,7 +155,7 @@ static void test_example_duplicates(void) {
       STR("Apple"), STR("Banana"), STR("Apple"), STR("Cherry"), STR("Apple"),
   };
   VEC(Str) list = {0};
-  vec_init_list(&list, &arena, ARRAY_SIZE(strings), strings);
+  vec_init_list(&list, &arena, ARRAY_LEN(strings), strings);
 
   Set unique = set_create(&arena);
   Set duplicates = set_create(&arena);
@@ -189,7 +189,7 @@ static void test_example_intersection(void) {
       STR("Grape"), STR("Orange"), STR("Pear"),
   };
   VEC(Str) first = {0};
-  vec_init_list(&first, &arena, ARRAY_SIZE(strings1), strings1);
+  vec_init_list(&first, &arena, ARRAY_LEN(strings1), strings1);
 
   Set s1 = set_create(&arena);
   for (size_t i = 0; i < first.len; i++) {
@@ -200,7 +200,7 @@ static void test_example_intersection(void) {
       STR("Apple"),  STR("Strawberry"), STR("Blueberry"), STR("Banana"),
       STR("Cherry"), STR("Lemon"),      STR("Pear"),
   };
-  const usize count2 = ARRAY_SIZE(strings2);
+  const usize count2 = ARRAY_LEN(strings2);
   Set s2 = set_create(&arena);
   for (size_t i = 0; i < count2; i++) {
     set_add(&s2, str_hash(strings2[i]));
