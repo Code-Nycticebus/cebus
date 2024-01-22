@@ -167,43 +167,68 @@ typedef struct _iobuf FILE;
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 
 #include <sys/cdefs.h>
-#define export
-#define no_return __attribute__((noreturn))
-#define pure __attribute__((pure))
-#define const_fn __attribute__((const))
+#define noreturn __attribute__((noreturn))
+#define pure __attribute__((pure)) __attribute__((warn_unused_result))
+#define const_fn __attribute__((const)) __attribute__((warn_unused_result))
 #define unused __attribute__((unused))
 #define used __attribute__((used))
 #define likely(exp) __builtin_expect(((exp) != 0), 1)
 #define unlikely(exp) __builtin_expect(((exp) != 0), 0)
-#if __has_attribute(format)
 #define fmt_args(__fmt_arg)                                                    \
   __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
-#else
-#define noreturn
-#endif
+#define deprecated __attribute__((deprecated))
 
 #elif defined(MSVC)
 
 #define export __declspec(dllexport)
-#define no_return __declspec(noreturn)
-#define pure
+#define noreturn __declspec(noreturn)
+#define pure _Check_return
+#define const_fn _Check_return
 #define unused __pragma(warning(suppress : 4100))
 #define used __pragma(warning(suppress : 4100))
-#define likely(x) (x)
-#define unlikely(x) (x)
-#define fmt_args(__fmt_arg) _Printf_format_string_ __fmt_arg
+#define fmt_args(__fmt_ar_Check_return_g) _Printf_format_string_ __fmt_arg
+#define deprecated __declspec(deprecated)
 
-#else
+#endif
 
+#ifndef export
 #define export
-#define no_return
-#define pure
-#define unused
-#define used
-#define likely(...) (__VA_ARGS__)
-#define unlikely(...) (__VA_ARGS__)
-#define fmt_args(...)
+#endif
 
+#ifndef noreturn
+#define noreturn
+#endif
+
+#ifndef pure
+#define pure
+#endif
+
+#ifndef const_fn
+#define const_fn
+#endif
+
+#ifndef unused
+#define unused
+#endif
+
+#ifndef used
+#define used
+#endif
+
+#ifndef likely
+#define likely(...) (__VA_ARGS__)
+#endif
+
+#ifndef unlikely
+#define unlikely(...) (__VA_ARGS__)
+#endif
+
+#ifndef fmt_args
+#define fmt_args(...)
+#endif
+
+#ifndef deprecated
+#define deprecated
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
