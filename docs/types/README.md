@@ -20,19 +20,21 @@ Create a new Str with:
 Str str = STR("Hello World");
 ```
 
-You can print the strings using the STR_FMT and STR_ARG() macro:
+You can print the strings using the ```STR_FMT``` and ```STR_ARG()``` macro:
 ```c
 printf(STR_FMT"\n", STR_ARG(str));
 ```
 
 I always treat strings as immutable.
-So you always have to provide an Arena to do allocations in.
+So you always have to provide an Arena on all manipulation functions.
 ```c
 Arena arena = {0};
-Str new_str = str_lower(str, &arena);
+
+Str lower = str_lower(str, &arena);
+Str upper = str_upper(str, &arena);
+
 arena_free(&arena);
 ```
-
 
 Iterating over a string is easy
 ```c
