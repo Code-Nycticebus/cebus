@@ -78,8 +78,7 @@ static void test_sort(void) {
 
 static CmpOrdering sort_smallest(const void *_ctx, const void *a,
                                  const void *b) {
-  const usize *smallest = _ctx;
-  if (*(const usize *)a == *smallest) {
+  if (*(const usize *)a == *(const usize *)_ctx) {
     return CMP_LESS;
   }
   return usize_compare_lt(*(const usize *)a, *(const usize *)b);
