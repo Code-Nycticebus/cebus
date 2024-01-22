@@ -42,32 +42,37 @@ void function_that_can_fail(Error* error)
   int error_code = -1; // Function returns a bad value
   if (error_code < 0) {
     error_init(error, error_code, "error: %d", error_code);
-    return;
   }
-  // Further processing
-  return;
 }
 ```
 
 Create new ```Error``` with ```ErrorCreate``` to except errors that occure
-inside the function. Always check with ```error_occured()``` before doing any
-calls to the error api.
+inside the function.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-if (error_occured(&error)) {
-  error_raise(&error);
-}
+OnError(&error, {});
 ```
 
-Add notes to ```Error``` with ```error_add_note()```
+Always check with ```OnError()``` before doing any
+calls to the error api. Or else the ```__error_context_missing```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-if (error_occured(&error)) {
+OnError(&error, {
+  error_raise(&error);
+});
+```
+
+Add notes to ```Error``` with ```error_add_note()``` or set a different error
+code with ```error_set_code()```
+```c
+Error error = ErrCreate;
+function_that_can_fail(&error);
+OnError(error, {
   error_add_note(&error, "Note added to error");
-  return;
-}
+  error_set_code(&error, 69);
+});
 ```
 
 Pass ```ErrRaise``` to that function to automatically call

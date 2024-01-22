@@ -10,32 +10,37 @@ void function_that_can_fail(Error* error)
   int error_code = -1; // Function returns a bad value
   if (error_code < 0) {
     error_init(error, error_code, "error: %d", error_code);
-    return;
   }
-  // Further processing
-  return;
 }
 ```
 
 Create new ```Error``` with ```ErrorCreate``` to except errors that occure
-inside the function. Always check with ```error_occured()``` before doing any
-calls to the error api.
+inside the function.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-if (error_occured(&error)) {
-  error_raise(&error);
-}
+OnError(&error, {});
 ```
 
-Add notes to ```Error``` with ```error_add_note()```
+Always check with ```OnError()``` before doing any
+calls to the error api. Or else the ```__error_context_missing```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-if (error_occured(&error)) {
+OnError(&error, {
+  error_raise(&error);
+});
+```
+
+Add notes to ```Error``` with ```error_add_note()``` or set a different error
+code with ```error_set_code()```
+```c
+Error error = ErrCreate;
+function_that_can_fail(&error);
+OnError(error, {
   error_add_note(&error, "Note added to error");
-  return;
-}
+  error_set_code(&error, 69);
+});
 ```
 
 Pass ```ErrRaise``` to that function to automatically call
@@ -88,21 +93,38 @@ typedef struct {
   _error_init((E) == ErrDefault ? ErrRaise : (E), code, __FILE__, __LINE__,    \
               __VA_ARGS__);
 
-bool error_occured(Error *err);
+#define error_handle(E, ...)                                                   \
+  do {                                                                         \
+    if (_error_occured(E)) {                                                   \
+      unused bool __error_context_missing = true;                              \
+      do {                                                                     \
+        __VA_ARGS__                                                            \
+      } while (0);                                                             \
+    }                                                                          \
+  } while (0)
 
-////////////////////////////////////////////////////////////////////////////
-
-void no_return error_raise(Error *err);
-void error_warn(Error *err);
+#define error_raise(E) _error_raise(E, __error_context_missing)
+#define error_warn(E) _error_warn(E, __error_context_missing)
+#define error_except(E) _error_except(E, __error_context_missing)
+#define error_set_code(E, code)                                                \
+  _error_set_code(E, __error_context_missing, code)
 #define error_add_note(E, ...)                                                 \
-  _error_add_note(E, __FILE__, __LINE__, __VA_ARGS__)
+  _error_add_note(E, __error_context_missing, __FILE__, __LINE__, __VA_ARGS__)
 
 ////////////////////////////////////////////////////////////////////////////
 
 void fmt_args(5) _error_init(Error *err, i32 code, const char *file, int line,
                              const char *fmt, ...);
-void fmt_args(4) _error_add_note(Error *err, const char *file, int line,
-                                 const char *fmt, ...);
+
+bool _error_occured(Error *err);
+
+void _error_set_code(Error *err, bool _err_ctx, i32 code);
+void _error_raise(Error *err, bool _err_ctx);
+void _error_warn(Error *err, bool _err_ctx);
+void _error_except(Error *err, bool _err_ctx);
+
+void fmt_args(5) _error_add_note(Error *err, bool _err_ctx, const char *file,
+                                 int line, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 ///

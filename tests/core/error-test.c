@@ -2,13 +2,9 @@
 
 #include "core/asserts.h"
 
-u64 fn_that_fails(bool fail, Error *error);
-
-u64 fn_that_fails(bool fail, Error *error) {
+static u64 fn_that_fails(bool fail, Error *error) {
   if (fail) {
-    error_init(error, 69,
-               "fn_that_fails(): function that fails failed o_o. '%s'",
-               fail ? "true" : "false");
+    error_init(error, 69, "function that fails failed o_o");
     return 0;
   }
   return 4;
@@ -16,10 +12,11 @@ u64 fn_that_fails(bool fail, Error *error) {
 
 static u64 fn_that_fails_and_adds_note(bool fail, Error *error) {
   u64 res = fn_that_fails(fail, error);
-  if (error_occured(error)) {
-    error_add_note(error, "Note: how did the function that fails, fail! '%s'",
-                   fail ? "true" : "false");
-  }
+  error_handle(error, {
+    error_add_note(error, "Note: function failed!");
+    error_set_code(error, 420);
+  });
+
   return res;
 }
 
@@ -32,5 +29,9 @@ int main(void) {
 
   Error err2 = ErrNew;
   fn_that_fails_and_adds_note(true, &err2);
-  clib_assert(err2.code == 69, "did not set err2.error correctly");
+  clib_assert(err2.code == 420, "did not set err2.error correctly");
+
+  error_handle(&err2, { error_except(&err2); });
+  clib_assert(err2.failure == false, "Did not except correctly");
+  clib_assert(err2.msg_size == 0, "Did not except correctly");
 }
