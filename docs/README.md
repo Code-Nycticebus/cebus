@@ -1,7 +1,143 @@
-# Core
-## [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/defines.h)
-## [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
+# Types
+## [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h)
 ## Usage
+Create new Bytes with:
+```c
+Bytes bytes = BYTES(0xff, 0x11);
+Bytes bytes_str = BYTES_STR("Bytes from a string");
+```
+## [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h)
+## Usage
+Create a new Str with:
+```c
+Str str = STR("Hello World");
+```
+
+You can print the strings using the ```STR_FMT``` and ```STR_ARG()``` macro:
+```c
+printf(STR_FMT"\n", STR_ARG(str));
+```
+
+I always treat strings as immutable.
+So you always have to provide an Arena on all manipulation functions.
+```c
+Arena arena = {0};
+
+Str lower = str_lower(str, &arena);
+Str upper = str_upper(str, &arena);
+
+arena_free(&arena);
+```
+
+Iterating over a string is easy
+```c
+Str content = STR("This is a line")
+for (Str word = {0}; str_try_chop_by_delim(&content, ' ', &word)) {
+  printf(STR_FMT"\n", STR_ARG(word));
+}
+```
+Outputs:
+```console
+This
+is
+a
+line
+```
+## [integers.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/integers.h)
+## Usage
+Just use the functions.
+## [char.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/char.h)
+
+Just a wrapper around ```#include <ctype.h>```
+
+# Os
+## [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h)
+## Usage
+Use the functions:
+```c
+Error e = ErrCreate;
+io_write(stdout, BYTES_STR("Hello, World"), &e);
+```
+
+The input function is just like the one in python:
+```c
+Str ret = input(STR(":> "));
+printf("input: '"STR_FMT"'\n", STR_ARG(ret));
+```
+Outputs:
+```console
+:> name
+input: 'name'
+```
+## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
+## Usage
+To read in the entire file as Str
+```c
+Arena arena = {0};
+Error error = ErrCreate;
+Str content = file_read_str(STR("filename.txt"), &arena, &error);
+if (error_occured(&error)) {
+  error_raise(&error);
+}
+arena_free(&arena);
+```
+# Collections
+## [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
+## Usage:
+Create a new Vec with:
+```c
+Arena arena = {0};
+VEC(int) vec = {0};
+vec_init(&vec, &arena);
+```
+
+Then you can push elements to the vector.
+```c
+vec_push(&vec, 69);
+vec_push(&vec, 420);
+```
+## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
+## Usage
+Create a new HashMap with:
+```c
+Arena arena = {0};
+HashMap hm = hm_create(&arena);
+hm_reserve(&hm, 10); // optional
+```
+
+Then you can add elements by hash to the HashMap.
+```c
+hm_insert(&set, str_hash(STR("Hello")), HashValue(i64, 69));
+hm_insert(&set, str_hash(STR("World")), HashValue(i64, 420));
+```
+
+Now you can get the values by passing in the hash of the element.
+```c
+hm_get(&set, str_hash(STR("Hello")))->as.i64;
+hm_get(&set, str_hash(STR("World")))->as.i64;
+```
+## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/set.h)
+## Usage
+Create a new Set with:
+```c
+Arena arena = {0};
+Set set = set_create(&arena);
+```
+
+Then you can add elements by hash to the Set.
+```c
+set_add(&set, str_hash(STR("Hello")));
+set_add(&set, str_hash(STR("World")));
+```
+
+Then you can test if an element is in the Set.
+```c
+set_contains(&set, str_hash(STR("Hello"))) == true;
+set_contains(&set, str_hash(STR("World"))) == true;
+```
+# Core
+## [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
+### Usage
 You can assert if something is true with:
 ```c
 clib_assert(1 == 1, "One should be one");
@@ -121,4 +257,3 @@ integers at once.
 ```c
 arena_free(&arena);
 ```
-## [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/logging.h)
