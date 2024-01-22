@@ -43,7 +43,6 @@ is
 a
 line
 ```
-## Bin
 ## Os
 ### [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h#L4)
 #### Usage

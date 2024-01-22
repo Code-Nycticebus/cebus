@@ -37,7 +37,7 @@ def write_src_to_doc(doc: Path, src: Path):
                     write_mode = True
 
 
-for file in src_dir.rglob("*.[c|h]"):
+for file in src_dir.rglob("*.h"):
     doc = doc_dir / file.relative_to(src_dir).parent
     docs_dict[doc].append(file)
 
@@ -46,7 +46,8 @@ with open(readme_file, "w") as f:
     f.truncate()
 
 for docs, files in docs_dict.items():
-    with open(readme_file, "a") as f:
-        f.write(f"## {docs.name.title()}\n")
+    if len(files):
+        with open(readme_file, "a") as f:
+            f.write(f"## {docs.name.title()}\n")
     for file in files:
         write_src_to_doc(readme_file, file)
