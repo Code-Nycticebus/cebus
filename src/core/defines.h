@@ -167,7 +167,7 @@ typedef struct _iobuf FILE;
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 
 #include <sys/cdefs.h>
-#define noreturn __attribute__((noreturn))
+#define no_return __attribute__((noreturn))
 #define pure __attribute__((pure)) __attribute__((warn_unused_result))
 #define const_fn __attribute__((const)) __attribute__((warn_unused_result))
 #define unused __attribute__((unused))
