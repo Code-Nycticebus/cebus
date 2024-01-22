@@ -2,7 +2,7 @@
 #define __CLIB_STR_H__
 
 /* DOCUMENTATION
-## Usage
+### Usage
 Create a new Str with:
 ```c
 Str str = STR("Hello World");

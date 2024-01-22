@@ -2,7 +2,7 @@
 #define __CLIB_DA_H__
 
 /* DOCUMENTATION
-## Usage:
+### Usage:
 Create a new Vec with:
 ```c
 Arena arena = {0};

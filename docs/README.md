@@ -1,13 +1,13 @@
 # Types
-## [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h)
-## Usage
+## [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h#L3)
+### Usage
 Create new Bytes with:
 ```c
 Bytes bytes = BYTES(0xff, 0x11);
 Bytes bytes_str = BYTES_STR("Bytes from a string");
 ```
-## [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h)
-## Usage
+## [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h#L3)
+### Usage
 Create a new Str with:
 ```c
 Str str = STR("Hello World");
@@ -43,16 +43,10 @@ is
 a
 line
 ```
-## [integers.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/integers.h)
-## Usage
-Just use the functions.
-## [char.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/char.h)
-
-Just a wrapper around ```#include <ctype.h>```
-
+# Bin
 # Os
-## [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h)
-## Usage
+## [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h#L3)
+### Usage
 Use the functions:
 ```c
 Error e = ErrCreate;
@@ -69,8 +63,8 @@ Outputs:
 :> name
 input: 'name'
 ```
-## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
-## Usage
+## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h#L3)
+### Usage
 To read in the entire file as Str
 ```c
 Arena arena = {0};
@@ -82,8 +76,8 @@ if (error_occured(&error)) {
 arena_free(&arena);
 ```
 # Collections
-## [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
-## Usage:
+## [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h#L3)
+### Usage:
 Create a new Vec with:
 ```c
 Arena arena = {0};
@@ -96,8 +90,8 @@ Then you can push elements to the vector.
 vec_push(&vec, 69);
 vec_push(&vec, 420);
 ```
-## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
-## Usage
+## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h#L3)
+### Usage
 Create a new HashMap with:
 ```c
 Arena arena = {0};
@@ -116,8 +110,8 @@ Now you can get the values by passing in the hash of the element.
 hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
-## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/set.h)
-## Usage
+## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/set.h#L3)
+### Usage
 Create a new Set with:
 ```c
 Arena arena = {0};
@@ -136,7 +130,7 @@ set_contains(&set, str_hash(STR("Hello"))) == true;
 set_contains(&set, str_hash(STR("World"))) == true;
 ```
 # Core
-## [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
+## [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h#L3)
 ### Usage
 You can assert if something is true with:
 ```c
@@ -151,14 +145,14 @@ clib_assert_warn(EXPR, FMT, ...);
 clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
-## [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
-## Example
+## [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h#L3)
+### Usage
 ```c
 int array[5] = {5, 4, 3, 2, 1};
 quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
-## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
-## Usage
+## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h#L3)
+### Usage
 If a function can fail it should take an ```Error*``` as parameter. If an error
 occurs, initialize the Error with ```error_emit()```.
 ```c
@@ -236,10 +230,10 @@ Match your error types with ```error_match()```.
     });
   });
 ```
-## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
+## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h#L3)
 Here are various macros for figuring out what Platform and compiler is used.
-## [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
-## Usage
+## [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h#L3)
+### Usage
 Create a new Arena with:
 ```c
 Arena arena = {0};

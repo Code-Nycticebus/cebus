@@ -1,12 +1,6 @@
 #ifndef __CLIB_CHAR_H__
 #define __CLIB_CHAR_H__
 
-/* DOCUMENTATION
-
-Just a wrapper around ```#include <ctype.h>```
-
-*/
-
 #include "core/defines.h"
 
 ///////////////////////////////////////////////////////////////////////////////

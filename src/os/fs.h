@@ -2,7 +2,7 @@
 #define __CLIB_FS_H__
 
 /* DOCUMENTATION
-## Usage
+### Usage
 To read in the entire file as Str
 ```c
 Arena arena = {0};

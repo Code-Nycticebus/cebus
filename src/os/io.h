@@ -2,7 +2,7 @@
 #define __CLIB_IO_H__
 
 /* DOCUMENTATION
-## Usage
+### Usage
 Use the functions:
 ```c
 Error e = ErrCreate;

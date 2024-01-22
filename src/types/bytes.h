@@ -2,7 +2,7 @@
 #define __CLIB_BYTES_H__
 
 /* DOCUMENTATION
-## Usage
+### Usage
 Create new Bytes with:
 ```c
 Bytes bytes = BYTES(0xff, 0x11);

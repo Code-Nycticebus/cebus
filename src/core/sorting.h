@@ -2,7 +2,7 @@
 #define __CLIB_SORTING_H__
 
 /* DOCUMENTATION
-## Example
+### Usage
 ```c
 int array[5] = {5, 4, 3, 2, 1};
 quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));

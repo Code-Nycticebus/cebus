@@ -1,11 +1,6 @@
 #ifndef __CLIB_INTEGERS_H__
 #define __CLIB_INTEGERS_H__
 
-/* DOCUMENTATION
-## Usage
-Just use the functions.
-*/
-
 #include "core/arena.h"
 #include "core/defines.h"
 

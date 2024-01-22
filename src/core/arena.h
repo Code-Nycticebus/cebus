@@ -2,7 +2,7 @@
 #define __CLIB_ARENA_H__
 
 /* DOCUMENTATION
-## Usage
+### Usage
 Create a new Arena with:
 ```c
 Arena arena = {0};
