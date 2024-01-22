@@ -8,6 +8,7 @@ remote = (
     .decode()
     .strip()[:-4]
 )
+
 cwd = Path.cwd()
 src_dir = Path(cwd, "src")
 doc_dir = cwd / "docs"
@@ -24,10 +25,8 @@ def write_src_to_doc(doc: Path, src: Path):
             for line in d.readlines():
                 if "*/" in line:
                     write_mode = False
-
                 if write_mode:
                     f.write(line)
-
                 if "/* DOCUMENTATION" in line:
                     if first:
                         first = False
