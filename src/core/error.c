@@ -23,7 +23,7 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
   err->msg.len += (usize)vsnprintf(&err->buffer[err->msg.len],
                                    ERROR_MESSAGE_MAX - err->msg.len, fmt, va);
   va_end(va);
-  if (err->raise) {
+  if (err->panic_instantly) {
     _error_panic(err);
   }
 }
@@ -35,10 +35,10 @@ void _error_panic(Error *err) {
 
 void _error_warn(Error *err) {
   clib_log_warning("%s:%d:\n" STR_FMT, err->file, err->line, STR_ARG(err->msg));
-  _error_ignore(err);
+  _error_except(err);
 }
 
-void _error_ignore(Error *err) {
+void _error_except(Error *err) {
   err->msg.len = 0;
   err->failure = false;
 }

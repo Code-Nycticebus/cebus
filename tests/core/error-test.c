@@ -20,28 +20,65 @@ static u64 fn_that_fails_and_adds_note(bool fail, Error *error) {
   return res;
 }
 
-int main(void) {
+static void test_error_creation(void) {
+  Error e1 = ErrNew;
+  clib_assert(e1.failure == false, "Init failed");
+  clib_assert(e1.panic_instantly == false, "Init failed");
+
+  Error *e2 = ErrPanic;
+  clib_assert(e2->failure == false, "Init failed");
+  clib_assert(e2->panic_instantly == true, "Init failed");
+
+  Error *e3 = ErrDefault;
+  clib_assert(e3 == ErrDefault, "Init failed");
+  clib_assert(e3 == NULL, "Init failed");
+}
+
+static void test_error_function(void) {
   Error err = ErrNew;
   u64 i = fn_that_fails(true, &err);
   clib_assert(err.failure == true, "did not set err.failure correctly");
   clib_assert(err.code == 69, "did not set err.error correctly");
   clib_assert(i == 0, "Did not return correctly");
+}
 
-  Error err2 = ErrNew;
-  fn_that_fails_and_adds_note(true, &err2);
-  clib_assert(err2.code == 420, "did not set err2.error correctly");
+static void test_error_note_adding(void) {
+  Error err = ErrNew;
+  fn_that_fails_and_adds_note(true, &err);
+  clib_assert(err.code == 420, "did not set err2.error correctly");
+}
 
-  error_context(&err2, {
+static void test_error_except(void) {
+  Error err = ErrNew;
+  fn_that_fails_and_adds_note(true, &err);
+
+  error_context(&err, { error_except(); });
+
+  clib_assert(err.failure == false, "Did not ignore correctly");
+  clib_assert(err.msg.len == 0, "Did not ignore correctly");
+}
+
+static void test_error_match(void) {
+  Error err = ErrNew;
+  fn_that_fails_and_adds_note(true, &err);
+  clib_assert(err.code == 420, "did not set err2.error correctly");
+
+  error_context(&err, {
     error_match({
       case 69:
-        error_panic();
+        clib_assert(false, "Should not execute this");
 
       case 420: {
-        error_ignore();
+        error_except();
       } break;
     });
   });
+}
 
-  clib_assert(err2.failure == false, "Did not ignore correctly");
-  clib_assert(err2.msg.len == 0, "Did not ignore correctly");
+int main(void) {
+  test_error_creation();
+  test_error_function();
+  test_error_note_adding();
+  test_error_except();
+  test_error_match();
 }

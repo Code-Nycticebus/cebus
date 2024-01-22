@@ -209,16 +209,16 @@ error_context(&error, {
 });
 ```
 
-```error_panic()``` panics and aborts if it
-encounters an error, ```error_warn()``` just prints a warning message and
-```error_ignore()``` ignores error completely.
+On error: ```error_panic()``` prints message and aborts, ```error_warn()``` just
+prints a warning message and
+```error_except()``` excepts and resets the error.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
 error_context(&error, {
-  error_warn();
-  error_ignore();
   error_panic();
+  error_warn();
+  error_except();
 });
 ```
 

@@ -41,16 +41,16 @@ error_context(&error, {
 });
 ```
 
-```error_panic()``` panics and aborts if it
-encounters an error, ```error_warn()``` just prints a warning message and
-```error_ignore()``` ignores error completely.
+On error: ```error_panic()``` prints message and aborts, ```error_warn()``` just
+prints a warning message and
+```error_except()``` excepts and resets the error.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
 error_context(&error, {
-  error_warn();
-  error_ignore();
   error_panic();
+  error_warn();
+  error_except();
 });
 ```
 
@@ -90,7 +90,7 @@ Match your error types with ```error_match()```.
 
 typedef struct {
   bool failure;
-  bool raise;
+  bool panic_instantly;
   const char *file;
   i32 line;
   i32 code;
@@ -100,14 +100,14 @@ typedef struct {
 
 #define ErrNew                                                                 \
   ((Error){                                                                    \
-      .raise = false,                                                          \
+      .panic_instantly = false,                                                \
       .line = __LINE__,                                                        \
       .file = __FILE__,                                                        \
   })
 
 #define ErrPanic                                                               \
   ((Error[]){{                                                                 \
-      .raise = true,                                                           \
+      .panic_instantly = true,                                                 \
       .line = __LINE__,                                                        \
       .file = __FILE__,                                                        \
   }})
@@ -130,7 +130,7 @@ typedef struct {
 
 #define error_panic() _error_panic(__error_context__)
 #define error_warn() _error_warn(__error_context__)
-#define error_ignore() _error_ignore(__error_context__)
+#define error_except() _error_except(__error_context__)
 
 #define error_set_code(code) _error_set_code(__error_context__, code)
 #define error_add_note(...)                                                    \
@@ -148,7 +148,7 @@ void fmt_args(5) _error_emit(Error *err, i32 code, const char *file, int line,
 
 void _error_panic(Error *err);
 void _error_warn(Error *err);
-void _error_ignore(Error *err);
+void _error_except(Error *err);
 
 void _error_set_code(Error *err, i32 code);
 void fmt_args(4) _error_add_note(Error *err, const char *file, int line,
