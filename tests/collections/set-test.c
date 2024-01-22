@@ -34,8 +34,8 @@ static void test_set_extend(void) {
   const u64 n2[] = {6, 7, 8, 9, 10, 11};
 
   Set set = set_create(&arena);
-  set_extend(&set, 6, n1);
-  set_extend(&set, 6, n2);
+  set_extend(&set, ARRAY_SIZE(n1), n1);
+  set_extend(&set, ARRAY_SIZE(n2), n2);
 
   clib_assert(set.cap == 20, "Did not increase size the proper way");
 
