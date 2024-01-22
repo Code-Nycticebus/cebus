@@ -1,17 +1,3 @@
-# [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
-## Usage:
-Create a new Vec with:
-```c
-Arena arena = {0};
-VEC(int) vec = {0};
-vec_init(&vec, &arena);
-```
-
-Then you can push elements to the vector.
-```c
-vec_push(&vec, 69);
-vec_push(&vec, 420);
-```
 # [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
 ## Usage
 Create a new HashMap with:
@@ -50,4 +36,18 @@ Then you can test if an element is in the Set.
 ```c
 set_contains(&set, str_hash(STR("Hello"))) == true;
 set_contains(&set, str_hash(STR("World"))) == true;
+```
+# [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
+## Usage:
+Create a new Vec with:
+```c
+Arena arena = {0};
+VEC(int) vec = {0};
+vec_init(&vec, &arena);
+```
+
+Then you can push elements to the vector.
+```c
+vec_push(&vec, 69);
+vec_push(&vec, 420);
 ```

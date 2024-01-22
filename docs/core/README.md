@@ -1,4 +1,22 @@
-# [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/defines.h)
+# [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
+## Usage
+Create a new Arena with:
+```c
+Arena arena = {0};
+```
+
+Now you can allocate from this arena.
+```c
+int* i1 = arena_alloc(&arena, sizeof(int));
+int* i2 = arena_alloc(&arena, sizeof(int));
+int* i3 = arena_alloc(&arena, sizeof(int));
+```
+
+Don't forget to free the arena once you're done. This frees all allocated
+integers at once.
+```c
+arena_free(&arena);
+```
 # [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
 ## Usage
 You can assert if something is true with:
@@ -14,12 +32,7 @@ clib_assert_warn(EXPR, FMT, ...);
 clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
-# [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
-## Example
-```c
-int array[5] = {5, 4, 3, 2, 1};
-quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
-```
+# [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/defines.h)
 # [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
 ## Usage
 If a function can fail it should take an ```Error*``` as parameter. Initialize
@@ -68,25 +81,12 @@ created at the first occurence of an error and ```error_raise()``` get called.
 ```c
 function_that_can_fail(ErrDefault);
 ```
+# [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/logging.h)
 # [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.
-# [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
-## Usage
-Create a new Arena with:
+# [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
+## Example
 ```c
-Arena arena = {0};
+int array[5] = {5, 4, 3, 2, 1};
+quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
-
-Now you can allocate from this arena.
-```c
-int* i1 = arena_alloc(&arena, sizeof(int));
-int* i2 = arena_alloc(&arena, sizeof(int));
-int* i3 = arena_alloc(&arena, sizeof(int));
-```
-
-Don't forget to free the arena once you're done. This frees all allocated
-integers at once.
-```c
-arena_free(&arena);
-```
-# [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/logging.h)

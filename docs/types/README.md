@@ -1,4 +1,3 @@
-# [utf8.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/utf8.h)
 # [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h)
 ## Usage
 Create new Bytes with:
@@ -6,6 +5,14 @@ Create new Bytes with:
 Bytes bytes = BYTES(0xff, 0x11);
 Bytes bytes_str = BYTES_STR("Bytes from a string");
 ```
+# [char.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/char.h)
+
+Just a wrapper around ```#include <ctype.h>```
+
+# [floats.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/floats.h)
+# [integers.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/integers.h)
+## Usage
+Just use the functions.
 # [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h)
 ## Usage
 Create a new Str with:
@@ -41,11 +48,4 @@ is
 a
 line
 ```
-# [floats.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/floats.h)
-# [integers.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/integers.h)
-## Usage
-Just use the functions.
-# [char.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/char.h)
-
-Just a wrapper around ```#include <ctype.h>```
-
+# [utf8.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/utf8.h)
