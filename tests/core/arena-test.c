@@ -29,9 +29,11 @@ static void test_chunks(void) {
   char *buffer = arena_alloc(&arena, n_bytes);
   clib_assert(buffer, "Buffer was not allocated");
 
-  TestChunk *tc = (TestChunk *)arena.begin;
-  clib_assert(tc->allocated == n_bytes, "Not enough bytes are allocated");
+  char *buffer2 = arena_alloc(&arena, n_bytes);
+  clib_assert(buffer + n_bytes == buffer2,
+              "'buffer2' was not next to 'buffer'");
 
+  TestChunk *tc = (TestChunk *)arena.begin;
   const usize more_bytes = tc->cap;
   char *big_buffer = arena_alloc(&arena, more_bytes);
   clib_assert(big_buffer, "Buffer was not allocated");
