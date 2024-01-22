@@ -43,5 +43,5 @@ int main(void) {
   });
 
   clib_assert(err2.failure == false, "Did not ignore correctly");
-  clib_assert(err2.msg_size == 0, "Did not ignore correctly");
+  clib_assert(err2.msg.len == 0, "Did not ignore correctly");
 }

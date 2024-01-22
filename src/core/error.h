@@ -94,8 +94,8 @@ typedef struct {
   const char *file;
   i32 line;
   i32 code;
-  usize msg_size;
-  char message[ERROR_MESSAGE_MAX];
+  Str msg;
+  char buffer[ERROR_MESSAGE_MAX];
 } Error;
 
 #define ErrNew                                                                 \
