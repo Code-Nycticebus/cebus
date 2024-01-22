@@ -32,7 +32,7 @@ def write_src_to_doc(doc: Path, src: Path):
                     if first:
                         first = False
                         f.write(
-                            f"## [{file.name}]({remote}/blob/main/{PurePosixPath(file.relative_to(cwd))}#L{nr})\n"
+                            f"## [{file.name}]({remote}/blob/main/{PurePosixPath(file.relative_to(cwd))}#L{nr+1})\n"
                         )
                     write_mode = True
 
