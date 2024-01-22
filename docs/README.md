@@ -1,13 +1,13 @@
 ## Types
 ### [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h#L4)
-### Usage
+#### Usage
 Create new Bytes with:
 ```c
 Bytes bytes = BYTES(0xff, 0x11);
 Bytes bytes_str = BYTES_STR("Bytes from a string");
 ```
 ### [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h#L4)
-### Usage
+#### Usage
 Create a new Str with:
 ```c
 Str str = STR("Hello World");
@@ -46,7 +46,7 @@ line
 ## Bin
 ## Os
 ### [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h#L4)
-### Usage
+#### Usage
 Use the functions:
 ```c
 Error e = ErrCreate;
@@ -64,7 +64,7 @@ Outputs:
 input: 'name'
 ```
 ### [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h#L4)
-### Usage
+#### Usage
 To read in the entire file as Str
 ```c
 Arena arena = {0};
@@ -77,7 +77,7 @@ arena_free(&arena);
 ```
 ## Collections
 ### [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h#L4)
-### Usage:
+#### Usage
 Create a new Vec with:
 ```c
 Arena arena = {0};
@@ -91,7 +91,7 @@ vec_push(&vec, 69);
 vec_push(&vec, 420);
 ```
 ### [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h#L4)
-### Usage
+#### Usage
 Create a new HashMap with:
 ```c
 Arena arena = {0};
@@ -111,7 +111,7 @@ hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
 ### [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/set.h#L4)
-### Usage
+#### Usage
 Create a new Set with:
 ```c
 Arena arena = {0};
@@ -131,7 +131,7 @@ set_contains(&set, str_hash(STR("World"))) == true;
 ```
 ## Core
 ### [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h#L4)
-### Usage
+#### Usage
 You can assert if something is true with:
 ```c
 clib_assert(1 == 1, "One should be one");
@@ -146,13 +146,13 @@ clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
 ### [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h#L4)
-### Usage
+#### Usage
 ```c
 int array[5] = {5, 4, 3, 2, 1};
 quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 ### [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h#L4)
-### Usage
+#### Usage
 If a function can fail it should take an ```Error*``` as parameter. If an error
 occurs, initialize the Error with ```error_emit()```.
 ```c
@@ -233,7 +233,7 @@ Match your error types with ```error_match()```.
 ### [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h#L4)
 Here are various macros for figuring out what Platform and compiler is used.
 ### [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h#L4)
-### Usage
+#### Usage
 Create a new Arena with:
 ```c
 Arena arena = {0};
