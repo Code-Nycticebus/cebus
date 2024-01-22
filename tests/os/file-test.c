@@ -12,18 +12,20 @@ int main(void) {
   Str filename1 = STR("__test_1_");
   Str filename2 = STR("__test_2_");
 
-  file_write(filename1, BYTES(0x69, 0x69), ErrRaise);
+  Error *PANIC = ErrPanic;
+
+  file_write(filename1, BYTES(0x69, 0x69), PANIC);
   clib_assert(file_exists(filename1), "This file should exist");
 
-  file_rename(filename1, filename2, ErrRaise);
+  file_rename(filename1, filename2, PANIC);
   clib_assert(file_exists(filename2), "This file should exist");
 
-  Bytes content = file_read_bytes(filename2, &arena, ErrRaise);
+  Bytes content = file_read_bytes(filename2, &arena, PANIC);
 
   clib_assert(content.data[0] == 0x69, "Did not read the file correctly");
   clib_assert(content.data[1] == 0x69, "Did not read the file correctly");
 
-  file_remove(filename2, ErrRaise);
+  file_remove(filename2, PANIC);
 
   clib_assert(file_exists(filename2) == false, "This file should not exist");
   clib_assert(file_exists(filename1) == false, "This file should not exist");

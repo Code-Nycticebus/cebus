@@ -7,34 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INVALID_ERROR_MSG "did you forget to check with 'ErrorOccured()'?"
-
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_raise(Error *err, unused bool _err_ctx) {
-  clib_log_fatal("%s:%d:\n%s", err->file, err->line, err->message);
-  abort();
-}
-
-void _error_warn(Error *err, unused bool _err_ctx) {
-  clib_log_warning("%s:%d:\n%s", err->file, err->line, err->message);
-  _error_except(err, _err_ctx);
-}
-
-void _error_except(Error *err, unused bool _err_ctx) {
-  err->msg_size = 0;
-  err->failure = false;
-}
-
-void _error_set_code(Error *err, unused bool _err_ctx, i32 code) {
-  err->code = code;
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-bool _error_occured(Error *err) { return err && err->failure; }
-
-void _error_init(Error *err, i32 code, const char *file, int line,
+void _error_emit(Error *err, i32 code, const char *file, int line,
                  const char *fmt, ...) {
   err->failure = true;
   err->code = code;
@@ -48,13 +23,33 @@ void _error_init(Error *err, i32 code, const char *file, int line,
                                     ERROR_MESSAGE_MAX - err->msg_size, fmt, va);
   va_end(va);
   if (err->raise) {
-    _error_raise(err, true);
+    _error_panic(err, true);
   }
+}
+
+bool _error_occured(Error *err) { return err && err->failure; }
+
+void _error_panic(Error *err, unused bool _err_ctx) {
+  clib_log_fatal("%s:%d:\n%s", err->file, err->line, err->message);
+  abort();
+}
+
+void _error_warn(Error *err, unused bool _err_ctx) {
+  clib_log_warning("%s:%d:\n%s", err->file, err->line, err->message);
+  _error_ignore(err, _err_ctx);
+}
+
+void _error_ignore(Error *err, unused bool _err_ctx) {
+  err->msg_size = 0;
+  err->failure = false;
+}
+
+void _error_set_code(Error *err, unused bool _err_ctx, i32 code) {
+  err->code = code;
 }
 
 void _error_add_note(Error *err, unused bool _err_ctx, const char *file,
                      int line, const char *fmt, ...) {
-  clib_assert_debug(err, INVALID_ERROR_MSG);
   va_list va;
   va_start(va, fmt);
   err->msg_size += (usize)snprintf(&err->message[err->msg_size],

@@ -35,13 +35,13 @@ clib_assert_return(EXPR, RETURN_VALUE);
 # [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/defines.h)
 # [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
 ## Usage
-If a function can fail it should take an ```Error*``` as parameter. Initialize
-the Error with ```error_init()```.
+If a function can fail it should take an ```Error*``` as parameter. If an error
+occurs, initialize the Error with ```error_emit()```.
 ```c
 void function_that_can_fail(Error* error)
   int error_code = -1; // Function returns a bad value
   if (error_code < 0) {
-    error_init(error, error_code, "error: %d", error_code);
+    error_emit(error, error_code, "error: %d", error_code);
   }
 }
 ```
@@ -51,16 +51,16 @@ inside the function.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-OnError(&error, {});
 ```
 
-Always check with ```OnError()``` before doing any
-calls to the error api. Or else the ```__error_context_missing```
+Always check with ```error_handle()``` before doing any
+calls to the error api. Or else the ```__error_context_missing``` identifier is
+not specified.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-OnError(&error, {
-  error_raise(&error);
+error_handle(&error, {
+  // Do error handling
 });
 ```
 
@@ -69,20 +69,33 @@ code with ```error_set_code()```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-OnError(error, {
+error_handle(&error, {
   error_add_note(&error, "Note added to error");
   error_set_code(&error, 69);
 });
 ```
 
-Pass ```ErrRaise``` to that function to automatically call
-```error_raise()``` if it encouters an error inside the function.
+Call what you want to do with these errors. ```error_panic()``` panics if it
+encounters an error, ```error_warn()``` just prints a warning message and
+```error_ignore()``` ignores error completely.
 ```c
-function_that_can_fail(ErrRaise);
+Error error = ErrCreate;
+function_that_can_fail(&error);
+error_handle(&error, {
+  error_warn(&error);
+  error_ignore(&error);
+  error_panic(&error);
+});
 ```
 
-If the function is called with ```ErrDefault``` a new ```ErrorRaise``` gets
-created at the first occurence of an error and ```error_raise()``` get called.
+Pass ```ErrPanic``` to that function to automatically call
+```error_panic()``` if it encouters an error inside the function.
+```c
+function_that_can_fail(ErrPanic);
+```
+
+```ErrDefault``` is the same as ```ErrorPanic``` but the ```Error``` gets
+created at the first occurence of an error.
 ```c
 function_that_can_fail(ErrDefault);
 ```

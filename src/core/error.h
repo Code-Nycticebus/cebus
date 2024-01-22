@@ -3,13 +3,13 @@
 
 /* DOCUMENTATION
 ## Usage
-If a function can fail it should take an ```Error*``` as parameter. Initialize
-the Error with ```error_init()```.
+If a function can fail it should take an ```Error*``` as parameter. If an error
+occurs, initialize the Error with ```error_emit()```.
 ```c
 void function_that_can_fail(Error* error)
   int error_code = -1; // Function returns a bad value
   if (error_code < 0) {
-    error_init(error, error_code, "error: %d", error_code);
+    error_emit(error, error_code, "error: %d", error_code);
   }
 }
 ```
@@ -19,16 +19,16 @@ inside the function.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-OnError(&error, {});
 ```
 
-Always check with ```OnError()``` before doing any
-calls to the error api. Or else the ```__error_context_missing```
+Always check with ```error_handle()``` before doing any
+calls to the error api. Or else the ```__error_context_missing``` identifier is
+not specified.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-OnError(&error, {
-  error_raise(&error);
+error_handle(&error, {
+  // Do error handling
 });
 ```
 
@@ -37,20 +37,33 @@ code with ```error_set_code()```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-OnError(error, {
+error_handle(&error, {
   error_add_note(&error, "Note added to error");
   error_set_code(&error, 69);
 });
 ```
 
-Pass ```ErrRaise``` to that function to automatically call
-```error_raise()``` if it encouters an error inside the function.
+Call what you want to do with these errors. ```error_panic()``` panics if it
+encounters an error, ```error_warn()``` just prints a warning message and
+```error_ignore()``` ignores error completely.
 ```c
-function_that_can_fail(ErrRaise);
+Error error = ErrCreate;
+function_that_can_fail(&error);
+error_handle(&error, {
+  error_warn(&error);
+  error_ignore(&error);
+  error_panic(&error);
+});
 ```
 
-If the function is called with ```ErrDefault``` a new ```ErrorRaise``` gets
-created at the first occurence of an error and ```error_raise()``` get called.
+Pass ```ErrPanic``` to that function to automatically call
+```error_panic()``` if it encouters an error inside the function.
+```c
+function_that_can_fail(ErrPanic);
+```
+
+```ErrDefault``` is the same as ```ErrorPanic``` but the ```Error``` gets
+created at the first occurence of an error.
 ```c
 function_that_can_fail(ErrDefault);
 ```
@@ -78,7 +91,8 @@ typedef struct {
       .line = __LINE__,                                                        \
       .file = __FILE__,                                                        \
   })
-#define ErrRaise                                                               \
+
+#define ErrPanic                                                               \
   ((Error[]){{                                                                 \
       .raise = true,                                                           \
       .line = __LINE__,                                                        \
@@ -89,8 +103,8 @@ typedef struct {
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define error_init(E, code, ...)                                               \
-  _error_init((E) == ErrDefault ? ErrRaise : (E), code, __FILE__, __LINE__,    \
+#define error_emit(E, code, ...)                                               \
+  _error_emit((E) == ErrDefault ? ErrPanic : (E), code, __FILE__, __LINE__,    \
               __VA_ARGS__);
 
 #define error_handle(E, ...)                                                   \
@@ -103,9 +117,9 @@ typedef struct {
     }                                                                          \
   } while (0)
 
-#define error_raise(E) _error_raise(E, __error_context_missing)
+#define error_panic(E) _error_panic(E, __error_context_missing)
 #define error_warn(E) _error_warn(E, __error_context_missing)
-#define error_except(E) _error_except(E, __error_context_missing)
+#define error_ignore(E) _error_ignore(E, __error_context_missing)
 #define error_set_code(E, code)                                                \
   _error_set_code(E, __error_context_missing, code)
 #define error_add_note(E, ...)                                                 \
@@ -113,16 +127,16 @@ typedef struct {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void fmt_args(5) _error_init(Error *err, i32 code, const char *file, int line,
+void fmt_args(5) _error_emit(Error *err, i32 code, const char *file, int line,
                              const char *fmt, ...);
 
 bool _error_occured(Error *err);
 
-void _error_set_code(Error *err, bool _err_ctx, i32 code);
-void _error_raise(Error *err, bool _err_ctx);
+void _error_panic(Error *err, bool _err_ctx);
 void _error_warn(Error *err, bool _err_ctx);
-void _error_except(Error *err, bool _err_ctx);
+void _error_ignore(Error *err, bool _err_ctx);
 
+void _error_set_code(Error *err, bool _err_ctx, i32 code);
 void fmt_args(5) _error_add_note(Error *err, bool _err_ctx, const char *file,
                                  int line, const char *fmt, ...);
 

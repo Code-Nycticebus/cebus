@@ -4,7 +4,7 @@
 
 static u64 fn_that_fails(bool fail, Error *error) {
   if (fail) {
-    error_init(error, 69, "function that fails failed o_o");
+    error_emit(error, 69, "function that fails failed o_o");
     return 0;
   }
   return 4;
@@ -31,7 +31,7 @@ int main(void) {
   fn_that_fails_and_adds_note(true, &err2);
   clib_assert(err2.code == 420, "did not set err2.error correctly");
 
-  error_handle(&err2, { error_except(&err2); });
-  clib_assert(err2.failure == false, "Did not except correctly");
-  clib_assert(err2.msg_size == 0, "Did not except correctly");
+  error_handle(&err2, { error_ignore(&err2); });
+  clib_assert(err2.failure == false, "Did not ignore correctly");
+  clib_assert(err2.msg_size == 0, "Did not ignore correctly");
 }

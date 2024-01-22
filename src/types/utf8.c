@@ -14,7 +14,7 @@ Utf8 utf8_decode(Bytes bytes, Error *error) {
   for (usize i = 0; i < bytes.size; i++) {
     usize bit_count = u8_leading_ones(bytes.data[i]);
     if (!(bit_count <= 4)) {
-      error_init(error, UTF8_DECODE,
+      error_emit(error, UTF8_DECODE,
                  "Decoding utf-8 failed: too many starting bits at %" USIZE_FMT
                  ": found %" USIZE_FMT,
                  i, bit_count);
@@ -23,7 +23,7 @@ Utf8 utf8_decode(Bytes bytes, Error *error) {
     usize idx = i;
     for (usize j = 1; j < bit_count; j++) {
       if (!(u8_leading_ones(bytes.data[idx + j]) == 1)) {
-        error_init(
+        error_emit(
             error, UTF8_DECODE,
             "Decoding utf-8 failed: wrong bits in between at %" USIZE_FMT,
             idx + j);
@@ -42,7 +42,7 @@ Utf8 utf8_decode(Bytes bytes, Error *error) {
 Bytes utf8_encode(Utf8 s, Error *error) {
   bool ret = utf8_validate(s);
   if (ret == false) {
-    error_init(error, UTF8_ENCODE, "Encoding utf-8 failed");
+    error_emit(error, UTF8_ENCODE, "Encoding utf-8 failed");
     return (Bytes){0};
   }
   return bytes_from_parts(s.size, (const u8 *)s.data);
