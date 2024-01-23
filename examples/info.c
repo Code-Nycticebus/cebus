@@ -12,3 +12,4 @@ int main(void) {
   clib_log_info("%s endian",
                 CLIB_BYTE_ORDER == ENDIAN_LITTLE ? "little" : "big");
 }
+

@@ -12,11 +12,11 @@ pybuildc build
 #### gcc and clang
 Build the static library.
 ```console
-gcc -I./src -c $(find ./src -type f -name '*.c' ! -path "./src/bin/*") && ar rcs libclib.a *.o && rm *.o
+gcc -I./src -c ./src/**/*.c && ar rcs libclib.a *.o && rm *.o
 ```
 Add ```-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib``` to your compiler flags and set the ```CLIB_DIRECTORY``` variable.
 ```console
-gcc main.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
+gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ```
 
 ## Documentation
