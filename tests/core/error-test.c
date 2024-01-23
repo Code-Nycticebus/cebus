@@ -12,8 +12,7 @@ static u64 fn_that_fails(bool fail, Error *error) {
 
 static u64 fn_that_fails_and_adds_note(bool fail, Error *error) {
   u64 res = fn_that_fails(fail, error);
-  error_context(error, {
-    error_add_location();
+  error_propagate(error, {
     error_add_note("Note: function failed!");
     error_set_code(420);
   });
@@ -75,10 +74,21 @@ static void test_error_match(void) {
   });
 }
 
+static void test_error_propagate(void) {
+  Error err = ErrNew;
+  fn_that_fails(true, &err);
+  error_propagate(&err, {
+    break; // Jump out of context!
+  });
+  clib_assert(err.info.location_count == 2,
+              "Propagate did not add any more locations!");
+}
+
 int main(void) {
   test_error_creation();
   test_error_function();
   test_error_note_adding();
   test_error_except();
   test_error_match();
+  test_error_propagate();
 }

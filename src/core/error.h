@@ -135,14 +135,20 @@ typedef struct {
     if ((E) && (E)->failure) {                                                 \
       Error *__error_context__ = (E);                                          \
       __VA_ARGS__                                                              \
+      if ((E)->failure) {                                                      \
+        _error_panic(E);                                                       \
+      }                                                                        \
     }                                                                          \
   } while (0)
 
 #define error_propagate(E, ...)                                                \
-  error_context(E, {                                                           \
-    error_add_location();                                                      \
-    __VA_ARGS__                                                                \
-  })
+  do {                                                                         \
+    if ((E) && (E)->failure) {                                                 \
+      Error *__error_context__ = (E);                                          \
+      error_add_location();                                                    \
+      __VA_ARGS__                                                              \
+    }                                                                          \
+  } while (0)
 
 #define error_panic() _error_panic(__error_context__)
 #define error_except() _error_except(__error_context__)
