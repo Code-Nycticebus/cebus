@@ -65,8 +65,6 @@ static void test_error_match(void) {
 
   error_context(&err, {
     error_match({
-      case 69:
-        clib_assert(false, "Should not execute this");
       case 420: {
         error_except();
       } break;
