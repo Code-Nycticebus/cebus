@@ -149,7 +149,7 @@ Pass ```ErrPanic``` to that function to automatically call
 function_that_can_fail(ErrPanic);
 ```
 
-```ErrDefault``` is the same as ```ErrorPanic``` but the ```Error``` gets
+```ErrDefault``` is the same as ```ErrPanic``` but the ```Error``` gets
 created at the first occurence of an error. Only use this if you really don't
 care about the error.
 ```c
@@ -162,10 +162,8 @@ Match your error types with ```error_match()```.
   function_that_can_fail(true, &err2);
   error_context(&error, {
     error_match({
-      case 69:
-        error_panic();
       case 420: {
-        error_ignore();
+        error_except();
       } break;
     });
   });
