@@ -13,6 +13,7 @@ static u64 fn_that_fails(bool fail, Error *error) {
 static u64 fn_that_fails_and_adds_note(bool fail, Error *error) {
   u64 res = fn_that_fails(fail, error);
   error_context(error, {
+    error_add_location();
     error_add_note("Note: function failed!");
     error_set_code(420);
   });
