@@ -1,21 +1,7 @@
 ## Collections
- - [vec.h](#vech)
  - [hm.h](#hmh)
  - [set.h](#seth)
-### [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
-#### Usage
-Create a new Vec with:
-```c
-Arena arena = {0};
-VEC(int) vec = {0};
-vec_init(&vec, &arena);
-```
-
-Then you can push elements to the vector.
-```c
-vec_push(&vec, 69);
-vec_push(&vec, 420);
-```
+ - [vec.h](#vech)
 ### [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
 #### Usage
 Create a new HashMap with:
@@ -55,14 +41,47 @@ Then you can test if an element is in the Set.
 set_contains(&set, str_hash(STR("Hello"))) == true;
 set_contains(&set, str_hash(STR("World"))) == true;
 ```
+### [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
+#### Usage
+Create a new Vec with:
+```c
+Arena arena = {0};
+VEC(int) vec = {0};
+vec_init(&vec, &arena);
+```
+
+Then you can push elements to the vector.
+```c
+vec_push(&vec, 69);
+vec_push(&vec, 420);
+```
 ## Core
- - [defines.h](#definesh)
- - [asserts.h](#assertsh)
- - [sorting.h](#sortingh)
- - [error.h](#errorh)
- - [platform.h](#platformh)
  - [arena.h](#arenah)
+ - [asserts.h](#assertsh)
+ - [defines.h](#definesh)
+ - [error.h](#errorh)
  - [logging.h](#loggingh)
+ - [platform.h](#platformh)
+ - [sorting.h](#sortingh)
+### [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
+#### Usage
+Create a new Arena with:
+```c
+Arena arena = {0};
+```
+
+Now you can allocate from this arena.
+```c
+int* i1 = arena_alloc(&arena, sizeof(int));
+int* i2 = arena_alloc(&arena, sizeof(int));
+int* i3 = arena_alloc(&arena, sizeof(int));
+```
+
+Don't forget to free the arena once you're done. This frees all allocated
+integers at once.
+```c
+arena_free(&arena);
+```
 ### [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
 #### Usage
 You can assert if something is true with:
@@ -77,12 +96,6 @@ clib_assert(EXPR, FMT, ...);
 clib_assert_warn(EXPR, FMT, ...);
 clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
-```
-### [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
-#### Usage
-```c
-int array[5] = {5, 4, 3, 2, 1};
-quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 ### [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
 #### Usage
@@ -172,29 +185,28 @@ Match your error types with ```error_match()```.
 ```
 ### [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.
-### [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
+### [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
 #### Usage
-Create a new Arena with:
 ```c
-Arena arena = {0};
-```
-
-Now you can allocate from this arena.
-```c
-int* i1 = arena_alloc(&arena, sizeof(int));
-int* i2 = arena_alloc(&arena, sizeof(int));
-int* i3 = arena_alloc(&arena, sizeof(int));
-```
-
-Don't forget to free the arena once you're done. This frees all allocated
-integers at once.
-```c
-arena_free(&arena);
+int array[5] = {5, 4, 3, 2, 1};
+quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 ## Os
+ - [fs.h](#fsh)
  - [io.h](#ioh)
  - [os.h](#osh)
- - [fs.h](#fsh)
+### [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
+#### Usage
+To read in the entire file as Str
+```c
+Arena arena = {0};
+Error error = ErrCreate;
+Str content = file_read_str(STR("filename.txt"), &arena, &error);
+if (error_occured(&error)) {
+  error_raise(&error);
+}
+arena_free(&arena);
+```
 ### [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h)
 #### Usage
 Use the functions:
@@ -213,25 +225,13 @@ Outputs:
 :> name
 input: 'name'
 ```
-### [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
-#### Usage
-To read in the entire file as Str
-```c
-Arena arena = {0};
-Error error = ErrCreate;
-Str content = file_read_str(STR("filename.txt"), &arena, &error);
-if (error_occured(&error)) {
-  error_raise(&error);
-}
-arena_free(&arena);
-```
 ## Types
- - [utf8.h](#utf8h)
  - [bytes.h](#bytesh)
- - [str.h](#strh)
+ - [char.h](#charh)
  - [floats.h](#floatsh)
  - [integers.h](#integersh)
- - [char.h](#charh)
+ - [str.h](#strh)
+ - [utf8.h](#utf8h)
 ### [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h)
 #### Usage
 Create new Bytes with:

@@ -46,6 +46,7 @@ with open(readme_file, "w") as f:
 
 for docs in sorted(docs_dict.keys()):
     files = docs_dict[docs]
+    files.sort()
     if len(files):
         with open(readme_file, "a") as f:
             f.write(f"## {docs.name.title()}\n")
