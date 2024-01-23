@@ -102,11 +102,21 @@ Error error = ErrNew;
 function_that_can_fail(&error);
 ```
 
-Work inside of an error context with ```error_context()```
+Work inside of an error context with ```error_context()```. if you don't call
+```error_except()``` or return inside, it will call ```error_panic()```.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
 error_context(&error, {
+  // Do error handling
+});
+```
+
+Or propagate the error with ```error_propagate()```
+```c
+Error error = ErrCreate;
+function_that_can_fail(&error);
+error_propagate(&error, {
   // Do error handling
 });
 ```
@@ -116,7 +126,7 @@ code with ```error_set_code()```
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
-error_context(&error, {
+error_propagate(&error, {
   error_add_note("Note added to error");
   error_set_code(69);
 });
@@ -140,7 +150,8 @@ function_that_can_fail(ErrPanic);
 ```
 
 ```ErrDefault``` is the same as ```ErrorPanic``` but the ```Error``` gets
-created at the first occurence of an error.
+created at the first occurence of an error. Only use this if you really don't
+care about the error.
 ```c
 function_that_can_fail(ErrDefault);
 ```

@@ -80,7 +80,10 @@ void _error_panic(Error *err) {
 }
 
 void _error_except(Error *err) {
-  err->info = (ErrorInfo){0};
+  err->info.msg_len = 0;
+  err->info.location_idx = 0;
+  err->info.location_count = 0;
+  err->info.msg = (Str){0};
   err->failure = false;
 }
 
