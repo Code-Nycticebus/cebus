@@ -39,16 +39,22 @@ static usize file_size(FILE *handle, Error *error) {
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
   Bytes result = {0};
   FILE *handle = file_open(filename, "r", error);
-  if (error && error->failure) {
+  error_context(error, {
+    error_add_location();
     goto defer;
-  }
+  });
   usize size = file_size(handle, error);
-  if (error && error->failure) {
+  error_context(error, {
+    error_add_location();
     goto defer;
-  }
+  });
 
   u8 *buffer = arena_alloc(arena, size);
   result = io_read(handle, size, buffer, error);
+  error_context(error, {
+    error_add_location();
+    goto defer;
+  });
 
 defer:
   if (handle) {
@@ -67,15 +73,21 @@ Utf8 file_read_utf8(Str filename, Arena *arena, Error *error) {
 
 void file_write(Str filename, Bytes bytes, Error *error) {
   FILE *handle = file_open(filename, "w", error);
-  if (error && error->failure) {
+  error_context(error, {
+    error_add_location();
     goto defer;
-  }
+  });
+
   io_write(handle, bytes, error);
+  error_context(error, {
+    error_add_location();
+    goto defer;
+  });
+
 defer:
   if (handle) {
     fclose(handle);
   }
-  return;
 }
 
 void file_rename(Str old_name, Str new_name, Error *error) {
