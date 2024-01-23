@@ -1,5 +1,5 @@
 /* DOCUMENTATION
-#### Usage
+##### Usage
 If a function can fail it should take an ```Error*``` as parameter. If an error
 occurs, initialize the Error with ```error_emit()```.
 ```c

@@ -1,5 +1,5 @@
 /* DOCUMENTATION
-#### Usage
+##### Usage
 Create a new HashMap with:
 ```c
 Arena arena = {0};

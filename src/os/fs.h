@@ -1,5 +1,5 @@
 /* DOCUMENTATION
-#### Usage
+##### Usage
 To read in the entire file as Str
 ```c
 Arena arena = {0};

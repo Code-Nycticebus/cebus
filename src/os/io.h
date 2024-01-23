@@ -1,5 +1,5 @@
 /* DOCUMENTATION
-#### Usage
+##### Usage
 Use the functions:
 ```c
 Error e = ErrCreate;

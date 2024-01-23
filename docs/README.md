@@ -34,7 +34,7 @@ pybuildc build
    - [utf8.h](#utf8h)
 ### Collections
 #### [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
-#### Usage
+##### Usage
 Create a new HashMap with:
 ```c
 Arena arena = {0};
@@ -54,7 +54,7 @@ hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
 #### [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/set.h)
-#### Usage
+##### Usage
 Create a new Set with:
 ```c
 Arena arena = {0};
@@ -73,7 +73,7 @@ set_contains(&set, str_hash(STR("Hello"))) == true;
 set_contains(&set, str_hash(STR("World"))) == true;
 ```
 #### [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
-#### Usage
+##### Usage
 Create a new Vec with:
 ```c
 Arena arena = {0};
@@ -88,7 +88,7 @@ vec_push(&vec, 420);
 ```
 ### Core
 #### [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
-#### Usage
+##### Usage
 Create a new Arena with:
 ```c
 Arena arena = {0};
@@ -107,7 +107,7 @@ integers at once.
 arena_free(&arena);
 ```
 #### [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
-#### Usage
+##### Usage
 You can assert if something is true with:
 ```c
 clib_assert(1 == 1, "One should be one");
@@ -122,7 +122,7 @@ clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
 #### [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
-#### Usage
+##### Usage
 If a function can fail it should take an ```Error*``` as parameter. If an error
 occurs, initialize the Error with ```error_emit()```.
 ```c
@@ -210,14 +210,14 @@ Match your error types with ```error_match()```.
 #### [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.
 #### [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
-#### Usage
+##### Usage
 ```c
 int array[5] = {5, 4, 3, 2, 1};
 quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 ### Os
 #### [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
-#### Usage
+##### Usage
 To read in the entire file as Str
 ```c
 Arena arena = {0};
@@ -229,7 +229,7 @@ if (error_occured(&error)) {
 arena_free(&arena);
 ```
 #### [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h)
-#### Usage
+##### Usage
 Use the functions:
 ```c
 Error e = ErrCreate;
@@ -248,14 +248,14 @@ input: 'name'
 ```
 ### Types
 #### [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h)
-#### Usage
+##### Usage
 Create new Bytes with:
 ```c
 Bytes bytes = BYTES(0xff, 0x11);
 Bytes bytes_str = BYTES_STR("Bytes from a string");
 ```
 #### [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h)
-#### Usage
+##### Usage
 Create a new Str with:
 ```c
 Str str = STR("Hello World");
