@@ -1,7 +1,21 @@
 ## Collections
- - [hm.h](#hmh)
  - [vec.h](#vech)
+ - [hm.h](#hmh)
  - [set.h](#seth)
+### [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
+#### Usage
+Create a new Vec with:
+```c
+Arena arena = {0};
+VEC(int) vec = {0};
+vec_init(&vec, &arena);
+```
+
+Then you can push elements to the vector.
+```c
+vec_push(&vec, 69);
+vec_push(&vec, 420);
+```
 ### [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
 #### Usage
 Create a new HashMap with:
@@ -21,20 +35,6 @@ Now you can get the values by passing in the hash of the element.
 ```c
 hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
-```
-### [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
-#### Usage
-Create a new Vec with:
-```c
-Arena arena = {0};
-VEC(int) vec = {0};
-vec_init(&vec, &arena);
-```
-
-Then you can push elements to the vector.
-```c
-vec_push(&vec, 69);
-vec_push(&vec, 420);
 ```
 ### [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/set.h)
 #### Usage
@@ -56,31 +56,33 @@ set_contains(&set, str_hash(STR("Hello"))) == true;
 set_contains(&set, str_hash(STR("World"))) == true;
 ```
 ## Core
- - [arena.h](#arenah)
- - [error.h](#errorh)
+ - [defines.h](#definesh)
  - [asserts.h](#assertsh)
  - [sorting.h](#sortingh)
- - [logging.h](#loggingh)
- - [defines.h](#definesh)
+ - [error.h](#errorh)
  - [platform.h](#platformh)
-### [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
+ - [arena.h](#arenah)
+ - [logging.h](#loggingh)
+### [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
 #### Usage
-Create a new Arena with:
+You can assert if something is true with:
 ```c
-Arena arena = {0};
+clib_assert(1 == 1, "One should be one");
+clib_assert(2 == 2, "It can even handle arguments: %d", 420);
 ```
 
-Now you can allocate from this arena.
+Here are all the available macros
 ```c
-int* i1 = arena_alloc(&arena, sizeof(int));
-int* i2 = arena_alloc(&arena, sizeof(int));
-int* i3 = arena_alloc(&arena, sizeof(int));
+clib_assert(EXPR, FMT, ...);
+clib_assert_warn(EXPR, FMT, ...);
+clib_assert_debug(EXPR, FMT, ...);
+clib_assert_return(EXPR, RETURN_VALUE);
 ```
-
-Don't forget to free the arena once you're done. This frees all allocated
-integers at once.
+### [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
+#### Usage
 ```c
-arena_free(&arena);
+int array[5] = {5, 4, 3, 2, 1};
+quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 ### [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
 #### Usage
@@ -168,45 +170,31 @@ Match your error types with ```error_match()```.
     });
   });
 ```
-### [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
-#### Usage
-You can assert if something is true with:
-```c
-clib_assert(1 == 1, "One should be one");
-clib_assert(2 == 2, "It can even handle arguments: %d", 420);
-```
-
-Here are all the available macros
-```c
-clib_assert(EXPR, FMT, ...);
-clib_assert_warn(EXPR, FMT, ...);
-clib_assert_debug(EXPR, FMT, ...);
-clib_assert_return(EXPR, RETURN_VALUE);
-```
-### [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
-#### Usage
-```c
-int array[5] = {5, 4, 3, 2, 1};
-quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
-```
 ### [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.
-## Os
- - [os.h](#osh)
- - [fs.h](#fsh)
- - [io.h](#ioh)
-### [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
+### [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
 #### Usage
-To read in the entire file as Str
+Create a new Arena with:
 ```c
 Arena arena = {0};
-Error error = ErrCreate;
-Str content = file_read_str(STR("filename.txt"), &arena, &error);
-if (error_occured(&error)) {
-  error_raise(&error);
-}
+```
+
+Now you can allocate from this arena.
+```c
+int* i1 = arena_alloc(&arena, sizeof(int));
+int* i2 = arena_alloc(&arena, sizeof(int));
+int* i3 = arena_alloc(&arena, sizeof(int));
+```
+
+Don't forget to free the arena once you're done. This frees all allocated
+integers at once.
+```c
 arena_free(&arena);
 ```
+## Os
+ - [io.h](#ioh)
+ - [os.h](#osh)
+ - [fs.h](#fsh)
 ### [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h)
 #### Usage
 Use the functions:
@@ -225,13 +213,32 @@ Outputs:
 :> name
 input: 'name'
 ```
+### [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
+#### Usage
+To read in the entire file as Str
+```c
+Arena arena = {0};
+Error error = ErrCreate;
+Str content = file_read_str(STR("filename.txt"), &arena, &error);
+if (error_occured(&error)) {
+  error_raise(&error);
+}
+arena_free(&arena);
+```
 ## Types
- - [char.h](#charh)
- - [floats.h](#floatsh)
  - [utf8.h](#utf8h)
- - [str.h](#strh)
- - [integers.h](#integersh)
  - [bytes.h](#bytesh)
+ - [str.h](#strh)
+ - [floats.h](#floatsh)
+ - [integers.h](#integersh)
+ - [char.h](#charh)
+### [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h)
+#### Usage
+Create new Bytes with:
+```c
+Bytes bytes = BYTES(0xff, 0x11);
+Bytes bytes_str = BYTES_STR("Bytes from a string");
+```
 ### [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h)
 #### Usage
 Create a new Str with:
@@ -268,11 +275,4 @@ This
 is
 a
 line
-```
-### [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h)
-#### Usage
-Create new Bytes with:
-```c
-Bytes bytes = BYTES(0xff, 0x11);
-Bytes bytes_str = BYTES_STR("Bytes from a string");
 ```

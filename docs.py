@@ -44,7 +44,8 @@ readme_file = doc_dir / "README.md"
 with open(readme_file, "w") as f:
     f.truncate()
 
-for docs, files in docs_dict.items():
+for docs in sorted(docs_dict.keys()):
+    files = docs_dict[docs]
     if len(files):
         with open(readme_file, "a") as f:
             f.write(f"## {docs.name.title()}\n")
