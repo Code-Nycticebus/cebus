@@ -77,9 +77,7 @@ Match your error types with ```error_match()```.
 Error error = ErrNew;
 function_that_can_fail(true, &error);
 error_match(&error, {
-  case 420: {
-    error_except();
-  } break;
+  error_case(420, { error_except(); });
 });
 ```
 */
@@ -173,6 +171,11 @@ typedef struct {
   error_context(E, {                                                           \
     switch (__error_context__->info.code) { __VA_ARGS__ }                      \
   })
+
+#define error_case(code, ...)                                                  \
+  case code: {                                                                 \
+    __VA_ARGS__                                                                \
+  } break
 
 ////////////////////////////////////////////////////////////////////////////
 

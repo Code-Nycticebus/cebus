@@ -64,9 +64,8 @@ static void test_error_match(void) {
   fn_that_fails_and_adds_note(true, &err);
 
   error_match(&err, {
-    case 420: {
-      error_except();
-    } break;
+    error_case(420, { error_except(); });
+    error_case(69, { error_add_note("Funny"); });
   });
 }
 

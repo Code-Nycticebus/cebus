@@ -212,9 +212,7 @@ Match your error types with ```error_match()```.
 Error error = ErrNew;
 function_that_can_fail(true, &error);
 error_match(&error, {
-  case 420: {
-    error_except();
-  } break;
+  error_case(420, { error_except(); });
 });
 ```
 ## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
