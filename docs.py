@@ -27,7 +27,7 @@ def write_src_to_doc(doc: TextIO, src: Path):
                 if first:
                     first = False
                     doc.write(
-                        f"#### [{src.name}]({REMOTE}/blob/main/{PurePosixPath(src.relative_to(CWD))})\n"
+                        f"## [{src.name}]({REMOTE}/blob/main/{PurePosixPath(src.relative_to(CWD))})\n"
                     )
                 write_mode = True
 
@@ -57,13 +57,13 @@ def main() -> None:
         for line in lines_to_keep:
             f.write(line)
         for docs, files in sorted_entries:
-            f.write(f"- {docs.name.title()}\n")
+            f.write(f"- [{docs.name.title()}](#{docs.name.title()})\n")
             for file in files:
                 f.write(f"   - [{file.name}](#{file.name.replace('.', '')})\n")
 
         # Iterates over all files and writes their content to readme
         for docs, files in sorted_entries:
-            f.write(f"### {docs.name.title()}\n")
+            f.write(f"## {docs.name.title()}\n")
 
             for file in files:
                 write_src_to_doc(f, file)

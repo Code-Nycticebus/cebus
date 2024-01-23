@@ -1,5 +1,5 @@
 /* DOCUMENTATION
-##### Usage
+### Usage
 Create a new Vec with:
 ```c
 Arena arena = {0};

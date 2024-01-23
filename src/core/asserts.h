@@ -2,7 +2,7 @@
 #define __CLIB_ASSERTS_H__
 
 /* DOCUMENTATION
-##### Usage
+### Usage
 You can assert if something is true with:
 ```c
 clib_assert(1 == 1, "One should be one");
