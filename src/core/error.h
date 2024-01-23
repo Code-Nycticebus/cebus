@@ -162,7 +162,8 @@ typedef struct {
 #define error_panic() _error_panic(__error_context__)
 #define error_except() _error_except(__error_context__)
 
-#define error_msg() (__error_context__->info.msg)
+#define error_msg (__error_context__->info.msg)
+#define error_code (__error_context__->info.code)
 
 #define error_set_code(code) _error_set_code(__error_context__, code)
 #define error_set_msg(...) _error_set_msg(__error_context__, __VA_ARGS__)
