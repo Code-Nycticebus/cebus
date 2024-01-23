@@ -17,7 +17,7 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
   err->msg.data = err->buffer;
   err->msg.len += (usize)snprintf(&err->buffer[err->msg.len],
                                   ERROR_MESSAGE_MAX - err->msg.len,
-                                  "  [ERROR] %s:%d:\n", file, line);
+                                  "  [EMIT] %s:%d:\n", file, line);
   va_list va;
   va_start(va, fmt);
   err->msg.len += (usize)vsnprintf(&err->buffer[err->msg.len],
@@ -29,7 +29,7 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
 }
 
 void _error_panic(Error *err) {
-  clib_log_fatal("%s:%d:\n" STR_FMT, err->file, err->line, STR_ARG(err->msg));
+  clib_log_error("%s:%d:\n" STR_FMT, err->file, err->line, STR_ARG(err->msg));
   abort();
 }
 
