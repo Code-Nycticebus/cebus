@@ -9,12 +9,12 @@ This is an extension of the C standart library.
 pybuildc build
 ```
 
-#### gcc and clang
+#### Gcc or Clang
 Build the static library.
 ```console
 gcc -I./src -c ./src/**/*.c && ar rcs libclib.a *.o && rm *.o
 ```
-Add ```-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib``` to your compiler flags and set the ```CLIB_DIRECTORY``` variable.
+set the ```CLIB_DIRECTORY``` variable and add ```-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib``` to your compiler flags.
 ```console
 gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ```
