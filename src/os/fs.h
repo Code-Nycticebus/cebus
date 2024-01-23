@@ -1,6 +1,3 @@
-#ifndef __CLIB_FS_H__
-#define __CLIB_FS_H__
-
 /* DOCUMENTATION
 #### Usage
 To read in the entire file as Str
@@ -14,6 +11,9 @@ if (error_occured(&error)) {
 arena_free(&arena);
 ```
 */
+
+#ifndef __CLIB_FS_H__
+#define __CLIB_FS_H__
 
 #include "core/arena.h"
 #include "core/defines.h"

@@ -1,9 +1,9 @@
-#ifndef __CLIB_PLATFORM_H__
-#define __CLIB_PLATFORM_H__
-
 /* DOCUMENTATION
 Here are various macros for figuring out what Platform and compiler is used.
 */
+
+#ifndef __CLIB_PLATFORM_H__
+#define __CLIB_PLATFORM_H__
 
 ////////////////////////////////////////////////////////////////////////////
 /* System */

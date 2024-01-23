@@ -1,6 +1,3 @@
-#ifndef __CLIB_ARENA_H__
-#define __CLIB_ARENA_H__
-
 /* DOCUMENTATION
 #### Usage
 Create a new Arena with:
@@ -21,6 +18,9 @@ integers at once.
 arena_free(&arena);
 ```
 */
+
+#ifndef __CLIB_ARENA_H__
+#define __CLIB_ARENA_H__
 
 #include "core/defines.h"
 

@@ -1,6 +1,3 @@
-#ifndef __CLIB_SET_H__
-#define __CLIB_SET_H__
-
 /* DOCUMENTATION
 #### Usage
 Create a new Set with:
@@ -21,6 +18,9 @@ set_contains(&set, str_hash(STR("Hello"))) == true;
 set_contains(&set, str_hash(STR("World"))) == true;
 ```
 */
+
+#ifndef __CLIB_SET_H__
+#define __CLIB_SET_H__
 
 #include "core/arena.h"
 #include "core/defines.h"

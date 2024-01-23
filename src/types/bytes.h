@@ -1,6 +1,3 @@
-#ifndef __CLIB_BYTES_H__
-#define __CLIB_BYTES_H__
-
 /* DOCUMENTATION
 #### Usage
 Create new Bytes with:
@@ -9,6 +6,9 @@ Bytes bytes = BYTES(0xff, 0x11);
 Bytes bytes_str = BYTES_STR("Bytes from a string");
 ```
 */
+
+#ifndef __CLIB_BYTES_H__
+#define __CLIB_BYTES_H__
 
 #include "core/arena.h"
 #include "core/defines.h"

@@ -1,6 +1,3 @@
-#ifndef __CLIB_DA_H__
-#define __CLIB_DA_H__
-
 /* DOCUMENTATION
 #### Usage
 Create a new Vec with:
@@ -16,6 +13,9 @@ vec_push(&vec, 69);
 vec_push(&vec, 420);
 ```
 */
+
+#ifndef __CLIB_DA_H__
+#define __CLIB_DA_H__
 
 #include "core/arena.h"   // IWYU pragma: export
 #include "core/defines.h" // IWYU pragma: export

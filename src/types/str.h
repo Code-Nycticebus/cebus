@@ -1,6 +1,3 @@
-#ifndef __CLIB_STR_H__
-#define __CLIB_STR_H__
-
 /* DOCUMENTATION
 #### Usage
 Create a new Str with:
@@ -39,6 +36,9 @@ a
 line
 ```
 */
+
+#ifndef __CLIB_STR_H__
+#define __CLIB_STR_H__
 
 #include "core/arena.h"
 #include "core/defines.h" // IWYU pragma: private: include "str.h"

@@ -1,6 +1,3 @@
-#ifndef __CLIB_IO_H__
-#define __CLIB_IO_H__
-
 /* DOCUMENTATION
 #### Usage
 Use the functions:
@@ -20,6 +17,9 @@ Outputs:
 input: 'name'
 ```
 */
+
+#ifndef __CLIB_IO_H__
+#define __CLIB_IO_H__
 
 #include "core/defines.h"
 #include "core/error.h"

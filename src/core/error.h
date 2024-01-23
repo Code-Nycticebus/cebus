@@ -1,6 +1,3 @@
-#ifndef __CLIB_ERROR_H__
-#define __CLIB_ERROR_H__
-
 /* DOCUMENTATION
 #### Usage
 If a function can fail it should take an ```Error*``` as parameter. If an error
@@ -88,6 +85,9 @@ Match your error types with ```error_match()```.
   });
 ```
 */
+
+#ifndef __CLIB_ERROR_H__
+#define __CLIB_ERROR_H__
 
 #include "core/defines.h"
 

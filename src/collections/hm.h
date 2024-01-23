@@ -1,6 +1,3 @@
-#ifndef __CLIB_HT_H__
-#define __CLIB_HT_H__
-
 /* DOCUMENTATION
 #### Usage
 Create a new HashMap with:
@@ -22,6 +19,9 @@ hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
 */
+
+#ifndef __CLIB_HT_H__
+#define __CLIB_HT_H__
 
 #include "core/arena.h"
 #include "core/defines.h"
