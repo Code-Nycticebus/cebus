@@ -41,15 +41,13 @@ error_context(&error, {
 });
 ```
 
-On error: ```error_panic()``` prints message and aborts, ```error_warn()``` just
-prints a warning message and
+On error: ```error_panic()``` prints message and aborts.
 ```error_except()``` excepts and resets the error.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
 error_context(&error, {
   error_panic();
-  error_warn();
   error_except();
 });
 ```
@@ -86,30 +84,43 @@ Match your error types with ```error_match()```.
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define ERROR_MESSAGE_MAX 1024
+#define ERROR_BUFFER_MAX 512
+#define ERROR_LOCATIONS_MAX 10
+#define FILE_LOC __FILE__, __LINE__
+
+typedef struct {
+  i32 code;
+  const char *file;
+  i32 line;
+  Str msg;
+  usize msg_len;
+  char msg_buffer[ERROR_BUFFER_MAX];
+  usize location_count;
+  usize location_idx;
+  struct {
+    const char *file;
+    int line;
+  } locations[ERROR_LOCATIONS_MAX];
+} ErrorInfo;
 
 typedef struct {
   bool failure;
   bool panic_instantly;
-  const char *file;
-  i32 line;
-  i32 code;
-  Str msg;
-  char buffer[ERROR_MESSAGE_MAX];
+  ErrorInfo info;
 } Error;
 
 #define ErrNew                                                                 \
   ((Error){                                                                    \
       .panic_instantly = false,                                                \
-      .line = __LINE__,                                                        \
-      .file = __FILE__,                                                        \
+      .info.line = __LINE__,                                                   \
+      .info.file = __FILE__,                                                   \
   })
 
 #define ErrPanic                                                               \
   ((Error[]){{                                                                 \
       .panic_instantly = true,                                                 \
-      .line = __LINE__,                                                        \
-      .file = __FILE__,                                                        \
+      .info.line = __LINE__,                                                   \
+      .info.file = __FILE__,                                                   \
   }})
 
 #define ErrDefault ((Error *)NULL)
@@ -117,8 +128,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define error_emit(E, code, ...)                                               \
-  _error_emit((E) == ErrDefault ? ErrPanic : (E), code, __FILE__, __LINE__,    \
-              __VA_ARGS__);
+  _error_emit((E) == ErrDefault ? ErrPanic : (E), code, FILE_LOC, __VA_ARGS__);
 
 #define error_context(E, ...)                                                  \
   do {                                                                         \
@@ -128,17 +138,20 @@ typedef struct {
     }                                                                          \
   } while (0)
 
+#define error_move(E) _error_move((E), FILE_LOC)
+
 #define error_panic() _error_panic(__error_context__)
-#define error_warn() _error_warn(__error_context__)
 #define error_except() _error_except(__error_context__)
 
+#define error_msg() (__error_context__->info.msg)
+
 #define error_set_code(code) _error_set_code(__error_context__, code)
-#define error_add_note(...)                                                    \
-  _error_add_note(__error_context__, __FILE__, __LINE__, __VA_ARGS__)
+#define error_set_msg(...) _error_set_msg(__error_context__, __VA_ARGS__)
+#define error_add_note(...) _error_add_note(__error_context__, __VA_ARGS__)
 
 #define error_match(...)                                                       \
   do {                                                                         \
-    switch (__error_context__->code) { __VA_ARGS__ }                           \
+    switch (__error_context__->info.code) { __VA_ARGS__ }                      \
   } while (0)
 
 ////////////////////////////////////////////////////////////////////////////
@@ -146,13 +159,14 @@ typedef struct {
 void fmt_args(5) _error_emit(Error *err, i32 code, const char *file, int line,
                              const char *fmt, ...);
 
+Error *_error_move(Error *err, const char *file, int line);
+
 void _error_panic(Error *err);
-void _error_warn(Error *err);
 void _error_except(Error *err);
 
 void _error_set_code(Error *err, i32 code);
-void fmt_args(4) _error_add_note(Error *err, const char *file, int line,
-                                 const char *fmt, ...);
+void fmt_args(2) _error_set_msg(Error *err, const char *fmt, ...);
+void fmt_args(2) _error_add_note(Error *err, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 ///
