@@ -138,6 +138,12 @@ typedef struct {
     }                                                                          \
   } while (0)
 
+#define error_propagate(E, ...)                                                \
+  error_context(E, {                                                           \
+    error_add_location();                                                      \
+    __VA_ARGS__                                                                \
+  })
+
 #define error_panic() _error_panic(__error_context__)
 #define error_except() _error_except(__error_context__)
 

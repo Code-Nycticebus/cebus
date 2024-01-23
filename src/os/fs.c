@@ -39,22 +39,13 @@ static usize file_size(FILE *handle, Error *error) {
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
   Bytes result = {0};
   FILE *handle = file_open(filename, "r", error);
-  error_context(error, {
-    error_add_location();
-    goto defer;
-  });
+  error_propagate(error, { goto defer; });
   usize size = file_size(handle, error);
-  error_context(error, {
-    error_add_location();
-    goto defer;
-  });
+  error_propagate(error, { goto defer; });
 
   u8 *buffer = arena_alloc(arena, size);
   result = io_read(handle, size, buffer, error);
-  error_context(error, {
-    error_add_location();
-    goto defer;
-  });
+  error_propagate(error, { goto defer; });
 
 defer:
   if (handle) {
@@ -64,25 +55,26 @@ defer:
 }
 
 Str file_read_str(Str filename, Arena *arena, Error *error) {
-  return str_from_bytes(file_read_bytes(filename, arena, error));
+  Bytes bytes = file_read_bytes(filename, arena, error);
+  error_propagate(error, { return (Str){0}; });
+  return str_from_bytes(bytes);
 }
 
 Utf8 file_read_utf8(Str filename, Arena *arena, Error *error) {
-  return utf8_decode(file_read_bytes(filename, arena, error), error);
+  Utf8 res = {0};
+  Bytes bytes = file_read_bytes(filename, arena, error);
+  error_propagate(error, { return (Utf8){0}; });
+  res = utf8_decode(bytes, error);
+  error_propagate(error, { return (Utf8){0}; });
+  return res;
 }
 
 void file_write(Str filename, Bytes bytes, Error *error) {
   FILE *handle = file_open(filename, "w", error);
-  error_context(error, {
-    error_add_location();
-    goto defer;
-  });
+  error_propagate(error, { goto defer; });
 
   io_write(handle, bytes, error);
-  error_context(error, {
-    error_add_location();
-    goto defer;
-  });
+  error_propagate(error, { goto defer; });
 
 defer:
   if (handle) {
