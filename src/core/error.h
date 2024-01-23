@@ -74,13 +74,13 @@ function_that_can_fail(ErrDefault);
 
 Match your error types with ```error_match()```.
 ```c
-  Error error = ErrNew;
-  function_that_can_fail(true, &err2);
-  error_match(&error, {
-    case 420: {
-      error_except();
-    } break;
-  });
+Error error = ErrNew;
+function_that_can_fail(true, &err2);
+error_match(&error, {
+  case 420: {
+    error_except();
+  } break;
+});
 ```
 */
 
