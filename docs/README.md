@@ -9,7 +9,7 @@ This is an extension of the C standart library.
 pybuildc build
 ```
 
-#### gcc
+#### gcc and clang
 Build the static library.
 ```console
 gcc -I./src -c $(find ./src -type f -name '*.c' ! -path "./src/bin/*") && ar rcs libclib.a *.o && rm *.o
