@@ -76,7 +76,7 @@ Match your error types with ```error_match()```.
 ```c
 Error error = ErrNew;
 function_that_can_fail(true, &error);
-error_match(&error, {
+error_context(&error, {
   case 420: {
     error_except();
   } break;
