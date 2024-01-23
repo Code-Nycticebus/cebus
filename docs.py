@@ -3,18 +3,15 @@ from collections import defaultdict
 import subprocess
 from typing import TextIO
 
-remote = (
+REMOTE = (
     subprocess.check_output(["git", "config", "--get", "remote.origin.url"])
     .decode()
     .strip()[:-4]
 )
-
-cwd = Path.cwd()
-src_dir = Path(cwd, "src")
-doc_dir = cwd / "docs"
-
-
-docs_dict: dict[Path, list[Path]] = defaultdict(list)
+CWD = Path.cwd()
+SRC = Path(CWD, "src")
+DOC = CWD / "docs"
+README = DOC / "README.md"
 
 
 def write_src_to_doc(doc: TextIO, src: Path):
@@ -30,31 +27,47 @@ def write_src_to_doc(doc: TextIO, src: Path):
                 if first:
                     first = False
                     doc.write(
-                        f"### [{file.name}]({remote}/blob/main/{PurePosixPath(file.relative_to(cwd))})\n"
+                        f"#### [{src.name}]({REMOTE}/blob/main/{PurePosixPath(src.relative_to(CWD))})\n"
                     )
                 write_mode = True
 
 
-# Collects the files
-for file in src_dir.rglob("*.h"):
-    doc = doc_dir / file.relative_to(src_dir).parent
-    docs_dict[doc].append(file)
+def main() -> None:
+    docs_dict: dict[Path, list[Path]] = defaultdict(list)
 
-readme_file = doc_dir / "README.md"
+    # Collects the files
+    for file in SRC.rglob("*.h"):
+        doc = DOC / file.relative_to(SRC).parent
+        docs_dict[doc].append(file)
 
-# Removes any previous concatinated documentation
-with open(readme_file, "r+") as f:
-    for line in f.readlines():
-        if "<!-- DOCUMENTATION -->" in line:
-            f.truncate(f.tell())
+    with open(README, "r") as f:
+        # Removes any previous concatinated documentation
+        lines_to_keep = []
+        for line in f.readlines():
+            lines_to_keep.append(line)
+            if "<!-- DOCUMENTATION -->" in line:
+                break
 
-# Iterates over all files and writes their content to readme
-for docs, files in sorted(docs_dict.items()):
-    with open(readme_file, "a") as f:
-        f.write(f"## {docs.name.title()}\n")
+    sorted_entries = tuple(
+        (docs, tuple(sorted(files))) for docs, files in sorted(docs_dict.items())
+    )
 
-        files.sort()
-        for file in files:
-            f.write(f" - [{file.name}](#{file.name.replace('.', '')})\n")
-        for file in files:
-            write_src_to_doc(f, file)
+    # Creates table of content
+    with open(README, "w") as f:
+        for line in lines_to_keep:
+            f.write(line)
+        for docs, files in sorted_entries:
+            f.write(f"- {docs.name.title()}\n")
+            for file in files:
+                f.write(f"   - [{file.name}](#{file.name.replace('.', '')})\n")
+
+        # Iterates over all files and writes their content to readme
+        for docs, files in sorted_entries:
+            f.write(f"### {docs.name.title()}\n")
+
+            for file in files:
+                write_src_to_doc(f, file)
+
+
+if __name__ == "__main__":
+    main()
