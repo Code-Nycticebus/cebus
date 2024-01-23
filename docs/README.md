@@ -1,10 +1,22 @@
 # Clib
  
-This is just my extension of the C standart library. Using [pybuildc](https://github.com/Code-Nycticebus/pybuildc) for building.
+This is an extension of the C standart library. 
 
 ### Quickstart
+
+#### [pybuildc](https://github.com/Code-Nycticebus/pybuildc)
 ```console
 pybuildc build
+```
+
+#### gcc
+Build the static library.
+```console
+gcc -I./src -c $(find ./src -type f -name '*.c' ! -path "./src/bin/*") && ar rcs libclib.a *.o && rm *.o
+```
+Add ```-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib``` to your compiler flags and set the ```CLIB_DIRECTORY``` variable.
+```console
+gcc main.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ```
 
 ## Documentation
