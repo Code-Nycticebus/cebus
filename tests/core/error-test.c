@@ -63,12 +63,10 @@ static void test_error_match(void) {
   Error err = ErrNew;
   fn_that_fails_and_adds_note(true, &err);
 
-  error_context(&err, {
-    error_match({
-      case 420: {
-        error_except();
-      } break;
-    });
+  error_match(&err, {
+    case 420: {
+      error_except();
+    } break;
   });
 }
 

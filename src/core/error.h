@@ -76,12 +76,10 @@ Match your error types with ```error_match()```.
 ```c
   Error error = ErrNew;
   function_that_can_fail(true, &err2);
-  error_context(&error, {
-    error_match({
-      case 420: {
-        error_except();
-      } break;
-    });
+  error_match(&error, {
+    case 420: {
+      error_except();
+    } break;
   });
 ```
 */
@@ -171,10 +169,10 @@ typedef struct {
 #define error_add_location(...) _error_add_location(__error_context__, FILE_LOC)
 #define error_add_note(...) _error_add_note(__error_context__, __VA_ARGS__)
 
-#define error_match(...)                                                       \
-  do {                                                                         \
+#define error_match(E, ...)                                                    \
+  error_context(E, {                                                           \
     switch (__error_context__->info.code) { __VA_ARGS__ }                      \
-  } while (0)
+  })
 
 ////////////////////////////////////////////////////////////////////////////
 
