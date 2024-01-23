@@ -14,7 +14,7 @@ Build the static library.
 ```console
 gcc -I./src -c ./src/**/*.c && ar rcs libclib.a *.o && rm *.o
 ```
-set the ```CLIB_DIRECTORY``` variable and add ```-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib``` to your compiler flags.
+Set the ```CLIB_DIRECTORY``` variable and add ```-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib``` to your compiler flags.
 ```console
 gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ```
@@ -153,8 +153,8 @@ Error error = ErrNew;
 function_that_can_fail(&error);
 ```
 
-Work inside of an error context with ```error_context()```. if you don't call
-```error_except()``` or return inside, it will call ```error_panic()```.
+Work inside of an error context with ```error_context()```. It will call
+```error_panic()``` if it falls through.
 ```c
 Error error = ErrCreate;
 function_that_can_fail(&error);
