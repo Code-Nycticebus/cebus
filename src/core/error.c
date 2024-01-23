@@ -74,13 +74,6 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
   }
 }
 
-Error *_error_move(Error *err, const char *file, int line) {
-  if (err) {
-    error_location_push(&err->info, file, line);
-  }
-  return err;
-}
-
 void _error_panic(Error *err) {
   error_dump(&err->info);
   abort();
@@ -114,6 +107,10 @@ void _error_add_note(Error *err, const char *fmt, ...) {
   err->info.msg_len++;
 
   va_end(va);
+}
+
+void _error_add_location(Error *err, const char *file, int line) {
+  error_location_push(&err->info, file, line);
 }
 
 ////////////////////////////////////////////////////////////////////////////
