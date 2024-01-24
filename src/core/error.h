@@ -141,7 +141,7 @@ typedef struct {
 
 #define error_context(E, ...)                                                  \
   do {                                                                         \
-    if ((E) && (E)->failure) {                                                 \
+    if (_error_occured(E)) {                                                   \
       Error *__error_context__ = (E);                                          \
       __VA_ARGS__                                                              \
       if ((E)->failure) {                                                      \
@@ -152,7 +152,7 @@ typedef struct {
 
 #define error_propagate(E, ...)                                                \
   do {                                                                         \
-    if ((E) && (E)->failure) {                                                 \
+    if (_error_occured(E)) {                                                   \
       Error *__error_context__ = (E);                                          \
       error_add_location();                                                    \
       __VA_ARGS__                                                              \
@@ -175,6 +175,8 @@ typedef struct {
 
 void FMT(5) _error_emit(Error *err, i32 code, const char *file, int line,
                         const char *fmt, ...);
+
+bool _error_occured(Error *err);
 
 void NORETURN _error_panic(Error *err);
 void _error_except(Error *err);

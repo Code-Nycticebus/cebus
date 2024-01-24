@@ -74,6 +74,8 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
   }
 }
 
+bool _error_occured(Error *err) { return err && err->failure; }
+
 void _error_panic(Error *err) {
   error_dump(&err->info);
   abort();
