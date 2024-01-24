@@ -22,9 +22,9 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ## Documentation
 <!-- DOCUMENTATION -->
 - [Collections](#Collections)
+   - [da.h](#dah)
    - [hm.h](#hmh)
    - [set.h](#seth)
-   - [vec.h](#vech)
 - [Core](#Core)
    - [arena.h](#arenah)
    - [asserts.h](#assertsh)
@@ -45,6 +45,20 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [str.h](#strh)
    - [utf8.h](#utf8h)
 ## Collections
+## [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/da.h)
+### Usage
+Create a new dynamic array with:
+```c
+Arena arena = {0};
+DA(int) vec = {0};
+da_init(&vec, &arena);
+```
+
+Then you can push elements to the dynamic array.
+```c
+da_push(&vec, 69);
+da_push(&vec, 420);
+```
 ## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
 ### Usage
 Create a new HashMap with:
@@ -83,20 +97,6 @@ Then you can test if an element is in the Set.
 ```c
 set_contains(&set, str_hash(STR("Hello"))) == true;
 set_contains(&set, str_hash(STR("World"))) == true;
-```
-## [vec.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/vec.h)
-### Usage
-Create a new Vec with:
-```c
-Arena arena = {0};
-VEC(int) vec = {0};
-vec_init(&vec, &arena);
-```
-
-Then you can push elements to the vector.
-```c
-vec_push(&vec, 69);
-vec_push(&vec, 420);
 ```
 ## Core
 ## [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)

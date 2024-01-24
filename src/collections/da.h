@@ -1,16 +1,16 @@
 /* DOCUMENTATION
 ### Usage
-Create a new Vec with:
+Create a new dynamic array with:
 ```c
 Arena arena = {0};
-VEC(int) vec = {0};
-vec_init(&vec, &arena);
+DA(int) vec = {0};
+da_init(&vec, &arena);
 ```
 
-Then you can push elements to the vector.
+Then you can push elements to the dynamic array.
 ```c
-vec_push(&vec, 69);
-vec_push(&vec, 420);
+da_push(&vec, 69);
+da_push(&vec, 420);
 ```
 */
 
@@ -23,7 +23,7 @@ vec_push(&vec, 420);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define VEC(T)                                                                 \
+#define DA(T)                                                                  \
   struct {                                                                     \
     usize cap;                                                                 \
     usize len;                                                                 \
@@ -31,15 +31,15 @@ vec_push(&vec, 420);
     T *items;                                                                  \
   }
 
-#define vec_first(list) (list)->items[0]
-#define vec_last(list) (list)->items[(list)->len - 1]
-#define vec_pop(list) (list)->items[--(list)->len]
-#define vec_empty(list) (!(list)->len)
-#define vec_clear(list) ((list)->len = 0)
+#define da_first(list) (list)->items[0]
+#define da_last(list) (list)->items[(list)->len - 1]
+#define da_pop(list) (list)->items[--(list)->len]
+#define da_empty(list) (!(list)->len)
+#define da_clear(list) ((list)->len = 0)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define vec_init(list, _arena)                                                 \
+#define da_init(list, _arena)                                                  \
   do {                                                                         \
     (list)->len = 0;                                                           \
     (list)->cap = 10;                                                          \
@@ -48,7 +48,7 @@ vec_push(&vec, 420);
                                       (list)->cap * sizeof((list)->items[0])); \
   } while (0)
 
-#define vec_init_list(list, _arena, count, array)                              \
+#define da_init_list(list, _arena, count, array)                               \
   do {                                                                         \
     (list)->len = count;                                                       \
     (list)->cap = count;                                                       \
@@ -60,9 +60,9 @@ vec_push(&vec, 420);
     }                                                                          \
   } while (0)
 
-#define vec_copy(src, dest)                                                    \
+#define da_copy(src, dest)                                                     \
   do {                                                                         \
-    vec_resize((dest), (src)->len);                                            \
+    da_resize((dest), (src)->len);                                             \
     for (usize __c_i = 0; __c_i < (src)->len; __c_i++) {                       \
       (dest)->items[__c_i] = (src)->items[__c_i];                              \
     }                                                                          \
@@ -71,7 +71,7 @@ vec_push(&vec, 420);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define vec_resize(list, size)                                                 \
+#define da_resize(list, size)                                                  \
   do {                                                                         \
     if (size < (list)->cap) {                                                  \
       break;                                                                   \
@@ -81,7 +81,7 @@ vec_push(&vec, 420);
         (list)->arena, (list)->items, (list)->cap * sizeof((list)->items[0])); \
   } while (0)
 
-#define vec_reserve(list, size)                                                \
+#define da_reserve(list, size)                                                 \
   do {                                                                         \
     const usize __rs = (list)->len + size;                                     \
     if (__rs < (list)->cap) {                                                  \
@@ -91,20 +91,20 @@ vec_push(&vec, 420);
     while (__ns < __rs) {                                                      \
       __ns *= 2;                                                               \
     }                                                                          \
-    vec_resize(list, __ns);                                                    \
+    da_resize(list, __ns);                                                     \
   } while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define vec_push(list, item)                                                   \
+#define da_push(list, item)                                                    \
   do {                                                                         \
-    vec_reserve((list), (list)->len + 1);                                      \
+    da_reserve((list), (list)->len + 1);                                       \
     (list)->items[(list)->len++] = (item);                                     \
   } while (0)
 
-#define vec_extend(list, count, _items)                                        \
+#define da_extend(list, count, _items)                                         \
   do {                                                                         \
-    vec_reserve((list), (count));                                              \
+    da_reserve((list), (count));                                               \
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[(list)->len + __e_i] = (_items)[__e_i];                    \
     }                                                                          \
@@ -113,18 +113,18 @@ vec_push(&vec, 420);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define vec_map(src, dest, map)                                                \
+#define da_map(src, dest, map)                                                 \
   do {                                                                         \
-    vec_reserve((dest), (src)->len);                                           \
+    da_reserve((dest), (src)->len);                                            \
     for (usize __m_i = 0; __m_i < (src)->len; __m_i++) {                       \
       (dest)->items[__m_i] = map((src)->items[__m_i]);                         \
     }                                                                          \
     (dest)->len = (src)->len;                                                  \
   } while (0)
 
-#define vec_filter(src, dest, filter)                                          \
+#define da_filter(src, dest, filter)                                           \
   do {                                                                         \
-    vec_reserve((dest), (src)->len);                                           \
+    da_reserve((dest), (src)->len);                                            \
     usize __f_count = 0;                                                       \
     for (usize __f_i = 0; __f_i < (src)->len; __f_i++) {                       \
       if (filter((src)->items[__f_i])) {                                       \
@@ -134,9 +134,9 @@ vec_push(&vec, 420);
     (dest)->len = __f_count;                                                   \
   } while (0)
 
-#define vec_filter_ctx(src, dest, filter, ctx)                                 \
+#define da_filter_ctx(src, dest, filter, ctx)                                  \
   do {                                                                         \
-    vec_reserve((dest), (src)->len);                                           \
+    da_reserve((dest), (src)->len);                                            \
     usize __f_count = 0;                                                       \
     for (usize __f_i = 0; __f_i < (src)->len; __f_i++) {                       \
       if (filter((ctx), (src)->items[__f_i])) {                                \
@@ -146,23 +146,23 @@ vec_push(&vec, 420);
     (dest)->len = __f_count;                                                   \
   } while (0)
 
-#define vec_sort(src, dest, sort)                                              \
+#define da_sort(src, dest, sort)                                               \
   do {                                                                         \
-    vec_reserve((dest), (src)->len);                                           \
+    da_reserve((dest), (src)->len);                                            \
     quicksort((src)->items, (dest)->items, sizeof((src)->items[0]),            \
               (src)->len, sort);                                               \
   } while (0)
 
-#define vec_sort_ctx(src, dest, sort, ctx)                                     \
+#define da_sort_ctx(src, dest, sort, ctx)                                      \
   do {                                                                         \
-    vec_reserve((dest), (src)->len);                                           \
+    da_reserve((dest), (src)->len);                                            \
     quicksort_ctx((src)->items, (dest)->items, sizeof((src)->items[0]),        \
                   (src)->len, sort, ctx);                                      \
   } while (0)
 
-#define vec_reverse(list)                                                      \
+#define da_reverse(list)                                                       \
   do {                                                                         \
-    vec_reserve((list), 1);                                                    \
+    da_reserve((list), 1);                                                     \
     for (usize __r_i = 0; __r_i < (list)->len - __r_i - 1; __r_i++) {          \
       (list)->items[(list)->len] = (list)->items[__r_i];                       \
       (list)->items[__r_i] = (list)->items[(list)->len - __r_i - 1];           \

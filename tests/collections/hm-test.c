@@ -1,6 +1,6 @@
 #include "collections/hm.h"
 
-#include "collections/vec.h"
+#include "collections/da.h"
 #include "core/asserts.h"
 #include "types/integers.h"
 #include "types/str.h"
@@ -50,22 +50,22 @@ static void test_example(void) {
       STR("Strawberry"), STR("Apple"),  STR("Banana"),
   };
 
-  VEC(Str) keys = {0};
-  vec_init(&keys, &arena);
+  DA(Str) keys = {0};
+  da_init(&keys, &arena);
 
   HashMap hm = hm_create(&arena);
   for (usize i = 0; i < ARRAY_LEN(strings); i++) {
     u64 hash = str_hash(strings[i]);
     HashValue *value = hm_get(&hm, hash);
     if (value == NULL) {
-      vec_push(&keys, strings[i]);
+      da_push(&keys, strings[i]);
       hm_insert(&hm, hash, HashValue(u64, 1));
     } else {
       value->as.u64++;
     }
   }
 
-  vec_sort_ctx(&keys, &keys, sort_by_occurence, &hm);
+  da_sort_ctx(&keys, &keys, sort_by_occurence, &hm);
 
   clib_assert(str_eq(keys.items[0], STR("Apple")),
               "Apple does occure the most");
