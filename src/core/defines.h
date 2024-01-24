@@ -167,10 +167,9 @@ typedef struct _iobuf FILE;
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 
 #include <sys/cdefs.h>
+#define EXPORT __attribute__((used))
 #define NORETURN __attribute__((noreturn))
 #define UNUSED __attribute__((unused))
-#define USED __attribute__((used))
-
 #define PURE __attribute__((pure)) __attribute__((warn_unused_result))
 #define CONST __attribute__((const)) __attribute__((warn_unused_result))
 #define LIKELY(exp) __builtin_expect(((exp) != 0), 1)
@@ -182,6 +181,7 @@ typedef struct _iobuf FILE;
 #include <sal.h>
 #define EXPORT __declspec(dllexport)
 #define NORETURN __declspec(noreturn)
+#define UNUSED __pragma(warning(suppress : 4100))
 #define PURE _Check_return
 #define CONST _Check_return
 
@@ -197,10 +197,6 @@ typedef struct _iobuf FILE;
 
 #ifndef UNUSED
 #define UNUSED
-#endif
-
-#ifndef USED
-#define USED
 #endif
 
 #ifndef PURE
