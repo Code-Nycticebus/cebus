@@ -207,7 +207,7 @@ care about the error.
 function_that_can_fail(ErrDefault);
 ```
 
-Match your error types with a ```switch``` statement inside the
+Match your error types with a ```switch``` on ```error_code()``` inside an
 ```error_context()```.
 ```c
 Error error = ErrNew;
