@@ -6,25 +6,25 @@
 
 #define INTEGER_DECL(T)                                                        \
   /* BIT OPERATIONS */                                                         \
-  T CONST T##_reverse_bits(T value);                                           \
-  usize CONST T##_leading_ones(T value);                                       \
-  usize CONST T##_trailing_ones(T value);                                      \
-  usize CONST T##_leading_zeros(T value);                                      \
-  usize CONST T##_trailing_zeros(T value);                                     \
-  usize CONST T##_count_zeros(T value);                                        \
-  usize CONST T##_count_ones(T value);                                         \
+  CONST T T##_reverse_bits(T value);                                           \
+  CONST usize T##_leading_ones(T value);                                       \
+  CONST usize T##_trailing_ones(T value);                                      \
+  CONST usize T##_leading_zeros(T value);                                      \
+  CONST usize T##_trailing_zeros(T value);                                     \
+  CONST usize T##_count_zeros(T value);                                        \
+  CONST usize T##_count_ones(T value);                                         \
   /* BIT OPERATIONS END */                                                     \
                                                                                \
   /* BYTE ORDER OPERATIONS */                                                  \
-  T CONST T##_swap_bytes(T value);                                             \
+  CONST T T##_swap_bytes(T value);                                             \
   /*  BIG ENDIAN OPERATIONS */                                                 \
-  T CONST T##_to_be(T value);                                                  \
-  T CONST T##_from_be(T value);                                                \
+  CONST T T##_to_be(T value);                                                  \
+  CONST T T##_from_be(T value);                                                \
   T T##_from_be_bytes(Bytes bytes);                                            \
   Bytes T##_to_be_bytes(T value, Arena *arena);                                \
   /*  LITTLE ENDIAN OPERATIONS */                                              \
-  T CONST T##_to_le(T value);                                                  \
-  T CONST T##_from_le(T value);                                                \
+  CONST T T##_to_le(T value);                                                  \
+  CONST T T##_from_le(T value);                                                \
   T T##_from_le_bytes(Bytes bytes);                                            \
   Bytes T##_to_le_bytes(T value, Arena *arena);                                \
   /*  NATIVE ENDIAN OPERATIONS */                                              \
@@ -33,17 +33,17 @@
   /* BYTE ORDER OPERATIONS END */                                              \
                                                                                \
   /* MATH OPERATIONS */                                                        \
-  T CONST T##_max(T a, T b);                                                   \
-  T CONST T##_min(T a, T b);                                                   \
-  T CONST T##_clamp(T min, T max, T value);                                    \
+  CONST T T##_max(T a, T b);                                                   \
+  CONST T T##_min(T a, T b);                                                   \
+  CONST T T##_clamp(T min, T max, T value);                                    \
   /* MATH OPERATIONS END */                                                    \
                                                                                \
   /* UTILS */                                                                  \
-  u64 CONST T##_hash(T value);                                                 \
+  CONST u64 T##_hash(T value);                                                 \
   void T##_swap(T *v1, T *v2);                                                 \
-  CmpOrdering CONST T##_compare_lt(T a, T b);                                  \
-  CmpOrdering CONST T##_compare_gt(T a, T b);                                  \
-  CompareFn CONST T##_compare_qsort(CmpOrdering ordering);                     \
+  CONST CmpOrdering T##_compare_lt(T a, T b);                                  \
+  CONST CmpOrdering T##_compare_gt(T a, T b);                                  \
+  CONST CompareFn T##_compare_qsort(CmpOrdering ordering);                     \
   /* UTILS END */
 
 INTEGER_DECL(u8)

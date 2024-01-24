@@ -179,6 +179,7 @@ typedef struct _iobuf FILE;
 
 #elif defined(MSVC)
 
+#include <sal.h>
 #define EXPORT __declspec(dllexport)
 #define NORETURN __declspec(noreturn)
 #define PURE _Check_return
