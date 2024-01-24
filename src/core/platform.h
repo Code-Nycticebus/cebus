@@ -14,7 +14,7 @@ Here are various macros for figuring out what Platform and compiler is used.
 #define WINDOWS
 #define CLIB_SYSTEM "Windows"
 #else
-#error "Platform currently not supported"
+PLATFORM_NOT_SUPPORTED
 #endif
 /* !System */
 
@@ -131,19 +131,19 @@ Here are various macros for figuring out what Platform and compiler is used.
 
 ////////////////////////////////////////////////////////////////////////////
 /* Byte-Order */
-#define ENDIAN_UNKOWN 0x00
-#define ENDIAN_LITTLE 0x01
-#define ENDIAN_BIG 0x80
-
 #if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) &&                \
     defined(__ORDER_LITTLE_ENDIAN__)
-#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define CLIB_BYTE_ORDER ENDIAN_BIG
-#elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+
+#define ENDIAN_LITTLE __ORDER_LITTLE_ENDIAN__
+#define ENDIAN_BIG __ORDER_BIG_ENDIAN__
+#define CLIB_BYTE_ORDER __BYTE_ORDER__
+
+#elif defined(_MSC_VER)
+#define ENDIAN_LITTLE 0x00000001
+#define ENDIAN_BIG 0x80000000
 #define CLIB_BYTE_ORDER ENDIAN_LITTLE
-#endif
 #else
-#define CLIB_BYTE_ORDER ENDIAN_UNKOWN
+UNDEFINED_BYTE_ORDER
 #endif
 /* !Byte-Order */
 
