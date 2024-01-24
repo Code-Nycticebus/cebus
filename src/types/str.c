@@ -2,6 +2,7 @@
 
 #include "core/arena.h"
 #include "core/asserts.h"
+#include "types/bytes.h"
 #include "types/char.h"
 #include "types/integers.h"
 
@@ -15,9 +16,13 @@ Str str_from_parts(usize size, const char *cstr) {
   return (Str){.len = size, .data = cstr};
 }
 
-Str str_from_bytes(Bytes bytes) { return *(Str *)&bytes; }
+Str str_from_bytes(Bytes bytes) {
+  return str_from_parts(bytes.size, (const char *)bytes.data);
+}
 
-Bytes str_to_bytes(Str s) { return *(Bytes *)&s; }
+Bytes str_to_bytes(Str s) {
+  return bytes_from_parts(s.len, (const u8 *)s.data);
+}
 
 Str str_from_cstr(const char *cstr) {
   return (Str){.len = strlen(cstr), .data = cstr};
