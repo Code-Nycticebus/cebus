@@ -1,8 +1,12 @@
 [pybuildc]
 name="clib"
 cc="clang"
-bin="static"
 cflags=["-std=c99", "-fsanitize=address"]
 
-[build.scripts]
-docs = "python3 docs.py"
+[exe]
+info="examples/info.c"
+
+[[build.scripts]]
+cmd="python3" 
+args=["docs.py"]
+
