@@ -27,7 +27,7 @@ input: 'name'
 ////////////////////////////////////////////////////////////////////////////
 
 void io_write(FILE *file, Bytes bytes, Error *error);
-Bytes io_read(FILE *file, usize size, u8 *buffer, Error *error);
+Bytes io_read(FILE *file, usize size, void *buffer, Error *error);
 Str io_read_line(FILE *file, usize size, char *buffer, Error *error);
 
 ////////////////////////////////////////////////////////////////////////////

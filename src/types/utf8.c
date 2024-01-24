@@ -45,7 +45,7 @@ Bytes utf8_encode(Utf8 s, Error *error) {
     error_emit(error, UTF8_ENCODE, "Encoding utf-8 failed");
     return (Bytes){0};
   }
-  return bytes_from_parts(s.size, (const u8 *)s.data);
+  return bytes_from_parts(s.size, s.data);
 }
 
 bool utf8_eq(Utf8 s1, Utf8 s2) {

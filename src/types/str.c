@@ -20,9 +20,7 @@ Str str_from_bytes(Bytes bytes) {
   return str_from_parts(bytes.size, (const char *)bytes.data);
 }
 
-Bytes str_to_bytes(Str s) {
-  return bytes_from_parts(s.len, (const u8 *)s.data);
-}
+Bytes str_to_bytes(Str s) { return bytes_from_parts(s.len, s.data); }
 
 Str str_from_cstr(const char *cstr) {
   return (Str){.len = strlen(cstr), .data = cstr};

@@ -22,7 +22,7 @@ void io_write(FILE *file, Bytes bytes, Error *error) {
   }
 }
 
-Bytes io_read(FILE *file, usize size, u8 *buffer, Error *error) {
+Bytes io_read(FILE *file, usize size, void *buffer, Error *error) {
   errno = 0;
   const usize bytes_read = fread(buffer, sizeof(u8), size, file);
   if (ferror(file)) {
