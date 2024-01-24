@@ -63,9 +63,11 @@ static void test_error_match(void) {
   Error err = ErrNew;
   fn_that_fails_and_adds_note(true, &err);
 
-  error_match(&err, {
-    error_case(420, { error_except(); });
-    error_case(69, { error_add_note("Funny"); });
+  error_context(&err, {
+    switch (error_code()) {
+    case 420:
+      error_except();
+    }
   });
 }
 

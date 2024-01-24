@@ -207,12 +207,16 @@ care about the error.
 function_that_can_fail(ErrDefault);
 ```
 
-Match your error types with ```error_match()```.
+Match your error types with a ```switch``` statement inside the
+```error_context()```.
 ```c
 Error error = ErrNew;
 function_that_can_fail(true, &error);
-error_match(&error, {
-  error_case(420, { error_except(); });
+error_context(&error, {
+  switch (error_code()) {
+  case 420:
+    error_except();
+  }
 });
 ```
 ## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
