@@ -50,7 +50,7 @@ Str str_prepend(Str s, Str prefix, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
-Str str_join(Str sep, usize count, Str s[count], Arena *arena) {
+Str str_join(Str sep, usize count, Str *s, Arena *arena) {
   usize size = sep.len * (count - 1);
   for (usize i = 0; i < count; i++) {
     size += s[i].len;
@@ -70,7 +70,7 @@ Str str_join(Str sep, usize count, Str s[count], Arena *arena) {
   return str_from_parts(size, buffer);
 }
 
-Str str_join_suffix(Str suffix, usize count, Str s[count], Arena *arena) {
+Str str_join_suffix(Str suffix, usize count, Str *s, Arena *arena) {
   usize size = suffix.len * count;
   for (usize i = 0; i < count; i++) {
     size += s[i].len;
@@ -88,7 +88,7 @@ Str str_join_suffix(Str suffix, usize count, Str s[count], Arena *arena) {
   return str_from_parts(size, buffer);
 }
 
-Str str_join_prefix(Str prefix, usize count, Str s[count], Arena *arena) {
+Str str_join_prefix(Str prefix, usize count, Str *s, Arena *arena) {
   usize size = prefix.len * count;
   for (usize i = 0; i < count; i++) {
     size += s[i].len;

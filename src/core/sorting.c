@@ -1,11 +1,17 @@
 #include "sorting.h"
 
+#if defined(MSVC)
+#include <malloc.h>
+#define alloca _alloca
+#else
+#include <alloca.h>
+#endif
 #include <string.h>
 
 ////////////////////////////////////////////////////////////////////////////
 
 static void swap(void *a, void *b, usize size) {
-  u8 temp[size];
+  u8 *temp = alloca(size);
   memcpy(temp, a, size);
   memcpy(a, b, size);
   memcpy(b, temp, size);

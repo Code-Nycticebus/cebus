@@ -114,7 +114,7 @@ Utf8 utf8_prepend(Utf8 s, Utf8 prefix, Arena *arena) {
   return (Utf8){.len = s.len + prefix.len, .size = new_size, .data = buffer};
 }
 
-Utf8 utf8_join(Utf8 sep, usize count, Utf8 s[count], Arena *arena) {
+Utf8 utf8_join(Utf8 sep, usize count, Utf8 *s, Arena *arena) {
   usize new_size = (sep.size * (count - 1));
   usize new_len = (sep.len * (count - 1));
   for (usize i = 0; i < count; i++) {

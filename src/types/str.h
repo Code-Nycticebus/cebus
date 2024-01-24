@@ -68,11 +68,11 @@ Str str_copy(Str s, Arena *arena);
 Str str_append(Str s1, Str suffix, Arena *arena);
 Str str_prepend(Str s1, Str prefix, Arena *arena);
 // Inserts sep in between elements
-Str str_join(Str sep, usize count, Str s[count], Arena *arena);
+Str str_join(Str sep, usize count, Str *s, Arena *arena);
 // Appends suffix to every element
-Str str_join_suffix(Str suffix, usize count, Str s[count], Arena *arena);
+Str str_join_suffix(Str suffix, usize count, Str *s, Arena *arena);
 // Prepends prefix to every element
-Str str_join_prefix(Str prefix, usize count, Str s[count], Arena *arena);
+Str str_join_prefix(Str prefix, usize count, Str *s, Arena *arena);
 Str str_upper(Str s, Arena *arena);
 Str str_lower(Str s, Arena *arena);
 Str str_replace(Str s, Str old, Str new, Arena *arena);

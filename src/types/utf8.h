@@ -24,7 +24,7 @@ Utf8 utf8_next(Utf8 *str);
 Utf8 utf8_copy(Utf8 str, Arena *arena);
 Utf8 utf8_append(Utf8 s, Utf8 suffix, Arena *arena);
 Utf8 utf8_prepend(Utf8 s, Utf8 prefix, Arena *arena);
-Utf8 utf8_join(Utf8 sep, usize count, Utf8 s[count], Arena *arena);
+Utf8 utf8_join(Utf8 sep, usize count, Utf8 *s, Arena *arena);
 Utf8 utf8_upper(Utf8 s, Arena *arena);
 Utf8 utf8_lower(Utf8 s, Arena *arena);
 // Utf8 utf8_replace(Utf8 s, Utf8 old, Utf8 new, Arena *arena);

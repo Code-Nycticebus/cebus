@@ -96,7 +96,7 @@ bool set_add(Set *set, u64 hash) {
   }
 }
 
-void set_extend(Set *set, usize count, const u64 hashes[count]) {
+void set_extend(Set *set, usize count, const u64 *hashes) {
   set_reserve(set, count);
   for (usize i = 0; i < count; i++) {
     set_add(set, hashes[i]);
