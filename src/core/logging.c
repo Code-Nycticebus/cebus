@@ -51,7 +51,7 @@ static bool display_colors = false;
 static bool tty_checked = false;
 
 static void _clib_log(LogLevel log_level) {
-  if (unlikely(!tty_checked)) {
+  if (UNLIKELY(!tty_checked)) {
     tty_checked = true;
     display_colors = isatty(STDOUT_FILENO) && isatty(STDERR_FILENO);
   }

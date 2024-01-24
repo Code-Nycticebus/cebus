@@ -16,17 +16,17 @@ typedef enum {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void fmt_args(2) clib_log(LogLevel log_level, const char *fmt, ...);
-void fmt_args(1) clib_log_fatal(const char *fmt, ...);
-void fmt_args(1) clib_log_error(const char *fmt, ...);
-void fmt_args(1) clib_log_warning(const char *fmt, ...);
-void fmt_args(1) clib_log_info(const char *fmt, ...);
+void FMT(2) clib_log(LogLevel log_level, const char *fmt, ...);
+void FMT(1) clib_log_fatal(const char *fmt, ...);
+void FMT(1) clib_log_error(const char *fmt, ...);
+void FMT(1) clib_log_warning(const char *fmt, ...);
+void FMT(1) clib_log_info(const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 
 #ifndef NDEBUG
-void fmt_args(1) clib_log_debug(const char *fmt, ...);
-void fmt_args(1) clib_log_trace(const char *fmt, ...);
+void FMT(1) clib_log_debug(const char *fmt, ...);
+void FMT(1) clib_log_trace(const char *fmt, ...);
 #else
 #define clib_log_debug(...)
 #define clib_log_trace(...)

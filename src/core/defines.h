@@ -167,68 +167,59 @@ typedef struct _iobuf FILE;
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 
 #include <sys/cdefs.h>
-#define no_return __attribute__((noreturn))
-#define pure __attribute__((pure)) __attribute__((warn_unused_result))
-#define const_fn __attribute__((const)) __attribute__((warn_unused_result))
-#define unused __attribute__((unused))
-#define used __attribute__((used))
-#define likely(exp) __builtin_expect(((exp) != 0), 1)
-#define unlikely(exp) __builtin_expect(((exp) != 0), 0)
-#define fmt_args(__fmt_arg)                                                    \
-  __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
-#define deprecated __attribute__((deprecated))
+#define NORETURN __attribute__((noreturn))
+#define UNUSED __attribute__((unused))
+#define USED __attribute__((used))
+
+#define PURE __attribute__((pure)) __attribute__((warn_unused_result))
+#define CONST __attribute__((const)) __attribute__((warn_unused_result))
+#define LIKELY(exp) __builtin_expect(((exp) != 0), 1)
+#define UNLIKELY(exp) __builtin_expect(((exp) != 0), 0)
+#define FMT(__fmt_arg) __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
 
 #elif defined(MSVC)
 
-#define export __declspec(dllexport)
-#define noreturn __declspec(noreturn)
-#define pure _Check_return
-#define const_fn _Check_return
-#define unused __pragma(warning(suppress : 4100))
-#define used __pragma(warning(suppress : 4100))
-#define fmt_args(__fmt_ar_Check_return_g) _Printf_format_string_ __fmt_arg
-#define deprecated __declspec(deprecated)
+#define EXPORT __declspec(dllexport)
+#define NORETURN __declspec(noreturn)
+#define PURE _Check_return
+#define CONST _Check_return
 
 #endif
 
-#ifndef export
-#define export
+#ifndef EXPORT
+#define EXPORT
 #endif
 
-#ifndef noreturn
-#define noreturn
+#ifndef NORETURN
+#define NORETURN
 #endif
 
-#ifndef pure
-#define pure
+#ifndef UNUSED
+#define UNUSED
 #endif
 
-#ifndef const_fn
-#define const_fn
+#ifndef USED
+#define USED
 #endif
 
-#ifndef unused
-#define unused
+#ifndef PURE
+#define PURE
 #endif
 
-#ifndef used
-#define used
+#ifndef CONST
+#define CONST
 #endif
 
-#ifndef likely
-#define likely(...) (__VA_ARGS__)
+#ifndef LIKELY
+#define LIKELY(...) (__VA_ARGS__)
 #endif
 
-#ifndef unlikely
-#define unlikely(...) (__VA_ARGS__)
+#ifndef UNLIKELY
+#define UNLIKELY(...) (__VA_ARGS__)
 #endif
 
-#ifndef fmt_args
-#define fmt_args(...)
-#endif
-
-#ifndef deprecated
-#define deprecated
+#ifndef FMT
+#define FMT(...)
 #endif
 
 ////////////////////////////////////////////////////////////////////////////

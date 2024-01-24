@@ -3,7 +3,7 @@
 
 #include "core/arena.h" // IWYU pragma: export
 
-#define TEST(name) static void name##_test(unused Arena *arena)
+#define TEST(name) static void name##_test(UNUSED Arena *arena)
 
 #define TEST_RUN(name, arena)                                                  \
   name##_test((arena));                                                        \

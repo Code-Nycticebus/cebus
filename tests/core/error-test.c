@@ -1,6 +1,8 @@
 #include "core/error.h"
 
 #include "core/asserts.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static u64 fn_that_fails(bool fail, Error *error) {
   if (fail) {

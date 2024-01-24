@@ -173,16 +173,16 @@ typedef struct {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void fmt_args(5) _error_emit(Error *err, i32 code, const char *file, int line,
-                             const char *fmt, ...);
+void FMT(5) _error_emit(Error *err, i32 code, const char *file, int line,
+                        const char *fmt, ...);
 
-void _error_panic(Error *err);
+void NORETURN _error_panic(Error *err);
 void _error_except(Error *err);
 
 void _error_set_code(Error *err, i32 code);
-void fmt_args(2) _error_set_msg(Error *err, const char *fmt, ...);
+void FMT(2) _error_set_msg(Error *err, const char *fmt, ...);
 void _error_add_location(Error *err, const char *file, int line);
-void fmt_args(2) _error_add_note(Error *err, const char *fmt, ...);
+void FMT(2) _error_add_note(Error *err, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 ///
