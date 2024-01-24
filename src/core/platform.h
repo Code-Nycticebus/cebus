@@ -102,6 +102,9 @@ PLATFORM_NOT_SUPPORTED
 #elif defined(__clang__)
 #define CLANG
 #define CLIB_COMPILER "Clang"
+#elif defined(__TINYC__)
+#define TINYC
+#define CLIB_COMPILER "TinyC"
 #elif defined(_MSC_VER)
 #define MSVC
 #define CLIB_COMPILER "MSVC"
