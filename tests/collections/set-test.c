@@ -11,7 +11,7 @@ static void test_set_insert(void) {
   Set set = set_create(&arena);
 
   set_reserve(&set, TEST_SET_DEFAULT_SIZE + 1);
-  clib_assert(set.cap == 20, "Did not increase cap the correct way");
+  clib_assert(set.cap == 16, "Did not increase cap the correct way");
 
   for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&set, i);
@@ -37,7 +37,7 @@ static void test_set_extend(void) {
   set_extend(&set, ARRAY_LEN(n1), n1);
   set_extend(&set, ARRAY_LEN(n2), n2);
 
-  clib_assert(set.cap == 20, "Did not increase size the proper way");
+  clib_assert(set.cap == 16, "Did not increase size the proper way");
 
   arena_free(&arena);
 }

@@ -6,15 +6,13 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-#define SET_DEFAULT_SIZE 10
+#define SET_DEFAULT_SIZE 8
 
 //////////////////////////////////////////////////////////////////////////////
 
 Set set_create(Arena *arena) {
   Set set = {0};
   set.arena = arena;
-  set.cap = SET_DEFAULT_SIZE;
-  set.items = arena_calloc_chunk(arena, set.cap * sizeof(set.items[0]));
   return set;
 }
 
@@ -36,14 +34,14 @@ Set set_copy(Arena *arena, Set *set) {
   return new_set;
 }
 
-void set_resize(Set *set, usize new_size) {
-  if (new_size < set->cap) {
+void set_resize(Set *set, usize size) {
+  if (size < set->cap) {
     return;
   }
   usize old_cap = set->cap;
   u64 *old_items = set->items;
 
-  set->cap = new_size;
+  set->cap = size == 0 ? SET_DEFAULT_SIZE : size;
   set->items = arena_calloc_chunk(set->arena, set->cap * sizeof(set->items[0]));
 
   set->count = 0;
@@ -60,7 +58,7 @@ void set_reserve(Set *set, usize size) {
   if (required_size < set->cap) {
     return;
   }
-  usize new_size = set->cap;
+  usize new_size = set->cap == 0 ? SET_DEFAULT_SIZE : set->cap;
   while (new_size < required_size) {
     new_size *= 2;
   }

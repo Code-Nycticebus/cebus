@@ -2,21 +2,18 @@
 
 #include "core/arena.h"
 #include "core/defines.h"
-#include "core/logging.h"
 #include "types/integers.h"
 
 #include <stdio.h>
 #include <string.h>
 
-#define HM_DEFAULT_SIZE 10
+#define HM_DEFAULT_SIZE 8
 
 ////////////////////////////////////////////////////////////////////////////
 
 HashMap hm_create(Arena *arena) {
   HashMap hm = {0};
   hm.arena = arena;
-  hm.cap = HM_DEFAULT_SIZE;
-  hm.nodes = arena_calloc_chunk(arena, hm.cap * sizeof(hm.nodes[0]));
   return hm;
 }
 
@@ -35,7 +32,7 @@ void hm_resize(HashMap *hm, usize size) {
   usize old_cap = hm->cap;
   HashNode *old_nodes = hm->nodes;
 
-  hm->cap = size;
+  hm->cap = size == 0 ? HM_DEFAULT_SIZE : size;
   hm->nodes = arena_calloc_chunk(hm->arena, hm->cap * sizeof(hm->nodes[0]));
 
   hm->count = 0;
@@ -52,7 +49,7 @@ void hm_reserve(HashMap *hm, usize size) {
   if (required_size < hm->cap) {
     return;
   }
-  usize new_size = hm->cap;
+  usize new_size = hm->cap == 0 ? HM_DEFAULT_SIZE : hm->cap;
   while (new_size < required_size) {
     new_size *= 2;
   }

@@ -117,6 +117,9 @@ void *arena_realloc_chunk(Arena *arena, void *ptr, usize size) {
 }
 
 void arena_free_chunk(Arena *arena, void *ptr) {
+  if (ptr == NULL) {
+    return;
+  }
   Chunk *chunk = (Chunk *)((u8 *)ptr - sizeof(Chunk));
   if (chunk == arena->begin) {
     arena->begin = chunk->next;
