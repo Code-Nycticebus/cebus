@@ -261,10 +261,25 @@ input: 'name'
 ## Types
 ## [bytes.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/bytes.h)
 ### Usage
-Create new Bytes with:
+Create new Bytes from a literal.
 ```c
 Bytes bytes = BYTES(0xff, 0x11);
 Bytes bytes_str = BYTES_STR("Bytes from a string");
+```
+
+Or from a pointer with size.
+```c
+int a = 69;
+Bytes bytes = bytes_from_parts(sizeof(a), &a);
+```
+
+if you need to take ownership of the bytes you can copy it.
+```c
+int a = 69;
+Bytes bytes = bytes_from_parts(sizeof(a), &a);
+
+Arena arena = {0};
+Bytes owned_bytes = bytes_copy(bytes, &arena);
 ```
 ## [str.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/str.h)
 ### Usage
