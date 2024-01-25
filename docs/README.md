@@ -207,14 +207,13 @@ care about the error.
 function_that_can_fail(ErrDefault);
 ```
 
-Match your error types with a ```switch``` on ```error_code()``` inside an
-```error_context()```.
+Match your error types with ```error_code()``` inside an ```error_context()```.
 ```c
 Error error = ErrNew;
 function_that_can_fail(true, &error);
 error_context(&error, {
-  switch (error_code()) {
-  case 420:
+  if (error_code == 420) {
+    printf("%s\n", error_msg);
     error_except();
   }
 });
