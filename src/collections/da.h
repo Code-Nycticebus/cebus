@@ -12,6 +12,12 @@ Then you can push elements to the dynamic array.
 da_push(&vec, 69);
 da_push(&vec, 420);
 ```
+
+Then you can push elements to the dynamic array.
+```c
+da_push(&vec, 69);
+da_push(&vec, 420);
+```
 */
 
 #ifndef __CLIB_DA_H__
@@ -42,19 +48,18 @@ da_push(&vec, 420);
 #define da_init(list, _arena)                                                  \
   do {                                                                         \
     (list)->len = 0;                                                           \
-    (list)->cap = 10;                                                          \
+    (list)->cap = 0;                                                           \
     (list)->arena = _arena;                                                    \
-    (list)->items = arena_alloc_chunk((list)->arena,                           \
-                                      (list)->cap * sizeof((list)->items[0])); \
+    (list)->items = NULL;                                                      \
   } while (0)
 
 #define da_init_list(list, _arena, count, array)                               \
   do {                                                                         \
     (list)->len = count;                                                       \
-    (list)->cap = count;                                                       \
+    (list)->cap = 0;                                                           \
     (list)->arena = _arena;                                                    \
-    (list)->items =                                                            \
-        arena_alloc_chunk(_arena, count * sizeof((list)->items[0]));           \
+    (list)->items = NULL;                                                      \
+    da_resize(list, count);                                                    \
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[__e_i] = (array)[__e_i];                                   \
     }                                                                          \
@@ -87,7 +92,7 @@ da_push(&vec, 420);
     if (__rs < (list)->cap) {                                                  \
       break;                                                                   \
     }                                                                          \
-    usize __ns = (list)->cap;                                                  \
+    usize __ns = (list)->cap == 0 ? 5 : (list)->cap;                           \
     while (__ns < __rs) {                                                      \
       __ns *= 2;                                                               \
     }                                                                          \

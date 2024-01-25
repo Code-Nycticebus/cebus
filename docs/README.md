@@ -59,6 +59,12 @@ Then you can push elements to the dynamic array.
 da_push(&vec, 69);
 da_push(&vec, 420);
 ```
+
+Then you can push elements to the dynamic array.
+```c
+da_push(&vec, 69);
+da_push(&vec, 420);
+```
 ## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
 ### Usage
 Create a new HashMap with:
