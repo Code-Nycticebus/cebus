@@ -40,6 +40,8 @@ Str file_read_str(Str filename, Arena *arena, Error *error);
 Utf8 file_read_utf8(Str filename, Arena *arena, Error *error);
 
 void file_write(Str filename, Bytes bytes, Error *error);
+void file_write_str(Str filename, Str content, Error *error);
+void file_write_utf8(Str filename, Utf8 content, Error *error);
 
 void file_rename(Str old_name, Str new_name, Error *error);
 void file_remove(Str filename, Error *error);

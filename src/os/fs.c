@@ -94,6 +94,16 @@ defer:
   }
 }
 
+void file_write_str(Str filename, Str content, Error *error) {
+  file_write(filename, str_to_bytes(content), error);
+}
+
+void file_write_utf8(Str filename, Utf8 content, Error *error) {
+  Bytes bytes = utf8_encode(content, error);
+  error_propagate(error, { return; });
+  file_write(filename, bytes, error);
+}
+
 void file_rename(Str old_name, Str new_name, Error *error) {
   char _old_name[FILENAME_MAX] = {0};
   memcpy(_old_name, old_name.data, old_name.len);
