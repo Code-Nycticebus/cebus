@@ -1,6 +1,6 @@
 #include "type/char.h"
 
-#include "core/asserts.h"
+#include "core/assert.h"
 
 static void test_char_test(void) {
   clib_assert(c_is_alnum('a') == true, "Did not test correctly");

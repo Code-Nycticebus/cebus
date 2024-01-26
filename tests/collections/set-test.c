@@ -1,7 +1,7 @@
-#include "collections/set.h"
+#include "collection/set.h"
 
-#include "collections/da.h"
-#include "core/asserts.h"
+#include "collection/da.h"
+#include "core/assert.h"
 #include "type/string.h"
 
 #define TEST_SET_DEFAULT_SIZE 10

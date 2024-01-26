@@ -1,6 +1,6 @@
 #include "type/char.h"
 
-#include "core/asserts.h"
+#include "core/assert.h"
 #include "type/string.h"
 
 #include <stdlib.h>

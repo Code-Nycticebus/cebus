@@ -1,7 +1,7 @@
 #include "./string.h"
 
 #include "core/arena.h"
-#include "core/asserts.h"
+#include "core/assert.h"
 #include "type/byte.h"
 #include "type/char.h"
 #include "type/integer.h"

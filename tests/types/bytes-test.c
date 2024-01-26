@@ -1,6 +1,6 @@
 #include "type/byte.h"
 
-#include "core/asserts.h"
+#include "core/assert.h"
 #include "type/string.h"
 
 static void test_bytes(void) {

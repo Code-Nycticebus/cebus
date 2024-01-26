@@ -1,6 +1,6 @@
 #include "integer.h" // IWYU pragma: keep
 
-#include "core/asserts.h"
+#include "core/assert.h"
 #include "core/platform.h"
 #include "type/byte.h"
 

@@ -1,7 +1,7 @@
-#include "collections/hm.h"
+#include "collection/hm.h"
 
-#include "collections/da.h"
-#include "core/asserts.h"
+#include "collection/da.h"
+#include "core/assert.h"
 #include "type/integer.h"
 #include "type/string.h"
 

@@ -4,8 +4,8 @@
 
 #if defined(WINDOWS)
 
-#include "types/integers.h"
-#include "types/str.h"
+#include "type/integer.h"
+#include "type/string.h"
 #include <direct.h>
 #include <stdio.h>
 #include <string.h>

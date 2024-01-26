@@ -1,7 +1,7 @@
-#include "core/asserts.h"
+#include "core/assert.h"
 #include "os/fs.h"
 
-#include "collections/da.h"
+#include "collection/da.h"
 #include "core/defines.h"
 
 int main(void) {

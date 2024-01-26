@@ -4,7 +4,7 @@
 
 #if defined(LINUX)
 
-#include "core/asserts.h"
+#include "core/assert.h"
 #include "type/integer.h"
 #include "type/string.h"
 

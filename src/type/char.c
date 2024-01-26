@@ -1,5 +1,5 @@
 #include "char.h"
-#include "core/asserts.h"
+#include "core/assert.h"
 
 #include <ctype.h>
 

@@ -21,13 +21,13 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 
 ## Documentation
 <!-- DOCUMENTATION -->
-- [Collections](#Collections)
+- [Collection](#Collection)
    - [da.h](#dah)
    - [hm.h](#hmh)
    - [set.h](#seth)
 - [Core](#Core)
    - [arena.h](#arenah)
-   - [asserts.h](#assertsh)
+   - [assert.h](#asserth)
    - [defines.h](#definesh)
    - [error.h](#errorh)
    - [logging.h](#loggingh)
@@ -44,8 +44,8 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [integer.h](#integerh)
    - [string.h](#stringh)
    - [utf8.h](#utf8h)
-## Collections
-## [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/da.h)
+## Collection
+## [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/da.h)
 ### Usage
 Create a new dynamic array with:
 ```c
@@ -65,7 +65,7 @@ Then you can push elements to the dynamic array.
 da_push(&vec, 69);
 da_push(&vec, 420);
 ```
-## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/hm.h)
+## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/hm.h)
 ### Usage
 Create a new HashMap with:
 ```c
@@ -85,7 +85,7 @@ Now you can get the values by passing in the hash of the element.
 hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
-## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collections/set.h)
+## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/set.h)
 ### Usage
 Create a new Set with:
 ```c
@@ -124,7 +124,7 @@ integers at once.
 ```c
 arena_free(&arena);
 ```
-## [asserts.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/asserts.h)
+## [assert.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/assert.h)
 ### Usage
 You can assert if something is true with:
 ```c

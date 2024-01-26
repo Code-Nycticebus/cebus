@@ -1,6 +1,6 @@
 #include "arena.h"
 
-#include "asserts.h"
+#include "core/assert.h"
 #include "type/integer.h"
 
 #include <errno.h>

@@ -1,6 +1,6 @@
 #include "type/float.h"
 
-#include "core/asserts.h"
+#include "core/assert.h"
 
 static void test_f32_eq(void) {
   clib_assert(f32_eq(3.14f, 3.14f) == true, "Floats should be eq");    // NOLINT
