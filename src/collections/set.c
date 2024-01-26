@@ -1,6 +1,6 @@
 #include "set.h"
 
-#include "types/integer.h"
+#include "type/integer.h"
 
 #include <string.h>
 

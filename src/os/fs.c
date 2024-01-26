@@ -2,8 +2,8 @@
 
 #include "core/error.h"
 #include "io.h"
-#include "types/string.h"
-#include "types/utf8.h"
+#include "type/string.h"
+#include "type/utf8.h"
 
 #include <errno.h>
 #include <stdio.h>

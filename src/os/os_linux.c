@@ -5,8 +5,8 @@
 #if defined(LINUX)
 
 #include "core/asserts.h"
-#include "types/integer.h"
-#include "types/string.h"
+#include "type/integer.h"
+#include "type/string.h"
 
 #include <stdio.h>
 #include <string.h>

@@ -2,8 +2,8 @@
 
 #include "collections/da.h"
 #include "core/asserts.h"
-#include "types/integer.h"
-#include "types/string.h"
+#include "type/integer.h"
+#include "type/string.h"
 
 static void test_insert(void) {
   Arena arena = {0};
@@ -45,7 +45,7 @@ static CmpOrdering sort_by_occurence(const void *ctx, const void *a,
 
 static void test_example(void) {
   Arena arena = {0};
-  Str strings[6] = {
+  const Str strings[6] = {
       STR("Apple"),      STR("Banana"), STR("Apple"),
       STR("Strawberry"), STR("Apple"),  STR("Banana"),
   };

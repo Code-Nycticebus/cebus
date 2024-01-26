@@ -2,7 +2,7 @@
 
 #include "core/asserts.h"
 #include "core/platform.h"
-#include "types/byte.h"
+#include "type/byte.h"
 
 #define INTEGER_IMPL(T, BITS)                                                  \
   /* BIT OPERATIONS */                                                         \

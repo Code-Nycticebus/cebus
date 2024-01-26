@@ -1,7 +1,7 @@
-#include "types/integer.h"
+#include "type/integer.h"
 
 #include "core/asserts.h"
-#include "types/byte.h"
+#include "type/byte.h"
 
 /* u8 */
 static void test_u8_leading_bits(void) {

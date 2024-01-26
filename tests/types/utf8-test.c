@@ -1,4 +1,4 @@
-#include "types/utf8.h"
+#include "type/utf8.h"
 
 #include "../test.h"
 #include "core/asserts.h"

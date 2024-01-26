@@ -1,6 +1,6 @@
 #include "os.h"
 
-#include "types/string.h"
+#include "type/string.h"
 
 #include <stdlib.h>
 

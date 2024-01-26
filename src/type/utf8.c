@@ -2,9 +2,9 @@
 
 #include "core/arena.h"
 #include "core/asserts.h"
-#include "types/byte.h"
-#include "types/char.h"
-#include "types/integer.h"
+#include "type/byte.h"
+#include "type/char.h"
+#include "type/integer.h"
 
 #include <string.h>
 

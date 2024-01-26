@@ -2,7 +2,7 @@
 
 #include "collections/da.h"
 #include "core/asserts.h"
-#include "types/string.h"
+#include "type/string.h"
 
 #define TEST_SET_DEFAULT_SIZE 10
 
@@ -151,7 +151,7 @@ static bool filter_with_set(Set *intersection, Str s) {
 static void test_example_duplicates(void) {
   Arena arena = {0};
 
-  Str strings[5] = {
+  const Str strings[5] = {
       STR("Apple"), STR("Banana"), STR("Apple"), STR("Cherry"), STR("Apple"),
   };
   DA(Str) list = {0};

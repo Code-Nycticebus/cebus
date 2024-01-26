@@ -37,7 +37,7 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [fs.h](#fsh)
    - [io.h](#ioh)
    - [os.h](#osh)
-- [Types](#Types)
+- [Type](#Type)
    - [byte.h](#byteh)
    - [char.h](#charh)
    - [float.h](#floath)
@@ -263,8 +263,8 @@ Outputs:
 :> name
 input: 'name'
 ```
-## Types
-## [byte.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/byte.h)
+## Type
+## [byte.h](https://github.com/Code-Nycticebus/clib/blob/main/src/type/byte.h)
 ### Usage
 Create new Bytes from a literal.
 ```c
@@ -286,7 +286,7 @@ Bytes bytes = bytes_from_parts(sizeof(a), &a);
 Arena arena = {0};
 Bytes owned_bytes = bytes_copy(bytes, &arena);
 ```
-## [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/types/string.h)
+## [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/type/string.h)
 ### Usage
 Create a new Str with:
 ```c

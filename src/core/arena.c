@@ -1,7 +1,7 @@
 #include "arena.h"
 
 #include "asserts.h"
-#include "types/integer.h"
+#include "type/integer.h"
 
 #include <errno.h>
 #include <stdio.h>

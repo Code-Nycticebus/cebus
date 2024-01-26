@@ -1,7 +1,7 @@
-#include "types/char.h"
-#include "types/string.h"
+#include "type/char.h"
 
 #include "core/asserts.h"
+#include "type/string.h"
 
 #include <stdlib.h>
 

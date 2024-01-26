@@ -1,4 +1,4 @@
-#include "types/char.h"
+#include "type/char.h"
 
 #include "core/asserts.h"
 
