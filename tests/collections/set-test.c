@@ -45,11 +45,11 @@ static void test_set_extend(void) {
 static void test_set_update(void) {
   Arena arena = {0};
   Set s1 = set_create(&arena);
-  const u64 s1_content[3] = {1, 2, 3};
+  const u64 s1_content[] = {1, 2, 3};
   set_extend(&s1, 3, s1_content);
 
   Set s2 = set_create(&arena);
-  const u64 s2_content[3] = {4, 5, 6};
+  const u64 s2_content[] = {4, 5, 6};
   set_extend(&s2, 3, s2_content);
 
   set_update(&s1, &s2);
