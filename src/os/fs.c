@@ -11,7 +11,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-static FILE *file_open(Str filename, const char *mode, Error *error) {
+FILE *file_open(Str filename, const char *mode, Error *error) {
   char _filename[FILENAME_MAX] = {0};
   memcpy(_filename, filename.data, filename.len);
   errno = 0;
@@ -21,6 +21,18 @@ static FILE *file_open(Str filename, const char *mode, Error *error) {
                strerror(errno));
   }
   return handle;
+}
+
+void file_close(FILE *file, Error *error) {
+  if (file == NULL) {
+    error_emit(error, FILE_INVALID, "can't close a FILE* that is NULL");
+    return;
+  }
+  errno = 0;
+  int ret = fclose(file);
+  if (ret == EOF) {
+    error_emit(error, errno, "closing file failed: %s", strerror(errno));
+  }
 }
 
 static usize file_size(FILE *handle, Error *error) {

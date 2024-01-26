@@ -27,9 +27,13 @@ typedef enum {
   FILE_OK,
   FILE_PERMISSION = EACCES,
   FILE_NOT_FOUND = ENOENT,
+  FILE_INVALID = EBADF,
 } FileError;
 
 ////////////////////////////////////////////////////////////////////////////
+
+FILE *file_open(Str filename, const char *mode, Error *error);
+void file_close(FILE *file, Error *error);
 
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error);
 Str file_read_str(Str filename, Arena *arena, Error *error);
