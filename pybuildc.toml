@@ -1,6 +1,6 @@
 [pybuildc]
 name="clib"
-cc="tcc"
+cc="clang"
 cflags=["-std=c99", "-fsanitize=address"]
 
 [exe]
