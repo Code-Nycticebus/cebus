@@ -42,6 +42,26 @@ static void test_set_extend(void) {
   arena_free(&arena);
 }
 
+static void test_set_update(void) {
+  Arena arena = {0};
+  Set s1 = set_create(&arena);
+  const u64 s1_content[3] = {1, 2, 3};
+  set_extend(&s1, 3, s1_content);
+
+  Set s2 = set_create(&arena);
+  const u64 s2_content[3] = {4, 5, 6};
+  set_extend(&s2, 3, s2_content);
+
+  set_update(&s1, &s2);
+
+  clib_assert(set_contains(&s1, 1), "set should contain 1");
+  clib_assert(set_contains(&s1, 2), "set should contain 2");
+  clib_assert(set_contains(&s1, 3), "set should contain 3");
+  clib_assert(set_contains(&s1, 4), "set should contain 4");
+  clib_assert(set_contains(&s1, 5), "set should contain 5");
+  clib_assert(set_contains(&s1, 6), "set should contain 6");
+}
+
 static void test_eq(void) {
   Arena arena = {0};
 
@@ -229,6 +249,7 @@ static void test_example_intersection(void) {
 int main(void) {
   test_set_insert();
   test_set_extend();
+  test_set_update();
   test_eq();
   test_subset();
   test_intersection();

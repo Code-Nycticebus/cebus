@@ -101,6 +101,15 @@ void set_extend(Set *set, usize count, const u64 *hashes) {
   }
 }
 
+void set_update(Set *dest, const Set *set) {
+  set_reserve(dest, set->count);
+  for (size_t i = 0; i < set->cap; i++) {
+    if (set->items[i]) {
+      set_add(dest, set->items[i]);
+    }
+  }
+}
+
 //////////////////////////////////////////////////////////////////////////////
 
 bool set_contains(const Set *set, u64 hash) {
