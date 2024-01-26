@@ -11,6 +11,19 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
+static usize file_size(FILE *handle, Error *error) {
+  fseek(handle, 0, SEEK_END);
+  const long size = ftell(handle);
+  fseek(handle, 0, SEEK_SET);
+  if (size < 0) {
+    error_emit(error, errno, "Could not get file size: %s", strerror(errno));
+    return 0;
+  }
+  return (usize)size;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
 FILE *file_open(Str filename, const char *mode, Error *error) {
   char _filename[FILENAME_MAX] = {0};
   memcpy(_filename, filename.data, filename.len);
@@ -34,19 +47,6 @@ void file_close(FILE *file, Error *error) {
     error_emit(error, errno, "closing file failed: %s", strerror(errno));
   }
 }
-
-static usize file_size(FILE *handle, Error *error) {
-  fseek(handle, 0, SEEK_END);
-  const long size = ftell(handle);
-  fseek(handle, 0, SEEK_SET);
-  if (size < 0) {
-    error_emit(error, errno, "Could not get file size: %s", strerror(errno));
-    return 0;
-  }
-  return (usize)size;
-}
-
-////////////////////////////////////////////////////////////////////////////
 
 Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
   Bytes result = {0};
