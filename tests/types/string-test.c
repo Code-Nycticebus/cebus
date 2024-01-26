@@ -176,7 +176,8 @@ static void test_replace(void) {
   Str all = str_replace(s, STR("World"), STR("All!"), &arena);
 
   clib_assert(str_eq(s, STR("Hello, World")), "");
-  clib_assert(str_eq(goodbye, STR("Goodbye, World")), "");
+  clib_assert(str_eq(goodbye, STR("Goodbye, World")), STR_FMT,
+              STR_ARG(goodbye));
   clib_assert(str_eq(all, STR("Hello, All!")), "");
 
   Str max_test = STR("test test test");

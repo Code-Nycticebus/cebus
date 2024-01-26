@@ -134,8 +134,8 @@ Str str_replace(Str s, Str old, Str new, Arena *arena) {
   buffer[new_size] = '\0';
 
   for (usize i = 0, j = 0; i < s.len;) {
-    if (strncmp(&s.data[i], old.data, old.len) == 0) {
-      strncpy(&buffer[j], new.data, new.len);
+    if (old.len <= s.len - i && memcmp(&s.data[i], old.data, old.len) == 0) {
+      memcpy(&buffer[j], new.data, new.len);
       i += old.len;
       j += new.len;
     } else {
@@ -227,7 +227,7 @@ bool str_eq(Str s1, Str s2) {
   if (s1.len != s2.len) {
     return false;
   }
-  return strncmp(s1.data, s2.data, s1.len) == 0;
+  return memcmp(s1.data, s2.data, s1.len) == 0;
 }
 
 bool str_eq_ignorecase(Str s1, Str s2) {
@@ -246,7 +246,7 @@ bool str_startswith(Str s1, Str prefix) {
   if (s1.len < prefix.len) {
     return false;
   }
-  return strncmp(s1.data, prefix.data, prefix.len) == 0;
+  return memcmp(s1.data, prefix.data, prefix.len) == 0;
 }
 
 bool str_endswith(Str s1, Str suffix) {
@@ -254,7 +254,7 @@ bool str_endswith(Str s1, Str suffix) {
     return false;
   }
   const usize idx = s1.len - suffix.len;
-  return strncmp(&s1.data[idx], suffix.data, suffix.len) == 0;
+  return memcmp(&s1.data[idx], suffix.data, suffix.len) == 0;
 }
 
 bool str_contains(Str haystack, Str needle) {
@@ -285,7 +285,7 @@ bool str_empty(Str s) { return s.len == 0; }
 
 CmpOrdering str_compare_gt(Str s1, Str s2) {
   const usize min_bytes = usize_min(s1.len, s2.len);
-  const int r = strncmp(s1.data, s2.data, min_bytes);
+  const int r = memcmp(s1.data, s2.data, min_bytes);
   return r < 0   ? CMP_LESS    // less
          : 0 < r ? CMP_GREATER // greater
                  : CMP_EQUAL;  // equal
@@ -488,7 +488,7 @@ usize str_find(Str haystack, Str needle) {
     return STR_NOT_FOUND;
   }
   for (usize i = 0; i < haystack.len - needle.len + 1; i++) {
-    if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
+    if (memcmp(&haystack.data[i], needle.data, needle.len) == 0) {
       return i;
     }
   }
@@ -500,7 +500,7 @@ usize str_find_last(Str haystack, Str needle) {
     return STR_NOT_FOUND;
   }
   for (usize i = haystack.len - needle.len + 1; i > 0; i--) {
-    if (strncmp(&haystack.data[i - 1], needle.data, needle.len) == 0) {
+    if (memcmp(&haystack.data[i - 1], needle.data, needle.len) == 0) {
       return i - 1;
     }
   }
@@ -513,7 +513,7 @@ usize str_count(Str haystack, Str needle) {
     return count;
   }
   for (usize i = 0; i < haystack.len - needle.len + 1; i++) {
-    if (strncmp(&haystack.data[i], needle.data, needle.len) == 0) {
+    if (memcmp(&haystack.data[i], needle.data, needle.len) == 0) {
       count++;
       i += needle.len;
     }
