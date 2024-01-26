@@ -1,10 +1,10 @@
-#include "str.h"
+#include "./string.h"
 
 #include "core/arena.h"
 #include "core/asserts.h"
-#include "types/bytes.h"
+#include "types/byte.h"
 #include "types/char.h"
-#include "types/integers.h"
+#include "types/integer.h"
 
 #include <inttypes.h>
 #include <stdio.h>

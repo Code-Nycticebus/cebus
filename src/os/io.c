@@ -1,8 +1,8 @@
 #include "io.h"
 
 #include "core/error.h"
-#include "types/bytes.h"
-#include "types/str.h"
+#include "types/byte.h"
+#include "types/string.h"
 
 #include <errno.h>
 #include <stdio.h>

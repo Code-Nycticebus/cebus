@@ -1,7 +1,7 @@
 #include "collections/da.h"
 
 #include "core/asserts.h"
-#include "types/integers.h"
+#include "types/integer.h"
 
 static void test_vec(void) {
   Arena arena = {0};

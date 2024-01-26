@@ -1,5 +1,5 @@
 #include "types/char.h"
-#include "types/str.h"
+#include "types/string.h"
 
 #include "core/asserts.h"
 
@@ -235,7 +235,7 @@ static void test_justify(void) {
 }
 
 static void test_cmp(void) {
-  Str array[] = {STR("Banana"), STR("Strawberry"), STR("Apple"), STR("Lemon")};
+  Str array[4] = {STR("Banana"), STR("Strawberry"), STR("Apple"), STR("Lemon")};
   const usize n = sizeof(array) / sizeof(array[0]);
   qsort(array, n, sizeof(array[0]), str_compare_qsort(CMP_GREATER));
 

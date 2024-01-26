@@ -2,7 +2,7 @@
 
 #include "core/arena.h"
 #include "core/defines.h"
-#include "types/integers.h"
+#include "types/integer.h"
 
 #include <stdio.h>
 #include <string.h>

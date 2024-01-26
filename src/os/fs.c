@@ -2,7 +2,7 @@
 
 #include "core/error.h"
 #include "io.h"
-#include "types/str.h"
+#include "types/string.h"
 #include "types/utf8.h"
 
 #include <errno.h>

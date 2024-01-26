@@ -1,4 +1,4 @@
-#include "floats.h" // IWYU pragma: keep
+#include "./float.h" // IWYU pragma: keep
 
 #define FLOAT_IMPL(T, BITS, EXPONENT_MASK, FRACTION_MASK)                      \
   bool T##_eq(T a, T b) { return T##_abs(a - b) < F##BITS##_EPSILON; }         \

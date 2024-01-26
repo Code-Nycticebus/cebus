@@ -72,7 +72,7 @@ TEST(append) {
 TEST(join) {
 
   Utf8 res = utf8_join(UTF8(" "), 3,
-                       (Utf8[]){UTF8("🎉"), UTF8("✅"), UTF8("🎉")}, arena);
+                       (Utf8[3]){UTF8("🎉"), UTF8("✅"), UTF8("🎉")}, arena);
 
   clib_assert(utf8_eq(res, UTF8("🎉 ✅ 🎉")),
               "String was not joined correctly");

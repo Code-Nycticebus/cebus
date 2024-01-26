@@ -1,8 +1,8 @@
-#include "integers.h" // IWYU pragma: keep
+#include "integer.h" // IWYU pragma: keep
 
 #include "core/asserts.h"
 #include "core/platform.h"
-#include "types/bytes.h"
+#include "types/byte.h"
 
 #define INTEGER_IMPL(T, BITS)                                                  \
   /* BIT OPERATIONS */                                                         \

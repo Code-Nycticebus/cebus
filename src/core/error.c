@@ -1,6 +1,6 @@
 #include "error.h"
 
-#include "types/str.h"
+#include "types/string.h"
 
 #include <stdarg.h>
 #include <stdio.h>

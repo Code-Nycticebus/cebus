@@ -1,9 +1,9 @@
-#include "bytes.h"
+#include "byte.h"
 
 #include "core/defines.h"
 #include "types/char.h"
-#include "types/integers.h"
-#include "types/str.h"
+#include "types/integer.h"
+#include "types/string.h"
 
 #include <stdio.h>
 #include <string.h>
