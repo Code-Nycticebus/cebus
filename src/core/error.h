@@ -72,13 +72,14 @@ care about the error.
 function_that_can_fail(ErrDefault);
 ```
 
-Match your error types with ```error_code()``` inside an ```error_context()```.
+Match your error types with ```error_code(T)``` inside an ```error_context()```
+and get the message with ```error_msg()```.
 ```c
 Error error = ErrNew;
 function_that_can_fail(true, &error);
 error_context(&error, {
-  if (error_code == 420) {
-    printf("%s\n", error_msg);
+  if (error_code(i32) == 420) {
+    printf("%s\n", error_msg());
     error_except();
   }
 });
@@ -161,8 +162,8 @@ typedef struct {
 #define error_panic() _error_panic(__error_context__)
 #define error_except() _error_except(__error_context__)
 
-#define error_msg (__error_context__->info.msg)
-#define error_code (__error_context__->info.code)
+#define error_msg() (__error_context__->info.msg)
+#define error_code(T) ((T)__error_context__->info.code)
 
 #define error_set_code(code) _error_set_code(__error_context__, code)
 #define error_set_msg(...) _error_set_msg(__error_context__, __VA_ARGS__)

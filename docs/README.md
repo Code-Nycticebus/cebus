@@ -213,13 +213,14 @@ care about the error.
 function_that_can_fail(ErrDefault);
 ```
 
-Match your error types with ```error_code()``` inside an ```error_context()```.
+Match your error types with ```error_code(T)``` inside an ```error_context()```
+and get the message with ```error_msg()```.
 ```c
 Error error = ErrNew;
 function_that_can_fail(true, &error);
 error_context(&error, {
-  if (error_code == 420) {
-    printf("%s\n", error_msg);
+  if (error_code(i32) == 420) {
+    printf("%s\n", error_msg());
     error_except();
   }
 });

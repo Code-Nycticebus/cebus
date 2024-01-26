@@ -66,7 +66,7 @@ static void test_error_match(void) {
   fn_that_fails_and_adds_note(true, &err);
 
   error_context(&err, {
-    switch (error_code) {
+    switch (error_code(i32)) {
     case 420:
       error_except();
     }
