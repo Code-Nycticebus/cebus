@@ -6,7 +6,7 @@
 - [x] Bytes
 - [x] Integers
 - [x] Floats
-- [ ] Chars
+- [x] Chars
 - [ ] UTF-8
 - [ ] Datetime
 
