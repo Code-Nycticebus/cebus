@@ -33,7 +33,9 @@ void hm_clear(HashMap *hm) {
 HashMap hm_copy(HashMap *hm, Arena *arena) {
   HashMap new = hm_with_size(arena, hm->count * 2);
   for (size_t i = 0; i < hm->cap; i++) {
-    hm_insert(&new, hm->nodes[i].key, hm->nodes[i].value);
+    if (hm->nodes[i].key) {
+      hm_insert(&new, hm->nodes[i].key, hm->nodes[i].value);
+    }
   }
   return new;
 }

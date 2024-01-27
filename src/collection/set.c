@@ -30,13 +30,13 @@ void set_clear(Set *set) {
 }
 
 Set set_copy(Arena *arena, Set *set) {
-  Set new_set = {0};
-  new_set.count = set->count;
-  new_set.cap = set->cap;
-  set->arena = arena;
-  new_set.items = arena_alloc_chunk(arena, set->cap * sizeof(set->items[0]));
-  memcpy(new_set.items, set->items, set->cap * sizeof(set->items[0]));
-  return new_set;
+  Set new = set_with_size(arena, set->count * 2);
+  for (size_t i = 0; i < set->cap; i++) {
+    if (set->items[i]) {
+      set_add(&new, set->items[i]);
+    }
+  }
+  return new;
 }
 
 void set_resize(Set *set, usize size) {
