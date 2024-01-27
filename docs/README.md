@@ -67,8 +67,9 @@ da_push(&vec, 420);
 ```
 ## [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/hashmap.h)
 ### Overview
-My HashMap does not safe anything other that the hash of the key and a numeric
-value. For use cases see test examples.
+This `HashMap` implementation stores only the keys hash and a `HashValue`, as
+retrieving key values directly from the `HashMap` is often not needed. To store
+the keys, you should be using a seperate array.
 ### Usage
 Create a new HashMap with:
 ```c
