@@ -316,6 +316,24 @@ Str str_trim_left(Str s) {
   return result;
 }
 
+Str str_trim_left_by_delim(Str s, char delim) {
+  Str result = s;
+  for (usize i = 0; i < s.len && s.data[i] == delim; ++i) {
+    result.data++;
+    result.len--;
+  }
+  return result;
+}
+
+Str str_trim_left_by_predicate(Str s, bool (*predicate)(char)) {
+  Str result = s;
+  for (usize i = 0; i < s.len && predicate(s.data[i]); ++i) {
+    result.data++;
+    result.len--;
+  }
+  return result;
+}
+
 Str str_trim_right(Str s) {
   Str result = s;
   for (usize i = 0; i < s.len && c_is_space(s.data[s.len - i - 1]); ++i) {
@@ -324,7 +342,30 @@ Str str_trim_right(Str s) {
   return result;
 }
 
+Str str_trim_right_by_delim(Str s, char delim) {
+  Str result = s;
+  for (usize i = 0; i < s.len && s.data[s.len - i - 1] == delim; ++i) {
+    result.len--;
+  }
+  return result;
+}
+
+Str str_trim_right_by_predicate(Str s, bool (*predicate)(char)) {
+  Str result = s;
+  for (usize i = 0; i < s.len && predicate(s.data[s.len - i - 1]); ++i) {
+    result.len--;
+  }
+  return result;
+}
+
 Str str_trim(Str s) { return str_trim_left(str_trim_right(s)); }
+Str str_trim_by_delim(Str s, char delim) {
+  return str_trim_left_by_delim(str_trim_right_by_delim(s, delim), delim);
+}
+Str str_trim_by_predicate(Str s, bool (*predicate)(char)) {
+  return str_trim_left_by_predicate(str_trim_right_by_predicate(s, predicate),
+                                    predicate);
+}
 
 bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {
   if (s->len == 0) {
@@ -342,6 +383,7 @@ bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {
     const usize new_len = usize_min(s->len, i + 1);
     s->data += new_len;
     s->len -= new_len;
+    *s = str_trim_left_by_delim(*s, delim);
     return true;
   }
 
@@ -359,6 +401,7 @@ Str str_chop_by_delim(Str *s, char delim) {
     const usize new_len = usize_min(s->len, i + 1);
     s->data += new_len;
     s->len -= new_len;
+    *s = str_trim_left_by_delim(*s, delim);
     return chunk;
   }
 
@@ -379,6 +422,7 @@ bool str_try_chop_by_predicate(Str *s, bool (*predicate)(char), Str *chunk) {
     const usize new_len = usize_min(s->len, i + 1);
     s->data += new_len;
     s->len -= new_len;
+    *s = str_trim_left_by_predicate(*s, predicate);
     return true;
   }
   return false;
@@ -395,6 +439,7 @@ Str str_chop_by_predicate(Str *s, bool (*predicate)(char)) {
     const usize new_len = usize_min(s->len, i + 1);
     s->data += new_len;
     s->len -= new_len;
+    *s = str_trim_left_by_predicate(*s, predicate);
     return chunk;
   }
   return *s;
@@ -409,6 +454,7 @@ Str str_chop_right_by_delim(Str *s, char delim) {
   if (s->len && i <= s->len) {
     Str chunk = str_from_parts(i, &s->data[s->len - i]);
     s->len -= usize_min(s->len, i + 1);
+    *s = str_trim_right_by_delim(*s, delim);
     return chunk;
   }
   return *s;
@@ -423,6 +469,7 @@ Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char)) {
   if (s->len && i <= s->len) {
     Str chunk = str_from_parts(i, &s->data[s->len - i]);
     s->len -= usize_min(s->len, i + 1);
+    *s = str_trim_right_by_predicate(*s, predicate);
     return chunk;
   }
   return *s;

@@ -82,14 +82,12 @@ static void test_trim(void) {
 static void test_chop(void) {
   Str text = STR("Hello\nThis\nis\n\ntext");
   Str h = str_chop_by_delim(&text, '\n');
-  clib_assert(str_eq(h, STR("Hello")), "");
+  clib_assert(str_eq(h, STR("Hello")), STR_FMT, STR_ARG(h));
 
   Str rest = str_chop_by_predicate(&text, c_is_space);
   clib_assert(str_eq(rest, STR("This")), STR_FMT, STR_ARG(rest));
   rest = str_chop_by_predicate(&text, c_is_space);
   clib_assert(str_eq(rest, STR("is")), STR_FMT, STR_ARG(rest));
-  rest = str_chop_by_predicate(&text, c_is_space);
-  clib_assert(str_eq(rest, STR("")), STR_FMT, STR_ARG(rest));
   rest = str_chop_by_predicate(&text, c_is_space);
   clib_assert(str_eq(rest, STR("text")), STR_FMT, STR_ARG(rest));
 }
@@ -110,10 +108,6 @@ static void test_try_chop(void) {
   clib_assert(t2 == true, "");
   clib_assert(str_eq(rest, STR("is")), STR_FMT, STR_ARG(rest));
 
-  t2 = str_try_chop_by_delim(&text, '\n', &rest);
-  clib_assert(t2 == true, "");
-  clib_assert(str_eq(rest, STR("")), STR_FMT, STR_ARG(rest));
-
   t2 = str_try_chop_by_predicate(&text, c_is_space, &rest);
   clib_assert(t2 == true, STR_FMT, STR_ARG(rest));
   clib_assert(str_eq(rest, STR("text")), STR_FMT, STR_ARG(rest));
@@ -123,7 +117,7 @@ static void test_try_chop(void) {
 }
 
 static void test_chop_right(void) {
-  Str text = STR("Hello\nThis is text");
+  Str text = STR("Hello\nThis is  text");
   Str t = str_chop_right_by_predicate(&text, c_is_space);
   Str rest = str_chop_right_by_delim(&text, '\n');
   Str rest2 = str_chop_right_by_delim(&text, '\n');

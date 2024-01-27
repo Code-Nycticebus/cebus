@@ -101,8 +101,16 @@ CompareFn str_compare_qsort(CmpOrdering ordering);
 ///////////////////////////////////////////////////////////////////////////////
 
 Str str_trim_left(Str s);
+Str str_trim_left_by_delim(Str s, char delim);
+Str str_trim_left_by_predicate(Str s, bool (*predicate)(char));
+
 Str str_trim_right(Str s);
+Str str_trim_right_by_delim(Str s, char delim);
+Str str_trim_right_by_predicate(Str s, bool (*predicate)(char));
+
 Str str_trim(Str s);
+Str str_trim_by_delim(Str s, char delim);
+Str str_trim_by_predicate(Str s, bool (*predicate)(char));
 
 bool str_try_chop_by_delim(Str *s, char delim, Str *chunk);
 Str str_chop_by_delim(Str *s, char delim);
