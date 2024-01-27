@@ -11,17 +11,17 @@ void function_that_can_fail(Error* error)
 }
 ```
 
-Create new ```Error``` with ```ErrCreate``` to except errors that occure
+Create new ```Error``` with ```ErrNew``` to except errors that occure
 inside the function.
 ```c
-Error error = ErrCreate;
+Error error = ErrNew;
 function_that_can_fail(&error);
 ```
 
 Work inside of an error context with ```error_context()```. It will call
 ```error_panic()``` if it falls through.
 ```c
-Error error = ErrCreate;
+Error error = ErrNew;
 function_that_can_fail(&error);
 error_context(&error, {
   // Do error handling
@@ -30,7 +30,7 @@ error_context(&error, {
 
 Or propagate the error with ```error_propagate()```
 ```c
-Error error = ErrCreate;
+Error error = ErrNew;
 function_that_can_fail(&error);
 error_propagate(&error, {
   // Do error handling
@@ -40,7 +40,7 @@ error_propagate(&error, {
 Add notes to ```Error``` with ```error_add_note()``` or set a different error
 code with ```error_set_code()```
 ```c
-Error error = ErrCreate;
+Error error = ErrNew;
 function_that_can_fail(&error);
 error_propagate(&error, {
   error_add_note("Note added to error");
@@ -51,7 +51,7 @@ error_propagate(&error, {
 On error: ```error_panic()``` prints message and aborts.
 ```error_except()``` excepts and resets the error.
 ```c
-Error error = ErrCreate;
+Error error = ErrNew;
 function_that_can_fail(&error);
 error_context(&error, {
   error_panic();
@@ -75,7 +75,7 @@ function_that_can_fail(ErrDefault);
 Match your error types with ```error_code(T)``` inside an ```error_context()```
 and get the message with ```error_msg()```.
 ```c
-Error error = ErrCreate;
+Error error = ErrNew;
 function_that_can_fail(true, &error);
 error_context(&error, {
   if (error_code(i32) == 420) {
@@ -118,7 +118,7 @@ typedef struct {
   ErrorInfo info;
 } Error;
 
-#define ErrCreate                                                              \
+#define ErrNew                                                                 \
   ((Error){                                                                    \
       .panic_instantly = false,                                                \
       .info.line = __LINE__,                                                   \
