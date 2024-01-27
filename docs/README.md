@@ -141,91 +141,54 @@ clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
 ## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
-### Usage
-If a function can fail it should take an ```Error*``` as parameter. If an error
-occurs, initialize the Error with ```error_emit()```.
+### Initialization Macros
+- `ErrNew`: Initializes a new Error instance.
+- `ErrPanic`: Initializes an Error that will trigger a panic on
+```error_emit()`.
+- `ErrDefault`: Represents a null Error pointer for cases where error
+handling is not required. It will still panic on ```error_emit()```.
+
+### Error Emitting and Context
+- `error_emit()` initializes the passed in error.
 ```c
-void function_that_can_fail(Error* error)
-  int error_code = -1; // Function returns a bad value
-  if (error_code < 0) {
-    error_emit(error, error_code, "error: %d", error_code);
+void function_that_fails(Error *error) {
+  // ...
+  if (failure_condition) {
+    error_emit(error, error_code, "Error: %s", reason);
   }
 }
 ```
 
-Create new ```Error``` with ```ErrNew``` to except errors that occure
-inside the function.
+- `error_context()` creates a context for you to handle the error. Panics if it
+falls through
 ```c
 Error error = ErrNew;
-function_that_can_fail(&error);
-```
-
-Work inside of an error context with ```error_context()```. It will call
-```error_panic()``` if it falls through.
-```c
-Error error = ErrNew;
-function_that_can_fail(&error);
+function_that_fails(&error);
 error_context(&error, {
-  // Do error handling
+  // Error Handling
 });
 ```
 
-Or propagate the error with ```error_propagate()```
+- `error_propagate()` creates a context. Does not panic if it falls through but
+also does not reset the error.
 ```c
 Error error = ErrNew;
-function_that_can_fail(&error);
+function_that_fails(&error);
 error_propagate(&error, {
-  // Do error handling
+  // Error Handling
 });
 ```
 
-Add notes to ```Error``` with ```error_add_note()``` or set a different error
-code with ```error_set_code()```
-```c
-Error error = ErrNew;
-function_that_can_fail(&error);
-error_propagate(&error, {
-  error_add_note("Note added to error");
-  error_set_code(69);
-});
-```
+### Error Handling
+- `error_panic()`: Triggers a panic with the current error.
+- `error_except()`: Resets the error state.
+- `error_msg()`: Retrieves the error message.
+- `error_code(T)`: Retrieves the error code and casts it to `T`.
+- `error_set_code()`: Sets a new error code.
+- `error_set_msg()`: Sets a new error message.
+- `error_add_location()`: Adds current file and line location.
+- `error_add_note()`: Adds a note to the error.
 
-On error: ```error_panic()``` prints message and aborts.
-```error_except()``` excepts and resets the error.
-```c
-Error error = ErrNew;
-function_that_can_fail(&error);
-error_context(&error, {
-  error_panic();
-  error_except();
-});
-```
-
-Pass ```ErrPanic``` to that function to automatically call
-```error_panic()``` if it encouters an error inside the function.
-```c
-function_that_can_fail(ErrPanic);
-```
-
-```ErrDefault``` is the same as ```ErrPanic``` but the ```Error``` gets
-created at the first occurence of an error. Only use this if you really don't
-care about the error.
-```c
-function_that_can_fail(ErrDefault);
-```
-
-Match your error types with ```error_code(T)``` inside an ```error_context()```
-and get the message with ```error_msg()```.
-```c
-Error error = ErrNew;
-function_that_can_fail(true, &error);
-error_context(&error, {
-  if (error_code(i32) == 420) {
-    printf("%s\n", error_msg());
-    error_except();
-  }
-});
-```
 ## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.
 ## [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
