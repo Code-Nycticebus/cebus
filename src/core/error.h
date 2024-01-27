@@ -1,10 +1,8 @@
 /* DOCUMENTATION
 ### Initialization Macros
 - `ErrNew`: Initializes a new Error instance.
-- `ErrPanic`: Initializes an Error that will trigger a panic on
-```error_emit()`.
-- `ErrDefault`: Represents a null Error pointer for cases where error
-handling is not required. It will still panic on ```error_emit()```.
+- `ErrPanic`: Initializes an Error that will trigger a panic on `error_emit()`.
+- `ErrDefault`: Empty Error that will panic on `error_emit()`.
 
 ### Error Emitting and Context
 - `error_emit()` initializes the passed in error.
