@@ -98,7 +98,7 @@ error_context(&error, {
 #define FILE_LOC __FILE__, __LINE__
 
 typedef struct {
-  i32 code;
+  i64 code;
   const char *file;
   i32 line;
   Str msg;
@@ -114,20 +114,20 @@ typedef struct {
 
 typedef struct {
   bool failure;
-  bool panic_instantly;
+  bool panic_on_emit;
   ErrorInfo info;
 } Error;
 
 #define ErrNew                                                                 \
   ((Error){                                                                    \
-      .panic_instantly = false,                                                \
+      .panic_on_emit = false,                                                  \
       .info.line = __LINE__,                                                   \
       .info.file = __FILE__,                                                   \
   })
 
 #define ErrPanic                                                               \
   ((Error[]){{                                                                 \
-      .panic_instantly = true,                                                 \
+      .panic_on_emit = true,                                                   \
       .info.line = __LINE__,                                                   \
       .info.file = __FILE__,                                                   \
   }})
@@ -165,7 +165,7 @@ typedef struct {
 #define error_msg() (__error_context__->info.msg)
 #define error_code(T) ((T)__error_context__->info.code)
 
-#define error_set_code(code) _error_set_code(__error_context__, (i32)code)
+#define error_set_code(code) _error_set_code(__error_context__, (i64)code)
 #define error_set_msg(...) _error_set_msg(__error_context__, __VA_ARGS__)
 
 #define error_add_location(...) _error_add_location(__error_context__, FILE_LOC)

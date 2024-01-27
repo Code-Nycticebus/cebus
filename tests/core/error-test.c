@@ -24,13 +24,13 @@ static u64 fn_that_fails_and_adds_note(bool fail, Error *error) {
 static void test_error_creation(void) {
   Error e1 = ErrNew;
   clib_assert(e1.failure == false, "Init failed");
-  clib_assert(e1.panic_instantly == false, "Init failed");
+  clib_assert(e1.panic_on_emit == false, "Init failed");
   clib_assert(e1.info.file, "This should be set");
   clib_assert(e1.info.line, "This should be set");
 
   Error *e2 = ErrPanic;
   clib_assert(e2->failure == false, "Init failed");
-  clib_assert(e2->panic_instantly == true, "Init failed");
+  clib_assert(e2->panic_on_emit == true, "Init failed");
 
   Error *e3 = ErrDefault;
   clib_assert(e3 == ErrDefault, "Init failed");
@@ -64,7 +64,6 @@ static void test_error_except(void) {
 static void test_error_match(void) {
   Error err = ErrNew;
   fn_that_fails_and_adds_note(true, &err);
-
   error_context(&err, {
     switch (error_code(i32)) {
     case 420:

@@ -69,7 +69,7 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
   err->info.msg = str_from_parts(err->info.msg_len, err->info.msg_buffer);
   err->info.msg_len++;
 
-  if (err->panic_instantly) {
+  if (err->panic_on_emit) {
     _error_panic(err);
   }
 }
