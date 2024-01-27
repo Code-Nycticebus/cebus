@@ -25,6 +25,14 @@ HashMap hm_with_size(Arena *arena, usize size) {
   return hm;
 }
 
+HashMap hm_copy(HashMap *hm, Arena *arena) {
+  HashMap new = hm_with_size(arena, hm->count * 2);
+  for (size_t i = 0; i < hm->cap; i++) {
+    hm_insert(&new, hm->nodes[i].key, hm->nodes[i].value);
+  }
+  return new;
+}
+
 void hm_resize(HashMap *hm, usize size) {
   if (size < hm->cap) {
     return;
@@ -83,6 +91,15 @@ bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
     }
 
     hm_resize(hm, hm->cap * 2);
+  }
+}
+
+void hm_update(HashMap *hm, HashMap *other) {
+  hm_reserve(hm, other->count);
+  for (usize i = 0; i < other->cap; ++i) {
+    if (other->nodes[i].key) {
+      hm_insert(hm, other->nodes[i].key, other->nodes[i].value);
+    }
   }
 }
 

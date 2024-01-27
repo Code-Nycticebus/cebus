@@ -59,12 +59,16 @@ typedef struct {
 
 HashMap hm_create(Arena *arena);
 HashMap hm_with_size(Arena *arena, usize size);
+
+HashMap hm_copy(HashMap *hm, Arena *arena);
+
 void hm_resize(HashMap *hm, usize size);
 void hm_reserve(HashMap *hm, usize size);
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool hm_insert(HashMap *hm, u64 hash, HashValue value);
+void hm_update(HashMap *hm, HashMap *other);
 // FIXME it is dangerous to return a pointer here
 HashValue *hm_get(const HashMap *hm, u64 hash);
 
