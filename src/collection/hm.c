@@ -25,6 +25,11 @@ HashMap hm_with_size(Arena *arena, usize size) {
   return hm;
 }
 
+void hm_clear(HashMap *hm) {
+  hm->count = 0;
+  memset(hm->nodes, 0, hm->cap * sizeof(hm->nodes[0]));
+}
+
 HashMap hm_copy(HashMap *hm, Arena *arena) {
   HashMap new = hm_with_size(arena, hm->count * 2);
   for (size_t i = 0; i < hm->cap; i++) {

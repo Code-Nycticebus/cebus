@@ -60,6 +60,8 @@ typedef struct {
 HashMap hm_create(Arena *arena);
 HashMap hm_with_size(Arena *arena, usize size);
 
+void hm_clear(HashMap *hm);
+
 HashMap hm_copy(HashMap *hm, Arena *arena);
 
 void hm_resize(HashMap *hm, usize size);
