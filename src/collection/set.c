@@ -24,6 +24,11 @@ Set set_with_size(Arena *arena, usize size) {
   return set;
 }
 
+void set_clear(Set *set) {
+  set->count = 0;
+  memset(set->items, 0, set->cap * sizeof(set->items[0]));
+}
+
 Set set_copy(Arena *arena, Set *set) {
   Set new_set = {0};
   new_set.count = set->count;
