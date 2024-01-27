@@ -55,6 +55,7 @@ void set_update(Set *dest, const Set *set);
 bool set_contains(const Set *set, u64 hash);
 bool set_eq(const Set *set, const Set *other);
 bool set_subset(const Set *set, const Set *other);
+bool set_disjoint(const Set *set, const Set *other);
 
 ///////////////////////////////////////////////////////////////////////////////
 

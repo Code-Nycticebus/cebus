@@ -161,6 +161,26 @@ bool set_subset(const Set *set, const Set *other) {
   return true;
 }
 
+bool set_disjoint(const Set *set, const Set *other) {
+  if (other->count == 0 || set->count == 0) {
+    return true;
+  }
+
+  if (other->cap < set->cap) {
+    const Set *temp = set;
+    set = other;
+    other = temp;
+  }
+  for (usize i = 0; i < set->cap; i++) {
+    if (set->items[i]) {
+      if (set_contains(other, set->items[i])) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 
 Set set_intersection(const Set *set, const Set *other, Arena *arena) {
