@@ -23,7 +23,7 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 <!-- DOCUMENTATION -->
 - [Collection](#Collection)
    - [da.h](#dah)
-   - [hm.h](#hmh)
+   - [hashmap.h](#hashmaph)
    - [set.h](#seth)
 - [Core](#Core)
    - [arena.h](#arenah)
@@ -65,7 +65,7 @@ Then you can push elements to the dynamic array.
 da_push(&vec, 69);
 da_push(&vec, 420);
 ```
-## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/hm.h)
+## [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/hashmap.h)
 ### Overview
 My HashMap does not safe anything other that the hash of the key and a numeric
 value. For use cases see test examples.

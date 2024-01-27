@@ -1,4 +1,4 @@
-#include "collection/hm.h"
+#include "collection/hashmap.h"
 
 #include "collection/da.h"
 #include "core/assert.h"
