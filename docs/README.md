@@ -93,16 +93,17 @@ Arena arena = {0};
 Set set = set_create(&arena);
 ```
 
-Then you can add elements by hash to the Set.
+Then you can add elements by hash to the Set. ```set_add()``` returns false if
+the Set already contains element.
 ```c
 set_add(&set, str_hash(STR("Hello")));
 set_add(&set, str_hash(STR("World")));
 ```
 
-Then you can test if an element is in the Set.
+Test if an element is in the Set.
 ```c
-set_contains(&set, str_hash(STR("Hello"))) == true;
-set_contains(&set, str_hash(STR("World"))) == true;
+set_contains(&set, str_hash(STR("Hello")));
+set_contains(&set, str_hash(STR("World")));
 ```
 ## Core
 ## [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
