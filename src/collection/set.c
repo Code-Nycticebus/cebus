@@ -119,6 +119,9 @@ void set_update(Set *dest, const Set *set) {
 }
 
 bool set_remove(Set *set, u64 hash) {
+  if (set->count == 0) {
+    return false;
+  }
   if (hash == 0 || hash == SET_DELETED_HASH) {
     hash = u64_hash(hash);
   }

@@ -7,7 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 
+////////////////////////////////////////////////////////////////////////////
+
 #define HM_DEFAULT_SIZE 8
+#define HM_DELETED_HASH 0xdeaddeaddeaddead
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +36,7 @@ void hm_clear(HashMap *hm) {
 HashMap hm_copy(HashMap *hm, Arena *arena) {
   HashMap new = hm_with_size(arena, hm->count * 2);
   for (size_t i = 0; i < hm->cap; i++) {
-    if (hm->nodes[i].key) {
+    if (hm->nodes[i].key || hm->nodes[i].key != HM_DELETED_HASH) {
       hm_insert(&new, hm->nodes[i].key, hm->nodes[i].value);
     }
   }
@@ -51,8 +54,9 @@ void hm_resize(HashMap *hm, usize size) {
   hm->nodes = arena_calloc_chunk(hm->arena, hm->cap * sizeof(hm->nodes[0]));
 
   hm->count = 0;
+  hm->deleted = 0;
   for (usize i = 0; i < old_cap; ++i) {
-    if (old_nodes[i].key) {
+    if (old_nodes[i].key || hm->nodes[i].key != HM_DELETED_HASH) {
       hm_insert(hm, old_nodes[i].key, old_nodes[i].value);
     }
   }
@@ -77,7 +81,7 @@ bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
   if (hash == 0) {
     hash = u64_hash(hash);
   }
-  if (hm->cap <= hm->count) {
+  if (hm->cap <= hm->count + hm->deleted) {
     hm_resize(hm, hm->cap * 2);
   }
 
@@ -110,11 +114,32 @@ void hm_update(HashMap *hm, HashMap *other) {
   }
 }
 
+bool hm_remove(HashMap *hm, usize hash) {
+  if (hm->count == 0) {
+    return false;
+  }
+  if (hash == 0 || hash == HM_DELETED_HASH) {
+    hash = u64_hash(hash);
+  }
+
+  usize idx = hash % hm->cap;
+  for (usize i = 0; i < hm->cap; i++) {
+    if (hm->nodes[idx].key && hm->nodes[idx].key == hash) {
+      hm->nodes[idx].key = HM_DELETED_HASH;
+      hm->count--;
+      hm->deleted++;
+      return true;
+    }
+    idx = (idx + i * i) % hm->cap;
+  }
+  return false;
+}
+
 HashValue *hm_get(const HashMap *hm, u64 hash) {
   if (hm->count == 0) {
     return NULL;
   }
-  if (hash == 0) {
+  if (hash == 0 || hash == HM_DELETED_HASH) {
     hash = u64_hash(hash);
   }
 

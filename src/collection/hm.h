@@ -51,6 +51,7 @@ typedef struct {
 typedef struct {
   usize cap;
   usize count;
+  usize deleted;
   Arena *arena;
   HashNode *nodes;
 } HashMap;
@@ -71,6 +72,9 @@ void hm_reserve(HashMap *hm, usize size);
 
 bool hm_insert(HashMap *hm, u64 hash, HashValue value);
 void hm_update(HashMap *hm, HashMap *other);
+
+bool hm_remove(HashMap *hm, usize hash);
+
 // FIXME it is dangerous to return a pointer here
 HashValue *hm_get(const HashMap *hm, u64 hash);
 
