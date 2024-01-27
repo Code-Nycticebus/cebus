@@ -1,4 +1,7 @@
 /* DOCUMENTATION
+### Overview
+My HashMap does not safe anything other that the hash of the key and a numeric
+value. For use cases see test examples.
 ### Usage
 Create a new HashMap with:
 ```c

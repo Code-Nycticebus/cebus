@@ -66,6 +66,9 @@ da_push(&vec, 69);
 da_push(&vec, 420);
 ```
 ## [hm.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/hm.h)
+### Overview
+My HashMap does not safe anything other that the hash of the key and a numeric
+value. For use cases see test examples.
 ### Usage
 Create a new HashMap with:
 ```c
