@@ -215,4 +215,24 @@ Set set_difference(const Set *set, const Set *other, Arena *arena) {
   return difference;
 }
 
+Set set_union(const Set *set, const Set *other, Arena *arena) {
+  Set _union = set_with_size(arena, set->count * 2);
+  for (usize i = 0; i < set->cap; i++) {
+    if (set->items[i]) {
+      if (!set_contains(other, set->items[i])) {
+        set_add(&_union, set->items[i]);
+      }
+    }
+  }
+
+  for (usize i = 0; i < other->cap; i++) {
+    if (other->items[i]) {
+      if (!set_contains(set, other->items[i])) {
+        set_add(&_union, other->items[i]);
+      }
+    }
+  }
+  return _union;
+}
+
 //////////////////////////////////////////////////////////////////////////////
