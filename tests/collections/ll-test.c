@@ -47,11 +47,21 @@ int main(void) {
   ll_append(&ll, LL_NODE(cn_init(&arena, 69)));
   ll_append(&ll, LL_NODE(cn_init(&arena, 23)));
   ll_append(&ll, LL_NODE(cn_init(&arena, 31)));
+  ll_append(&ll, LL_NODE(cn_init(&arena, 132)));
+  ll_append(&ll, LL_NODE(cn_init(&arena, 155)));
+  ll_append(&ll, LL_NODE(cn_init(&arena, 29)));
+  ll_append(&ll, LL_NODE(cn_init(&arena, 92)));
 
+  printf("{");
   for (LLNode *next = ll.begin; next != NULL; next = next->next) {
+    if (next != ll.begin) {
+      printf(", ");
+    }
+
     int *node = LL_VALUE(IntNode, next);
-    printf("%d\n", *node);
+    printf("%d", *node);
   }
+  printf("}\n");
 
   arena_free(&arena);
 }

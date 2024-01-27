@@ -4,7 +4,6 @@
 #include "core/assert.h"
 #include "type/integer.h"
 #include "type/string.h"
-#include <stdio.h>
 
 #define TEST_SET_DEFAULT_SIZE 10
 
@@ -35,9 +34,7 @@ static void test_set_remove(void) {
   Set set = set_create(&arena);
 
   for (usize i = 0; i < 10; ++i) {
-    u64 h = usize_hash(i);
-    printf("here: %zu: %lx: \n", i, h);
-    set_add(&set, h);
+    set_add(&set, usize_hash(i));
   }
 
   set_remove(&set, usize_hash(1));
