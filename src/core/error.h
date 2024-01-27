@@ -11,10 +11,10 @@ void function_that_can_fail(Error* error)
 }
 ```
 
-Create new ```Error``` with ```ErrNew``` to except errors that occure
+Create new ```Error``` with ```ErrCreate``` to except errors that occure
 inside the function.
 ```c
-Error error = ErrNew;
+Error error = ErrCreate;
 function_that_can_fail(&error);
 ```
 
@@ -75,7 +75,7 @@ function_that_can_fail(ErrDefault);
 Match your error types with ```error_code(T)``` inside an ```error_context()```
 and get the message with ```error_msg()```.
 ```c
-Error error = ErrNew;
+Error error = ErrCreate;
 function_that_can_fail(true, &error);
 error_context(&error, {
   if (error_code(i32) == 420) {
@@ -118,7 +118,7 @@ typedef struct {
   ErrorInfo info;
 } Error;
 
-#define ErrNew                                                                 \
+#define ErrCreate                                                              \
   ((Error){                                                                    \
       .panic_instantly = false,                                                \
       .info.line = __LINE__,                                                   \
