@@ -60,6 +60,8 @@ static void test_set_update(void) {
   clib_assert(set_contains(&s1, 4), "set should contain 4");
   clib_assert(set_contains(&s1, 5), "set should contain 5");
   clib_assert(set_contains(&s1, 6), "set should contain 6");
+
+  arena_free(&arena);
 }
 
 static void test_eq(void) {
@@ -116,6 +118,32 @@ static void test_subset(void) {
   arena_free(&arena);
 }
 
+static void test_set_disjoint(void) {
+  Arena arena = {0};
+
+  const u64 test_numbers[] = {2, 3, 7, 8};
+  const usize count = ARRAY_LEN(test_numbers);
+  Set set1 = set_create(&arena);
+  set_extend(&set1, count, test_numbers);
+
+  const u64 test_numbers2[] = {2, 8, 9};
+  const usize count2 = ARRAY_LEN(test_numbers2);
+  Set set2 = set_create(&arena);
+  set_extend(&set2, count2, test_numbers2);
+
+  const u64 test_numbers3[] = {4, 5, 6};
+  const usize count3 = ARRAY_LEN(test_numbers3);
+  Set set3 = set_create(&arena);
+  set_extend(&set3, count3, test_numbers3);
+
+  clib_assert(set_disjoint(&set1, &set2) == false, "Should not be disjoint");
+  clib_assert(set_disjoint(&set2, &set1) == false, "Should not be disjoint");
+  clib_assert(set_disjoint(&set3, &set2) == true, "Should be disjoint");
+  clib_assert(set_disjoint(&set3, &set1) == true, "Should be disjoint");
+
+  arena_free(&arena);
+}
+
 static void test_intersection(void) {
   Arena arena = {0};
 
@@ -160,6 +188,60 @@ static void test_difference(void) {
   clib_assert(set_contains(&diff, 3) == false, "should not be different");
   clib_assert(set_contains(&diff, 4) == false, "should not be symetrical");
   clib_assert(set_contains(&diff, 5) == false, "should not be symetrical");
+
+  arena_free(&arena);
+}
+
+static void test_set_union(void) {
+  Arena arena = {0};
+
+  const u64 test_numbers[] = {1, 2, 3};
+  const usize count = ARRAY_LEN(test_numbers);
+  Set set1 = set_create(&arena);
+  set_extend(&set1, count, test_numbers);
+
+  const u64 test_numbers2[] = {3, 4, 5};
+  const usize count2 = ARRAY_LEN(test_numbers);
+  Set set2 = set_create(&arena);
+  set_extend(&set2, count2, test_numbers2);
+
+  Set _unique = set_union(&set1, &set2, &arena);
+
+  clib_assert(set_contains(&_unique, 1) == true, "Set should contain 1");
+  clib_assert(set_contains(&_unique, 2) == true, "Set should contain 2");
+  clib_assert(set_contains(&_unique, 3) == false, "Set should not contain 3");
+  clib_assert(set_contains(&_unique, 4) == true, "Set should contain 4");
+  clib_assert(set_contains(&_unique, 5) == true, "Set should contain 6");
+
+  arena_free(&arena);
+}
+
+static bool filter_duplicates(void *set, Str s) {
+  return set_add(set, str_hash(s));
+}
+
+static void test_example_deduplicate(void) {
+  Arena arena = {0};
+
+  const Str strings[5] = {
+      STR("Apple"), STR("Banana"), STR("Apple"), STR("Cherry"), STR("Apple"),
+  };
+  DA(Str) list = {0};
+  da_init_list(&list, &arena, ARRAY_LEN(strings), strings);
+
+  Arena temp = {0};
+  Set unique = set_create(&temp);
+  da_filter_ctx(&list, &list, filter_duplicates, &unique);
+  arena_free(&temp);
+
+  clib_assert(list.len == 3, "Did not find the unique strings correctly: %zu",
+              list.len);
+  clib_assert(str_eq(list.items[0], STR("Apple")),
+              "Did not filter out correctly");
+  clib_assert(str_eq(list.items[1], STR("Banana")),
+              "Did not filter out correctly");
+  clib_assert(str_eq(list.items[2], STR("Cherry")),
+              "Did not filter out correctly");
 
   arena_free(&arena);
 }
@@ -252,9 +334,12 @@ int main(void) {
   test_set_update();
   test_eq();
   test_subset();
+  test_set_disjoint();
   test_intersection();
   test_difference();
+  test_set_union();
 
+  test_example_deduplicate();
   test_example_duplicates();
   test_example_intersection();
 }
