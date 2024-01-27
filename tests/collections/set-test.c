@@ -2,7 +2,9 @@
 
 #include "collection/da.h"
 #include "core/assert.h"
+#include "type/integer.h"
 #include "type/string.h"
+#include <stdio.h>
 
 #define TEST_SET_DEFAULT_SIZE 10
 
@@ -23,6 +25,28 @@ static void test_set_insert(void) {
   clib_assert(set_contains(&set, 3) == true, "Set should contain this number!");
   clib_assert(set_contains(&set, 4) == true, "Set should contain this number!");
   clib_assert(set_contains(&set, 5) == true, "Set should contain this number!");
+
+  arena_free(&arena);
+}
+
+static void test_set_remove(void) {
+  Arena arena = {0};
+
+  Set set = set_create(&arena);
+
+  for (usize i = 0; i < 10; ++i) {
+    u64 h = usize_hash(i);
+    printf("here: %zu: %lx: \n", i, h);
+    set_add(&set, h);
+  }
+
+  set_remove(&set, usize_hash(1));
+  clib_assert(set_add(&set, usize_hash(5)) == false,
+              "5 should already be in set");
+
+  set_remove(&set, usize_hash(5));
+  clib_assert(set_contains(&set, usize_hash(5)) == false,
+              "Set should not contain 5");
 
   arena_free(&arena);
 }
@@ -330,6 +354,7 @@ static void test_example_intersection(void) {
 
 int main(void) {
   test_set_insert();
+  test_set_remove();
   test_set_extend();
   test_set_update();
   test_eq();

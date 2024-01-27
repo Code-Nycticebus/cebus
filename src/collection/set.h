@@ -31,6 +31,7 @@ set_contains(&set, str_hash(STR("World")));
 typedef struct {
   usize cap;
   usize count;
+  usize deleted;
   Arena *arena;
   u64 *items;
 } Set;
@@ -52,6 +53,8 @@ void set_reserve(Set *set, usize size);
 bool set_add(Set *set, u64 hash);
 void set_extend(Set *set, usize count, const u64 *hashes);
 void set_update(Set *dest, const Set *set);
+
+bool set_remove(Set *set, u64 hash);
 
 //////////////////////////////////////////////////////////////////////////////
 

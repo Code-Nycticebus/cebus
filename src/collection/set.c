@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #define SET_DEFAULT_SIZE 8
+#define SET_DELETED_HASH 0xdeaddeaddeaddead
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +27,7 @@ Set set_with_size(Arena *arena, usize size) {
 
 void set_clear(Set *set) {
   set->count = 0;
+  set->deleted = 0;
   memset(set->items, 0, set->cap * sizeof(set->items[0]));
 }
 
@@ -50,6 +52,7 @@ void set_resize(Set *set, usize size) {
   set->items = arena_calloc_chunk(set->arena, set->cap * sizeof(set->items[0]));
 
   set->count = 0;
+  set->deleted = 0;
   for (usize i = 0; i < old_cap; ++i) {
     if (old_items[i]) {
       set_add(set, old_items[i]);
@@ -73,10 +76,10 @@ void set_reserve(Set *set, usize size) {
 //////////////////////////////////////////////////////////////////////////////
 
 bool set_add(Set *set, u64 hash) {
-  if (hash == 0) {
+  if (hash == 0 || hash == SET_DELETED_HASH) {
     hash = u64_hash(hash);
   }
-  if (set->cap <= set->count) {
+  if (set->cap <= set->count + set->deleted) {
     set_resize(set, set->cap * 2);
   }
 
@@ -115,10 +118,28 @@ void set_update(Set *dest, const Set *set) {
   }
 }
 
+bool set_remove(Set *set, u64 hash) {
+  if (hash == 0 || hash == SET_DELETED_HASH) {
+    hash = u64_hash(hash);
+  }
+
+  usize idx = hash % set->cap;
+  for (usize i = 0; i < set->cap; i++) {
+    if (set->items[idx] && set->items[idx] == hash) {
+      set->items[idx] = SET_DELETED_HASH;
+      set->count--;
+      set->deleted++;
+      return true;
+    }
+    idx = (idx + i * i) % set->cap;
+  }
+  return false;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 
 bool set_contains(const Set *set, u64 hash) {
-  if (hash == 0) {
+  if (hash == 0 || hash == SET_DELETED_HASH) {
     hash = u64_hash(hash);
   }
 
@@ -143,7 +164,7 @@ bool set_eq(const Set *set, const Set *other) {
     other = temp;
   }
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i]) {
+    if (set->items[i] && set->items[i] != SET_DELETED_HASH) {
       if (!set_contains(other, set->items[i])) {
         return false;
       }
@@ -157,7 +178,7 @@ bool set_subset(const Set *set, const Set *other) {
     return false;
   }
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i]) {
+    if (set->items[i] && set->items[i] != SET_DELETED_HASH) {
       if (!set_contains(other, set->items[i])) {
         return false;
       }
@@ -177,7 +198,7 @@ bool set_disjoint(const Set *set, const Set *other) {
     other = temp;
   }
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i]) {
+    if (set->items[i] && set->items[i] != SET_DELETED_HASH) {
       if (set_contains(other, set->items[i])) {
         return false;
       }
@@ -198,7 +219,7 @@ Set set_intersection(const Set *set, const Set *other, Arena *arena) {
   Set intersection = set_create(arena);
   set_reserve(&intersection, usize_min(set->count, other->count) * 2);
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i]) {
+    if (set->items[i] && set->items[i] != SET_DELETED_HASH) {
       if (set_contains(other, set->items[i])) {
         set_add(&intersection, set->items[i]);
       }
@@ -211,7 +232,7 @@ Set set_difference(const Set *set, const Set *other, Arena *arena) {
   Set difference = set_create(arena);
   set_reserve(&difference, set->count * 2);
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i]) {
+    if (set->items[i] && set->items[i] != SET_DELETED_HASH) {
       if (!set_contains(other, set->items[i])) {
         set_add(&difference, set->items[i]);
       }
@@ -223,7 +244,7 @@ Set set_difference(const Set *set, const Set *other, Arena *arena) {
 Set set_union(const Set *set, const Set *other, Arena *arena) {
   Set _union = set_with_size(arena, set->count * 2);
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[i]) {
+    if (set->items[i] && set->items[i] != SET_DELETED_HASH) {
       if (!set_contains(other, set->items[i])) {
         set_add(&_union, set->items[i]);
       }
@@ -231,7 +252,7 @@ Set set_union(const Set *set, const Set *other, Arena *arena) {
   }
 
   for (usize i = 0; i < other->cap; i++) {
-    if (other->items[i]) {
+    if (other->items[i] && set->items[i] != SET_DELETED_HASH) {
       if (!set_contains(set, other->items[i])) {
         set_add(&_union, other->items[i]);
       }
