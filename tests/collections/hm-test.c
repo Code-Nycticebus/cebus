@@ -56,7 +56,7 @@ static void test_example(void) {
   HashMap hm = hm_create(&arena);
   for (usize i = 0; i < ARRAY_LEN(strings); i++) {
     u64 hash = str_hash(strings[i]);
-    HashValue *value = hm_get(&hm, hash);
+    HashValue *value = hm_get_mut(&hm, hash);
     if (value == NULL) {
       da_push(&keys, strings[i]);
       hm_insert(&hm, hash, HashValue(u64, 1));

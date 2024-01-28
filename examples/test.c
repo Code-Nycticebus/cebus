@@ -26,7 +26,7 @@ static void command(Str i) {
       return;
     }
     type = str_trim(type);
-    HashValue *hv = hm_get(&types_hm, str_hash(type));
+    const HashValue *hv = hm_get(&types_hm, str_hash(type));
     if (hv == NULL) {
       clib_log_fatal("unkown type: \"" STR_FMT "\"", STR_ARG(type));
       return;
@@ -49,7 +49,7 @@ static void command(Str i) {
     da_push(&values, str_copy(str_trim(value), &arena));
   } else {
     u64 hash = str_hash(i);
-    HashValue *value = hm_get(&symbol_value, hash);
+    const HashValue *value = hm_get(&symbol_value, hash);
     if (value) {
       u64 idx = value->as.u64;
       switch (types.items[idx]) {

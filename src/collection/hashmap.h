@@ -24,8 +24,8 @@ hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
 */
 
-#ifndef __CLIB_HT_H__
-#define __CLIB_HT_H__
+#ifndef __CLIB_HASHMAP_H__
+#define __CLIB_HASHMAP_H__
 
 #include "core/arena.h"
 #include "core/defines.h"
@@ -79,9 +79,9 @@ void hm_update(HashMap *hm, HashMap *other);
 
 bool hm_remove(HashMap *hm, usize hash);
 
-// FIXME it is dangerous to return a pointer here
-HashValue *hm_get(const HashMap *hm, u64 hash);
+const HashValue *hm_get(const HashMap *hm, u64 hash);
+HashValue *hm_get_mut(const HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif /* !__CLIB_HT_H__ */
+#endif /* !__CLIB_HASHMAP_H__ */

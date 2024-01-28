@@ -135,7 +135,13 @@ bool hm_remove(HashMap *hm, usize hash) {
   return false;
 }
 
-HashValue *hm_get(const HashMap *hm, u64 hash) {
+////////////////////////////////////////////////////////////////////////////
+
+const HashValue *hm_get(const HashMap *hm, u64 hash) {
+  return hm_get_mut(hm, hash);
+}
+
+HashValue *hm_get_mut(const HashMap *hm, u64 hash) {
   if (hm->count == 0) {
     return NULL;
   }
