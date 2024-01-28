@@ -33,7 +33,7 @@ static void test_set_remove(void) {
 
   Set set = set_create(&arena);
 
-  for (usize i = 0; i < 10; ++i) {
+  for (usize i = 0; i < TEST_SET_DEFAULT_SIZE; ++i) {
     set_add(&set, usize_hash(i));
   }
 
@@ -41,7 +41,7 @@ static void test_set_remove(void) {
   clib_assert(set_add(&set, usize_hash(5)) == false,
               "5 should already be in set");
 
-  set_remove(&set, usize_hash(5));
+  clib_assert(set_remove(&set, usize_hash(5)) == true, "Should remove 5");
   clib_assert(set_contains(&set, usize_hash(5)) == false,
               "Set should not contain 5");
 
