@@ -14,9 +14,8 @@ typedef enum {
   INT,
   STR,
 } Type;
+DA(Type) types = {0};
 HashMap types_hm;
-
-HashMap symbol_types;
 
 static void command(Str i) {
   i = str_trim(i);
@@ -45,21 +44,23 @@ static void command(Str i) {
     }
 
     u64 hash = str_hash(symbol);
-    hm_insert(&symbol_types, hash, *hv);
+    hm_insert(&symbol_value, hash, HashValue(u64, values.len));
+    da_push(&types, hv->as.u32);
     da_push(&values, str_copy(str_trim(value), &arena));
-    hm_insert(&symbol_value, hash, HashValue(ptr, &da_last(&values)));
   } else {
     u64 hash = str_hash(i);
     HashValue *value = hm_get(&symbol_value, hash);
     if (value) {
-      Type type = (Type)hm_get(&symbol_types, hash)->as.i32;
-      switch (type) {
+      u64 idx = value->as.u64;
+      switch (types.items[idx]) {
       case INT: {
-        clib_log_info("%" U64_FMT, str_to_u64(*(Str *)value->as.ptr));
-      } break;
+        clib_log_info("%" U64_FMT, str_to_u64(values.items[idx]));
+        return;
+      }
       case STR: {
-        clib_log_info("\"" STR_FMT "\"", STR_ARG(*(Str *)value->as.ptr));
-      } break;
+        clib_log_info("\"" STR_FMT "\"", STR_ARG(values.items[idx]));
+        return;
+      }
       }
     } else {
       clib_log_info("Symbol not found: \"" STR_FMT "\"", STR_ARG(i));
@@ -69,21 +70,19 @@ static void command(Str i) {
 
 int main(void) {
   da_init(&values, &arena);
+  da_init(&types, &arena);
   symbol_value = hm_create(&arena);
 
-  symbol_types = hm_create(&arena);
-
   types_hm = hm_create(&arena);
-  hm_insert(&types_hm, str_hash(STR("int")), HashValue(i32, INT));
-  hm_insert(&types_hm, str_hash(STR("str")), HashValue(i32, STR));
+  hm_insert(&types_hm, str_hash(STR("int")), HashValue(u32, INT));
+  hm_insert(&types_hm, str_hash(STR("str")), HashValue(u32, STR));
 
   while (true) {
     Str i = input(STR("> "));
     if (str_eq(i, STR("q")) || str_eq(i, STR("quit"))) {
       break;
-    } else {
-      command(i);
     }
+    command(i);
   }
 
   arena_free(&arena);
