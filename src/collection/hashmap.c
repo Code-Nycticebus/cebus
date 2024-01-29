@@ -1,6 +1,7 @@
 #include "hashmap.h"
 
 #include "core/arena.h"
+#include "core/assert.h"
 #include "core/defines.h"
 #include "type/integer.h"
 
@@ -11,6 +12,36 @@
 
 #define HM_DEFAULT_SIZE 8
 #define HM_DELETED_HASH 0xdeaddeaddeaddead
+
+////////////////////////////////////////////////////////////////////////////
+
+static bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
+  if (hash == 0) {
+    hash = u64_hash(hash);
+  }
+  if (hm->cap <= hm->count + hm->deleted) {
+    hm_resize(hm, hm->cap * 2);
+  }
+
+  while (true) {
+    usize idx = hash % hm->cap;
+
+    for (usize i = 0; i < hm->cap; i++) {
+      if (!hm->nodes[idx].key) {
+        hm->nodes[idx] = (HashNode){.key = hash, .value = value};
+        hm->count++;
+        return true;
+      }
+      if (hm->nodes[idx].key == hash) {
+        hm->nodes[idx].value = value;
+        return false;
+      }
+      idx = (idx + i * i) % hm->cap;
+    }
+
+    hm_resize(hm, hm->cap * 2);
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -77,33 +108,25 @@ void hm_reserve(HashMap *hm, usize size) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
-  if (hash == 0) {
-    hash = u64_hash(hash);
-  }
-  if (hm->cap <= hm->count + hm->deleted) {
-    hm_resize(hm, hm->cap * 2);
+#define HM_INSERT_IMPL(T, TYPE)                                                \
+  bool hm_insert_##T(HashMap *hm, u64 hash, T value) {                         \
+    if (hm->type != HM_NONE) {                                                 \
+      clib_assert(hm->type == TYPE, "HashMap stores different type: %s", #T);  \
+    } else {                                                                   \
+      hm->type = TYPE;                                                         \
+    }                                                                          \
+    return hm_insert(hm, hash, (HashValue){.as.T = value});                    \
   }
 
-  while (true) {
-    usize idx = hash % hm->cap;
+HM_INSERT_IMPL(f32, HM_F32)
+HM_INSERT_IMPL(f64, HM_F64)
+HM_INSERT_IMPL(i32, HM_I32)
+HM_INSERT_IMPL(u32, HM_U32)
+HM_INSERT_IMPL(i64, HM_I64)
+HM_INSERT_IMPL(u64, HM_U64)
 
-    for (usize i = 0; i < hm->cap; i++) {
-      if (!hm->nodes[idx].key) {
-        hm->nodes[idx] = (HashNode){.key = hash, .value = value};
-        hm->count++;
-        return true;
-      }
-      if (hm->nodes[idx].key == hash) {
-        hm->nodes[idx].value = value;
-        return false;
-      }
-      idx = (idx + i * i) % hm->cap;
-    }
-
-    hm_resize(hm, hm->cap * 2);
-  }
-}
+typedef void *ptr;
+HM_INSERT_IMPL(ptr, HM_PTR)
 
 void hm_update(HashMap *hm, HashMap *other) {
   hm_reserve(hm, other->count);

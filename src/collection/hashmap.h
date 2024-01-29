@@ -32,6 +32,17 @@ hm_get(&set, str_hash(STR("World")))->as.i64;
 
 ////////////////////////////////////////////////////////////////////////////
 
+typedef enum {
+  HM_NONE,
+  HM_F32,
+  HM_F64,
+  HM_I32,
+  HM_U32,
+  HM_I64,
+  HM_U64,
+  HM_PTR,
+} HashTypes;
+
 typedef struct {
   union {
     f32 f32;
@@ -53,6 +64,7 @@ typedef struct {
 } HashNode;
 
 typedef struct {
+  HashTypes type;
   usize cap;
   usize count;
   usize deleted;
@@ -74,7 +86,14 @@ void hm_reserve(HashMap *hm, usize size);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool hm_insert(HashMap *hm, u64 hash, HashValue value);
+bool hm_insert_f32(HashMap *hm, u64 hash, f32 value);
+bool hm_insert_f64(HashMap *hm, u64 hash, f64 value);
+bool hm_insert_i32(HashMap *hm, u64 hash, i32 value);
+bool hm_insert_u32(HashMap *hm, u64 hash, u32 value);
+bool hm_insert_i64(HashMap *hm, u64 hash, i64 value);
+bool hm_insert_u64(HashMap *hm, u64 hash, u64 value);
+bool hm_insert_ptr(HashMap *hm, u64 hash, void *value);
+
 void hm_update(HashMap *hm, HashMap *other);
 
 bool hm_remove(HashMap *hm, usize hash);
