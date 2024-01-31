@@ -62,6 +62,7 @@ def main() -> None:
             f.write(f"- [{docs.name.title()}](#{docs.name.title()})\n")
             for file in files:
                 f.write(f"   - [{file.name}](#{file.name.replace('.', '')})\n")
+        f.write("\n")
 
         # Writes documentation content
         for docs, files in sorted_entries:

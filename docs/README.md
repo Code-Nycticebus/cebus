@@ -44,6 +44,7 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [integer.h](#integerh)
    - [string.h](#stringh)
    - [utf8.h](#utf8h)
+
 ## Collection
 ## [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/da.h)
 ### Usage
