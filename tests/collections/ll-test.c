@@ -10,7 +10,7 @@ typedef struct {
 
 void ll_append(LinkedList *ll, LLNode *node);
 
-#define LL_FOR_EACH(T, ll, next)                                               \
+#define ll_for_each(T, ll, next)                                               \
   for (T *next = (T *)(ll)->begin; next; next = (T *)next->head.next)
 
 /////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ int main(void) {
   }
 
   printf("{");
-  LL_FOR_EACH(IntNode, &ll, next) {
+  ll_for_each(IntNode, &ll, next) {
     if (next != (void *)ll.begin) {
       printf(", ");
     }
