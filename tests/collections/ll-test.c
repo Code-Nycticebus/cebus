@@ -1,6 +1,4 @@
-#include "core/arena.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <stddef.h>
 
 typedef struct LLNode {
   struct LLNode *next, *prev;
@@ -11,6 +9,9 @@ typedef struct {
 } LinkedList;
 
 void ll_append(LinkedList *ll, LLNode *node);
+
+#define LL_FOR_EACH(T, ll, next)                                               \
+  for (T *next = (T *)(ll)->begin; next; next = (T *)next->head.next)
 
 /////////////////////////////////////////////////////////////
 
@@ -26,6 +27,11 @@ void ll_append(LinkedList *ll, LLNode *node) {
 }
 
 /////////////////////////////////////////////////////////////
+
+#include "core/arena.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct {
   LLNode head;
@@ -48,12 +54,11 @@ int main(void) {
   }
 
   printf("{");
-  for (LLNode *next = ll.begin; next; next = next->next) {
-    IntNode *node = (IntNode *)next;
-    if (next != ll.begin) {
+  LL_FOR_EACH(IntNode, &ll, next) {
+    if (next != (void *)ll.begin) {
       printf(", ");
     }
-    printf("%d", node->value);
+    printf("%d", next->value);
   }
   printf("}\n");
 
