@@ -101,6 +101,9 @@ bool hm_remove(HashMap *hm, usize hash);
 const HashValue *hm_get(const HashMap *hm, u64 hash);
 HashValue *hm_get_mut(const HashMap *hm, u64 hash);
 
+const i32 *hm_get_i32(const HashMap *hm, u64 hash);
+i32 *hm_get_i32_mut(const HashMap *hm, u64 hash);
+
 ///////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CLIB_HASHMAP_H__ */

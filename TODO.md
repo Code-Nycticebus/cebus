@@ -13,7 +13,7 @@
 ### Collections
 - [x] Dynamic array
 - [ ] HashMap
-- [ ] Set
+- [x] Set
 - [ ] Linked List
 
 ### Base

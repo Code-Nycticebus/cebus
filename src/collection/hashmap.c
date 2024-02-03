@@ -182,4 +182,12 @@ HashValue *hm_get_mut(const HashMap *hm, u64 hash) {
   return NULL;
 }
 
+const i32 *hm_get_i32(const HashMap *hm, u64 hash) {
+  return (i32 *)&hm_get_mut(hm, hash)->as.i32;
+}
+
+i32 *hm_get_i32_mut(const HashMap *hm, u64 hash) {
+  return (i32 *)&hm_get_mut(hm, hash)->as.i32;
+}
+
 ////////////////////////////////////////////////////////////////////////////
