@@ -13,6 +13,9 @@ SRC = Path(CWD, "src")
 DOC = CWD / "docs"
 README = DOC / "README.md"
 
+DOCUMENTATION_START = "/* DOCUMENTATION"
+DOCUMENTATION_END = "*/"
+
 
 def write_src_to_doc(doc: TextIO, src: Path):
     first = True
@@ -20,17 +23,19 @@ def write_src_to_doc(doc: TextIO, src: Path):
         # This is kind of a state machine
         write_mode: bool = False
         for line in d.readlines():
-            if "*/" in line:
+            if line.startswith(DOCUMENTATION_END):
                 write_mode = False
             if write_mode:
                 doc.write(line)
-            if "/* DOCUMENTATION" in line:
+            if line.startswith(DOCUMENTATION_START):
                 if first:
                     first = False
                     doc.write(
                         f"## [{src.name}]({REMOTE}/blob/main/{PurePosixPath(src.relative_to(CWD))})\n"
                     )
                 write_mode = True
+    if not first:
+        doc.write("\n")
 
 
 def main() -> None:
@@ -62,10 +67,10 @@ def main() -> None:
             f.write(f"- [{docs.name.title()}](#{docs.name.title()})\n")
             for file in files:
                 f.write(f"   - [{file.name}](#{file.name.replace('.', '')})\n")
-
+        f.write("\n")
         # Writes documentation content
         for docs, files in sorted_entries:
-            f.write(f"## {docs.name.title()}\n")
+            f.write(f"## {docs.name.title()}\n\n")
 
             for file in files:
                 write_src_to_doc(f, file)

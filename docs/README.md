@@ -1,25 +1,31 @@
 # Clib
- 
+
 This is an extension of the C standart library. 
 
 ### Quickstart
 
 #### [pybuildc](https://github.com/Code-Nycticebus/pybuildc)
+
 ```console
 pybuildc build
 ```
 
 #### Gcc or Clang
+
 Build the static library.
+
 ```console
 gcc -I./src -c ./src/**/*.c && ar rcs libclib.a *.o && rm *.o
 ```
+
 Set the ```CLIB_DIRECTORY``` variable and add ```-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib``` to your compiler flags.
+
 ```console
 gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ```
 
 ## Documentation
+
 <!-- DOCUMENTATION -->
 - [Collection](#Collection)
    - [da.h](#dah)
@@ -44,7 +50,9 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [integer.h](#integerh)
    - [string.h](#stringh)
    - [utf8.h](#utf8h)
+
 ## Collection
+
 ## [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/da.h)
 ### Usage
 Create a new dynamic array with:
@@ -65,6 +73,7 @@ Then you can push elements to the dynamic array.
 da_push(&vec, 69);
 da_push(&vec, 420);
 ```
+
 ## [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/hashmap.h)
 ### Overview
 This `HashMap` implementation stores only the keys hash and a `HashValue`, as
@@ -89,6 +98,7 @@ Now you can get the values by passing in the hash of the element.
 hm_get(&set, str_hash(STR("Hello")))->as.i64;
 hm_get(&set, str_hash(STR("World")))->as.i64;
 ```
+
 ## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/set.h)
 ### Usage
 Create a new Set with:
@@ -109,7 +119,9 @@ Test if an element is in the Set.
 set_contains(&set, str_hash(STR("Hello")));
 set_contains(&set, str_hash(STR("World")));
 ```
+
 ## Core
+
 ## [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
 ### Usage
 Create a new Arena with:
@@ -129,6 +141,7 @@ integers at once.
 ```c
 arena_free(&arena);
 ```
+
 ## [assert.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/assert.h)
 ### Usage
 You can assert if something is true with:
@@ -144,6 +157,7 @@ clib_assert_warn(EXPR, FMT, ...);
 clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
+
 ## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
 ### Initialization Macros
 - `ErrNew`: Initializes a new Error instance.
@@ -191,15 +205,19 @@ error_propagate(&error, {
 - `error_add_location()`: Adds current file and line location.
 - `error_add_note()`: Adds a note to the error.
 
+
 ## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.
+
 ## [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
 ### Usage
 ```c
 int array[5] = {5, 4, 3, 2, 1};
 quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
+
 ## Os
+
 ## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
 ### Usage
 To read in the entire file as Str
@@ -212,6 +230,7 @@ if (error_occured(&error)) {
 }
 arena_free(&arena);
 ```
+
 ## [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h)
 ### Usage
 Use the functions:
@@ -230,7 +249,9 @@ Outputs:
 :> name
 input: 'name'
 ```
+
 ## Type
+
 ## [byte.h](https://github.com/Code-Nycticebus/clib/blob/main/src/type/byte.h)
 ### Usage
 Create new Bytes from a literal.
@@ -253,6 +274,7 @@ Bytes bytes = bytes_from_parts(sizeof(a), &a);
 Arena arena = {0};
 Bytes owned_bytes = bytes_copy(bytes, &arena);
 ```
+
 ## [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/type/string.h)
 ### Usage
 Create a new Str with:
@@ -290,3 +312,4 @@ is
 a
 line
 ```
+
