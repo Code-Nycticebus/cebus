@@ -12,7 +12,7 @@
 
 ### Collections
 - [x] Dynamic array
-- [ ] HashMap
+- [x] HashMap
 - [x] Set
 - [ ] Linked List
 
