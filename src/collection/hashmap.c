@@ -43,6 +43,24 @@ static bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
   }
 }
 
+static HashValue *hm_get(const HashMap *hm, u64 hash) {
+  if (hm->count == 0) {
+    return NULL;
+  }
+  if (hash == 0 || hash == HM_DELETED_HASH) {
+    hash = u64_hash(hash);
+  }
+
+  usize idx = hash % hm->cap;
+  for (usize i = 0; i < hm->cap; i++) {
+    if (hm->nodes[idx].key && hm->nodes[idx].key == hash) {
+      return &hm->nodes[idx].value;
+    }
+    idx = (idx + i * i) % hm->cap;
+  }
+  return NULL;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 HashMap hm_create(Arena *arena) {
@@ -106,28 +124,6 @@ void hm_reserve(HashMap *hm, usize size) {
   hm_resize(hm, new_size);
 }
 
-////////////////////////////////////////////////////////////////////////////
-
-#define HM_INSERT_IMPL(T, TYPE)                                                \
-  bool hm_insert_##T(HashMap *hm, u64 hash, T value) {                         \
-    if (hm->type != HM_NONE) {                                                 \
-      clib_assert(hm->type == TYPE, "HashMap stores different type: %s", #T);  \
-    } else {                                                                   \
-      hm->type = TYPE;                                                         \
-    }                                                                          \
-    return hm_insert(hm, hash, (HashValue){.as.T = value});                    \
-  }
-
-HM_INSERT_IMPL(f32, HM_F32)
-HM_INSERT_IMPL(f64, HM_F64)
-HM_INSERT_IMPL(i32, HM_I32)
-HM_INSERT_IMPL(u32, HM_U32)
-HM_INSERT_IMPL(i64, HM_I64)
-HM_INSERT_IMPL(u64, HM_U64)
-
-typedef void *ptr;
-HM_INSERT_IMPL(ptr, HM_PTR)
-
 void hm_update(HashMap *hm, HashMap *other) {
   hm_reserve(hm, other->count);
   for (usize i = 0; i < other->cap; ++i) {
@@ -158,36 +154,114 @@ bool hm_remove(HashMap *hm, usize hash) {
   return false;
 }
 
+#define TYPE_CHECK(hm, T)                                                      \
+  do {                                                                         \
+    if (hm->type != HM_NONE) {                                                 \
+      clib_assert(hm->type == T, "HashMap stores different type: %s", #T);     \
+    }                                                                          \
+  } while (0)
+
+bool hm_insert_f32(HashMap *hm, u64 hash, f32 value) {
+  TYPE_CHECK(hm, HM_F32);
+  hm->type = HM_F32;
+  return hm_insert(hm, hash, (HashValue){.as.f32 = value});
+}
+
+bool hm_insert_f64(HashMap *hm, u64 hash, f64 value) {
+  TYPE_CHECK(hm, HM_F64);
+  hm->type = HM_F64;
+  return hm_insert(hm, hash, (HashValue){.as.f64 = value});
+}
+
+bool hm_insert_i32(HashMap *hm, u64 hash, i32 value) {
+  TYPE_CHECK(hm, HM_I32);
+  hm->type = HM_I32;
+  return hm_insert(hm, hash, (HashValue){.as.i32 = value});
+}
+
+bool hm_insert_u32(HashMap *hm, u64 hash, u32 value) {
+  TYPE_CHECK(hm, HM_U32);
+  hm->type = HM_U32;
+  return hm_insert(hm, hash, (HashValue){.as.u32 = value});
+}
+
+bool hm_insert_i64(HashMap *hm, u64 hash, i64 value) {
+  TYPE_CHECK(hm, HM_I64);
+  hm->type = HM_I64;
+  return hm_insert(hm, hash, (HashValue){.as.i64 = value});
+}
+
+bool hm_insert_u64(HashMap *hm, u64 hash, u64 value) {
+  TYPE_CHECK(hm, HM_U64);
+  hm->type = HM_U64;
+  return hm_insert(hm, hash, (HashValue){.as.u64 = value});
+}
+
+bool hm_insert_ptr(HashMap *hm, u64 hash, void *value) {
+  TYPE_CHECK(hm, HM_PTR);
+  hm->type = HM_PTR;
+  return hm_insert(hm, hash, (HashValue){.as.ptr = value});
+}
+
+bool hm_insert_const_ptr(HashMap *hm, u64 hash, const void *value) {
+  TYPE_CHECK(hm, HM_CONST_PTR);
+  hm->type = HM_CONST_PTR;
+  return hm_insert(hm, hash, (HashValue){.as.const_ptr = value});
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
-const HashValue *hm_get(const HashMap *hm, u64 hash) {
-  return hm_get_mut(hm, hash);
+f32 *hm_get_f32_mut(const HashMap *hm, u64 hash) {
+  TYPE_CHECK(hm, HM_F32);
+  return &hm_get(hm, hash)->as.f32;
 }
-
-HashValue *hm_get_mut(const HashMap *hm, u64 hash) {
-  if (hm->count == 0) {
-    return NULL;
-  }
-  if (hash == 0 || hash == HM_DELETED_HASH) {
-    hash = u64_hash(hash);
-  }
-
-  usize idx = hash % hm->cap;
-  for (usize i = 0; i < hm->cap; i++) {
-    if (hm->nodes[idx].key && hm->nodes[idx].key == hash) {
-      return &hm->nodes[idx].value;
-    }
-    idx = (idx + i * i) % hm->cap;
-  }
-  return NULL;
+f64 *hm_get_f64_mut(const HashMap *hm, u64 hash) {
+  TYPE_CHECK(hm, HM_F64);
+  return &hm_get(hm, hash)->as.f64;
 }
-
-const i32 *hm_get_i32(const HashMap *hm, u64 hash) {
-  return (i32 *)&hm_get_mut(hm, hash)->as.i32;
-}
-
 i32 *hm_get_i32_mut(const HashMap *hm, u64 hash) {
-  return (i32 *)&hm_get_mut(hm, hash)->as.i32;
+  TYPE_CHECK(hm, HM_I32);
+  return &hm_get(hm, hash)->as.i32;
+}
+u32 *hm_get_u32_mut(const HashMap *hm, u64 hash) {
+  TYPE_CHECK(hm, HM_U32);
+  return &hm_get(hm, hash)->as.u32;
+}
+i64 *hm_get_i64_mut(const HashMap *hm, u64 hash) {
+  TYPE_CHECK(hm, HM_I64);
+  return &hm_get(hm, hash)->as.i64;
+}
+u64 *hm_get_u64_mut(const HashMap *hm, u64 hash) {
+  TYPE_CHECK(hm, HM_U64);
+  return &hm_get(hm, hash)->as.u64;
+}
+void **hm_get_ptr_mut(const HashMap *hm, u64 hash) {
+  TYPE_CHECK(hm, HM_PTR);
+  return &hm_get(hm, hash)->as.ptr;
+}
+///////////////////////////////////////////////////////////////////////////////
+
+const f32 *hm_get_f32(const HashMap *hm, u64 hash) {
+  return hm_get_f32_mut(hm, hash);
+}
+const f64 *hm_get_f64(const HashMap *hm, u64 hash) {
+  return hm_get_f64_mut(hm, hash);
+}
+const i32 *hm_get_i32(const HashMap *hm, u64 hash) {
+  return hm_get_i32_mut(hm, hash);
+}
+const u32 *hm_get_u32(const HashMap *hm, u64 hash) {
+  return hm_get_u32_mut(hm, hash);
+}
+const i64 *hm_get_i64(const HashMap *hm, u64 hash) {
+  return hm_get_i64_mut(hm, hash);
+}
+const u64 *hm_get_u64(const HashMap *hm, u64 hash) {
+  return hm_get_u64_mut(hm, hash);
+}
+const void **hm_get_ptr(const HashMap *hm, u64 hash) {
+  TYPE_CHECK(hm, HM_CONST_PTR);
+  return &hm_get(hm, hash)->as.const_ptr;
 }
 
-////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////

@@ -40,6 +40,7 @@ static void dt_dump(const DateTime *dt) {
   Arena arena = {0};
   Str s = dt_to_str(dt, &arena);
   printf(STR_FMT "\n", STR_ARG(s));
+  arena_free(&arena);
 }
 
 int main(void) {

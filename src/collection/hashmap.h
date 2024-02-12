@@ -41,6 +41,7 @@ typedef enum {
   HM_I64,
   HM_U64,
   HM_PTR,
+  HM_CONST_PTR,
 } HashTypes;
 
 typedef struct {
@@ -52,11 +53,9 @@ typedef struct {
     i64 i64;
     u64 u64;
     void *ptr;
+    const void *const_ptr;
   } as;
 } HashValue;
-
-#define HashValue(T, value)                                                    \
-  (HashValue) { .as.T = value }
 
 typedef struct {
   u64 key;
@@ -84,6 +83,10 @@ HashMap hm_copy(HashMap *hm, Arena *arena);
 void hm_resize(HashMap *hm, usize size);
 void hm_reserve(HashMap *hm, usize size);
 
+void hm_update(HashMap *hm, HashMap *other);
+
+bool hm_remove(HashMap *hm, usize hash);
+
 ///////////////////////////////////////////////////////////////////////////////
 
 bool hm_insert_f32(HashMap *hm, u64 hash, f32 value);
@@ -93,16 +96,27 @@ bool hm_insert_u32(HashMap *hm, u64 hash, u32 value);
 bool hm_insert_i64(HashMap *hm, u64 hash, i64 value);
 bool hm_insert_u64(HashMap *hm, u64 hash, u64 value);
 bool hm_insert_ptr(HashMap *hm, u64 hash, void *value);
+bool hm_insert_const_ptr(HashMap *hm, u64 hash, const void *value);
 
-void hm_update(HashMap *hm, HashMap *other);
+///////////////////////////////////////////////////////////////////////////////
 
-bool hm_remove(HashMap *hm, usize hash);
-
-const HashValue *hm_get(const HashMap *hm, u64 hash);
-HashValue *hm_get_mut(const HashMap *hm, u64 hash);
-
-const i32 *hm_get_i32(const HashMap *hm, u64 hash);
+f32 *hm_get_f32_mut(const HashMap *hm, u64 hash);
+f64 *hm_get_f64_mut(const HashMap *hm, u64 hash);
 i32 *hm_get_i32_mut(const HashMap *hm, u64 hash);
+u32 *hm_get_u32_mut(const HashMap *hm, u64 hash);
+i64 *hm_get_i64_mut(const HashMap *hm, u64 hash);
+u64 *hm_get_u64_mut(const HashMap *hm, u64 hash);
+void **hm_get_ptr_mut(const HashMap *hm, u64 hash);
+
+///////////////////////////////////////////////////////////////////////////////
+
+const f32 *hm_get_f32(const HashMap *hm, u64 hash);
+const f64 *hm_get_f64(const HashMap *hm, u64 hash);
+const i32 *hm_get_i32(const HashMap *hm, u64 hash);
+const u32 *hm_get_u32(const HashMap *hm, u64 hash);
+const i64 *hm_get_i64(const HashMap *hm, u64 hash);
+const u64 *hm_get_u64(const HashMap *hm, u64 hash);
+const void **hm_get_ptr(const HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 
