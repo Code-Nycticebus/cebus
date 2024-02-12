@@ -69,19 +69,17 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 
   Str cmd = str_join_wrap(STR(" "), STR("\""), argc, argv, &arena);
 
-  bool ret = CreateProcessA(NULL, cmd.data, NULL, NULL, false, 0, NULL, NULL,
-                            &si, &pi);
+  if (!CreateProcessA(NULL, cmd.data, NULL, NULL, false, 0, NULL, NULL, &si,
+                      &pi)) {
+    error_emit(error, -1, "command failed: " STR_FMT ": %d", STR_ARG(argv[0]),
+               GetLastError());
+  }
   WaitForSingleObject(pi.hProcess, INFINITE);
 
   arena_free(&arena);
 
   CloseHandle(pi.hProcess);
   CloseHandle(pi.hThread);
-
-  if (ret == false) {
-    error_emit(error, -1, "command failed: " STR_FMT ": %s", STR_ARG(argv[0]),
-               GetLastError());
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////////

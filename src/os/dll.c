@@ -62,7 +62,7 @@ Dll *dll_load(Str path, Error *error) {
 
   HINSTANCE handle = LoadLibraryA(temp_file_path);
   if (handle == NULL) {
-    error_emit(error, -1, "error loading library: %s: %s\n", lib,
+    error_emit(error, -1, "error loading library: %s: %d\n", lib,
                GetLastError());
     return NULL;
   }
@@ -79,7 +79,7 @@ void dll_close(Dll *handle) {
 Function *dll_symbol(Dll *handle, const char *symbol, Error *error) {
   Function *fn = (void *)GetProcAddress(handle, symbol);
   if (fn == NULL) {
-    error_emit(error, -1, "dll function: %s: %s\n", symbol, GetLastError());
+    error_emit(error, -1, "dll function: %s: %d\n", symbol, GetLastError());
     return NULL;
   }
   return fn;
