@@ -2,11 +2,16 @@
 
 #include "collection/da.h"
 #include "core/arena.h"
+#include "core/platform.h"
 
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+////////////////////////////////////////////////////////////////////////////
+#if defined(LINUX)
+
+#include <errno.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -46,3 +51,11 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
     }
   }
 }
+
+////////////////////////////////////////////////////////////////////////////
+#elif defined(WINDOWS)
+
+#error "TODO implement this"
+
+////////////////////////////////////////////////////////////////////////////
+#endif
