@@ -67,19 +67,26 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
   ZeroMemory(&pi, sizeof(pi));
 
   Arena arena = {0};
-
-  Str command = str_join_wrap(STR(" "), STR("\""), argc, argv, &arena);
-  char *cmd = arena_calloc(&arena, command.len + 1);
+  
+  Str command = str_wrap(argv[0], STR("\""), &arena);
+  Str args = str_join(STR(" "), argc-1, argv+1, &arena);
+  char *cmd = arena_calloc(&arena, command.len + 1 + args.len + 1);
   strncpy(cmd, command.data, command.len);
+  cmd[command.len] = ' ';
+  strncpy(cmd+command.len+1, args.data, args.len);
 
   if (!CreateProcessA(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
     DWORD ec = GetLastError();
-    error_emit(error, (i32)ec, "command creation failed: " STR_FMT ": %lu",
+    if (ec == 0x2) {
+      error_emit(error, CMD_NOT_FOUND, "command not found: "STR_FMT, STR_ARG(argv[0]));
+    } else {
+      error_emit(error, (i32)ec, "command creation failed: " STR_FMT ": %lu",
                STR_ARG(argv[0]), ec);
+    }
+    goto defer;
   }
   WaitForSingleObject(pi.hProcess, INFINITE);
 
-  arena_free(&arena);
 
   DWORD exit_code = 0;
   if (!GetExitCodeProcess(pi.hProcess, &exit_code)) {
@@ -90,11 +97,12 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
   }
   if (exit_code != 0) {
     error_emit(error, (i32)exit_code, "command failed: " STR_FMT ": %lu",
-               STR_ARG(argv[0]), exit_code);
+               STR_ARG(command), exit_code);
     goto defer;
   }
 
 defer:
+  arena_free(&arena);
   CloseHandle(pi.hProcess);
   CloseHandle(pi.hThread);
 }

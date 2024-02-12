@@ -53,6 +53,16 @@ Str str_prepend(Str s, Str prefix, Arena *arena) {
   return str_from_parts(new_size, buffer);
 }
 
+Str str_wrap(Str s, Str wrap, Arena* arena) {
+  const usize new_size = s.len + wrap.len * 2;
+  char *buffer = arena_alloc(arena, new_size + 1);
+  memcpy(&buffer[0], wrap.data, wrap.len);
+  memcpy(&buffer[wrap.len], s.data, s.len);
+  memcpy(&buffer[wrap.len+s.len], wrap.data, wrap.len);
+  buffer[new_size] = '\0';
+  return str_from_parts(new_size, buffer);
+}
+
 Str str_join(Str sep, usize count, Str *s, Arena *arena) {
   usize size = sep.len * (count - 1);
   for (usize i = 0; i < count; i++) {

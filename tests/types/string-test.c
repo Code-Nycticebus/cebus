@@ -64,6 +64,10 @@ static void test_append(void) {
   clib_assert(str_eq(prepend, STR("used_mark__filename.c")),
               "did not prepend correctly");
 
+  Str wrap = str_wrap(STR("command here"), STR("'"), &arena);
+  clib_assert(str_eq(wrap, STR("'command here'")),
+              "did not wrap correctly");
+
   arena_free(&arena);
 }
 

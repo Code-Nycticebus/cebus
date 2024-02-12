@@ -67,6 +67,8 @@ Str str_from_cstr(const char *cstr);
 Str str_copy(Str s, Arena *arena);
 Str str_append(Str s1, Str suffix, Arena *arena);
 Str str_prepend(Str s1, Str prefix, Arena *arena);
+Str str_wrap(Str s, Str wrap, Arena* arena);
+
 // Inserts sep in between elements
 Str str_join(Str sep, usize count, Str *s, Arena *arena);
 // Appends suffix to every element
