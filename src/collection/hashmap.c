@@ -10,6 +10,47 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
+typedef enum {
+  HM_NONE,
+  HM_F32,
+  HM_F64,
+  HM_I32,
+  HM_U32,
+  HM_I64,
+  HM_U64,
+  HM_PTR,
+  HM_CONST_PTR,
+} HashTypes;
+
+typedef struct {
+  union {
+    f32 f32;
+    f64 f64;
+    i32 i32;
+    u32 u32;
+    i64 i64;
+    u64 u64;
+    void *ptr;
+    const void *const_ptr;
+  } as;
+} HashValue;
+
+typedef struct {
+  u64 key;
+  HashValue value;
+} HashNode;
+
+struct HashMap {
+  HashTypes type;
+  usize cap;
+  usize count;
+  usize deleted;
+  Arena *arena;
+  HashNode *nodes;
+};
+
+////////////////////////////////////////////////////////////////////////////
+
 #define HM_DEFAULT_SIZE 8
 #define HM_DELETED_HASH 0xdeaddeaddeaddead
 
@@ -61,32 +102,61 @@ static HashValue *hm_get(const HashMap *hm, u64 hash) {
   return NULL;
 }
 
+static const char *hm_type(HashTypes type) {
+  switch (type) {
+  case HM_F32:
+    return "HM_F32";
+  case HM_F64:
+    return "HM_F64";
+  case HM_I32:
+    return "HM_I32";
+  case HM_U32:
+    return "HM_U32";
+  case HM_I64:
+    return "HM_I64";
+  case HM_U64:
+    return "HM_U64";
+  case HM_PTR:
+    return "HM_PTR";
+  case HM_CONST_PTR:
+    return "HM_CONST_PTR";
+  case HM_NONE:
+    return "HM_NONE";
+  }
+  // clib_assert(false, "UNREACHABLE: %d", type);
+  return NULL;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
-HashMap hm_create(Arena *arena) {
-  HashMap hm = {0};
-  hm.arena = arena;
+HashMap *hm_create(Arena *arena) {
+  HashMap *hm = arena_calloc(arena, sizeof(HashMap));
+  hm->type = HM_NONE;
+  hm->arena = arena;
   return hm;
 }
 
-HashMap hm_with_size(Arena *arena, usize size) {
-  HashMap hm = {0};
-  hm.arena = arena;
-  hm.cap = usize_max(size, HM_DEFAULT_SIZE);
-  hm.nodes = arena_calloc_chunk(arena, hm.cap * sizeof(hm.nodes[0]));
+HashMap *hm_with_size(Arena *arena, usize size) {
+  HashMap *hm = arena_calloc(arena, sizeof(HashMap));
+  hm->type = HM_NONE;
+  hm->arena = arena;
+  hm->cap = usize_max(size, HM_DEFAULT_SIZE);
+  hm->nodes = arena_calloc_chunk(arena, hm->cap * sizeof(hm->nodes[0]));
   return hm;
 }
 
 void hm_clear(HashMap *hm) {
+  hm->type = HM_NONE;
   hm->count = 0;
   memset(hm->nodes, 0, hm->cap * sizeof(hm->nodes[0]));
 }
 
-HashMap hm_copy(HashMap *hm, Arena *arena) {
-  HashMap new = hm_with_size(arena, hm->count * 2);
+HashMap *hm_copy(HashMap *hm, Arena *arena) {
+  HashMap *new = hm_with_size(arena, hm->count * 2);
+  new->type = hm->type;
   for (size_t i = 0; i < hm->cap; i++) {
     if (hm->nodes[i].key || hm->nodes[i].key != HM_DELETED_HASH) {
-      hm_insert(&new, hm->nodes[i].key, hm->nodes[i].value);
+      hm_insert(new, hm->nodes[i].key, hm->nodes[i].value);
     }
   }
   return new;
@@ -156,8 +226,10 @@ bool hm_remove(HashMap *hm, usize hash) {
 
 #define TYPE_CHECK(hm, T)                                                      \
   do {                                                                         \
-    if (hm->type != HM_NONE) {                                                 \
-      clib_assert(hm->type == T, "HashMap stores different type: %s", #T);     \
+    if (hm->type != HM_NONE && hm->type != T) {                                \
+      clib_log_warning("HashMap Type Error: expected '%s' got '%s'",           \
+                       hm_type(hm->type), #T);                                 \
+      return NULL;                                                             \
     }                                                                          \
   } while (0)
 

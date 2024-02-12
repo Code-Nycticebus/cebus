@@ -30,55 +30,16 @@ hm_get(&set, str_hash(STR("World")))->as.i64;
 #include "core/arena.h"
 #include "core/defines.h"
 
-////////////////////////////////////////////////////////////////////////////
-
-typedef enum {
-  HM_NONE,
-  HM_F32,
-  HM_F64,
-  HM_I32,
-  HM_U32,
-  HM_I64,
-  HM_U64,
-  HM_PTR,
-  HM_CONST_PTR,
-} HashTypes;
-
-typedef struct {
-  union {
-    f32 f32;
-    f64 f64;
-    i32 i32;
-    u32 u32;
-    i64 i64;
-    u64 u64;
-    void *ptr;
-    const void *const_ptr;
-  } as;
-} HashValue;
-
-typedef struct {
-  u64 key;
-  HashValue value;
-} HashNode;
-
-typedef struct {
-  HashTypes type;
-  usize cap;
-  usize count;
-  usize deleted;
-  Arena *arena;
-  HashNode *nodes;
-} HashMap;
+typedef struct HashMap HashMap;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-HashMap hm_create(Arena *arena);
-HashMap hm_with_size(Arena *arena, usize size);
+HashMap *hm_create(Arena *arena);
+HashMap *hm_with_size(Arena *arena, usize size);
 
 void hm_clear(HashMap *hm);
 
-HashMap hm_copy(HashMap *hm, Arena *arena);
+HashMap *hm_copy(HashMap *hm, Arena *arena);
 
 void hm_resize(HashMap *hm, usize size);
 void hm_reserve(HashMap *hm, usize size);

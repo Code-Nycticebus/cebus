@@ -8,14 +8,14 @@
 
 static void test_insert(void) {
   Arena arena = {0};
-  HashMap hm = hm_create(&arena);
+  HashMap *hm = hm_create(&arena);
 
-  hm_insert_i64(&hm, str_hash(STR("Hello")), 420);  // NOLINT
-  hm_insert_i64(&hm, str_hash(STR("Hello2")), -69); // NOLINT
+  hm_insert_i64(hm, str_hash(STR("Hello")), 420);  // NOLINT
+  hm_insert_i64(hm, str_hash(STR("Hello2")), -69); // NOLINT
 
-  clib_assert(*hm_get_i64(&hm, str_hash(STR("Hello"))) == 420,
+  clib_assert(*hm_get_i64(hm, str_hash(STR("Hello"))) == 420,
               "ht should get the value correctly");
-  clib_assert(*hm_get_i64(&hm, str_hash(STR("Hello2"))) == -69,
+  clib_assert(*hm_get_i64(hm, str_hash(STR("Hello2"))) == -69,
               "ht should get the value correctly");
 
   arena_free(&arena);
@@ -25,14 +25,13 @@ static void test_hm(void) {
   const usize test_count = 10000;
   Arena arena = {0};
 
-  HashMap hm = hm_with_size(&arena, test_count * 2);
+  HashMap *hm = hm_with_size(&arena, test_count * 2);
   for (size_t i = 0; i < test_count; i++) {
-    hm_insert_u64(&hm, i, i * 4);
+    hm_insert_u64(hm, i, i * 4);
   }
-  clib_assert(hm.count == test_count, "Hash table should be at this size");
 
   for (size_t i = 0; i < test_count; i++) {
-    clib_assert(*hm_get_u64(&hm, i) == i * 4, "Hashing was wrong");
+    clib_assert(*hm_get_u64(hm, i) == i * 4, "Hashing was wrong");
   }
 
   arena_free(&arena);
@@ -40,12 +39,12 @@ static void test_hm(void) {
 
 static void test_hm_ptr(void) {
   Arena arena = {0};
-  HashMap hm = hm_create(&arena);
+  HashMap *hm = hm_create(&arena);
 
   const int a = 32;
-  hm_insert_const_ptr(&hm, (u64)a, &a);
+  hm_insert_const_ptr(hm, (u64)a, &a);
 
-  const int *aptr = *hm_get_ptr(&hm, (u64)a);
+  const int *aptr = *hm_get_ptr(hm, (u64)a);
 
   printf("%d\n", *aptr);
 
@@ -68,33 +67,33 @@ static void test_example(void) {
   DA(Str) keys = {0};
   da_init(&keys, &arena);
 
-  HashMap hm = hm_create(&arena);
+  HashMap *hm = hm_create(&arena);
   for (usize i = 0; i < ARRAY_LEN(strings); i++) {
     u64 hash = str_hash(strings[i]);
-    u64 *value = hm_get_u64_mut(&hm, hash);
+    u64 *value = hm_get_u64_mut(hm, hash);
     if (value == NULL) {
       da_push(&keys, strings[i]);
-      hm_insert_u64(&hm, hash, 1);
+      hm_insert_u64(hm, hash, 1);
     } else {
       (*value)++;
     }
   }
 
-  da_sort_ctx(&keys, &keys, sort_by_occurence, &hm);
+  da_sort_ctx(&keys, &keys, sort_by_occurence, hm);
 
   clib_assert(str_eq(keys.items[0], STR("Apple")),
               "Apple does occure the most");
-  clib_assert(*hm_get_u64(&hm, str_hash(keys.items[0])) == 3,
+  clib_assert(*hm_get_u64(hm, str_hash(keys.items[0])) == 3,
               "Apple should occure 3 times");
 
   clib_assert(str_eq(keys.items[1], STR("Banana")),
               "Banana does occure the second most");
-  clib_assert(*hm_get_u64(&hm, str_hash(keys.items[1])) == 2,
+  clib_assert(*hm_get_u64(hm, str_hash(keys.items[1])) == 2,
               "Banana should occure 2 times");
 
   clib_assert(str_eq(keys.items[2], STR("Strawberry")),
               "Strawberry does occure the least");
-  clib_assert(*hm_get_u64(&hm, str_hash(keys.items[2])) == 1,
+  clib_assert(*hm_get_u64(hm, str_hash(keys.items[2])) == 1,
               "Strawberry should occure 1 time");
 
   arena_free(&arena);
