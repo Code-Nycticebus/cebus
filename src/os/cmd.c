@@ -79,7 +79,8 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
   CloseHandle(pi.hThread);
 
   if (ret == false) {
-    error_emit(error, -1, "command failed: " STR_FMT, STR_ARG(argv[0]));
+    error_emit(error, -1, "command failed: " STR_FMT ": %s", STR_ARG(argv[0]),
+               GetLastError());
   }
 }
 
