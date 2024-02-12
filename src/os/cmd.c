@@ -67,17 +67,33 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 
   Arena arena = {0};
 
-  Str cmd = str_join_wrap(STR(" "), STR("\""), argc, argv, &arena);
+  Str command = str_join_wrap(STR(" "), STR("\""), argc, argv, &arena);
+  char *cmd = arena_calloc(&arena, command.len + 1);
+  strncpy(cmd, command.data, command.len);
 
-  if (!CreateProcessA(NULL, cmd.data, NULL, NULL, false, 0, NULL, NULL, &si,
-                      &pi)) {
-    error_emit(error, -1, "command failed: " STR_FMT ": %d", STR_ARG(argv[0]),
-               GetLastError());
+  if (!CreateProcessA(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+    int ec = GetLastError();
+    error_emit(error, ec, "command creation failed: " STR_FMT ": %d",
+               STR_ARG(argv[0]), ec);
   }
   WaitForSingleObject(pi.hProcess, INFINITE);
 
   arena_free(&arena);
 
+  DWORD exit_code = 0;
+  if (!GetExitCodeProcess(pi.hProcess, &exit_code)) {
+    int ec = GetLastError();
+    error_emit(error, ec, "Could not get exit code of process: " STR_FMT ": %d",
+               STR_ARG(argv[0]), ec);
+    goto defer;
+  }
+  if (exit_code != 0) {
+    error_emit(error, exit_code, "command failed: " STR_FMT ": %d",
+               STR_ARG(argv[0]), exit_code);
+    goto defer;
+  }
+
+defer:
   CloseHandle(pi.hProcess);
   CloseHandle(pi.hThread);
 }

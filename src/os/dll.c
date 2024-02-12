@@ -79,7 +79,8 @@ void dll_close(Dll *handle) {
 Function *dll_symbol(Dll *handle, const char *symbol, Error *error) {
   Function *fn = (void *)GetProcAddress(handle, symbol);
   if (fn == NULL) {
-    error_emit(error, -1, "dll function: %s: %d\n", symbol, GetLastError());
+    int err_code = GetLastError();
+    error_emit(error, err_code, "dll function: %s: %d\n", symbol, err_code);
     return NULL;
   }
   return fn;
