@@ -9,7 +9,7 @@ typedef struct TestChunk {
   u8 data[];
 } TestChunk;
 
-CONST static usize test_align(usize size) {
+CONST_FN static usize test_align(usize size) {
   const usize mask = sizeof(void *) - 1;
   return (size + mask) & ~mask;
 }

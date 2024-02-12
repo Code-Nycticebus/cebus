@@ -404,7 +404,7 @@ static void test_i32_hash(void) {
 
 /* u64 */
 static void test_u64_leading_bits(void) {
-  clib_assert(u64_leading_ones(0xe000000000000001LL) == 3,
+  clib_assert(u64_leading_ones(0xe000000000000001ULL) == 3,
               "Did not count correctly");
   clib_assert(u64_leading_zeros(0x1f00000000000000) == 3,
               "Did not count correctly");
