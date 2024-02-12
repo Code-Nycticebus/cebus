@@ -58,11 +58,12 @@ Dll *dll_load(Str path, Error *error) {
 
   char temp_file_name[MAX_PATH];
   GetTempFileName(temp_path, TEXT("lib"), 0, temp_file_name);
-  CopyFile(lib_path, temp_file_name, 0));
+  CopyFile(lib_path, temp_file_name, 0);
 
-  HINSTANCE handle = LoadLibraryA(temp_file_path);
+  HINSTANCE handle = LoadLibraryA(temp_file_name);
   if (handle == NULL) {
-    error_emit(error, -1, "error loading library: %s: %d\n", lib,
+    DWORD ec = GetLastError();
+    error_emit(error, (i32)ec, "error loading library: "STR_FMT": %lu\n", STR_ARG(path),
                GetLastError());
     return NULL;
   }
@@ -79,8 +80,8 @@ void dll_close(Dll *handle) {
 Function *dll_symbol(Dll *handle, const char *symbol, Error *error) {
   Function *fn = (void *)GetProcAddress(handle, symbol);
   if (fn == NULL) {
-    int err_code = GetLastError();
-    error_emit(error, err_code, "dll function: %s: %d\n", symbol, err_code);
+    DWORD err_code = GetLastError();
+    error_emit(error, (i32)err_code, "dll function: %s: %lu\n", symbol, err_code);
     return NULL;
   }
   return fn;

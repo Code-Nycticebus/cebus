@@ -1,6 +1,6 @@
 #include "sorting.h"
 
-#if defined(MSVC)
+#if defined(WINDOWS)
 #include <malloc.h>
 #define alloca _alloca
 #else

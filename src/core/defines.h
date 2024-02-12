@@ -96,7 +96,11 @@ typedef size_t usize;
 #if defined(LINUX)
 #define USIZE_FMT "zu"
 #elif defined(WINDOWS)
+#if defined(CLIB_64BIT)
 #define USIZE_FMT "llu"
+#else
+#define USIZE_FMT "u"
+#endif
 #endif
 
 typedef float f32;
@@ -166,12 +170,11 @@ typedef struct _iobuf FILE;
 
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 
-#include <sys/cdefs.h>
 #define EXPORT __attribute__((used))
 #define NORETURN __attribute__((noreturn))
 #define UNUSED __attribute__((unused))
-#define PURE __attribute__((pure)) __attribute__((warn_unused_result))
-#define CONST __attribute__((const)) __attribute__((warn_unused_result))
+#define PURE_FN __attribute__((pure)) __attribute__((warn_unused_result))
+#define CONST_FN __attribute__((const)) __attribute__((warn_unused_result))
 #define LIKELY(exp) __builtin_expect(((exp) != 0), 1)
 #define UNLIKELY(exp) __builtin_expect(((exp) != 0), 0)
 #define FMT(__fmt_arg) __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
@@ -182,8 +185,8 @@ typedef struct _iobuf FILE;
 #define EXPORT __declspec(dllexport)
 #define NORETURN __declspec(noreturn)
 #define UNUSED __pragma(warning(suppress : 4100))
-#define PURE _Check_return
-#define CONST _Check_return
+#define PURE_FN _Check_return
+#define CONST_FN _Check_return
 
 #endif
 
@@ -199,12 +202,12 @@ typedef struct _iobuf FILE;
 #define UNUSED
 #endif
 
-#ifndef PURE
-#define PURE
+#ifndef PURE_FN
+#define PURE_FN
 #endif
 
-#ifndef CONST
-#define CONST
+#ifndef CONST_FN
+#define CONST_FN
 #endif
 
 #ifndef LIKELY

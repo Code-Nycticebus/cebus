@@ -40,16 +40,17 @@ Str os_getcwd(Arena *arena) {
 //////////////////////////////////////////////////////////////////////////////
 #elif defined(WINDOWS)
 
+#include <windows.h>
 #include <direct.h>
 
 void os_chdir(Str path) {
-  char buffer[MAX_PATH] = {0};
-  memcpy(buffer, path.data, usize_min(path.len, MAX_PATH));
+  char buffer[FILENAME_MAX] = {0};
+  memcpy(buffer, path.data, usize_min(path.len, FILENAME_MAX));
   _chdir(buffer);
 }
 
 Str os_getcwd(Arena *arena) {
-  usize size = GetCurrentDirectory(0, NULL);
+  DWORD size = GetCurrentDirectory(0, NULL);
   char *buf = arena_alloc(arena, size);
   GetCurrentDirectory((DWORD)size, buf);
   // TODO error handling

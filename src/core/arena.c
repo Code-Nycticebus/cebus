@@ -32,7 +32,7 @@ static Chunk *chunk_allocate(usize size) {
 
 static void chunk_free(Chunk *chunk) { free(chunk); }
 
-CONST static usize align(usize size) {
+CONST_FN static usize align(usize size) {
   const usize mask = sizeof(void *) - 1;
   return (size + mask) & ~mask;
 }

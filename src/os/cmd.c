@@ -56,6 +56,7 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 #elif defined(WINDOWS)
 
 #include "type/string.h"
+
 #include <windows.h>
 
 void cmd_exec(Error *error, size_t argc, Str *argv) {
@@ -72,8 +73,8 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
   strncpy(cmd, command.data, command.len);
 
   if (!CreateProcessA(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-    int ec = GetLastError();
-    error_emit(error, ec, "command creation failed: " STR_FMT ": %d",
+    DWORD ec = GetLastError();
+    error_emit(error, (i32)ec, "command creation failed: " STR_FMT ": %lu",
                STR_ARG(argv[0]), ec);
   }
   WaitForSingleObject(pi.hProcess, INFINITE);
@@ -82,13 +83,13 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 
   DWORD exit_code = 0;
   if (!GetExitCodeProcess(pi.hProcess, &exit_code)) {
-    int ec = GetLastError();
-    error_emit(error, ec, "Could not get exit code of process: " STR_FMT ": %d",
+    DWORD ec = GetLastError();
+    error_emit(error, (i32)ec, "Could not get exit code of process: " STR_FMT ": %lu",
                STR_ARG(argv[0]), ec);
     goto defer;
   }
   if (exit_code != 0) {
-    error_emit(error, exit_code, "command failed: " STR_FMT ": %d",
+    error_emit(error, (i32)exit_code, "command failed: " STR_FMT ": %lu",
                STR_ARG(argv[0]), exit_code);
     goto defer;
   }

@@ -46,7 +46,7 @@ void hm_reserve(HashMap *hm, usize size);
 
 void hm_update(HashMap *hm, HashMap *other);
 
-bool hm_remove(HashMap *hm, usize hash);
+bool hm_remove(HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 

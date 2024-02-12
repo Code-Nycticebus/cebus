@@ -52,7 +52,7 @@ struct HashMap {
 ////////////////////////////////////////////////////////////////////////////
 
 #define HM_DEFAULT_SIZE 8
-#define HM_DELETED_HASH 0xdeaddeaddeaddead
+#define HM_DELETED_HASH ((u64)0xdeaddeaddeaddead)
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -203,7 +203,7 @@ void hm_update(HashMap *hm, HashMap *other) {
   }
 }
 
-bool hm_remove(HashMap *hm, usize hash) {
+bool hm_remove(HashMap *hm, u64 hash) {
   if (hm->count == 0) {
     return false;
   }

@@ -13,6 +13,8 @@ Here are various macros for figuring out what Platform and compiler is used.
 #elif defined(_WIN32) || defined(_WIN64)
 #define WINDOWS
 #define CLIB_SYSTEM "Windows"
+#define _CRT_SECURE_NO_WARNINGS
+#define WIN32_LEAN_AND_MEAN
 #else
 PLATFORM_NOT_SUPPORTED
 #endif
