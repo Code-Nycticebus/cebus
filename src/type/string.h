@@ -73,6 +73,10 @@ Str str_join(Str sep, usize count, Str *s, Arena *arena);
 Str str_join_suffix(Str suffix, usize count, Str *s, Arena *arena);
 // Prepends prefix to every element
 Str str_join_prefix(Str prefix, usize count, Str *s, Arena *arena);
+
+Str str_join_prefix_and_suffix(Str prefix, Str suffix, usize count, Str *s,
+                               Arena *arena);
+
 Str str_upper(Str s, Arena *arena);
 Str str_lower(Str s, Arena *arena);
 Str str_replace(Str s, Str old, Str new, Arena *arena);

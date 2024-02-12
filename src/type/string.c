@@ -109,6 +109,27 @@ Str str_join_prefix(Str prefix, usize count, Str *s, Arena *arena) {
   return str_from_parts(size, buffer);
 }
 
+Str str_join_prefix_and_suffix(Str prefix, Str suffix, usize count, Str *s,
+                               Arena *arena) {
+  usize size = prefix.len * count + suffix.len * count;
+  for (usize i = 0; i < count; i++) {
+    size += s[i].len;
+  }
+  char *buffer = arena_alloc(arena, size + 1);
+  usize b_idx = 0;
+  for (usize i = 0; i < count; i++) {
+    memcpy(&buffer[b_idx], prefix.data, prefix.len);
+    b_idx += prefix.len;
+    memcpy(&buffer[b_idx], s[i].data, s[i].len);
+    b_idx += s[i].len;
+    memcpy(&buffer[b_idx], suffix.data, suffix.len);
+    b_idx += suffix.len;
+  }
+  buffer[size] = '\0';
+
+  return str_from_parts(size, buffer);
+}
+
 Str str_upper(Str s, Arena *arena) {
   char *buffer = arena_alloc(arena, s.len + 1);
   buffer[s.len] = '\0';
