@@ -40,6 +40,7 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [platform.h](#platformh)
    - [sorting.h](#sortingh)
 - [Os](#Os)
+   - [dll.h](#dllh)
    - [fs.h](#fsh)
    - [io.h](#ioh)
    - [os.h](#osh)

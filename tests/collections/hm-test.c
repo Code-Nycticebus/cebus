@@ -45,7 +45,7 @@ static void test_hm_ptr(void) {
   hm_insert_mut_ptr(hm, (u64)a, &a);
 
   int b = 34;
-  hm_insert_ptr(hm, (u64)b, &b);
+  hm_insert_mut_ptr(hm, (u64)b, &b);
 
   const int *aptr = *hm_get_ptr(hm, (u64)a);
   const void **p = hm_get_ptr(hm, (u64)b);
