@@ -26,8 +26,8 @@
 
 ### Os
 - [ ] Paths
-- [ ] IO 
-- [ ] File System Operations
-- [ ] Dynamic Library loading
+- [x] IO 
+- [x] File System Operations
+- [x] Dynamic Library loading
 - [ ] Threads 
 - [ ] Time
