@@ -132,3 +132,26 @@ void file_remove(Str filename, Error *error) {
 }
 
 ////////////////////////////////////////////////////////////////////////////
+#if defined(LINUX)
+
+#include <unistd.h>
+
+bool file_exists(Str filename) {
+  char _filename[FILENAME_MAX] = {0};
+  memcpy(_filename, filename.data, filename.len);
+  return access(_filename, 0) == 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+#elif defined(WINDOWS)
+
+#include <io.h>
+
+bool file_exists(Str filename) {
+  char _filename[FILENAME_MAX] = {0};
+  memcpy(_filename, filename.data, filename.len);
+  return _access(_filename, 0) == 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+#endif
