@@ -4,6 +4,7 @@
 #include "core/assert.h"
 #include "type/integer.h"
 #include "type/string.h"
+#include <stdio.h>
 
 static void test_insert(void) {
   Arena arena = {0};
@@ -33,6 +34,20 @@ static void test_hm(void) {
   for (size_t i = 0; i < test_count; i++) {
     clib_assert(*hm_get_u64(&hm, i) == i * 4, "Hashing was wrong");
   }
+
+  arena_free(&arena);
+}
+
+static void test_hm_ptr(void) {
+  Arena arena = {0};
+  HashMap hm = hm_create(&arena);
+
+  const int a = 32;
+  hm_insert_const_ptr(&hm, (u64)a, &a);
+
+  const int *aptr = *hm_get_ptr(&hm, (u64)a);
+
+  printf("%d\n", *aptr);
 
   arena_free(&arena);
 }
@@ -88,5 +103,6 @@ static void test_example(void) {
 int main(void) {
   test_insert();
   test_hm();
+  test_hm_ptr();
   test_example();
 }
