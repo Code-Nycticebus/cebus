@@ -14,9 +14,9 @@ static void test_insert(void) {
   hm_insert_i64(&hm, str_hash(STR("Hello2")), -69); // NOLINT
 
   clib_assert(*hm_get_i64(&hm, str_hash(STR("Hello"))) == 420,
-              "ht should get the value correnctly");
+              "ht should get the value correctly");
   clib_assert(*hm_get_i64(&hm, str_hash(STR("Hello2"))) == -69,
-              "ht should get the value correnctly");
+              "ht should get the value correctly");
 
   arena_free(&arena);
 }
