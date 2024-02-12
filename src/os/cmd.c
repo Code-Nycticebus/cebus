@@ -55,7 +55,33 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 ////////////////////////////////////////////////////////////////////////////
 #elif defined(WINDOWS)
 
-#error "TODO implement this"
+#include "type/string.h"
+#include <windows.h>
+
+void cmd_exec(Error *error, size_t argc, Str *argv) {
+  STARTUPINFOA si;
+  PROCESS_INFORMATION pi;
+  ZeroMemory(&si, sizeof(si));
+  si.cb = sizeof(si);
+  ZeroMemory(&pi, sizeof(pi));
+
+  Arena arena = {0};
+
+  Str cmd = str_join(STR(" "), argc, argv, &arena);
+
+  bool ret = CreateProcessA(NULL, cmd.data, NULL, NULL, false, 0, NULL, NULL,
+                            &si, &pi);
+  WaitForSingleObject(pi.hProcess, INFINITE);
+
+  arena_free(&arena);
+
+  CloseHandle(pi.hProcess);
+  CloseHandle(pi.hThread);
+
+  if (ret == false) {
+    error_emit(error, -1, "command failed: " STR_FMT, STR_ARG(argv[0]));
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////
 #endif
