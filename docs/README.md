@@ -85,20 +85,21 @@ the keys, you should be using a seperate array.
 Create a new HashMap with:
 ```c
 Arena arena = {0};
-HashMap hm = hm_create(&arena);
-hm_reserve(&hm, 10); // optional
+HashMap* hm = hm_create(&arena);
+hm_reserve(hm, 10); // optional
 ```
 
 Then you can add elements by hash to the HashMap.
 ```c
-hm_insert(&set, str_hash(STR("Hello")), HashValue(i64, 69));
-hm_insert(&set, str_hash(STR("World")), HashValue(i64, 420));
+hm_insert_i32(hm, str_hash(STR("Hello")), 69);
+hm_insert_i32(hm, str_hash(STR("World")), 420);
 ```
 
-Now you can get the values by passing in the hash of the element.
+Now you can get pointers to values by passing in the hash of the element.
+> :warning: Dont safe pointers that point inside the HashMap!
 ```c
-hm_get(&set, str_hash(STR("Hello")))->as.i64;
-hm_get(&set, str_hash(STR("World")))->as.i64;
+hm_get_i32(hm, str_hash(STR("Hello")));
+hm_get_i32(hm, str_hash(STR("World")));
 ```
 
 ## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/set.h)
