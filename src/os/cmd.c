@@ -67,7 +67,7 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 
   Arena arena = {0};
 
-  Str cmd = str_join(STR(" "), argc, argv, &arena);
+  Str cmd = str_join_wrap(STR(" "), STR("\""), argc, argv, &arena);
 
   bool ret = CreateProcessA(NULL, cmd.data, NULL, NULL, false, 0, NULL, NULL,
                             &si, &pi);

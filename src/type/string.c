@@ -109,21 +109,24 @@ Str str_join_prefix(Str prefix, usize count, Str *s, Arena *arena) {
   return str_from_parts(size, buffer);
 }
 
-Str str_join_prefix_and_suffix(Str prefix, Str suffix, usize count, Str *s,
-                               Arena *arena) {
-  usize size = prefix.len * count + suffix.len * count;
+Str str_join_wrap(Str sep, Str wrap, usize count, Str *s, Arena *arena) {
+  usize size = sep.len * (count - 1) + wrap.len * count * 2;
   for (usize i = 0; i < count; i++) {
     size += s[i].len;
   }
   char *buffer = arena_alloc(arena, size + 1);
   usize b_idx = 0;
   for (usize i = 0; i < count; i++) {
-    memcpy(&buffer[b_idx], prefix.data, prefix.len);
-    b_idx += prefix.len;
+    if (i != 0) {
+      memcpy(&buffer[b_idx], sep.data, sep.len);
+      b_idx += sep.len;
+    }
+    memcpy(&buffer[b_idx], wrap.data, wrap.len);
+    b_idx += wrap.len;
     memcpy(&buffer[b_idx], s[i].data, s[i].len);
     b_idx += s[i].len;
-    memcpy(&buffer[b_idx], suffix.data, suffix.len);
-    b_idx += suffix.len;
+    memcpy(&buffer[b_idx], wrap.data, wrap.len);
+    b_idx += wrap.len;
   }
   buffer[size] = '\0';
 
