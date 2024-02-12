@@ -226,7 +226,7 @@ bool hm_remove(HashMap *hm, usize hash) {
 
 #define TYPE_CHECK(hm, T)                                                      \
   do {                                                                         \
-    if (hm->type != HM_NONE && hm->type != T) {                                \
+    if (hm->type != HM_NONE && (hm->type != T)) {                              \
       clib_log_warning("HashMap Type Error: expected '%s' got '%s'",           \
                        hm_type(hm->type), #T);                                 \
       return NULL;                                                             \
@@ -269,13 +269,13 @@ bool hm_insert_u64(HashMap *hm, u64 hash, u64 value) {
   return hm_insert(hm, hash, (HashValue){.as.u64 = value});
 }
 
-bool hm_insert_ptr(HashMap *hm, u64 hash, void *value) {
+bool hm_insert_mut_ptr(HashMap *hm, u64 hash, void *value) {
   TYPE_CHECK(hm, HM_PTR);
   hm->type = HM_PTR;
   return hm_insert(hm, hash, (HashValue){.as.ptr = value});
 }
 
-bool hm_insert_const_ptr(HashMap *hm, u64 hash, const void *value) {
+bool hm_insert_ptr(HashMap *hm, u64 hash, const void *value) {
   TYPE_CHECK(hm, HM_CONST_PTR);
   hm->type = HM_CONST_PTR;
   return hm_insert(hm, hash, (HashValue){.as.const_ptr = value});
@@ -311,6 +311,7 @@ void **hm_get_ptr_mut(const HashMap *hm, u64 hash) {
   TYPE_CHECK(hm, HM_PTR);
   return &hm_get(hm, hash)->as.ptr;
 }
+
 ///////////////////////////////////////////////////////////////////////////////
 
 const f32 *hm_get_f32(const HashMap *hm, u64 hash) {
@@ -332,7 +333,7 @@ const u64 *hm_get_u64(const HashMap *hm, u64 hash) {
   return hm_get_u64_mut(hm, hash);
 }
 const void **hm_get_ptr(const HashMap *hm, u64 hash) {
-  TYPE_CHECK(hm, HM_CONST_PTR);
+  TYPE_CHECK(hm, HM_CONST_PTR && hm->type != HM_PTR);
   return &hm_get(hm, hash)->as.const_ptr;
 }
 

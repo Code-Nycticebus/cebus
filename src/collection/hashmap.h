@@ -56,8 +56,8 @@ bool hm_insert_i32(HashMap *hm, u64 hash, i32 value);
 bool hm_insert_u32(HashMap *hm, u64 hash, u32 value);
 bool hm_insert_i64(HashMap *hm, u64 hash, i64 value);
 bool hm_insert_u64(HashMap *hm, u64 hash, u64 value);
-bool hm_insert_ptr(HashMap *hm, u64 hash, void *value);
-bool hm_insert_const_ptr(HashMap *hm, u64 hash, const void *value);
+bool hm_insert_mut_ptr(HashMap *hm, u64 hash, void *value);
+bool hm_insert_ptr(HashMap *hm, u64 hash, const void *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 

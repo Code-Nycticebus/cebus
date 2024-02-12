@@ -41,10 +41,15 @@ static void test_hm_ptr(void) {
   Arena arena = {0};
   HashMap *hm = hm_create(&arena);
 
-  const int a = 32;
-  hm_insert_const_ptr(hm, (u64)a, &a);
+  int a = 32;
+  hm_insert_mut_ptr(hm, (u64)a, &a);
+
+  int b = 34;
+  hm_insert_ptr(hm, (u64)b, &b);
 
   const int *aptr = *hm_get_ptr(hm, (u64)a);
+  const void **p = hm_get_ptr(hm, (u64)b);
+  printf("%d\n", *(const int *)*p);
 
   printf("%d\n", *aptr);
 
