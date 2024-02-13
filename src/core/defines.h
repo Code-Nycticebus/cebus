@@ -115,7 +115,8 @@ typedef double f64;
 
 #define F32_INF (*(const f32 *)(const u32[]){0x7F800000})
 #define F64_INF (*(const f64 *)(const u64[]){0x7FF0000000000000})
-#define NAN (0.0 / 0.0)
+#define F32_NAN (0.0f / 0.0f)
+#define F64_NAN (0.0 / 0.0)
 #define PI 3.14159265358979323846
 #define E 2.71828182845904523536
 
