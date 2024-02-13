@@ -1,7 +1,7 @@
 [pybuildc]
 name="clib"
 cc="clang"
-cflags=["-std=c99", "-fsanitize=address"]
+cflags=["-std=c99"]
 
 [exe]
 info="examples/info.c"
