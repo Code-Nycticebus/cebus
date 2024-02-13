@@ -2,7 +2,6 @@
 
 #include "clib/collection/da.h"
 #include "clib/core/arena.h"
-#include "clib/core/platform.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,7 +54,7 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 ////////////////////////////////////////////////////////////////////////////
 #elif defined(WINDOWS)
 
-#include "type/string.h"
+#include "clib/type/string.h"
 
 #include <windows.h>
 
