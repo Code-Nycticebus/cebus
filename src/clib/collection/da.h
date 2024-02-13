@@ -33,6 +33,7 @@ da_push(&vec, 420);
   struct {                                                                     \
     usize cap;                                                                 \
     usize len;                                                                 \
+    usize _size;                                                               \
     Arena *arena;                                                              \
     T *items;                                                                  \
   }
@@ -51,6 +52,7 @@ da_push(&vec, 420);
     (list)->cap = 0;                                                           \
     (list)->arena = _arena;                                                    \
     (list)->items = NULL;                                                      \
+    (list)->_size = sizeof(*(list)->items);                                    \
   } while (0)
 
 #define da_init_list(list, _arena, count, array)                               \
@@ -59,6 +61,7 @@ da_push(&vec, 420);
     (list)->cap = 0;                                                           \
     (list)->arena = _arena;                                                    \
     (list)->items = NULL;                                                      \
+    (list)->_size = sizeof(*(list)->items);                                    \
     da_resize(list, count);                                                    \
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[__e_i] = (array)[__e_i];                                   \
@@ -82,8 +85,8 @@ da_push(&vec, 420);
       break;                                                                   \
     }                                                                          \
     (list)->cap = size;                                                        \
-    (list)->items = arena_realloc_chunk(                                       \
-        (list)->arena, (list)->items, (list)->cap * sizeof((list)->items[0])); \
+    (list)->items = arena_realloc_chunk((list)->arena, (list)->items,          \
+                                        (list)->cap * (list)->_size);          \
   } while (0)
 
 #define da_reserve(list, size)                                                 \
