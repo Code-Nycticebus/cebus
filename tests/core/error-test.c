@@ -1,6 +1,7 @@
-#include "core/error.h"
+#include "clib/core/error.h"
 
-#include "core/assert.h"
+#include "clib/core/assert.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 

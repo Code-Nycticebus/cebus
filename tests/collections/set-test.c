@@ -1,9 +1,9 @@
-#include "collection/set.h"
+#include "clib/collection/set.h"
 
-#include "collection/da.h"
-#include "core/assert.h"
-#include "type/integer.h"
-#include "type/string.h"
+#include "clib/collection/da.h"
+#include "clib/core/assert.h"
+#include "clib/type/integer.h"
+#include "clib/type/string.h"
 
 #define TEST_SET_DEFAULT_SIZE 10
 

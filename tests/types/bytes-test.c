@@ -1,7 +1,7 @@
-#include "type/byte.h"
+#include "clib/type/byte.h"
 
-#include "core/assert.h"
-#include "type/string.h"
+#include "clib/core/assert.h"
+#include "clib/type/string.h"
 
 static void test_bytes(void) {
   Arena arena = {0};

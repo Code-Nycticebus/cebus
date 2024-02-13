@@ -1,9 +1,10 @@
-#include "collection/hashmap.h"
+#include "clib/collection/hashmap.h"
 
-#include "collection/da.h"
-#include "core/assert.h"
-#include "type/integer.h"
-#include "type/string.h"
+#include "clib/collection/da.h"
+#include "clib/core/assert.h"
+#include "clib/type/integer.h"
+#include "clib/type/string.h"
+
 #include <stdio.h>
 
 static void test_insert(void) {

@@ -1,6 +1,6 @@
-#include "core/sorting.h"
+#include "clib/core/sorting.h"
 
-#include "core/assert.h"
+#include "clib/core/assert.h"
 
 static CmpOrdering cmp(const void *a, const void *b) {
   return *(const i32 *)a - *(const i32 *)b;

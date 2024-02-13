@@ -28,7 +28,7 @@ void ll_append(LinkedList *ll, LLNode *node) {
 
 /////////////////////////////////////////////////////////////
 
-#include "core/arena.h"
+#include "clib/core/arena.h"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,5 +1,5 @@
-#include "core/defines.h"
-#include "type/string.h"
+#include "clib/core/defines.h"
+#include "clib/type/string.h"
 
 #include <stdio.h>
 #include <time.h>

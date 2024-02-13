@@ -1,6 +1,6 @@
-#include "type/float.h"
+#include "clib/type/float.h"
 
-#include "core/assert.h"
+#include "clib/core/assert.h"
 
 static void test_f32_eq(void) {
   clib_assert(f32_eq(3.14f, 3.14f) == true, "Floats should be eq");    // NOLINT
@@ -14,7 +14,7 @@ static void test_f32_abs(void) {
 }
 
 static void test_f32_isnan(void) {
-  const f32 n = NAN;
+  const f32 n = F32_NAN;
   const f32 nn = 0.1f;
   clib_assert(f32_isnan(n) == true, "n should be nan");
   clib_assert(f32_isnan(nn) == false, "nn should not be nan");
@@ -49,7 +49,7 @@ static void test_f64_abs(void) {
 }
 
 static void test_f64_isnan(void) {
-  const f64 n = NAN;
+  const f64 n = F64_NAN;
   const f64 nn = 0.1;
   clib_assert(f64_isnan(n) == true, "n should be nan");
   clib_assert(f64_isnan(nn) == false, "nn should not be nan");

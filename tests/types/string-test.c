@@ -1,7 +1,7 @@
-#include "type/char.h"
+#include "clib/type/char.h"
 
-#include "core/assert.h"
-#include "type/string.h"
+#include "clib/core/assert.h"
+#include "clib/type/string.h"
 
 #include <stdlib.h>
 
@@ -65,8 +65,7 @@ static void test_append(void) {
               "did not prepend correctly");
 
   Str wrap = str_wrap(STR("command here"), STR("'"), &arena);
-  clib_assert(str_eq(wrap, STR("'command here'")),
-              "did not wrap correctly");
+  clib_assert(str_eq(wrap, STR("'command here'")), "did not wrap correctly");
 
   arena_free(&arena);
 }

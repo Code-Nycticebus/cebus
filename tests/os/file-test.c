@@ -1,8 +1,8 @@
-#include "os/fs.h"
+#include "clib/os/fs.h"
 
-#include "collection/da.h"
-#include "core/assert.h"
-#include "core/defines.h"
+#include "clib/collection/da.h"
+#include "clib/core/assert.h"
+#include "clib/core/defines.h"
 
 int main(void) {
   Arena arena = {0};

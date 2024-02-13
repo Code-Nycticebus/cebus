@@ -27,6 +27,8 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ## Documentation
 
 <!-- DOCUMENTATION -->
+- [Clib](#Clib)
+   - [clib.h](#clibh)
 - [Collection](#Collection)
    - [da.h](#dah)
    - [hashmap.h](#hashmaph)
@@ -53,9 +55,11 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [string.h](#stringh)
    - [utf8.h](#utf8h)
 
+## Clib
+
 ## Collection
 
-## [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/da.h)
+## [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/da.h)
 ### Usage
 Create a new dynamic array with:
 ```c
@@ -76,7 +80,7 @@ da_push(&vec, 69);
 da_push(&vec, 420);
 ```
 
-## [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/hashmap.h)
+## [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/hashmap.h)
 ### Overview
 This `HashMap` implementation stores only the keys hash and a `HashValue`, as
 retrieving key values directly from the `HashMap` is often not needed. To store
@@ -102,7 +106,7 @@ hm_get_i32(hm, str_hash(STR("Hello")));
 hm_get_i32(hm, str_hash(STR("World")));
 ```
 
-## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/collection/set.h)
+## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/set.h)
 ### Usage
 Create a new Set with:
 ```c
@@ -125,7 +129,7 @@ set_contains(&set, str_hash(STR("World")));
 
 ## Core
 
-## [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/arena.h)
+## [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/arena.h)
 ### Usage
 Create a new Arena with:
 ```c
@@ -145,7 +149,7 @@ integers at once.
 arena_free(&arena);
 ```
 
-## [assert.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/assert.h)
+## [assert.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/assert.h)
 ### Usage
 You can assert if something is true with:
 ```c
@@ -161,7 +165,7 @@ clib_assert_debug(EXPR, FMT, ...);
 clib_assert_return(EXPR, RETURN_VALUE);
 ```
 
-## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/error.h)
+## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/error.h)
 ### Initialization Macros
 - `ErrNew`: Initializes a new Error instance.
 - `ErrPanic`: Initializes an Error that will trigger a panic on `error_emit()`.
@@ -209,10 +213,10 @@ error_propagate(&error, {
 - `error_add_note()`: Adds a note to the error.
 
 
-## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/platform.h)
+## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/platform.h)
 Here are various macros for figuring out what Platform and compiler is used.
 
-## [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/core/sorting.h)
+## [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/sorting.h)
 ### Usage
 ```c
 int array[5] = {5, 4, 3, 2, 1};
@@ -221,7 +225,7 @@ quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 
 ## Os
 
-## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/fs.h)
+## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/fs.h)
 ### Usage
 To read in the entire file as Str
 ```c
@@ -234,7 +238,7 @@ if (error_occured(&error)) {
 arena_free(&arena);
 ```
 
-## [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/os/io.h)
+## [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/io.h)
 ### Usage
 Use the functions:
 ```c
@@ -255,7 +259,7 @@ input: 'name'
 
 ## Type
 
-## [byte.h](https://github.com/Code-Nycticebus/clib/blob/main/src/type/byte.h)
+## [byte.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/byte.h)
 ### Usage
 Create new Bytes from a literal.
 ```c
@@ -278,7 +282,7 @@ Arena arena = {0};
 Bytes owned_bytes = bytes_copy(bytes, &arena);
 ```
 
-## [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/type/string.h)
+## [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/string.h)
 ### Usage
 Create a new Str with:
 ```c

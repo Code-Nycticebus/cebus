@@ -1,5 +1,5 @@
-#include "core/logging.h"
-#include "core/platform.h"
+#include "clib/core/logging.h"
+#include "clib/core/platform.h"
 
 int main(void) {
   clib_log_info("%s-%s", CLIB_SYSTEM, CLIB_ARCHITECTURE);
