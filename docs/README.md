@@ -1,4 +1,4 @@
-# Clib
+# C Library 
 
 This is an extension of the C standart library. 
 
@@ -56,6 +56,12 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [utf8.h](#utf8h)
 
 ## Clib
+
+## [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/clib.h)
+Include this file to include all the header files.
+```c
+#include <clib/clib.h>
+```
 
 ## Collection
 
