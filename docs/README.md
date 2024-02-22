@@ -60,7 +60,7 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ## [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/clib.h)
 Include this file to include all the header files.
 ```c
-#include <clib/clib.h>
+#include "clib/clib.h"
 ```
 
 ## Collection
