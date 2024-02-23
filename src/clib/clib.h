@@ -30,4 +30,6 @@ Include this file to include all the header files.
 #include "clib/type/string.h"
 #include "clib/type/utf8.h"
 
+// IWYU pragma: end_exports
+
 #endif /* !__CLIB_H__ */
