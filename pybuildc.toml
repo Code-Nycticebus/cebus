@@ -1,7 +1,13 @@
 [pybuildc]
 name="clib"
 cc="clang"
-cflags=["-std=c99"]
+cflags=[
+  "-std=c99",
+  "-Wconversion",
+  "-Wmissing-prototypes",
+  "-Wmissing-declarations",
+  "-Wstrict-prototypes",
+]
 
 [exe]
 info="examples/info.c"
