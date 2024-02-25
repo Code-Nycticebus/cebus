@@ -72,9 +72,7 @@ void clib_log_info(const char *fmt, ...) { _LOG(CLIB_LOG_INFO, fmt); }
 
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef NDEBUG
-void clib_log_debug(const char *fmt, ...) { _LOG(CLIB_LOG_DEBUG, fmt); }
-void clib_log_trace(const char *fmt, ...) { _LOG(CLIB_LOG_TRACE, fmt); }
-#endif
+void _clib_log_debug(const char *fmt, ...) { _LOG(CLIB_LOG_DEBUG, fmt); }
+void _clib_log_trace(const char *fmt, ...) { _LOG(CLIB_LOG_TRACE, fmt); }
 
 ////////////////////////////////////////////////////////////////////////////

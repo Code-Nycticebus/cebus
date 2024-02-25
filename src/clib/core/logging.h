@@ -24,9 +24,12 @@ void FMT(1) clib_log_info(const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 
+void FMT(1) _clib_log_debug(const char *fmt, ...);
+void FMT(1) _clib_log_trace(const char *fmt, ...);
+
 #ifndef NDEBUG
-void FMT(1) clib_log_debug(const char *fmt, ...);
-void FMT(1) clib_log_trace(const char *fmt, ...);
+#define clib_log_debug(...) _clib_log_debug(__VA_ARGS__)
+#define clib_log_trace(...) _clib_log_trace(__VA_ARGS__)
 #else
 #define clib_log_debug(...)
 #define clib_log_trace(...)
