@@ -106,7 +106,7 @@ hm_insert_i32(hm, str_hash(STR("World")), 420);
 ```
 
 Now you can get pointers to values by passing in the hash of the element.
-> :warning: Dont safe pointers that point inside the HashMap!
+> :warning: Dont save pointers that point inside the HashMap!
 ```c
 hm_get_i32(hm, str_hash(STR("Hello")));
 hm_get_i32(hm, str_hash(STR("World")));
