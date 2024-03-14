@@ -18,7 +18,6 @@ clib_log_error("This is an error message: %s", error_details);
 - `clib_log_trace(fmt, ...)`: Logs a trace message (only in debug builds).
 */
 
-
 #ifndef __CLIB_LOGGING_H__
 #define __CLIB_LOGGING_H__
 
