@@ -1,28 +1,40 @@
 /* DOCUMENTATION
-### Overview
-This `HashMap` implementation stores only the keys hash and a `HashValue`, as
-retrieving key values directly from the `HashMap` is often not needed. To store
-the keys, you should be using a seperate array.
-### Usage
-Create a new HashMap with:
+## Initialization
+
+Creating a new `HashMap` involves initializing an `Arena`, then calling `hm_create` or `hm_with_size` to initialize the hashmap with an optional initial size:
+
 ```c
 Arena arena = {0};
 HashMap* hm = hm_create(&arena);
-hm_reserve(hm, 10); // optional
 ```
 
-Then you can add elements by hash to the HashMap.
-```c
-hm_insert_i32(hm, str_hash(STR("Hello")), 69);
-hm_insert_i32(hm, str_hash(STR("World")), 420);
-```
+## HashMap Operations
 
-Now you can get pointers to values by passing in the hash of the element.
-> :warning: Don't safe pointers that point inside the HashMap!
-```c
-hm_get_i32(hm, str_hash(STR("Hello")));
-hm_get_i32(hm, str_hash(STR("World")));
-```
+Basic hashmap management includes clearing, copying, resizing, reserving capacity, and updating from another hashmap:
+
+- `hm_clear`: Clears the hashmap.
+- `hm_copy`: Creates a copy of the hashmap.
+- `hm_resize`: Resizes the hashmap.
+- `hm_reserve`: Reserves space in the hashmap to optimize for upcoming insertions.
+- `hm_update`: Merges another hashmap into the current one.
+
+## Inserting Elements
+
+Elements of various types can be inserted into the hashmap, including integers, floating-point numbers, and pointers:
+
+- `hm_insert_f32`, `hm_insert_f64`: Insert floating-point values.
+- `hm_insert_i32`, `hm_insert_u32`, `hm_insert_i64`, `hm_insert_u64`: Insert integer values.
+- `hm_insert_mut_ptr`, `hm_insert_ptr`: Insert mutable or constant pointers.
+
+## Querying Elements
+
+Retrieve pointers to the values stored in the hashmap by their key hashes, allowing for mutable or immutable access:
+
+> :warning: Avoid storing pointers from the hashmap for extended periods. 
+> Keeping these pointers beyond the immediate scope can lead to undefined behavior, as the underlying storage may change.
+
+- `hm_get_f32_mut`, `hm_get_f64_mut`, etc.: Retrieve mutable pointers to values.
+- `hm_get_f32`, `hm_get_f64`, etc.: Retrieve immutable pointers to values.
 */
 
 #ifndef __CLIB_HASHMAP_H__

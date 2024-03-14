@@ -2,20 +2,31 @@
 #define __CLIB_ASSERTS_H__
 
 /* DOCUMENTATION
-### Usage
-You can assert if something is true with:
+## Usage
+
+Use the assertion macros to validate conditions and log failures:
+
 ```c
-clib_assert(1 == 1, "One should be one");
+clib_assert(1 == 1, "It needs a message");
 clib_assert(2 == 2, "It can even handle arguments: %d", 420);
 ```
 
-Here are all the available macros
-```c
-clib_assert(EXPR, FMT, ...);
-clib_assert_warn(EXPR, FMT, ...);
-clib_assert_debug(EXPR, FMT, ...);
-clib_assert_return(EXPR, RETURN_VALUE);
-```
+## Available Macros
+
+- `clib_assert(EXPR, FMT, ...)`: Asserts a condition and logs an error if the condition is false.
+- `clib_assert_warn(EXPR, FMT, ...)`: Asserts a condition and logs a warning if the condition is false.
+- `clib_assert_debug(EXPR, FMT, ...)`: Debug-only assert that logs a debug message if the condition is false.
+- `clib_assert_return(EXPR, RETURN_VALUE)`: Asserts a condition and returns a value if the condition is false.
+
+## Debug Break
+
+A `debugbreak` is triggered on assertion failure to facilitate debugging, with behavior varying by platform:
+
+- **Linux**: Uses `raise(SIGTRAP)`.
+- **Windows**: Uses `__debugbreak()`.
+- **Other Platforms**: Uses `abort()`.
+
+
 */
 
 #include "clib/core/platform.h"

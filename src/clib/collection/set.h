@@ -1,23 +1,43 @@
 /* DOCUMENTATION
-### Usage
-Create a new Set with:
+## Initialization
+
+To start using the set, you need to initialize an `Arena` and create a new set:
+
 ```c
 Arena arena = {0};
 Set set = set_create(&arena);
 ```
 
-Then you can add elements by hash to the Set. ```set_add()``` returns false if
-the Set already contains element.
-```c
-set_add(&set, str_hash(STR("Hello")));
-set_add(&set, str_hash(STR("World")));
-```
+## Set Operations
 
-Test if an element is in the Set.
-```c
-set_contains(&set, str_hash(STR("Hello")));
-set_contains(&set, str_hash(STR("World")));
-```
+Perform basic set operations such as adding, removing, and extending sets with multiple elements:
+
+- `set_add`: Add an element to the set. Returns false if the element already exists.
+- `set_remove`: Remove an element from the set.
+- `set_extend`: Add multiple elements to the set at once.
+
+Copy and resize sets for handling dynamic set sizes:
+
+- `set_copy`: Create a duplicate of a set.
+- `set_resize`: Adjust the internal capacity of the set.
+- `set_reserve`: Ensure the set has enough capacity for a specified number of elements.
+
+## Set Query Operations
+
+Query the set for the presence of elements, equality with another set, or subset and disjoint relationships:
+
+- `set_contains`: Check if an element is in the set.
+- `set_eq`: Check if two sets are equal.
+- `set_subset`: Determine if one set is a subset of another.
+- `set_disjoint`: Determine if two sets have no elements in common.
+
+## Set Algebraic Operations
+
+Combine sets or find their differences using algebraic set operations:
+
+- `set_intersection`: Find the intersection of two sets.
+- `set_difference`: Find the difference between two sets.
+- `set_union`: Combine two sets into a union.
 */
 
 #ifndef __CLIB_SET_H__

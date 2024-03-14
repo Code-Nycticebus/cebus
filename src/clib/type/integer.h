@@ -1,3 +1,42 @@
+/* DOCUMENTATION
+## Bit Operations
+
+- `T_reverse_bits(T value)`: Reverses the bits in `value`.
+- `T_leading_ones(T value)`: Counts the number of leading ones in `value`.
+- `T_trailing_ones(T value)`: Counts the number of trailing ones in `value`.
+- `T_leading_zeros(T value)`: Counts the number of leading zeros in `value`.
+- `T_trailing_zeros(T value)`: Counts the number of trailing zeros in `value`.
+- `T_count_zeros(T value)`: Counts the number of zeros in `value`.
+- `T_count_ones(T value)`: Counts the number of ones in `value`.
+
+## Byte Order Operations
+
+- `T_swap_bytes(T value)`: Swaps the byte order of `value`.
+- `T_to_be(T value)`: Converts `value` to big endian format.
+- `T_from_be(T value)`: Converts `value` from big endian format.
+- `T_to_le(T value)`: Converts `value` to little endian format.
+- `T_from_le(T value)`: Converts `value` from little endian format.
+- `T_to_ne_bytes(T value)`: Converts `value` to native endian format.
+
+## Math Operations
+
+Basic math operations including max, min, and clamp are provided.
+
+- `T_max(T a, T b)`: Returns the maximum of `a` and `b`.
+- `T_min(T a, T b)`: Returns the minimum of `a` and `b`.
+- `T_clamp(T min, T max, T value)`: Clamps `value` between `min` and `max`.
+
+## Utilities
+
+- `T_hash(T value)`: Generates a hash for `value`.
+- `T_swap(T *v1, T *v2)`: Swaps the values of `v1` and `v2`.
+- `T_compare_lt(T a, T b)`: Compares `a` and `b` for less than.
+- `T_compare_gt(T a, T b)`: Compares `a` and `b` for greater than.
+- `T_compare_qsort(CmpOrdering ordering)`: Provides a comparison function
+suitable for `qsort`.
+
+*/
+
 #ifndef __CLIB_INTEGERS_H__
 #define __CLIB_INTEGERS_H__
 
@@ -55,5 +94,7 @@ INTEGER_DECL(i32)
 INTEGER_DECL(u64)
 INTEGER_DECL(i64)
 INTEGER_DECL(usize)
+
+#undef INTEGER_DECL
 
 #endif /* !__CLIB_INTEGERS_H__ */

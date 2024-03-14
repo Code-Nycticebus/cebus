@@ -1,5 +1,11 @@
 /* DOCUMENTATION
-Here are various macros for figuring out what Platform and compiler is used.
+## Features
+
+- **Platform Detection**: Identifies the operating system, such as Linux or Windows.
+- **Architecture Detection**: Determines the CPU architecture, such as x86_64 or ARM.
+- **Compiler Detection**: Identifies the compiler used, such as GCC, Clang, or MSVC.
+- **CPU Bitness**: Distinguishes between 32-bit and 64-bit environments.
+- **Byte Order**: Defines the system's byte order (endianness).
 */
 
 #ifndef __CLIB_PLATFORM_H__

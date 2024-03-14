@@ -1,3 +1,24 @@
+/* DOCUMENTATION
+## Usage
+
+Call the function with the message format and arguments:
+
+```c
+clib_log_error("This is an error message: %s", error_details);
+```
+
+## Functions
+
+- `clib_log(log_level, fmt, ...)`: Logs a message with the specified log level.
+- `clib_log_fatal(fmt, ...)`: Logs a fatal message.
+- `clib_log_error(fmt, ...)`: Logs an error message.
+- `clib_log_warning(fmt, ...)`: Logs a warning message.
+- `clib_log_info(fmt, ...)`: Logs an info message.
+- `clib_log_debug(fmt, ...)`: Logs a debug message (only in debug builds).
+- `clib_log_trace(fmt, ...)`: Logs a trace message (only in debug builds).
+*/
+
+
 #ifndef __CLIB_LOGGING_H__
 #define __CLIB_LOGGING_H__
 
