@@ -421,6 +421,7 @@ error_context(&error, {
 Function *myFunction = dll_symbol(myLib, "myFunctionName", &error);
 // Use the function pointer as needed
 dll_close(myLib);
+```
 
 ## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/fs.h)
 ## Functions

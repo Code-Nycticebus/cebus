@@ -17,6 +17,7 @@ error_context(&error, {
 Function *myFunction = dll_symbol(myLib, "myFunctionName", &error);
 // Use the function pointer as needed
 dll_close(myLib);
+```
 */
 
 #ifndef __CLIB_DLL_H__
