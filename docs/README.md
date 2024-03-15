@@ -416,7 +416,7 @@ error_context(&error, {
 Error error = ErrNew;
 Dll *myLib = dll_load(STR("myLibrary.dll"), &error);
 error_context(&error, {
-	error_raise();
+  error_raise();
 });
 Function *myFunction = dll_symbol(myLib, "myFunctionName", &error);
 // Use the function pointer as needed
@@ -460,9 +460,6 @@ arena_free(&arena);
 
 - **Output**:
   - `io_write(file, bytes, error)`: Writes byte data to a file or stream.
-    - `file`: The file or stream to write to (e.g., `stdout`).
-    - `bytes`: The byte data to write.
-    - `error`: A pointer to an `Error` struct for error handling.
 
 - **Input**:
   - `io_read(file, size, buffer, error)`: Reads a specified amount of byte data from a file or stream into a buffer.
@@ -492,8 +489,6 @@ input: 'name'
 
 - **Environment Variables**:
   - `os_getenv(env, error)`: Retrieves the value of an environment variable.
-    - `env`: The name of the environment variable.
-    - `error`: A pointer to an `Error` struct for error handling.
 
 - **Current Working Directory**:
   - `os_getcwd(arena)`: Returns the current working directory, allocating memory from the specified `Arena`.
@@ -506,7 +501,7 @@ Error error = ErrNew;
 Str cwd = os_getcwd(&arena);
 Str home = os_getenv("HOME", &error);
 error_context(&error, {
-	error_raise();
+  error_raise();
 });
 
 printf("Current working directory: %s\n", cwd);
@@ -647,7 +642,7 @@ suitable for `qsort`.
 ## Features and Functions
 - **String Creation and Printing**:
   - `STR("Hello World")`: Create a new string.
-  - `printf(STR_FMT"\\n", STR_ARG(str))`: Print strings using macros.
+  - `printf(STR_FMT"\n", STR_ARG(str))`: Print strings using macros.
 
 - **String Manipulation**:
   - `str_lower(str, &arena)`, `str_upper(str, &arena)`: Convert to lower or upper case.
@@ -675,6 +670,6 @@ suitable for `qsort`.
 Arena arena = {0};
 Str greeting = STR("Hello World");
 Str lower = str_lower(greeting, &arena);
-printf(STR_FMT"\\n", STR_ARG(lower));
+printf(STR_FMT"\n", STR_ARG(lower));
 ```
 

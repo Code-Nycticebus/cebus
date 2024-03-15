@@ -3,8 +3,6 @@
 
 - **Environment Variables**:
   - `os_getenv(env, error)`: Retrieves the value of an environment variable.
-    - `env`: The name of the environment variable.
-    - `error`: A pointer to an `Error` struct for error handling.
 
 - **Current Working Directory**:
   - `os_getcwd(arena)`: Returns the current working directory, allocating memory from the specified `Arena`.
@@ -17,7 +15,7 @@ Error error = ErrNew;
 Str cwd = os_getcwd(&arena);
 Str home = os_getenv("HOME", &error);
 error_context(&error, {
-	error_raise();
+  error_raise();
 });
 
 printf("Current working directory: %s\n", cwd);

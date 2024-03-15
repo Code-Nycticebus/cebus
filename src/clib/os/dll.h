@@ -12,7 +12,7 @@
 Error error = ErrNew;
 Dll *myLib = dll_load(STR("myLibrary.dll"), &error);
 error_context(&error, {
-	error_raise();
+  error_raise();
 });
 Function *myFunction = dll_symbol(myLib, "myFunctionName", &error);
 // Use the function pointer as needed

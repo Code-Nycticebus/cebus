@@ -2,7 +2,7 @@
 ## Features and Functions
 - **String Creation and Printing**:
   - `STR("Hello World")`: Create a new string.
-  - `printf(STR_FMT"\\n", STR_ARG(str))`: Print strings using macros.
+  - `printf(STR_FMT"\n", STR_ARG(str))`: Print strings using macros.
 
 - **String Manipulation**:
   - `str_lower(str, &arena)`, `str_upper(str, &arena)`: Convert to lower or upper case.
@@ -30,7 +30,7 @@
 Arena arena = {0};
 Str greeting = STR("Hello World");
 Str lower = str_lower(greeting, &arena);
-printf(STR_FMT"\\n", STR_ARG(lower));
+printf(STR_FMT"\n", STR_ARG(lower));
 ```
 */
 

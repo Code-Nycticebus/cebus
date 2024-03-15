@@ -3,9 +3,6 @@
 
 - **Output**:
   - `io_write(file, bytes, error)`: Writes byte data to a file or stream.
-    - `file`: The file or stream to write to (e.g., `stdout`).
-    - `bytes`: The byte data to write.
-    - `error`: A pointer to an `Error` struct for error handling.
 
 - **Input**:
   - `io_read(file, size, buffer, error)`: Reads a specified amount of byte data from a file or stream into a buffer.
