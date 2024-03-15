@@ -31,7 +31,7 @@ def write_src_to_doc(doc: TextIO, src: Path):
                 if first:
                     first = False
                     doc.write(
-                        f"## [{src.name}]({REMOTE}/blob/main/{PurePosixPath(src.relative_to(CWD))})\n"
+                        f"# [{src.name}]({REMOTE}/blob/main/{PurePosixPath(src.relative_to(CWD))})\n"
                     )
                 write_mode = True
     if not first:
@@ -71,7 +71,7 @@ def main() -> None:
 
         # Writes documentation content
         for docs, files in sorted_entries:
-            f.write(f"## {docs.name.title()}\n\n")
+            f.write(f"# {docs.name.title()}\n\n")
 
             for file in files:
                 write_src_to_doc(f, file)

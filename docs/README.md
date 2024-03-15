@@ -55,17 +55,17 @@ gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [string.h](#stringh)
    - [utf8.h](#utf8h)
 
-## Clib
+# Clib
 
-## [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/clib.h)
+# [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/clib.h)
 Include this file to include all the header files.
 ```c
 #include "clib/clib.h"
 ```
 
-## Collection
+# Collection
 
-## [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/da.h)
+# [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/da.h)
 ## Initialization
 
 To start using the dynamic array, you first need to create an instance of `Arena` for memory management and then initialize the dynamic array with the specific type.
@@ -122,7 +122,7 @@ int popped = da_pop(&vec);
 - `da_sort_ctx`: Sort the array using a comparison function that also takes a `void*` as a context.
 - `da_reverse`: Reverse the order of elements in the array.
 
-## [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/hashmap.h)
+# [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/hashmap.h)
 ## Initialization
 
 Creating a new `HashMap` involves initializing an `Arena`, then calling `hm_create` or `hm_with_size` to initialize the hashmap with an optional initial size:
@@ -160,7 +160,7 @@ Retrieve pointers to the values stored in the hashmap by their key hashes, allow
 - `hm_get_f32_mut`, `hm_get_f64_mut`, etc.: Retrieve mutable pointers to values.
 - `hm_get_f32`, `hm_get_f64`, etc.: Retrieve immutable pointers to values.
 
-## [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/set.h)
+# [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/set.h)
 ## Initialization
 
 To start using the set, you need to initialize an `Arena` and create a new set:
@@ -201,9 +201,9 @@ Combine sets or find their differences using algebraic set operations:
 - `set_difference`: Find the difference between two sets.
 - `set_union`: Combine two sets into a union.
 
-## Core
+# Core
 
-## [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/arena.h)
+# [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/arena.h)
 ## Initialization
 
 To start using the library, initialize an `Arena` struct:
@@ -239,7 +239,7 @@ The library also provides functions for more granular control over memory chunks
 - `arena_realloc_chunk`: Reallocate a previously allocated chunk to a new size.
 - `arena_free_chunk`: Free a specific chunk of memory (advanced use cases).
 
-## [assert.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/assert.h)
+# [assert.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/assert.h)
 ## Usage
 
 Use the assertion macros to validate conditions and log failures:
@@ -266,7 +266,7 @@ A `debugbreak` is triggered on assertion failure to facilitate debugging, with b
 
 
 
-## [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/defines.h)
+# [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/defines.h)
 ## Key Definitions and Macros
 
 - **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`, `usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
@@ -279,7 +279,7 @@ A `debugbreak` is triggered on assertion failure to facilitate debugging, with b
 - **Format Attribute**: `FMT` macro to specify format strings for functions, enhancing type safety with `printf`-like functions.
 
 
-## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/error.h)
+# [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/error.h)
 ### Initialization Macros
 - `ErrNew`: Initializes a new Error instance.
 - `ErrPanic`: Initializes an Error that will trigger a panic on `error_emit()`.
@@ -327,7 +327,7 @@ error_propagate(&error, {
 - `error_add_note()`: Adds a note to the error.
 
 
-## [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/logging.h)
+# [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/logging.h)
 ## Usage
 
 Call the function with the message format and arguments:
@@ -346,7 +346,7 @@ clib_log_error("This is an error message: %s", error_details);
 - `clib_log_debug(fmt, ...)`: Logs a debug message (only in debug builds).
 - `clib_log_trace(fmt, ...)`: Logs a trace message (only in debug builds).
 
-## [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/platform.h)
+# [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/platform.h)
 ## Features
 
 - **Platform Detection**: Identifies the operating system, such as Linux or Windows.
@@ -355,7 +355,7 @@ clib_log_error("This is an error message: %s", error_details);
 - **CPU Bitness**: Distinguishes between 32-bit and 64-bit environments.
 - **Byte Order**: Defines the system's byte order (endianness).
 
-## [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/sorting.h)
+# [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/sorting.h)
 ## Usage
 
 Sort an array by providing the array, its size, the number of elements, and a comparison function:
@@ -368,9 +368,9 @@ quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 For context-aware comparisons, use `quicksort_ctx` with a comparison function that takes an additional context parameter.
 
 
-## Os
+# Os
 
-## [cmd.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/cmd.h)
+# [cmd.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/cmd.h)
 ## Functions
 
 - **`cmd_exec(error, argc, argv)`**: Executes a system command.
@@ -393,7 +393,7 @@ error_context(&error, {
 });
 ```
 
-## [dll.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/dll.h)
+# [dll.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/dll.h)
 ## Functions
 
 - **`dll_load(path, error)`**: Loads a dynamic link library.
@@ -414,7 +414,7 @@ Function *myFunction = dll_symbol(myLib, "myFunctionName", &error);
 dll_close(myLib);
 ```
 
-## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/fs.h)
+# [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/fs.h)
 ## Functions
 
 - **Reading Files**:
@@ -446,7 +446,7 @@ error_context(&error, {
 arena_free(&arena);
 ```
 
-## [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/io.h)
+# [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/io.h)
 ## Functions
 
 - **Output**:
@@ -475,7 +475,7 @@ input: 'name'
 ```
 
 
-## [os.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/os.h)
+# [os.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/os.h)
 ## Functions
 
 - **Environment Variables**:
@@ -499,9 +499,9 @@ printf("Current working directory: %s\n", cwd);
 printf("Home directory: %s\n", home);
 ```
 
-## Type
+# Type
 
-## [byte.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/byte.h)
+# [byte.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/byte.h)
 ## Features and Functions
 
 - **Creating Byte Arrays**:
@@ -547,7 +547,7 @@ Arena arena = {0};
 Bytes owned_bytes = bytes_copy(bytes, &arena);
 ```
 
-## [char.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/char.h)
+# [char.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/char.h)
 ## Character Classification Functions
 
 - `c_is_alnum(c)`: Checks if a character is alphanumeric.
@@ -576,7 +576,7 @@ character (lowercase).
 - `c_u8_to_HEX(d)`: Converts an unsigned 8-bit integer to a hexadecimal
 character (uppercase).
 
-## [float.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/float.h)
+# [float.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/float.h)
 ## Functions
 
 These functions are available for `f32` and `f64`.
@@ -591,7 +591,7 @@ These functions are available for `f32` and `f64`.
 - `f32_rad(deg)`: Converts degrees to radians.
 - `f32_deg(rad)`: Converts radians to degrees.
 
-## [integer.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/integer.h)
+# [integer.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/integer.h)
 
 All these functions are defined for these types: `u8`, `i8`, `u16`, `i16`, `u32`, `i32`, `u64`, `i64`, `usize`.
 
@@ -632,7 +632,7 @@ Basic math operations including max, min, and clamp are provided.
 suitable for `qsort`.
 
 
-## [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/string.h)
+# [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/string.h)
 ## Features and Functions
 - **String Creation and Printing**:
   - `STR("Hello World")`: Create a new string.
