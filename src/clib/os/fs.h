@@ -1,13 +1,32 @@
 /* DOCUMENTATION
-### Usage
-To read in the entire file as Str
+## Functions
+
+- **Reading Files**:
+  - `file_read_bytes(filename, arena, error)`: Reads the entire file into a byte array.
+  - `file_read_str(filename, arena, error)`: Reads the entire file into a string.
+  - `file_read_utf8(filename, arena, error)`: Reads the entire file into UTF-8 format.
+
+- **Writing Files**:
+  - `file_write(filename, bytes, error)`: Writes byte data to a file.
+  - `file_write_str(filename, content, error)`: Writes a string to a file.
+  - `file_write_utf8(filename, content, error)`: Writes UTF-8 formatted data to a file.
+
+- **File Management**:
+  - `file_open(filename, mode, error)`: Opens a file with the specified mode.
+  - `file_close(file, error)`: Closes an open file.
+  - `file_rename(old_name, new_name, error)`: Renames a file.
+  - `file_remove(filename, error)`: Removes a file.
+  - `file_exists(filename)`: Checks if a file exists.
+
+## Usage Example
+
 ```c
 Arena arena = {0};
-Error error = ErrCreate;
+Error error = ErrNew;
 Str content = file_read_str(STR("filename.txt"), &arena, &error);
-if (error_occured(&error)) {
-  error_raise(&error);
-}
+error_context(&error, {
+    error_raise();
+});
 arena_free(&arena);
 ```
 */

@@ -1,39 +1,36 @@
 /* DOCUMENTATION
-### Usage
-Create a new Str with:
-```c
-Str str = STR("Hello World");
-```
+## Features and Functions
+- **String Creation and Printing**:
+  - `STR("Hello World")`: Create a new string.
+  - `printf(STR_FMT"\\n", STR_ARG(str))`: Print strings using macros.
 
-You can print the strings using the ```STR_FMT``` and ```STR_ARG()``` macro:
-```c
-printf(STR_FMT"\n", STR_ARG(str));
-```
+- **String Manipulation**:
+  - `str_lower(str, &arena)`, `str_upper(str, &arena)`: Convert to lower or upper case.
+  - `str_append(str, suffix, &arena)`, `str_prepend(str, prefix, &arena)`: Append or prepend strings.
+  - `str_wrap(str, wrap, &arena)`: Wrap a string.
+  - `str_join(sep, count, strs, &arena)`: Join strings with a separator.
 
-I always treat strings as immutable.
-So you always have to provide an Arena on all manipulation functions.
+- **String Trimming and Slicing**:
+  - `str_trim(str)`, `str_trim_left(str)`, `str_trim_right(str)`: Trim whitespace.
+  - `str_chop_by_delim(str, delim)`, `str_try_chop_by_delim(str, delim, &chunk)`: Chop strings by delimiter.
+  - `str_substring(str, start, end)`: Extract a substring.
+
+- **String Comparison and Search**:
+  - `str_eq(s1, s2)`, `str_eq_ignorecase(s1, s2)`: Check string equality.
+  - `str_startswith(str, prefix)`, `str_endswith(str, suffix)`: Check prefixes/suffixes.
+  - `str_contains(haystack, needle)`: Check if string contains a substring.
+
+- **Conversion and Utility**:
+  - `str_to_u64(str)`, `str_u64(n, &arena)`: Convert between strings and unsigned 64-bit integers.
+  - `str_hash(str)`: Generate a hash value for a string.
+
+## Usage Example
+
 ```c
 Arena arena = {0};
-
-Str lower = str_lower(str, &arena);
-Str upper = str_upper(str, &arena);
-
-arena_free(&arena);
-```
-
-Iterating over a string is easy
-```c
-Str content = STR("This is a line")
-for (Str word = {0}; str_try_chop_by_delim(&content, ' ', &word)) {
-  printf(STR_FMT"\n", STR_ARG(word));
-}
-```
-Outputs:
-```console
-This
-is
-a
-line
+Str greeting = STR("Hello World");
+Str lower = str_lower(greeting, &arena);
+printf(STR_FMT"\\n", STR_ARG(lower));
 ```
 */
 

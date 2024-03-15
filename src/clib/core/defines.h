@@ -1,3 +1,26 @@
+/* DOCUMENTATION
+## Key Definitions and Macros
+
+- **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`, `usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
+- **Mathematical Constants**: Defines `F32_PI` and `F32_E` for mathematical operations.
+- **Memory Units**: Macros for `KILOBYTES`, `MEGABYTES`, and `GIGABYTES` to easily specify memory sizes.
+- **Array Length**: `ARRAY_LEN(A)` calculates the number of elements in an array.
+- **Comparison Ordering**: Enum `CmpOrdering` for less than, equal, and greater than comparisons.
+- **Compiler Attributes**: Macros such as `EXPORT`, `NORETURN`, `UNUSED`, `PURE_FN`, `CONST_FN` for compiler-specific attributes.
+- **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler about branch prediction.
+- **Format Attribute**: `FMT` macro to specify format strings for functions, enhancing type safety with `printf`-like functions.
+
+## Usage Example
+
+```c
+u64 large_number = GIGABYTES(2);
+printf("Large number in bytes: %" U64_FMT "\n", large_number);
+
+Str example = STR("Example");
+printf(STR_FMT "\n", STR_ARG(example));
+```
+*/
+
 #ifndef __CLIB_DEFINES_H__
 #define __CLIB_DEFINES_H__
 

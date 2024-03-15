@@ -266,6 +266,28 @@ A `debugbreak` is triggered on assertion failure to facilitate debugging, with b
 
 
 
+## [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/defines.h)
+## Key Definitions and Macros
+
+- **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`, `usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
+- **Mathematical Constants**: Defines `F32_PI` and `F32_E` for mathematical operations.
+- **Memory Units**: Macros for `KILOBYTES`, `MEGABYTES`, and `GIGABYTES` to easily specify memory sizes.
+- **Array Length**: `ARRAY_LEN(A)` calculates the number of elements in an array.
+- **Comparison Ordering**: Enum `CmpOrdering` for less than, equal, and greater than comparisons.
+- **Compiler Attributes**: Macros such as `EXPORT`, `NORETURN`, `UNUSED`, `PURE_FN`, `CONST_FN` for compiler-specific attributes.
+- **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler about branch prediction.
+- **Format Attribute**: `FMT` macro to specify format strings for functions, enhancing type safety with `printf`-like functions.
+
+## Usage Example
+
+```c
+u64 large_number = GIGABYTES(2);
+printf("Large number in bytes: %" U64_FMT "\n", large_number);
+
+Str example = STR("Example");
+printf(STR_FMT "\n", STR_ARG(example));
+```
+
 ## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/error.h)
 ### Initialization Macros
 - `ErrNew`: Initializes a new Error instance.
@@ -357,36 +379,137 @@ For context-aware comparisons, use `quicksort_ctx` with a comparison function th
 
 ## Os
 
+## [cmd.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/cmd.h)
+## Functions
+
+- **`cmd_exec(error, argc, argv)`**: Executes a system command.
+
+## Error Handling
+
+Defines `CmdError` enum for different command execution outcomes:
+- `CMD_OK`: Command executed successfully.
+- `CMD_FORK`: Error occurred while forking the process.
+- `CMD_NOT_FOUND`: Command not found, typically returns `127`.
+
+## Usage Example
+
+```c
+Error error = ErrNew;
+Str args[] = {STR("/bin/echo"), STR("Hello, world!")};
+cmd_exec(&error, 2, args);
+error_context(&error, {
+    // Handle error
+});
+```
+
+## [dll.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/dll.h)
+## Functions
+
+- **`dll_load(path, error)`**: Loads a dynamic link library.
+- **`dll_close(handle)`**: Closes an opened dynamic link library.
+- **`dll_symbol(handle, symbol, error)`**: Retrieves a symbol from the dynamic link library.
+
+
+## Usage Example
+
+```c
+Error error = ErrNew;
+Dll *myLib = dll_load(STR("myLibrary.dll"), &error);
+error_context(&error, {
+	error_raise();
+});
+Function *myFunction = dll_symbol(myLib, "myFunctionName", &error);
+// Use the function pointer as needed
+dll_close(myLib);
+
 ## [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/fs.h)
-### Usage
-To read in the entire file as Str
+## Functions
+
+- **Reading Files**:
+  - `file_read_bytes(filename, arena, error)`: Reads the entire file into a byte array.
+  - `file_read_str(filename, arena, error)`: Reads the entire file into a string.
+  - `file_read_utf8(filename, arena, error)`: Reads the entire file into UTF-8 format.
+
+- **Writing Files**:
+  - `file_write(filename, bytes, error)`: Writes byte data to a file.
+  - `file_write_str(filename, content, error)`: Writes a string to a file.
+  - `file_write_utf8(filename, content, error)`: Writes UTF-8 formatted data to a file.
+
+- **File Management**:
+  - `file_open(filename, mode, error)`: Opens a file with the specified mode.
+  - `file_close(file, error)`: Closes an open file.
+  - `file_rename(old_name, new_name, error)`: Renames a file.
+  - `file_remove(filename, error)`: Removes a file.
+  - `file_exists(filename)`: Checks if a file exists.
+
+## Usage Example
+
 ```c
 Arena arena = {0};
-Error error = ErrCreate;
+Error error = ErrNew;
 Str content = file_read_str(STR("filename.txt"), &arena, &error);
-if (error_occured(&error)) {
-  error_raise(&error);
-}
+error_context(&error, {
+    error_raise();
+});
 arena_free(&arena);
 ```
 
 ## [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/io.h)
-### Usage
-Use the functions:
-```c
-Error e = ErrCreate;
-io_write(stdout, BYTES_STR("Hello, World"), &e);
-```
+## Functions
 
-The input function is just like the one in python:
+- **Output**:
+  - `io_write(file, bytes, error)`: Writes byte data to a file or stream.
+    - `file`: The file or stream to write to (e.g., `stdout`).
+    - `bytes`: The byte data to write.
+    - `error`: A pointer to an `Error` struct for error handling.
+
+- **Input**:
+  - `io_read(file, size, buffer, error)`: Reads a specified amount of byte data from a file or stream into a buffer.
+  - `io_read_line(file, size, buffer, error)`: Reads a line of text from a file or stream into a buffer.
+  - `input(prefix)`: Displays a prompt and reads a line of text from standard input.
+
+## Usage Example
+
 ```c
+Error e = ErrNew;
+io_write(stdout, BYTES_STR("Hello, World"), &e);
+error_context(&e, { error_raise(); });
+
 Str ret = input(STR(":> "));
 printf("input: '"STR_FMT"'\n", STR_ARG(ret));
 ```
-Outputs:
+
+Output when running the example:
 ```console
 :> name
 input: 'name'
+```
+
+
+## [os.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/os.h)
+## Functions
+
+- **Environment Variables**:
+  - `os_getenv(env, error)`: Retrieves the value of an environment variable.
+    - `env`: The name of the environment variable.
+    - `error`: A pointer to an `Error` struct for error handling.
+
+- **Current Working Directory**:
+  - `os_getcwd(arena)`: Returns the current working directory, allocating memory from the specified `Arena`.
+  - `os_chdir(path)`: Changes the current working directory to the specified path.
+
+## Usage Example
+
+```c
+Error error = ErrNew;
+Str cwd = os_getcwd(&arena);
+Str home = os_getenv("HOME", &error);
+error_context(&error, {
+	error_raise();
+});
+
+printf("Current working directory: %s\n", cwd);
+printf("Home directory: %s\n", home);
 ```
 
 ## Type
@@ -520,40 +643,37 @@ suitable for `qsort`.
 
 
 ## [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/string.h)
-### Usage
-Create a new Str with:
-```c
-Str str = STR("Hello World");
-```
+## Features and Functions
+- **String Creation and Printing**:
+  - `STR("Hello World")`: Create a new string.
+  - `printf(STR_FMT"\\n", STR_ARG(str))`: Print strings using macros.
 
-You can print the strings using the ```STR_FMT``` and ```STR_ARG()``` macro:
-```c
-printf(STR_FMT"\n", STR_ARG(str));
-```
+- **String Manipulation**:
+  - `str_lower(str, &arena)`, `str_upper(str, &arena)`: Convert to lower or upper case.
+  - `str_append(str, suffix, &arena)`, `str_prepend(str, prefix, &arena)`: Append or prepend strings.
+  - `str_wrap(str, wrap, &arena)`: Wrap a string.
+  - `str_join(sep, count, strs, &arena)`: Join strings with a separator.
 
-I always treat strings as immutable.
-So you always have to provide an Arena on all manipulation functions.
+- **String Trimming and Slicing**:
+  - `str_trim(str)`, `str_trim_left(str)`, `str_trim_right(str)`: Trim whitespace.
+  - `str_chop_by_delim(str, delim)`, `str_try_chop_by_delim(str, delim, &chunk)`: Chop strings by delimiter.
+  - `str_substring(str, start, end)`: Extract a substring.
+
+- **String Comparison and Search**:
+  - `str_eq(s1, s2)`, `str_eq_ignorecase(s1, s2)`: Check string equality.
+  - `str_startswith(str, prefix)`, `str_endswith(str, suffix)`: Check prefixes/suffixes.
+  - `str_contains(haystack, needle)`: Check if string contains a substring.
+
+- **Conversion and Utility**:
+  - `str_to_u64(str)`, `str_u64(n, &arena)`: Convert between strings and unsigned 64-bit integers.
+  - `str_hash(str)`: Generate a hash value for a string.
+
+## Usage Example
+
 ```c
 Arena arena = {0};
-
-Str lower = str_lower(str, &arena);
-Str upper = str_upper(str, &arena);
-
-arena_free(&arena);
-```
-
-Iterating over a string is easy
-```c
-Str content = STR("This is a line")
-for (Str word = {0}; str_try_chop_by_delim(&content, ' ', &word)) {
-  printf(STR_FMT"\n", STR_ARG(word));
-}
-```
-Outputs:
-```console
-This
-is
-a
-line
+Str greeting = STR("Hello World");
+Str lower = str_lower(greeting, &arena);
+printf(STR_FMT"\\n", STR_ARG(lower));
 ```
 

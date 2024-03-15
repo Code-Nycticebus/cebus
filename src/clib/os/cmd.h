@@ -1,3 +1,27 @@
+/* DOCUMENTATION
+## Functions
+
+- **`cmd_exec(error, argc, argv)`**: Executes a system command.
+
+## Error Handling
+
+Defines `CmdError` enum for different command execution outcomes:
+- `CMD_OK`: Command executed successfully.
+- `CMD_FORK`: Error occurred while forking the process.
+- `CMD_NOT_FOUND`: Command not found, typically returns `127`.
+
+## Usage Example
+
+```c
+Error error = ErrNew;
+Str args[] = {STR("/bin/echo"), STR("Hello, world!")};
+cmd_exec(&error, 2, args);
+error_context(&error, {
+    // Handle error
+});
+```
+*/
+
 #ifndef __CLIB_CMD_H__
 #define __CLIB_CMD_H__
 
