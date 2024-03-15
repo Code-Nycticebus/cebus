@@ -4,24 +4,51 @@ This is an extension of the C standart library.
 
 ### Quickstart
 
+### Hello World
+
+This is the hello world of clib. I will call it `hello-clib.c`
+```c
+#include <clib/clib.h>
+
+int main(void) {
+	Str name = input(STR("Enter your name: "));
+	clib_log_info("Hello " STR_FMT, STR_ARG(name));
+}
+```
+
 #### [pybuildc](https://github.com/Code-Nycticebus/pybuildc)
 
+Create a new project with `pybuildc`. 
 ```console
-pybuildc build
+pybuildc new hello-clib
+```
+
+Paste the above [Hello World](#hello-world) in the `src/hello-clib.c`.
+
+You can add clib as dependency in the `pybuildc.toml` file.
+```toml
+[deps]
+clib = { dir = "path/to/clib", type = "pybuildc" }
+```
+
+And then run your project with.
+```console
+pybuildc run
 ```
 
 #### Gcc or Clang
 
-Build the static library.
+Build the static library. When inside the clib directory, run:
 
 ```console
 gcc -I./src -c ./src/**/*.c && ar rcs libclib.a *.o && rm *.o
 ```
 
-Set the ```CLIB_DIRECTORY``` variable and add ```-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib``` to your compiler flags.
+Set the `CLIB_DIRECTORY` variable (or just replace $CLIB_DIRECTORY with the directory path)
+and add `-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib` to your compiler flags. 
 
 ```console
-gcc -o info examples/info.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
+gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ```
 
 ## Documentation

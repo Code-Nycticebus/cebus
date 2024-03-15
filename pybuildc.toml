@@ -13,6 +13,6 @@ cflags=[
 info="examples/info.c"
 
 [[build.scripts]]
-cmd="python3" 
+cmd="python" 
 args=["docs.py"]
 
