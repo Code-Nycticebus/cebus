@@ -6,13 +6,13 @@ This is an extension of the C standart library.
 
 ### Hello World
 
-This is the hello world of clib. I will call it `hello-clib.c`
+This is the hello world of clib. I will call it `hello-clib.c`.
 ```c
 #include <clib/clib.h>
 
 int main(void) {
-	Str name = input(STR("Enter your name: "));
-	clib_log_info("Hello " STR_FMT, STR_ARG(name));
+  Str name = input(STR("Enter your name: "));
+  clib_log_info("Hello " STR_FMT, STR_ARG(name));
 }
 ```
 
