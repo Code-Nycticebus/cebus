@@ -1,4 +1,7 @@
 /* DOCUMENTATION
+
+All these functions are defined for these types: `u8`, `i8`, `u16`, `i16`, `u32`, `i32`, `u64`, `i64`, `usize`.
+
 ## Bit Operations
 
 - `T_reverse_bits(T value)`: Reverses the bits in `value`.

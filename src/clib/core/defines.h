@@ -10,15 +10,6 @@
 - **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler about branch prediction.
 - **Format Attribute**: `FMT` macro to specify format strings for functions, enhancing type safety with `printf`-like functions.
 
-## Usage Example
-
-```c
-u64 large_number = GIGABYTES(2);
-printf("Large number in bytes: %" U64_FMT "\n", large_number);
-
-Str example = STR("Example");
-printf(STR_FMT "\n", STR_ARG(example));
-```
 */
 
 #ifndef __CLIB_DEFINES_H__

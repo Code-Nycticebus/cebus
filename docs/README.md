@@ -278,15 +278,6 @@ A `debugbreak` is triggered on assertion failure to facilitate debugging, with b
 - **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler about branch prediction.
 - **Format Attribute**: `FMT` macro to specify format strings for functions, enhancing type safety with `printf`-like functions.
 
-## Usage Example
-
-```c
-u64 large_number = GIGABYTES(2);
-printf("Large number in bytes: %" U64_FMT "\n", large_number);
-
-Str example = STR("Example");
-printf(STR_FMT "\n", STR_ARG(example));
-```
 
 ## [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/error.h)
 ### Initialization Macros
@@ -601,6 +592,9 @@ These functions are available for `f32` and `f64`.
 - `f32_deg(rad)`: Converts radians to degrees.
 
 ## [integer.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/integer.h)
+
+All these functions are defined for these types: `u8`, `i8`, `u16`, `i16`, `u32`, `i32`, `u64`, `i64`, `usize`.
+
 ## Bit Operations
 
 - `T_reverse_bits(T value)`: Reverses the bits in `value`.
