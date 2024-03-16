@@ -17,8 +17,8 @@
     return value < min ? min : value > max ? max : value;                      \
   }                                                                            \
   T T##_lerp(T min, T max, T value) { return min + value * (max - min); }      \
-  T T##_rad(T deg) { return deg * ((T)PI / 180.0f); }                          \
-  T T##_deg(T rad) { return rad * ((T)PI / 180.0f); }
+  T T##_rad(T deg) { return deg * ((T)F64_PI / 180.0f); }                      \
+  T T##_deg(T rad) { return rad * ((T)F64_PI / 180.0f); }
 
 FLOAT_IMPL(f32, 32, 0x7F800000, 0x007FFFFF)
 FLOAT_IMPL(f64, 64, 0x7FF0000000000000, 0x000FFFFFFFFFFFFF)

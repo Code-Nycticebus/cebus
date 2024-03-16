@@ -320,14 +320,22 @@ A `debugbreak` is triggered on assertion failure to facilitate debugging, with b
 # [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/defines.h)
 ## Key Definitions and Macros
 
-- **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`, `usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
-- **Mathematical Constants**: Defines `F32_PI` and `F32_E` for mathematical operations.
-- **Memory Units**: Macros for `KILOBYTES`, `MEGABYTES`, and `GIGABYTES` to easily specify memory sizes.
-- **Array Length**: `ARRAY_LEN(A)` calculates the number of elements in an array.
-- **Comparison Ordering**: Enum `CmpOrdering` for less than, equal, and greater than comparisons.
-- **Compiler Attributes**: Macros such as `EXPORT`, `NORETURN`, `UNUSED`, `PURE_FN`, `CONST_FN` for compiler-specific attributes.
-- **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler about branch prediction.
-- **Format Attribute**: `FMT` macro to specify format strings for functions, enhancing type safety with `printf`-like functions.
+- **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`,
+`usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
+- **Mathematical Constants**: Defines `F64_PI` and `F64_E` for mathematical
+operations.
+- **Memory Units**: Macros for `KILOBYTES`, `MEGABYTES`, and `GIGABYTES` to
+easily specify memory sizes.
+- **Array Length**: `ARRAY_LEN(A)` calculates the number of elements in an
+array.
+- **Comparison Ordering**: Enum `CmpOrdering` for less than, equal, and greater
+than comparisons.
+- **Compiler Attributes**: Macros such as `EXPORT`, `NORETURN`, `UNUSED`,
+`PURE_FN`, `CONST_FN` for compiler-specific attributes.
+- **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler
+about branch prediction.
+- **Format Attribute**: `FMT` macro to specify format strings for functions,
+enhancing type safety with `printf`-like functions.
 
 
 # [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/error.h)

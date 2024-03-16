@@ -1,14 +1,22 @@
 /* DOCUMENTATION
 ## Key Definitions and Macros
 
-- **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`, `usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
-- **Mathematical Constants**: Defines `F32_PI` and `F32_E` for mathematical operations.
-- **Memory Units**: Macros for `KILOBYTES`, `MEGABYTES`, and `GIGABYTES` to easily specify memory sizes.
-- **Array Length**: `ARRAY_LEN(A)` calculates the number of elements in an array.
-- **Comparison Ordering**: Enum `CmpOrdering` for less than, equal, and greater than comparisons.
-- **Compiler Attributes**: Macros such as `EXPORT`, `NORETURN`, `UNUSED`, `PURE_FN`, `CONST_FN` for compiler-specific attributes.
-- **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler about branch prediction.
-- **Format Attribute**: `FMT` macro to specify format strings for functions, enhancing type safety with `printf`-like functions.
+- **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`,
+`usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
+- **Mathematical Constants**: Defines `F64_PI` and `F64_E` for mathematical
+operations.
+- **Memory Units**: Macros for `KILOBYTES`, `MEGABYTES`, and `GIGABYTES` to
+easily specify memory sizes.
+- **Array Length**: `ARRAY_LEN(A)` calculates the number of elements in an
+array.
+- **Comparison Ordering**: Enum `CmpOrdering` for less than, equal, and greater
+than comparisons.
+- **Compiler Attributes**: Macros such as `EXPORT`, `NORETURN`, `UNUSED`,
+`PURE_FN`, `CONST_FN` for compiler-specific attributes.
+- **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler
+about branch prediction.
+- **Format Attribute**: `FMT` macro to specify format strings for functions,
+enhancing type safety with `printf`-like functions.
 
 */
 
@@ -127,8 +135,8 @@ typedef double f64;
 #define F64_INF (*(const f64 *)(const u64[]){0x7FF0000000000000})
 #define F32_NAN (0.0f / 0.0f)
 #define F64_NAN (0.0 / 0.0)
-#define PI 3.14159265358979323846
-#define E 2.71828182845904523536
+#define F64_PI 3.14159265358979323846
+#define F64_E 2.71828182845904523536
 
 ////////////////////////////////////////////////////////////////////////////
 
