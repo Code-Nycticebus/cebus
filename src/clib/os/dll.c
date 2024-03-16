@@ -31,7 +31,8 @@ Dll *dll_load(Str path, Error *error) {
 void dll_close(Dll *handle) { dlclose(handle); }
 
 Function dll_symbol(Dll *handle, const char *symbol, Error *error) {
-  Function fn = dlsym(handle, symbol);
+  Function fn;
+  *(void **)(&fn) = dlsym(handle, symbol);
   if (fn == NULL) {
     error_emit(error, -1, "dll function: %s: %s\n", symbol, dlerror());
     return NULL;
