@@ -97,6 +97,9 @@ typedef uint64_t u64;
 #elif defined(WINDOWS)
 #define U64_FMT "llu"
 #define U64_HEX "llx"
+#else
+#define U64_FMT "lu"
+#define U64_HEX "lx"
 #endif
 
 typedef int64_t i64;
@@ -109,6 +112,9 @@ typedef int64_t i64;
 #elif defined(WINDOWS)
 #define I64_FMT "llu"
 #define I64_HEX "llx"
+#else
+#define I64_FMT "lu"
+#define I32_FMT "lx"
 #endif
 
 typedef size_t usize;
@@ -119,6 +125,8 @@ typedef size_t usize;
 #define USIZE_FMT "zu"
 #elif defined(WINDOWS)
 #define USIZE_FMT "llu"
+#else
+#define USIZE_FMT "zu"
 #endif
 
 typedef float f32;
