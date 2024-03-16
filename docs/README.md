@@ -87,7 +87,7 @@ gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 # [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/clib.h)
 Include this file to include all the header files.
 ```c
-#include "clib/clib.h"
+#include <clib/clib.h>
 ```
 
 # Collection
@@ -408,9 +408,12 @@ clib_log_error("This is an error message: %s", error_details);
 # [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/platform.h)
 ## Features
 
-- **Platform Detection**: Identifies the operating system, such as Linux or Windows.
-- **Architecture Detection**: Determines the CPU architecture, such as x86_64 or ARM.
-- **Compiler Detection**: Identifies the compiler used, such as GCC, Clang, or MSVC.
+- **Platform Detection**: Identifies the operating system, such as Linux or
+Windows.
+- **Architecture Detection**: Determines the CPU architecture, such as x86_64 or
+ARM.
+- **Compiler Detection**: Identifies the compiler used, such as GCC, Clang, or
+MSVC.
 - **CPU Bitness**: Distinguishes between 32-bit and 64-bit environments.
 - **Byte Order**: Defines the system's byte order (endianness).
 

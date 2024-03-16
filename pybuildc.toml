@@ -11,6 +11,7 @@ cflags=[
 
 [exe]
 info="examples/info.c"
+word="examples/word.c"
 
 [[build.scripts]]
 cmd="python"

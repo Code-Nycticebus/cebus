@@ -1,7 +1,7 @@
 /* DOCUMENTATION
 Include this file to include all the header files.
 ```c
-#include "clib/clib.h"
+#include <clib/clib.h>
 ```
 */
 
