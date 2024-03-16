@@ -1,9 +1,12 @@
 /* DOCUMENTATION
 ## Features
 
-- **Platform Detection**: Identifies the operating system, such as Linux or Windows.
-- **Architecture Detection**: Determines the CPU architecture, such as x86_64 or ARM.
-- **Compiler Detection**: Identifies the compiler used, such as GCC, Clang, or MSVC.
+- **Platform Detection**: Identifies the operating system, such as Linux or
+Windows.
+- **Architecture Detection**: Determines the CPU architecture, such as x86_64 or
+ARM.
+- **Compiler Detection**: Identifies the compiler used, such as GCC, Clang, or
+MSVC.
 - **CPU Bitness**: Distinguishes between 32-bit and 64-bit environments.
 - **Byte Order**: Defines the system's byte order (endianness).
 */
@@ -21,8 +24,6 @@
 #define CLIB_SYSTEM "Windows"
 #define _CRT_SECURE_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
-#else
-PLATFORM_NOT_SUPPORTED
 #endif
 /* !System */
 
