@@ -10,21 +10,27 @@ Set set = set_create(&arena);
 
 ## Set Operations
 
-Perform basic set operations such as adding, removing, and extending sets with multiple elements:
+Perform basic set operations such as adding, removing, and extending sets with
+multiple elements:
 
-- `set_add`: Add an element to the set. Returns false if the element already exists.
+- `set_add`: Add an element to the set. Returns false if the element already
+exists.
 - `set_remove`: Remove an element from the set.
 - `set_extend`: Add multiple elements to the set at once.
 
 Copy and resize sets for handling dynamic set sizes:
 
 - `set_copy`: Create a duplicate of a set.
-- `set_resize`: Adjust the internal capacity of the set.
-- `set_reserve`: Ensure the set has enough capacity for a specified number of elements.
+- `set_resize`: Adjust the capacity of the set. Used for preallocating
+space.
+- `set_reserve`: Reserves space in the set. Used before adding multiple
+elements
+
 
 ## Set Query Operations
 
-Query the set for the presence of elements, equality with another set, or subset and disjoint relationships:
+Query the set for the presence of elements, equality with another set, or subset
+and disjoint relationships:
 
 - `set_contains`: Check if an element is in the set.
 - `set_eq`: Check if two sets are equal.

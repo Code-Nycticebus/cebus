@@ -6,21 +6,27 @@
   - `BYTES_STR`: Create a byte array from a string literal.
 
 - **Creating from Pointer and Size**:
-  - `bytes_from_parts(size, data)`: Creates a byte array from given size and data pointer.
+  - `bytes_from_parts(size, data)`: Creates a byte array from given size and
+data pointer.
 
 - **Copying Byte Arrays**:
-  - `bytes_copy(bytes, arena)`: Performs a deep copy of a byte array, allocating memory from the specified arena.
+  - `bytes_copy(bytes, arena)`: Performs a deep copy of a byte array, allocating
+memory from the specified arena.
 
 - **Slicing and Taking Bytes**:
-  - `bytes_slice(bytes, idx1, idx2)`: Returns a new byte array that is a slice from the original, from `idx1` to `idx2`.
-  - `bytes_take(bytes, count)`: Modifies the original byte array to keep only the first `count` bytes, returning the removed portion.
+  - `bytes_slice(bytes, idx1, idx2)`: Returns a new byte array that is a slice
+from the original, from `idx1` to `idx2`.
+  - `bytes_take(bytes, count)`: Modifies the original byte array to keep only
+the first `count` bytes, returning the removed portion.
 
 - **Checking Equality**:
   - `bytes_eq(b1, b2)`: Checks if two byte arrays are equal.
 
 - **Hexadecimal Conversion**:
-  - `bytes_to_hex(bytes, arena)`: Converts a byte array into a hexadecimal string representation, using memory from the arena.
-  - `bytes_from_hex(s, arena)`: Creates a byte array from a hexadecimal string, allocating memory from the arena.
+  - `bytes_to_hex(bytes, arena)`: Converts a byte array into a hexadecimal
+string representation, using memory from the arena.
+  - `bytes_from_hex(s, arena)`: Creates a byte array from a hexadecimal string,
+allocating memory from the arena.
 
 ## Usage
 Create new Bytes from a literal.

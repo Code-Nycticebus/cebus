@@ -95,7 +95,9 @@ Include this file to include all the header files.
 # [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/da.h)
 ## Initialization
 
-To start using the dynamic array, you first need to create an instance of `Arena` for memory management and then initialize the dynamic array with the specific type.
+To start using the dynamic array, you first need to create an instance of
+`Arena` for memory management and then initialize the dynamic array with the
+specific type.
 
 ```c
 Arena arena = {0};
@@ -105,7 +107,8 @@ da_init(&vec, &arena);
 
 ## Adding Elements
 
-Elements can be added to the dynamic array using `da_push`, which automatically resizes the array if additional space is required.
+Elements can be added to the dynamic array using `da_push`, which automatically
+resizes the array if additional space is required.
 
 ```c
 da_push(&vec, 69);
@@ -114,7 +117,8 @@ da_push(&vec, 420);
 
 ## Accessing Elements
 
-Access the first and last elements with `da_first` and `da_last`. Remove the last element with `da_pop`.
+Access the first and last elements with `da_first` and `da_last`. Remove the
+last element with `da_pop`.
 
 > :warning: `da_pop` does not perform any bounds checks.
 
@@ -133,26 +137,34 @@ int popped = da_pop(&vec);
 
 ## Resizing and Reserving Space
 
-- `da_resize`: Adjust the capacity of the array to a specified size. This is useful for preallocating space.
-- `da_reserve`: Ensure there is enough space for additional elements, useful before adding multiple elements.
+- `da_resize`: Adjust the capacity of the array to a specified size. Used for
+preallocating space.
+- `da_reserve`: Ensure there is enough space for additional elements. Used
+before adding multiple elements.
 
 ## Extending and Mapping
 
 - `da_extend`: Add multiple elements from another array or list.
-- `da_map`: Transform elements of the array into another form and store them in a destination array.
-- `da_filter`: Filter dynamic array with a filter function and place it into a destination.
-- `da_filter_ctx`: Filter dynamic array with a filter function, that takes a `void*` as a context, and place it into a destination.
+- `da_map`: Transform elements of the array into another form and store them in
+a destination array.
+- `da_filter`: Filter dynamic array with a filter function and place it into a
+destination.
+- `da_filter_ctx`: Filter dynamic array with a filter function, that takes a
+`void*` as a context, and place it into a destination.
 
 ## Sorting and Reversing
 
 - `da_sort`: Sort the array using a comparison function.
-- `da_sort_ctx`: Sort the array using a comparison function that also takes a `void*` as a context.
+- `da_sort_ctx`: Sort the array using a comparison function that also takes a
+`void*` as a context.
 - `da_reverse`: Reverse the order of elements in the array.
 
 # [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/hashmap.h)
 ## Initialization
 
-Creating a new `HashMap` involves initializing an `Arena`, then calling `hm_create` or `hm_with_size` to initialize the hashmap with an optional initial size:
+Creating a new `HashMap` involves initializing an `Arena`, then calling
+`hm_create` or `hm_with_size` to initialize the hashmap with an optional initial
+size:
 
 ```c
 Arena arena = {0};
@@ -161,28 +173,34 @@ HashMap* hm = hm_create(&arena);
 
 ## HashMap Operations
 
-Basic hashmap management includes clearing, copying, resizing, reserving capacity, and updating from another hashmap:
+Basic hashmap management includes clearing, copying, resizing, reserving
+capacity, and updating from another hashmap:
 
 - `hm_clear`: Clears the hashmap.
 - `hm_copy`: Creates a copy of the hashmap.
-- `hm_resize`: Resizes the hashmap.
-- `hm_reserve`: Reserves space in the hashmap to optimize for upcoming insertions.
+- `hm_resize`: Resizes the hashmap. Used for preallocating space
+- `hm_reserve`: Reserves space in the hashmap. Used before adding multiple
+elements.
 - `hm_update`: Merges another hashmap into the current one.
 
 ## Inserting Elements
 
-Elements of various types can be inserted into the hashmap, including integers, floating-point numbers, and pointers:
+Elements of various types can be inserted into the hashmap, including integers,
+floating-point numbers, and pointers:
 
 - `hm_insert_f32`, `hm_insert_f64`: Insert floating-point values.
-- `hm_insert_i32`, `hm_insert_u32`, `hm_insert_i64`, `hm_insert_u64`: Insert integer values.
+- `hm_insert_i32`, `hm_insert_u32`, `hm_insert_i64`, `hm_insert_u64`: Insert
+integer values.
 - `hm_insert_mut_ptr`, `hm_insert_ptr`: Insert mutable or constant pointers.
 
 ## Querying Elements
 
-Retrieve pointers to the values stored in the hashmap by their key hashes, allowing for mutable or immutable access:
+Retrieve pointers to the values stored in the hashmap by their key hashes,
+allowing for mutable or immutable access:
 
-> :warning: Avoid storing pointers from the hashmap for extended periods. 
-> Keeping these pointers beyond the immediate scope can lead to undefined behavior, as the underlying storage may change.
+> :warning: Avoid storing pointers from the hashmap for extended periods.
+> Keeping these pointers beyond the immediate scope can lead to undefined
+behavior, as the underlying storage may change.
 
 - `hm_get_f32_mut`, `hm_get_f64_mut`, etc.: Retrieve mutable pointers to values.
 - `hm_get_f32`, `hm_get_f64`, etc.: Retrieve immutable pointers to values.
@@ -199,21 +217,27 @@ Set set = set_create(&arena);
 
 ## Set Operations
 
-Perform basic set operations such as adding, removing, and extending sets with multiple elements:
+Perform basic set operations such as adding, removing, and extending sets with
+multiple elements:
 
-- `set_add`: Add an element to the set. Returns false if the element already exists.
+- `set_add`: Add an element to the set. Returns false if the element already
+exists.
 - `set_remove`: Remove an element from the set.
 - `set_extend`: Add multiple elements to the set at once.
 
 Copy and resize sets for handling dynamic set sizes:
 
 - `set_copy`: Create a duplicate of a set.
-- `set_resize`: Adjust the internal capacity of the set.
-- `set_reserve`: Ensure the set has enough capacity for a specified number of elements.
+- `set_resize`: Adjust the capacity of the set. Used for preallocating
+space.
+- `set_reserve`: Reserves space in the set. Used before adding multiple
+elements
+
 
 ## Set Query Operations
 
-Query the set for the presence of elements, equality with another set, or subset and disjoint relationships:
+Query the set for the presence of elements, equality with another set, or subset
+and disjoint relationships:
 
 - `set_contains`: Check if an element is in the set.
 - `set_eq`: Check if two sets are equal.
@@ -329,7 +353,7 @@ falls through
 Error error = ErrNew;
 function_that_fails(&error);
 error_context(&error, {
-  // Error Handling
+  error_raise();
 });
 ```
 
@@ -339,7 +363,7 @@ also does not reset the error.
 Error error = ErrNew;
 function_that_fails(&error);
 error_propagate(&error, {
-  // Error Handling
+  error_raise();
 });
 ```
 
@@ -385,14 +409,16 @@ clib_log_error("This is an error message: %s", error_details);
 # [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/sorting.h)
 ## Usage
 
-Sort an array by providing the array, its size, the number of elements, and a comparison function:
+Sort an array by providing the array, its size, the number of elements, and a
+comparison function:
 
 ```c
 int array[5] = {5, 4, 3, 2, 1};
 quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 
-For context-aware comparisons, use `quicksort_ctx` with a comparison function that takes an additional context parameter.
+For context-aware comparisons, use `quicksort_ctx` with a comparison function
+that takes an additional context parameter.
 
 
 # Os
@@ -536,21 +562,27 @@ printf("Home directory: %s\n", home);
   - `BYTES_STR`: Create a byte array from a string literal.
 
 - **Creating from Pointer and Size**:
-  - `bytes_from_parts(size, data)`: Creates a byte array from given size and data pointer.
+  - `bytes_from_parts(size, data)`: Creates a byte array from given size and
+data pointer.
 
 - **Copying Byte Arrays**:
-  - `bytes_copy(bytes, arena)`: Performs a deep copy of a byte array, allocating memory from the specified arena.
+  - `bytes_copy(bytes, arena)`: Performs a deep copy of a byte array, allocating
+memory from the specified arena.
 
 - **Slicing and Taking Bytes**:
-  - `bytes_slice(bytes, idx1, idx2)`: Returns a new byte array that is a slice from the original, from `idx1` to `idx2`.
-  - `bytes_take(bytes, count)`: Modifies the original byte array to keep only the first `count` bytes, returning the removed portion.
+  - `bytes_slice(bytes, idx1, idx2)`: Returns a new byte array that is a slice
+from the original, from `idx1` to `idx2`.
+  - `bytes_take(bytes, count)`: Modifies the original byte array to keep only
+the first `count` bytes, returning the removed portion.
 
 - **Checking Equality**:
   - `bytes_eq(b1, b2)`: Checks if two byte arrays are equal.
 
 - **Hexadecimal Conversion**:
-  - `bytes_to_hex(bytes, arena)`: Converts a byte array into a hexadecimal string representation, using memory from the arena.
-  - `bytes_from_hex(s, arena)`: Creates a byte array from a hexadecimal string, allocating memory from the arena.
+  - `bytes_to_hex(bytes, arena)`: Converts a byte array into a hexadecimal
+string representation, using memory from the arena.
+  - `bytes_from_hex(s, arena)`: Creates a byte array from a hexadecimal string,
+allocating memory from the arena.
 
 ## Usage
 Create new Bytes from a literal.
@@ -620,7 +652,8 @@ These functions are available for `f32` and `f64`.
 
 # [integer.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/integer.h)
 
-All these functions are defined for these types: `u8`, `i8`, `u16`, `i16`, `u32`, `i32`, `u64`, `i64`, `usize`.
+All these functions are defined for these types: `u8`, `i8`, `u16`, `i16`,
+`u32`, `i32`, `u64`, `i64`, `usize`.
 
 ## Bit Operations
 
@@ -666,23 +699,29 @@ suitable for `qsort`.
   - `printf(STR_FMT"\n", STR_ARG(str))`: Print strings using macros.
 
 - **String Manipulation**:
-  - `str_lower(str, &arena)`, `str_upper(str, &arena)`: Convert to lower or upper case.
-  - `str_append(str, suffix, &arena)`, `str_prepend(str, prefix, &arena)`: Append or prepend strings.
+  - `str_lower(str, &arena)`, `str_upper(str, &arena)`: Convert to lower or
+upper case.
+  - `str_append(str, suffix, &arena)`, `str_prepend(str, prefix, &arena)`:
+Append or prepend strings.
   - `str_wrap(str, wrap, &arena)`: Wrap a string.
   - `str_join(sep, count, strs, &arena)`: Join strings with a separator.
 
 - **String Trimming and Slicing**:
-  - `str_trim(str)`, `str_trim_left(str)`, `str_trim_right(str)`: Trim whitespace.
-  - `str_chop_by_delim(str, delim)`, `str_try_chop_by_delim(str, delim, &chunk)`: Chop strings by delimiter.
+  - `str_trim(str)`, `str_trim_left(str)`, `str_trim_right(str)`: Trim
+whitespace.
+  - `str_chop_by_delim(str, delim)`, `str_try_chop_by_delim(str, delim,
+&chunk)`: Chop strings by delimiter.
   - `str_substring(str, start, end)`: Extract a substring.
 
 - **String Comparison and Search**:
   - `str_eq(s1, s2)`, `str_eq_ignorecase(s1, s2)`: Check string equality.
-  - `str_startswith(str, prefix)`, `str_endswith(str, suffix)`: Check prefixes/suffixes.
+  - `str_startswith(str, prefix)`, `str_endswith(str, suffix)`: Check
+prefixes/suffixes.
   - `str_contains(haystack, needle)`: Check if string contains a substring.
 
 - **Conversion and Utility**:
-  - `str_to_u64(str)`, `str_u64(n, &arena)`: Convert between strings and unsigned 64-bit integers.
+  - `str_to_u64(str)`, `str_u64(n, &arena)`: Convert between strings and
+unsigned 64-bit integers.
   - `str_hash(str)`: Generate a hash value for a string.
 
 ## Usage Example

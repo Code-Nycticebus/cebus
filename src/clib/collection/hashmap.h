@@ -1,7 +1,9 @@
 /* DOCUMENTATION
 ## Initialization
 
-Creating a new `HashMap` involves initializing an `Arena`, then calling `hm_create` or `hm_with_size` to initialize the hashmap with an optional initial size:
+Creating a new `HashMap` involves initializing an `Arena`, then calling
+`hm_create` or `hm_with_size` to initialize the hashmap with an optional initial
+size:
 
 ```c
 Arena arena = {0};
@@ -10,28 +12,34 @@ HashMap* hm = hm_create(&arena);
 
 ## HashMap Operations
 
-Basic hashmap management includes clearing, copying, resizing, reserving capacity, and updating from another hashmap:
+Basic hashmap management includes clearing, copying, resizing, reserving
+capacity, and updating from another hashmap:
 
 - `hm_clear`: Clears the hashmap.
 - `hm_copy`: Creates a copy of the hashmap.
-- `hm_resize`: Resizes the hashmap.
-- `hm_reserve`: Reserves space in the hashmap to optimize for upcoming insertions.
+- `hm_resize`: Resizes the hashmap. Used for preallocating space
+- `hm_reserve`: Reserves space in the hashmap. Used before adding multiple
+elements.
 - `hm_update`: Merges another hashmap into the current one.
 
 ## Inserting Elements
 
-Elements of various types can be inserted into the hashmap, including integers, floating-point numbers, and pointers:
+Elements of various types can be inserted into the hashmap, including integers,
+floating-point numbers, and pointers:
 
 - `hm_insert_f32`, `hm_insert_f64`: Insert floating-point values.
-- `hm_insert_i32`, `hm_insert_u32`, `hm_insert_i64`, `hm_insert_u64`: Insert integer values.
+- `hm_insert_i32`, `hm_insert_u32`, `hm_insert_i64`, `hm_insert_u64`: Insert
+integer values.
 - `hm_insert_mut_ptr`, `hm_insert_ptr`: Insert mutable or constant pointers.
 
 ## Querying Elements
 
-Retrieve pointers to the values stored in the hashmap by their key hashes, allowing for mutable or immutable access:
+Retrieve pointers to the values stored in the hashmap by their key hashes,
+allowing for mutable or immutable access:
 
-> :warning: Avoid storing pointers from the hashmap for extended periods. 
-> Keeping these pointers beyond the immediate scope can lead to undefined behavior, as the underlying storage may change.
+> :warning: Avoid storing pointers from the hashmap for extended periods.
+> Keeping these pointers beyond the immediate scope can lead to undefined
+behavior, as the underlying storage may change.
 
 - `hm_get_f32_mut`, `hm_get_f64_mut`, etc.: Retrieve mutable pointers to values.
 - `hm_get_f32`, `hm_get_f64`, etc.: Retrieve immutable pointers to values.

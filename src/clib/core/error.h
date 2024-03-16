@@ -21,7 +21,7 @@ falls through
 Error error = ErrNew;
 function_that_fails(&error);
 error_context(&error, {
-  // Error Handling
+  error_raise();
 });
 ```
 
@@ -31,7 +31,7 @@ also does not reset the error.
 Error error = ErrNew;
 function_that_fails(&error);
 error_propagate(&error, {
-  // Error Handling
+  error_raise();
 });
 ```
 

@@ -1,14 +1,16 @@
 /* DOCUMENTATION
 ## Usage
 
-Sort an array by providing the array, its size, the number of elements, and a comparison function:
+Sort an array by providing the array, its size, the number of elements, and a
+comparison function:
 
 ```c
 int array[5] = {5, 4, 3, 2, 1};
 quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
 ```
 
-For context-aware comparisons, use `quicksort_ctx` with a comparison function that takes an additional context parameter.
+For context-aware comparisons, use `quicksort_ctx` with a comparison function
+that takes an additional context parameter.
 
 */
 

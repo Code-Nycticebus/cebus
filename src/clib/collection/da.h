@@ -1,7 +1,9 @@
 /* DOCUMENTATION
 ## Initialization
 
-To start using the dynamic array, you first need to create an instance of `Arena` for memory management and then initialize the dynamic array with the specific type.
+To start using the dynamic array, you first need to create an instance of
+`Arena` for memory management and then initialize the dynamic array with the
+specific type.
 
 ```c
 Arena arena = {0};
@@ -11,7 +13,8 @@ da_init(&vec, &arena);
 
 ## Adding Elements
 
-Elements can be added to the dynamic array using `da_push`, which automatically resizes the array if additional space is required.
+Elements can be added to the dynamic array using `da_push`, which automatically
+resizes the array if additional space is required.
 
 ```c
 da_push(&vec, 69);
@@ -20,7 +23,8 @@ da_push(&vec, 420);
 
 ## Accessing Elements
 
-Access the first and last elements with `da_first` and `da_last`. Remove the last element with `da_pop`.
+Access the first and last elements with `da_first` and `da_last`. Remove the
+last element with `da_pop`.
 
 > :warning: `da_pop` does not perform any bounds checks.
 
@@ -39,20 +43,26 @@ int popped = da_pop(&vec);
 
 ## Resizing and Reserving Space
 
-- `da_resize`: Adjust the capacity of the array to a specified size. This is useful for preallocating space.
-- `da_reserve`: Ensure there is enough space for additional elements, useful before adding multiple elements.
+- `da_resize`: Adjust the capacity of the array to a specified size. Used for
+preallocating space.
+- `da_reserve`: Ensure there is enough space for additional elements. Used
+before adding multiple elements.
 
 ## Extending and Mapping
 
 - `da_extend`: Add multiple elements from another array or list.
-- `da_map`: Transform elements of the array into another form and store them in a destination array.
-- `da_filter`: Filter dynamic array with a filter function and place it into a destination.
-- `da_filter_ctx`: Filter dynamic array with a filter function, that takes a `void*` as a context, and place it into a destination.
+- `da_map`: Transform elements of the array into another form and store them in
+a destination array.
+- `da_filter`: Filter dynamic array with a filter function and place it into a
+destination.
+- `da_filter_ctx`: Filter dynamic array with a filter function, that takes a
+`void*` as a context, and place it into a destination.
 
 ## Sorting and Reversing
 
 - `da_sort`: Sort the array using a comparison function.
-- `da_sort_ctx`: Sort the array using a comparison function that also takes a `void*` as a context.
+- `da_sort_ctx`: Sort the array using a comparison function that also takes a
+`void*` as a context.
 - `da_reverse`: Reverse the order of elements in the array.
 */
 
