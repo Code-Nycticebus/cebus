@@ -110,11 +110,7 @@ typedef size_t usize;
 #if defined(LINUX)
 #define USIZE_FMT "zu"
 #elif defined(WINDOWS)
-#if defined(CLIB_64BIT)
 #define USIZE_FMT "llu"
-#else
-#define USIZE_FMT "u"
-#endif
 #endif
 
 typedef float f32;

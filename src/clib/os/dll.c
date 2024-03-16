@@ -30,8 +30,8 @@ Dll *dll_load(Str path, Error *error) {
 
 void dll_close(Dll *handle) { dlclose(handle); }
 
-Function *dll_symbol(Dll *handle, const char *symbol, Error *error) {
-  Function *fn = dlsym(handle, symbol);
+Function dll_symbol(Dll *handle, const char *symbol, Error *error) {
+  Function fn = dlsym(handle, symbol);
   if (fn == NULL) {
     error_emit(error, -1, "dll function: %s: %s\n", symbol, dlerror());
     return NULL;
@@ -77,8 +77,8 @@ void dll_close(Dll *handle) {
   DeleteFile(temp_file_name);
 }
 
-Function *dll_symbol(Dll *handle, const char *symbol, Error *error) {
-  Function *fn = (void *)GetProcAddress(handle, symbol);
+Function dll_symbol(Dll *handle, const char *symbol, Error *error) {
+  Function fn = (Function)GetProcAddress(handle, symbol);
   if (fn == NULL) {
     DWORD err_code = GetLastError();
     error_emit(error, (i32)err_code, "dll function: %s: %lu\n", symbol,

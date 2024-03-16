@@ -26,11 +26,11 @@ dll_close(myLib);
 #include "clib/core/error.h"
 
 typedef void Dll;
-typedef void Function;
+typedef void (*Function)(void);
 
 Dll *dll_load(Str path, Error *error);
 void dll_close(Dll *handle);
 
-Function *dll_symbol(Dll *handle, const char *symbol, Error *error);
+Function dll_symbol(Dll *handle, const char *symbol, Error *error);
 
 #endif /*  !__CLIB_DLL_H__ */

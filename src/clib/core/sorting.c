@@ -2,7 +2,9 @@
 
 #if defined(WINDOWS)
 #include <malloc.h>
+#ifndef alloca
 #define alloca _alloca
+#endif
 #else
 #include <alloca.h>
 #endif

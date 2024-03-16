@@ -1,6 +1,6 @@
 [pybuildc]
 name="clib"
-cc="clang"
+cc="gcc"
 cflags=[
   "-std=c99",
   "-Wconversion",
@@ -13,6 +13,6 @@ cflags=[
 info="examples/info.c"
 
 [[build.scripts]]
-cmd="python" 
+cmd="python"
 args=["docs.py"]
 

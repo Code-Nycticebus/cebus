@@ -255,7 +255,7 @@ static void test_example_deduplicate(void) {
   da_filter_ctx(&list, &list, filter_duplicates, &unique);
   arena_free(&temp);
 
-  clib_assert(list.len == 3, "Did not find the unique strings correctly: %zu",
+  clib_assert(list.len == 3, "Did not find the unique strings correctly: %" USIZE_FMT,
               list.len);
   clib_assert(str_eq(list.items[0], STR("Apple")),
               "Did not filter out correctly");

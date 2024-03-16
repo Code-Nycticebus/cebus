@@ -10,8 +10,12 @@
 #elif defined(WINDOWS)
 #include <io.h>
 #define isatty(...) _isatty(__VA_ARGS__)
+#ifndef STDERR_FILENO
 #define STDERR_FILENO 1
+#endif
+#ifndef STDOUT_FILENO
 #define STDOUT_FILENO 2
+#endif
 #else
 #define isatty(...) false
 #endif
