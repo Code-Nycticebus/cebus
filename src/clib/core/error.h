@@ -31,7 +31,7 @@ also does not reset the error.
 Error error = ErrNew;
 function_that_fails(&error);
 error_propagate(&error, {
-  error_raise();
+  return;
 });
 ```
 
