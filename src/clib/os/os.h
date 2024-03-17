@@ -18,8 +18,8 @@ error_context(&error, {
   error_raise();
 });
 
-printf("Current working directory: %s\n", cwd);
-printf("Home directory: %s\n", home);
+printf("Current working directory: " STR_FMT "\n", STR_ARG(cwd));
+printf("Home directory: " STR_FMT "\n", STR_ARG(home));
 ```
 */
 

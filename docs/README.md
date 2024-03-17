@@ -120,7 +120,7 @@ da_push(&vec, 420);
 Access the first and last elements with `da_first` and `da_last`. Remove the
 last element with `da_pop`.
 
-> :warning: `da_pop` does not perform any bounds checks.
+> :warning: `da_pop` does not perform any bounds checks. So make sure your dynamic array has at least one element in it.
 
 ```c
 int first = da_first(&vec);
@@ -559,8 +559,8 @@ error_context(&error, {
   error_raise();
 });
 
-printf("Current working directory: %s\n", cwd);
-printf("Home directory: %s\n", home);
+printf("Current working directory: " STR_FMT "\n", STR_ARG(cwd));
+printf("Home directory: " STR_FMT "\n", STR_ARG(home));
 ```
 
 # Type

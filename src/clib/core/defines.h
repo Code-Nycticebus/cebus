@@ -121,7 +121,7 @@ typedef size_t usize;
 #define USIZE_MAX SIZE_MAX
 #define USIZE_MIN 0
 #define USIZE_BITS (sizeof(usize) * 8)
-#define USIZE_FMT "zu"
+#define USIZE_FMT "llu"
 
 typedef float f32;
 #define F32_MAX FLT_MAX
