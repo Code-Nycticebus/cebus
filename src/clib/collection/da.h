@@ -24,13 +24,14 @@ da_push(&vec, 420);
 ## Accessing Elements
 
 Access the first and last elements with `da_first` and `da_last`. Remove the
-last element with `da_pop`.
+last element with `da_pop`. Get any element with `da_get`.
 
-> :warning: `da_pop` does not perform any bounds checks. So make sure your dynamic array has at least one element in it.
+> :warning: These operations do not perform any bounds checks. So make sure your dynamic array has at least one element in it.
 
 ```c
 int first = da_first(&vec);
 int last = da_last(&vec);
+int nth = da_get(&vec, 3);
 int popped = da_pop(&vec);
 ```
 
@@ -86,6 +87,7 @@ destination.
 
 #define da_first(list) (list)->items[0]
 #define da_last(list) (list)->items[(list)->len - 1]
+#define da_get(list, idx) (list)->items[idx]
 #define da_pop(list) (list)->items[--(list)->len]
 #define da_empty(list) (!(list)->len)
 #define da_clear(list) ((list)->len = 0)
