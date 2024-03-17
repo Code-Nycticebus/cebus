@@ -2,9 +2,9 @@
 
 This is an extension of the C standart library. 
 
-### Quickstart
+# Quickstart
 
-### Hello World
+## Hello World
 
 This is the hello world of clib. I will call it `hello-clib.c`.
 ```c
@@ -16,7 +16,7 @@ int main(void) {
 }
 ```
 
-#### [pybuildc](https://github.com/Code-Nycticebus/pybuildc)
+## [pybuildc](https://github.com/Code-Nycticebus/pybuildc)
 
 Create a new project with `pybuildc`. 
 ```console
@@ -36,7 +36,7 @@ And then run your project with.
 pybuildc run
 ```
 
-#### Gcc or Clang
+## Gcc or Clang
 
 Build the static library. When inside the clib directory, run:
 
@@ -51,7 +51,7 @@ and add `-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib` to your compiler fl
 gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 ```
 
-## Documentation
+# Documentation
 
 <!-- DOCUMENTATION -->
 - [Clib](#Clib)
