@@ -1,5 +1,5 @@
 /* DOCUMENTATION
-Include this file to include all the header files.
+Include this file to include all the header files that are listed below.
 ```c
 #include <clib/clib.h>
 ```
