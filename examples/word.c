@@ -53,8 +53,8 @@ int main(void) {
   // print out the first 4 words
   for (usize i = 0; i < 4; ++i) {
     clib_log_info("%" USIZE_FMT ": %d, " STR_FMT, i + 1,
-                  *hm_get_u32(occurences, str_hash(words.items[i])),
-                  STR_ARG(words.items[i]));
+                  *hm_get_u32(occurences, str_hash(da_get(&words, i))),
+                  STR_ARG(da_get(&words, i)));
   }
 
   // free the memory
