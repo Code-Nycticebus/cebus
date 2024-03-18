@@ -3,8 +3,7 @@
 #define FLOAT_IMPL(T, BITS, EXPONENT_MASK, FRACTION_MASK)                      \
   bool T##_eq(T a, T b) { return T##_abs(a - b) < F##BITS##_EPSILON; }         \
   bool T##_isnan(T value) {                                                    \
-    u##BITS u = *(u##BITS *)&value;                                            \
-    return (u & EXPONENT_MASK) == EXPONENT_MASK && (u & FRACTION_MASK) != 0;   \
+    return value != value;   \
   }                                                                            \
   T T##_abs(T value) {                                                         \
     u##BITS *i = (u##BITS *)&value;                                            \
