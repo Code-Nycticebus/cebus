@@ -85,7 +85,7 @@ gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
 # Clib
 
 # [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/clib.h)
-Include this file to include all the header files.
+Include this file to include all the header files that are listed below.
 ```c
 #include <clib/clib.h>
 ```
