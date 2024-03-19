@@ -1,6 +1,6 @@
 [pybuildc]
 name="clib"
-cc="gcc"
+cc="clang"
 cflags=[
   "-std=c99",
   "-Wconversion",

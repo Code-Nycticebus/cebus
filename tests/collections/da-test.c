@@ -1,5 +1,6 @@
 #include "clib/collection/da.h"
 
+#include "clib/core/arena.h"
 #include "clib/core/assert.h"
 #include "clib/type/integer.h"
 
@@ -242,6 +243,42 @@ static void test_pop(void) {
   arena_free(&arena);
 }
 
+static void test_insert(void) {
+  Arena arena = {0};
+  DA(usize) list = {0};
+  da_init(&list, &arena);
+
+  da_push(&list, 1);
+  da_push(&list, 3);
+
+  da_insert(&list, 2, 1);
+
+  clib_assert(list.len == 3, "");
+  clib_assert(da_get(&list, 0) == 1, "");
+  clib_assert(da_get(&list, 1) == 2, "");
+  clib_assert(da_get(&list, 2) == 3, "");
+
+  arena_free(&arena);
+}
+
+static void test_remove(void) {
+  Arena arena = {0};
+  DA(usize) list = {0};
+  da_init(&list, &arena);
+
+  da_push(&list, 1);
+  da_push(&list, 2);
+  da_push(&list, 3);
+
+  da_remove(&list, 1);
+
+  clib_assert(list.len == 2, "");
+  clib_assert(da_get(&list, 0) == 1, "");
+  clib_assert(da_get(&list, 1) == 3, "");
+
+  arena_free(&arena);
+}
+
 int main(void) {
   test_vec();
   test_da_init();
@@ -256,4 +293,6 @@ int main(void) {
   test_filter_ctx();
   test_copy();
   test_pop();
+  test_insert();
+  test_remove();
 }

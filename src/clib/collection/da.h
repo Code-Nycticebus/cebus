@@ -26,7 +26,8 @@ da_push(&vec, 420);
 Access the first and last elements with `da_first` and `da_last`. Remove the
 last element with `da_pop`. Get any element with `da_get`.
 
-> :warning: These operations do not perform any bounds checks. So make sure your dynamic array has at least one element in it.
+> :warning: These operations do not perform any bounds checks. So make sure your
+dynamic array has at least one element in it.
 
 ```c
 int first = da_first(&vec);
@@ -91,6 +92,7 @@ destination.
 #define da_pop(list) (list)->items[--(list)->len]
 #define da_empty(list) (!(list)->len)
 #define da_clear(list) ((list)->len = 0)
+#define da_len(list) ((list)->len)
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -139,7 +141,7 @@ destination.
 
 #define da_reserve(list, size)                                                 \
   do {                                                                         \
-    const usize __rs = (list)->len + size;                                     \
+    const usize __rs = da_len(list) + size;                                    \
     if (__rs < (list)->cap) {                                                  \
       break;                                                                   \
     }                                                                          \
@@ -154,75 +156,92 @@ destination.
 
 #define da_push(list, item)                                                    \
   do {                                                                         \
-    da_reserve((list), (list)->len + 1);                                       \
-    (list)->items[(list)->len++] = (item);                                     \
+    da_reserve((list), 1);                                                     \
+    da_get(list, da_len(list)++) = (item);                                     \
   } while (0)
 
 #define da_extend(list, count, _items)                                         \
   do {                                                                         \
     da_reserve((list), (count));                                               \
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
-      (list)->items[(list)->len + __e_i] = (_items)[__e_i];                    \
+      da_get(list, da_len(list) + __e_i) = (_items)[__e_i];                    \
     }                                                                          \
     (list)->len += count;                                                      \
+  } while (0)
+
+#define da_insert(list, value, idx)                                            \
+  do {                                                                         \
+    for (usize __r_i = idx + 1; __r_i < da_len(list); __r_i++) {               \
+      da_get(list, __r_i) = da_get(list, __r_i - 1);                           \
+    }                                                                          \
+    da_get(list, idx) = value;                                                 \
+    da_len(list)++;                                                            \
+  } while (0)
+
+#define da_remove(list, idx)                                                   \
+  do {                                                                         \
+    for (usize __r_i = idx + 1; __r_i < da_len(list); __r_i++) {               \
+      da_get(list, __r_i - 1) = da_get(list, __r_i);                           \
+    }                                                                          \
+    da_len(list)--;                                                            \
   } while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
 
 #define da_map(src, dest, map)                                                 \
   do {                                                                         \
-    da_reserve((dest), (src)->len);                                            \
-    for (usize __m_i = 0; __m_i < (src)->len; __m_i++) {                       \
-      (dest)->items[__m_i] = map((src)->items[__m_i]);                         \
+    da_reserve((dest), da_len(src));                                           \
+    for (usize __m_i = 0; __m_i < da_len(src); __m_i++) {                      \
+      da_get(dest, __m_i) = map(da_get(src, __m_i));                           \
     }                                                                          \
-    (dest)->len = (src)->len;                                                  \
+    da_len(dest) = da_len(src);                                                \
   } while (0)
 
 #define da_filter(src, dest, filter)                                           \
   do {                                                                         \
-    da_reserve((dest), (src)->len);                                            \
+    da_reserve((dest), da_len(src));                                           \
     usize __f_count = 0;                                                       \
-    for (usize __f_i = 0; __f_i < (src)->len; __f_i++) {                       \
-      if (filter((src)->items[__f_i])) {                                       \
-        (dest)->items[__f_count++] = (src)->items[__f_i];                      \
+    for (usize __f_i = 0; __f_i < da_len(src); __f_i++) {                      \
+      if (filter(da_get(src, __f_i))) {                                        \
+        da_get(dest, __f_count++) = da_get(src, __f_i);                        \
       }                                                                        \
     }                                                                          \
-    (dest)->len = __f_count;                                                   \
+    da_len(dest) = __f_count;                                                  \
   } while (0)
 
 #define da_filter_ctx(src, dest, filter, ctx)                                  \
   do {                                                                         \
-    da_reserve((dest), (src)->len);                                            \
+    da_reserve((dest), da_len(src));                                           \
     usize __f_count = 0;                                                       \
-    for (usize __f_i = 0; __f_i < (src)->len; __f_i++) {                       \
-      if (filter((ctx), (src)->items[__f_i])) {                                \
-        (dest)->items[__f_count++] = (src)->items[__f_i];                      \
+    for (usize __f_i = 0; __f_i < da_len(src); __f_i++) {                      \
+      if (filter((ctx), da_get(src, __f_i))) {                                 \
+        da_get(dest, __f_count++) = da_get(src, __f_i);                        \
       }                                                                        \
     }                                                                          \
-    (dest)->len = __f_count;                                                   \
+    da_len(dest) = __f_count;                                                  \
   } while (0)
 
 #define da_sort(src, dest, sort)                                               \
   do {                                                                         \
-    da_reserve((dest), (src)->len);                                            \
-    quicksort((src)->items, (dest)->items, sizeof((src)->items[0]),            \
-              (src)->len, sort);                                               \
+    da_reserve((dest), da_len(src));                                           \
+    quicksort(&da_get(src, 0), &da_get(dest, 0), sizeof(da_get(src, 0)),       \
+              da_len(src), sort);                                              \
   } while (0)
 
 #define da_sort_ctx(src, dest, sort, ctx)                                      \
   do {                                                                         \
-    da_reserve((dest), (src)->len);                                            \
-    quicksort_ctx((src)->items, (dest)->items, sizeof((src)->items[0]),        \
-                  (src)->len, sort, ctx);                                      \
+    da_reserve((dest), da_len(src));                                           \
+    quicksort_ctx((src)->items, (dest)->items, sizeof(da_get(src, 0)),         \
+                  da_len(src), sort, ctx);                                     \
   } while (0)
 
 #define da_reverse(list)                                                       \
   do {                                                                         \
     da_reserve((list), 1);                                                     \
     for (usize __r_i = 0; __r_i < (list)->len - __r_i - 1; __r_i++) {          \
-      (list)->items[(list)->len] = (list)->items[__r_i];                       \
-      (list)->items[__r_i] = (list)->items[(list)->len - __r_i - 1];           \
-      (list)->items[(list)->len - __r_i - 1] = (list)->items[(list)->len];     \
+      da_get(list, da_len(list)) = da_get(list, __r_i);                        \
+      da_get(list, __r_i) = da_get(list, da_len(list) - __r_i - 1);            \
+      da_get(list, da_len(list) - __r_i - 1) = da_get(list, da_len(list));     \
     }                                                                          \
   } while (0)
 

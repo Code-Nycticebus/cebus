@@ -120,7 +120,8 @@ da_push(&vec, 420);
 Access the first and last elements with `da_first` and `da_last`. Remove the
 last element with `da_pop`. Get any element with `da_get`.
 
-> :warning: These operations do not perform any bounds checks. So make sure your dynamic array has at least one element in it.
+> :warning: These operations do not perform any bounds checks. So make sure your
+dynamic array has at least one element in it.
 
 ```c
 int first = da_first(&vec);
