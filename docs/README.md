@@ -134,8 +134,11 @@ int popped = da_pop(&vec);
 
 - `da_clear`: Reset the length of the array to zero.
 - `da_empty`: Use to check if the array has no elements.
+- `da_len`: Get the length of the dynamic array.
 - `da_init_list`: Initialize dynamic array with elements from a static array.
 - `da_copy`: Duplicate the contents of one dynamic array into another.
+- `da_insert`: Insert a value at a specified index.
+- `da_remove`: Remove a value at a specified index.
 
 ## Resizing and Reserving Space
 
