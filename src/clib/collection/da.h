@@ -36,13 +36,17 @@ int nth = da_get(&vec, 3);
 int popped = da_pop(&vec);
 ```
 
-## Manipulating the Array
+## Array Utils
 
-- `da_clear`: Reset the length of the array to zero.
 - `da_empty`: Use to check if the array has no elements.
 - `da_len`: Get the length of the dynamic array.
+- `da_clear`: Reset the length of the array to zero.
 - `da_init_list`: Initialize dynamic array with elements from a static array.
 - `da_copy`: Duplicate the contents of one dynamic array into another.
+
+## Removing and inserting
+:warning: These operations do not perform any bound checks.
+
 - `da_insert`: Insert a value at a specified index.
 - `da_remove`: Remove a value at a specified index.
 
@@ -53,18 +57,16 @@ preallocating space.
 - `da_reserve`: Ensure there is enough space for additional elements. Used
 before adding multiple elements.
 
-## Extending and Mapping
+## Manipulating the Array
 
 - `da_extend`: Add multiple elements from another array or list.
 - `da_map`: Transform elements of the array into another form and store them in
 a destination array.
+- `da_map_ctx`: Same but the mapping function also takes a context.
 - `da_filter`: Filter dynamic array with a filter function and place it into a
 destination.
 - `da_filter_ctx`: Filter dynamic array with a filter function, that takes a
 `void*` as a context, and place it into a destination.
-
-## Sorting and Reversing
-
 - `da_sort`: Sort the array using a comparison function.
 - `da_sort_ctx`: Sort the array using a comparison function that also takes a
 `void*` as a context.
@@ -94,8 +96,9 @@ destination.
 #define da_get(list, idx) (list)->items[idx]
 #define da_pop(list) (list)->items[--(list)->len]
 #define da_empty(list) (!(list)->len)
-#define da_clear(list) ((list)->len = 0)
 #define da_len(list) ((list)->len)
+
+#define da_clear(list) ((list)->len = 0)
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -196,6 +199,15 @@ destination.
     da_reserve((dest), da_len(src));                                           \
     for (usize __m_i = 0; __m_i < da_len(src); __m_i++) {                      \
       da_get(dest, __m_i) = map(da_get(src, __m_i));                           \
+    }                                                                          \
+    da_len(dest) = da_len(src);                                                \
+  } while (0)
+
+#define da_map_ctx(src, dest, map, ctx)                                        \
+  do {                                                                         \
+    da_reserve((dest), da_len(src));                                           \
+    for (usize __m_i = 0; __m_i < da_len(src); __m_i++) {                      \
+      da_get(dest, __m_i) = map(ctx, da_get(src, __m_i));                      \
     }                                                                          \
     da_len(dest) = da_len(src);                                                \
   } while (0)
