@@ -249,14 +249,16 @@ static void test_insert(void) {
   da_init(&list, &arena);
 
   da_push(&list, 1);
-  da_push(&list, 3);
+  da_push(&list, 4);
 
   da_insert(&list, 2, 1);
+  da_insert(&list, 3, 2);
 
-  clib_assert(list.len == 3, "");
+  clib_assert(list.len == 4, "");
   clib_assert(da_get(&list, 0) == 1, "");
   clib_assert(da_get(&list, 1) == 2, "");
   clib_assert(da_get(&list, 2) == 3, "");
+  clib_assert(da_get(&list, 3) == 4, "");
 
   arena_free(&arena);
 }
@@ -269,12 +271,14 @@ static void test_remove(void) {
   da_push(&list, 1);
   da_push(&list, 2);
   da_push(&list, 3);
+  da_push(&list, 4);
 
+  da_remove(&list, 1);
   da_remove(&list, 1);
 
   clib_assert(list.len == 2, "");
   clib_assert(da_get(&list, 0) == 1, "");
-  clib_assert(da_get(&list, 1) == 3, "");
+  clib_assert(da_get(&list, 1) == 4, "");
 
   arena_free(&arena);
 }
