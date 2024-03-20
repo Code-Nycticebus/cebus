@@ -11,6 +11,7 @@ void function_that_fails(Error *error) {
   // ...
   if (failure_condition) {
     error_emit(error, error_code, "Error: %s", reason);
+    return;
   }
 }
 ```

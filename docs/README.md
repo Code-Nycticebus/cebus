@@ -343,7 +343,7 @@ A `debugbreak` is triggered on assertion failure to facilitate debugging, with b
 # [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/defines.h)
 ## Key Definitions and Macros
 
-- **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`,
+- **Data Types**: Defines types such as `u8`, `i8`, `u32`, `i32`,
 `usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
 - **Mathematical Constants**: Defines `F64_PI` and `F64_E` for mathematical
 operations.
@@ -374,6 +374,7 @@ void function_that_fails(Error *error) {
   // ...
   if (failure_condition) {
     error_emit(error, error_code, "Error: %s", reason);
+    return;
   }
 }
 ```

@@ -1,7 +1,7 @@
 /* DOCUMENTATION
 ## Key Definitions and Macros
 
-- **Data Types**: Defines essential types such as `u8`, `i8`, `u32`, `i32`,
+- **Data Types**: Defines types such as `u8`, `i8`, `u32`, `i32`,
 `usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
 - **Mathematical Constants**: Defines `F64_PI` and `F64_E` for mathematical
 operations.
@@ -142,7 +142,9 @@ typedef double f64;
 #define F32_NAN (0.0f / 0.0f)
 #define F64_NAN (0.0 / 0.0)
 #define F64_PI 3.14159265358979323846
+#define F32_PI 3.1415926535f
 #define F64_E 2.71828182845904523536
+#define F32_E 2.7182818284f
 
 ////////////////////////////////////////////////////////////////////////////
 
