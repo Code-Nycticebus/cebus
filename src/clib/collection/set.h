@@ -1,4 +1,10 @@
 /* DOCUMENTATION
+My `Set` implementation follows the same principle as my `HashMap`: it stores
+only the hashes for lookup. This means you get efficient way to check
+if something is in the set without the overhead of storing the actual elements.
+It’s pretty handy for cases where you just need to keep track of existence
+rather than the elements themselves.
+
 ## Initialization
 
 To start using the set, you need to initialize an `Arena` and create a new set:
