@@ -206,9 +206,8 @@ elements.
 Elements of various types can be inserted into the hashmap, including integers,
 floating-point numbers, and pointers:
 
-- `hm_insert_f32`, `hm_insert_f64`: Insert floating-point values.
-- `hm_insert_i32`, `hm_insert_u32`, `hm_insert_i64`, `hm_insert_u64`: Insert
-integer values.
+- `hm_insert_<T>`: Insert `u8`, `i8`, `u32`, `i32`, `usize`, `f32` or `f64`
+values.
 - `hm_insert_mut_ptr`, `hm_insert_ptr`: Insert mutable or constant pointers.
 
 ## Querying Elements
