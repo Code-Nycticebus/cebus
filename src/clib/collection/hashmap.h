@@ -1,4 +1,15 @@
 /* DOCUMENTATION
+My HashMap takes a unique approach: it stores only the hashes of keys, not the
+keys themselves. Most of the time, you don’t really need the original keys
+hanging around. If you find yourself in a situation where you do, just pair it
+with a dynamic array to cover those bases. See
+[this](https://github.com/Code-Nycticebus/clib/blob/main/examples/word.c)
+example.
+
+As for the values, the HashMap is set up to work with simple, primitive
+data types. You can use pointers to handle more complex values. But make sure
+they have the same lifetime as the `HashMap`.
+
 ## Initialization
 
 Creating a new `HashMap` involves initializing an `Arena`, then calling
@@ -71,33 +82,40 @@ bool hm_remove(HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool hm_insert_f32(HashMap *hm, u64 hash, f32 value);
-bool hm_insert_f64(HashMap *hm, u64 hash, f64 value);
-bool hm_insert_i32(HashMap *hm, u64 hash, i32 value);
-bool hm_insert_u32(HashMap *hm, u64 hash, u32 value);
-bool hm_insert_i64(HashMap *hm, u64 hash, i64 value);
-bool hm_insert_u64(HashMap *hm, u64 hash, u64 value);
+#define HM_TYPES(DO)                                                           \
+  DO(f32)                                                                      \
+  DO(f64)                                                                      \
+  DO(i8)                                                                       \
+  DO(u8)                                                                       \
+  DO(i16)                                                                      \
+  DO(u16)                                                                      \
+  DO(i32)                                                                      \
+  DO(u32)                                                                      \
+  DO(i64)                                                                      \
+  DO(u64)                                                                      \
+  DO(usize)
+
+#define HM_INSERT_DECL(T) bool hm_insert_##T(HashMap *hm, u64 hash, T value);
+HM_TYPES(HM_INSERT_DECL)
+#undef HM_INSERT_DECL
+
 bool hm_insert_mut_ptr(HashMap *hm, u64 hash, void *value);
 bool hm_insert_ptr(HashMap *hm, u64 hash, const void *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-f32 *hm_get_f32_mut(const HashMap *hm, u64 hash);
-f64 *hm_get_f64_mut(const HashMap *hm, u64 hash);
-i32 *hm_get_i32_mut(const HashMap *hm, u64 hash);
-u32 *hm_get_u32_mut(const HashMap *hm, u64 hash);
-i64 *hm_get_i64_mut(const HashMap *hm, u64 hash);
-u64 *hm_get_u64_mut(const HashMap *hm, u64 hash);
+#define HM_GET_MUT_DECL(T) T *hm_get_##T##_mut(const HashMap *hm, u64 hash);
+HM_TYPES(HM_GET_MUT_DECL)
+#undef HM_GET_MUT_DECL
+
 void **hm_get_ptr_mut(const HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const f32 *hm_get_f32(const HashMap *hm, u64 hash);
-const f64 *hm_get_f64(const HashMap *hm, u64 hash);
-const i32 *hm_get_i32(const HashMap *hm, u64 hash);
-const u32 *hm_get_u32(const HashMap *hm, u64 hash);
-const i64 *hm_get_i64(const HashMap *hm, u64 hash);
-const u64 *hm_get_u64(const HashMap *hm, u64 hash);
+#define HM_GET_DECL(T) const T *hm_get_##T(const HashMap *hm, u64 hash);
+HM_TYPES(HM_GET_DECL)
+#undef HM_GET_DECL
+
 const void **hm_get_ptr(const HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////

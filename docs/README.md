@@ -167,6 +167,17 @@ destination.
 - `da_reverse`: Reverse the order of elements in the array.
 
 # [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/hashmap.h)
+My HashMap takes a unique approach: it stores only the hashes of keys, not the
+keys themselves. Most of the time, you don’t really need the original keys
+hanging around. If you find yourself in a situation where you do, just pair it
+with a dynamic array to cover those bases. See
+[this](https://github.com/Code-Nycticebus/clib/blob/main/examples/word.c)
+example.
+
+As for the values, the HashMap is set up to work with simple, primitive
+data types. You can use pointers to handle more complex values. But make sure
+they have the same lifetime as the `HashMap`.
+
 ## Initialization
 
 Creating a new `HashMap` involves initializing an `Arena`, then calling
