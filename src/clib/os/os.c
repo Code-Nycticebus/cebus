@@ -22,12 +22,16 @@ Str os_getenv(const char *env, Error *error) {
 ////////////////////////////////////////////////////////////////////////////
 #if defined(LINUX)
 
+#include <errno.h>
+#include <string.h>
 #include <unistd.h>
 
 void os_chdir(Str path) {
   char pathname[FILENAME_MAX] = {0};
   memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
-  chdir(pathname);
+  clib_assert(chdir(pathname) == -1,
+              "Could not change directory to '" STR_FMT "': %s", STR_ARG(path),
+              strerror(errno));
 }
 
 Str os_getcwd(Arena *arena) {
