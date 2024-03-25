@@ -69,7 +69,7 @@ int main(int argc, const char** argv) {
   clib_log_info(STR_FMT, STR_ARG(file));
   clib_log_info("contains: %"USIZE_FMT" words", words.len);
   // print out the first 4 words
-  for (usize i = 0; i < 4; ++i) {
+  for (usize i = 0; i < 3; ++i) {
     clib_log_info("%" USIZE_FMT ": %d, " STR_FMT, i + 1,
                   *hm_get_u32(occurences, str_hash(da_get(&words, i))),
                   STR_ARG(da_get(&words, i)));
