@@ -12,7 +12,7 @@ cflags=[
 info="examples/info.c"
 word="examples/word.c"
 
-[[build.scripts]]
+[[scripts.build]]
 cmd="python"
 args=["docs.py"]
 

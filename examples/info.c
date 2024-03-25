@@ -1,6 +1,7 @@
 #include <clib/clib.h>
 
 int main(void) {
+  clib_log_info("CLIB version 1.0.0");
   clib_log_info("%s-%s", CLIB_SYSTEM, CLIB_ARCHITECTURE);
   clib_log_info("%s", CLIB_COMPILER);
 #if defined(CLIB_64BIT)
