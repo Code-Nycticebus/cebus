@@ -30,7 +30,7 @@ FILE *file_open(Str filename, const char *mode, Error *error) {
   errno = 0;
   FILE *handle = fopen(_filename, mode);
   if (handle == NULL) {
-    error_emit(error, errno, "Could not open file: %s: %s", _filename,
+    error_emit(error, errno, "Could not open file: '%s': %s", _filename,
                strerror(errno));
   }
   return handle;
@@ -126,7 +126,7 @@ void file_remove(Str filename, Error *error) {
   errno = 0;
   int ret = remove(_filename);
   if (ret == -1) {
-    error_emit(error, errno, "Could not rename the file: " STR_FMT ": %s",
+    error_emit(error, errno, "Could not remove the file: " STR_FMT ": %s",
                STR_ARG(filename), strerror(errno));
   }
 }
