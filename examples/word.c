@@ -1,4 +1,4 @@
-/* counts the all the occurunces of words inside itself. */
+/* counts the all the occurunces of words of a specified text file. */
 
 #include "clib/clib.h"
 
@@ -12,12 +12,26 @@ static CmpOrdering sort_by_occurence(const void *context, const void *a,
                         *hm_get_u32(context, str_hash(*(Str *)b)));
 }
 
-int main(void) {
+int main(int argc, const char** argv) {
+  // Takes an argument
+  Str file = argc < 2 ? STR(__FILE__) : str_from_cstr(argv[1]);
+
   // Initialize arena for allocation
   Arena arena = {0};
 
+  // Create error 
+  Error error = ErrNew;
   // Read the entire file
-  Str content = file_read_str(STR(__FILE__), &arena, ErrDefault);
+  Str content = file_read_str(file, &arena, &error);
+  // Handle errors
+  error_context(&error, {
+    // catch a FILE_NOT_FOUND error
+    if (error_code(FileError) == FILE_NOT_FOUND) {
+      // log error message
+      clib_log_error(STR_FMT, STR_ARG(error_msg()));
+      return -1;
+    }
+  });
 
   // initialize the dynamic array
   DA(Str) words = {0};
@@ -50,6 +64,10 @@ int main(void) {
   // Sort the array using the sorting function
   da_sort_ctx(&words, &words, sort_by_occurence, occurences);
 
+
+  // stats
+  clib_log_info(STR_FMT, STR_ARG(file));
+  clib_log_info("contains: %"USIZE_FMT" words", words.len);
   // print out the first 4 words
   for (usize i = 0; i < 4; ++i) {
     clib_log_info("%" USIZE_FMT ": %d, " STR_FMT, i + 1,
