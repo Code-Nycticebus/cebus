@@ -29,6 +29,5 @@
 - [x] IO 
 - [x] File System Operations
 - [x] Dynamic Library loading
-- [ ] Args
 - [ ] Threads 
 - [ ] Time
