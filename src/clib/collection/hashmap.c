@@ -144,7 +144,7 @@ HashMap *hm_copy(HashMap *hm, Arena *arena) {
   HashMap *new = hm_with_size(arena, hm->count * 2);
   new->type = hm->type;
   for (size_t i = 0; i < hm->cap; i++) {
-    if (hm->nodes[i].key || hm->nodes[i].key != HM_DELETED_HASH) {
+    if (hm->nodes[i].key && hm->nodes[i].key != HM_DELETED_HASH) {
       hm_insert(new, hm->nodes[i].key, hm->nodes[i].value);
     }
   }
@@ -164,7 +164,7 @@ void hm_resize(HashMap *hm, usize size) {
   hm->count = 0;
   hm->deleted = 0;
   for (usize i = 0; i < old_cap; ++i) {
-    if (old_nodes[i].key || hm->nodes[i].key != HM_DELETED_HASH) {
+    if (old_nodes[i].key && hm->nodes[i].key != HM_DELETED_HASH) {
       hm_insert(hm, old_nodes[i].key, old_nodes[i].value);
     }
   }

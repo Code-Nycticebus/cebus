@@ -34,7 +34,7 @@ void set_clear(Set *set) {
 Set set_copy(Arena *arena, Set *set) {
   Set new = set_with_size(arena, set->count * 2);
   for (size_t i = 0; i < set->cap; i++) {
-    if (set->items[i]) {
+    if (set->items[i] && set->items[i] != SET_DELETED_HASH) {
       set_add(&new, set->items[i]);
     }
   }
@@ -54,7 +54,7 @@ void set_resize(Set *set, usize size) {
   set->count = 0;
   set->deleted = 0;
   for (usize i = 0; i < old_cap; ++i) {
-    if (old_items[i]) {
+    if (old_items[i] && old_items[i] != SET_DELETED_HASH) {
       set_add(set, old_items[i]);
     }
   }
