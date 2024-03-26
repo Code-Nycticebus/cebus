@@ -12,14 +12,14 @@ static CmpOrdering sort_by_occurence(const void *context, const void *a,
                         *hm_get_u32(context, str_hash(*(Str *)b)));
 }
 
-int main(int argc, const char** argv) {
+int main(int argc, const char **argv) {
   // Takes an argument
   Str file = argc < 2 ? STR(__FILE__) : str_from_cstr(argv[1]);
 
   // Initialize arena for allocation
   Arena arena = {0};
 
-  // Create error 
+  // Create error
   Error error = ErrNew;
   // Read the entire file
   Str content = file_read_str(file, &arena, &error);
@@ -64,10 +64,9 @@ int main(int argc, const char** argv) {
   // Sort the array using the sorting function
   da_sort_ctx(&words, &words, sort_by_occurence, occurences);
 
-
   // stats
   clib_log_info(STR_FMT, STR_ARG(file));
-  clib_log_info("contains: %"USIZE_FMT" words", words.len);
+  clib_log_info("contains: %" USIZE_FMT " words", words.len);
   // print out the first 3 words
   for (usize i = 0; i < 3; ++i) {
     clib_log_info("%" USIZE_FMT ": %d, " STR_FMT, i + 1,
