@@ -33,9 +33,12 @@ Bytes io_read(FILE *file, usize size, void *buffer, Error *error) {
 
 Str io_read_line(FILE *file, usize size, char *buffer, Error *error) {
   clearerr(file);
-  fgets(buffer, (int)size, file);
-  if (ferror(file)) {
-    error_emit(error, errno, "Could not read line: %s", strerror(errno));
+  if (fgets(buffer, (int)size, file) == NULL) {
+    if (ferror(file)) {
+      error_emit(error, errno, "Could not read line: %s", strerror(errno));
+      return (Str){0};
+    }
+    error_emit(error, EOF, "EOF");
     return (Str){0};
   }
   return str_from_cstr(buffer);
