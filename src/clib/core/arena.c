@@ -10,7 +10,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define CHUNK_DEFAULT_SIZE KILOBYTES(8)
+#define CHUNK_DEFAULT_SIZE GIGABYTES(8)
 
 struct Chunk {
   Chunk *next, *prev;
@@ -113,6 +113,12 @@ void *arena_realloc_chunk(Arena *arena, void *ptr, usize size) {
     return chunk->data;
   }
   Chunk *new_chunk = realloc(chunk, sizeof(Chunk) + size);
+  if (new_chunk->prev) {
+    new_chunk->prev->next = new_chunk;
+  }
+  if (new_chunk->next) {
+    new_chunk->next->prev = new_chunk;
+  }
   return new_chunk->data;
 }
 
