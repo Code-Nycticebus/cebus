@@ -8,14 +8,18 @@ typedef struct {
   LLNode *begin, *end;
 } LinkedList;
 
-void ll_append(LinkedList *ll, LLNode *node);
+void _ll_append(LinkedList *ll, LLNode *node);
+
+#define ll_append(ll, node) _ll_append(ll, &(node)->head)
 
 #define ll_for_each(T, ll, next)                                               \
   for (T *next = (T *)(ll)->begin; next; next = (T *)next->head.next)
 
+#define LL_HEAD LLNode head
+
 /////////////////////////////////////////////////////////////
 
-void ll_append(LinkedList *ll, LLNode *node) {
+void _ll_append(LinkedList *ll, LLNode *node) {
   if (ll->begin == NULL) {
     ll->begin = node;
   }
@@ -34,14 +38,14 @@ void ll_append(LinkedList *ll, LLNode *node) {
 #include <stdlib.h>
 
 typedef struct {
-  LLNode head;
+  LL_HEAD;
   int value;
 } IntNode;
 
-static LLNode *int_node_init(int value, Arena *arena) {
+static IntNode *int_node_init(int value, Arena *arena) {
   IntNode *node = arena_calloc(arena, sizeof(IntNode));
   node->value = value;
-  return (LLNode *)node;
+  return node;
 }
 
 int main(void) {
