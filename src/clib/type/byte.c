@@ -1,8 +1,8 @@
 #include "byte.h"
 
 #include "clib/type/char.h"
-#include "integer.h"
-#include "string.h"
+#include "clib/type/integer.h"
+#include "clib/type/string.h"
 
 #include <stdio.h>
 #include <string.h>
