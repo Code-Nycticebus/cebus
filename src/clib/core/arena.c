@@ -1,6 +1,7 @@
 #include "arena.h"
 
 #include "clib/core/assert.h"
+#include "clib/core/defines.h"
 #include "clib/type/integer.h"
 
 #include <errno.h>
@@ -10,7 +11,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define CHUNK_DEFAULT_SIZE GIGABYTES(8)
+#define CHUNK_DEFAULT_SIZE KILOBYTES(8)
 
 struct Chunk {
   Chunk *next, *prev;
