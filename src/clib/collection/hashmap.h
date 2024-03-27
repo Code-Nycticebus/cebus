@@ -107,7 +107,7 @@ bool hm_insert_ptr(HashMap *hm, u64 hash, const void *value);
 HM_TYPES(HM_GET_MUT_DECL)
 #undef HM_GET_MUT_DECL
 
-void **hm_get_ptr_mut(const HashMap *hm, u64 hash);
+void *hm_get_ptr_mut(const HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -115,7 +115,7 @@ void **hm_get_ptr_mut(const HashMap *hm, u64 hash);
 HM_TYPES(HM_GET_DECL)
 #undef HM_GET_DECL
 
-const void **hm_get_ptr(const HashMap *hm, u64 hash);
+const void *hm_get_ptr(const HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 
