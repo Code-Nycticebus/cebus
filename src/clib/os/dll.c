@@ -1,8 +1,9 @@
 #include "dll.h"
 
 #include "clib/core/platform.h"
+#include "clib/os/fs.h"
 #include "clib/type/integer.h"
-#include "fs.h"
+#include "clib/type/string.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -30,13 +31,20 @@ Dll *dll_load(Str path, Error *error) {
 
 void dll_close(Dll *handle) { dlclose(handle); }
 
-Function dll_symbol(Dll *handle, const char *symbol, Error *error) {
+Function dll_symbol(Dll *handle, Str symbol, Error *error) {
+  Arena arena = {0};
+  Str safe_symbol = str_copy(symbol, &arena);
+
   Function fn;
-  *(void **)(&fn) = dlsym(handle, symbol);
+  *(void **)(&fn) = dlsym(handle, safe_symbol.data);
   if (fn == NULL) {
-    error_emit(error, -1, "dll function: %s: %s\n", symbol, dlerror());
-    return NULL;
+    error_emit(error, -1, "dll function: %s: %s\n", safe_symbol.data,
+               dlerror());
+    goto defer;
   }
+
+defer:
+  arena_free(&arena);
   return fn;
 }
 
@@ -78,14 +86,19 @@ void dll_close(Dll *handle) {
   DeleteFile(temp_file_name);
 }
 
-Function dll_symbol(Dll *handle, const char *symbol, Error *error) {
-  Function fn = (Function)GetProcAddress(handle, symbol);
+Function dll_symbol(Dll *handle, Str symbol, Error *error) {
+  Arena arena = {0};
+  Str safe_symbol = str_copy(symbol, &arena);
+  Function fn = (Function)GetProcAddress(handle, safe_symbol.data);
   if (fn == NULL) {
     DWORD err_code = GetLastError();
-    error_emit(error, (i32)err_code, "dll function: %s: %lu\n", symbol,
-               err_code);
-    return NULL;
+    error_emit(error, (i32)err_code, "dll function: %s: %lu\n",
+               safe_symbol.data, err_code);
+    goto defer;
   }
+
+defer:
+  arena_free(&arena);
   return fn;
 }
 
