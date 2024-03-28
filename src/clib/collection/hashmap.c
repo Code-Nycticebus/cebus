@@ -250,16 +250,18 @@ bool hm_insert_ptr(HashMap *hm, u64 hash, const void *value) {
 #define HM_GET_MUT_IMPL(T)                                                     \
   T *hm_get_##T##_mut(const HashMap *hm, u64 hash) {                           \
     TYPE_CHECK(hm, HM_TYPE_##T);                                               \
-    return &hm_get(hm, hash)->as.T;                                            \
+    HashValue *value = hm_get(hm, hash);                                       \
+    return value ? &value->as.T : NULL;                                        \
   }
 
 HM_TYPES(HM_GET_MUT_IMPL)
 
 #undef HM_GET_MUT_IMPL
 
-void **hm_get_ptr_mut(const HashMap *hm, u64 hash) {
+void *hm_get_ptr_mut(const HashMap *hm, u64 hash) {
   TYPE_CHECK(hm, HM_PTR);
-  return &hm_get(hm, hash)->as.ptr;
+  HashValue *value = hm_get(hm, hash);
+  return value ? value->as.ptr : NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -273,9 +275,10 @@ HM_TYPES(HM_GET_IMPL)
 
 #undef HM_GET_IMPL
 
-const void **hm_get_ptr(const HashMap *hm, u64 hash) {
+const void *hm_get_ptr(const HashMap *hm, u64 hash) {
   TYPE_CHECK(hm, HM_CONST_PTR && hm->type != HM_PTR);
-  return &hm_get(hm, hash)->as.const_ptr;
+  HashValue *value = hm_get(hm, hash);
+  return value ? value->as.const_ptr : NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
