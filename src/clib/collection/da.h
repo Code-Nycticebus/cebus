@@ -160,10 +160,10 @@ destination.
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define da_push(list, item)                                                    \
+#define da_push(list, ...)                                                     \
   do {                                                                         \
     da_reserve((list), 1);                                                     \
-    da_get(list, da_len(list)++) = (item);                                     \
+    da_get(list, da_len(list)++) = (__VA_ARGS__);                              \
   } while (0)
 
 #define da_extend(list, count, _items)                                         \
