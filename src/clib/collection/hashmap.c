@@ -51,7 +51,7 @@ struct HashMap {
 ////////////////////////////////////////////////////////////////////////////
 
 static bool hm_insert(HashMap *hm, u64 hash, HashValue value) {
-  if (hash == 0) {
+  if (hash == 0 || hash == HM_DELETED_HASH) {
     hash = u64_hash(hash);
   }
   if (hm->cap <= hm->count + hm->deleted) {
@@ -88,7 +88,10 @@ static HashValue *hm_get(const HashMap *hm, u64 hash) {
 
   usize idx = hash % hm->cap;
   for (usize i = 0; i < hm->cap; i++) {
-    if (hm->nodes[idx].key && hm->nodes[idx].key == hash) {
+    if (hm->nodes[idx].key == 0) {
+      return NULL;
+    }
+    if (hm->nodes[idx].key == hash) {
       return &hm->nodes[idx].value;
     }
     idx = (idx + i * i) % hm->cap;
@@ -186,7 +189,7 @@ void hm_reserve(HashMap *hm, usize size) {
 void hm_update(HashMap *hm, HashMap *other) {
   hm_reserve(hm, other->count);
   for (usize i = 0; i < other->cap; ++i) {
-    if (other->nodes[i].key) {
+    if (other->nodes[i].key && other->nodes[i].key != HM_DELETED_HASH) {
       hm_insert(hm, other->nodes[i].key, other->nodes[i].value);
     }
   }
