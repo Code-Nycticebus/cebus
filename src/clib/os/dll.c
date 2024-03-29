@@ -33,13 +33,12 @@ void dll_close(Dll *handle) { dlclose(handle); }
 
 Function dll_symbol(Dll *handle, Str symbol, Error *error) {
   Arena arena = {0};
-  Str safe_symbol = str_copy(symbol, &arena);
+  symbol = str_copy(symbol, &arena);
 
   Function fn;
-  *(void **)(&fn) = dlsym(handle, safe_symbol.data);
+  *(void **)(&fn) = dlsym(handle, symbol.data);
   if (fn == NULL) {
-    error_emit(error, -1, "dll function: %s: %s\n", safe_symbol.data,
-               dlerror());
+    error_emit(error, -1, "dll function: %s: %s\n", symbol.data, dlerror());
     goto defer;
   }
 
@@ -88,12 +87,12 @@ void dll_close(Dll *handle) {
 
 Function dll_symbol(Dll *handle, Str symbol, Error *error) {
   Arena arena = {0};
-  Str safe_symbol = str_copy(symbol, &arena);
-  Function fn = (Function)GetProcAddress(handle, safe_symbol.data);
+  symbol = str_copy(symbol, &arena);
+  Function fn = (Function)GetProcAddress(handle, symbol.data);
   if (fn == NULL) {
     DWORD err_code = GetLastError();
-    error_emit(error, (i32)err_code, "dll function: %s: %lu\n",
-               safe_symbol.data, err_code);
+    error_emit(error, (i32)err_code, "dll function: %s: %lu\n", symbol.data,
+               err_code);
     goto defer;
   }
 
