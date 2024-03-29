@@ -486,7 +486,8 @@ error_context(&error, {
 
 - **`dll_load(path, error)`**: Loads a dynamic link library.
 - **`dll_close(handle)`**: Closes an opened dynamic link library.
-- **`dll_symbol(handle, symbol, error)`**: Retrieves a symbol from the dynamic link library.
+- **`dll_symbol(handle, symbol, error)`**: Retrieves a symbol from the dynamic
+link library.
 
 
 ## Usage Example
