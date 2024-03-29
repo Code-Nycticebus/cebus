@@ -43,7 +43,7 @@ int main(int argc, const char **argv) {
   da_init(&words, &arena);
 
   // intialize the HashMap
-  HashMap *occurences = hm_create(&arena);
+  HashMap *word_idx = hm_create(&arena);
 
   // Iterate over the content word by word
   for (Str word = {0}; str_try_chop_by_predicate(&content, predicate, &word);) {
@@ -52,10 +52,10 @@ int main(int argc, const char **argv) {
     u64 hash = str_hash(word);
 
     // search for the word inside of the HashMap
-    const usize *idx = hm_get_usize(occurences, hash);
+    const usize *idx = hm_get_usize(word_idx, hash);
     if (idx == NULL) {
       // Insert index into HashMap
-      hm_insert_usize(occurences, hash, words.len);
+      hm_insert_usize(word_idx, hash, words.len);
       // Push it into the dynamic array
       da_push(&words, (WordOccurence){.word = word, .count = 1});
     } else {
@@ -75,7 +75,6 @@ int main(int argc, const char **argv) {
     clib_log_info("%" USIZE_FMT ": %d, " STR_FMT, i + 1,
                   da_get(&words, i).count, STR_ARG(da_get(&words, i).word));
   }
-
   // free the memory
   arena_free(&arena);
 }
