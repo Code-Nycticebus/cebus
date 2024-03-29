@@ -120,6 +120,9 @@ void *arena_realloc_chunk(Arena *arena, void *ptr, usize size) {
   if (new_chunk->next) {
     new_chunk->next->prev = new_chunk;
   }
+  if (arena->begin == chunk) {
+    arena->begin = new_chunk;
+  }
   return new_chunk->data;
 }
 
