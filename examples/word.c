@@ -47,7 +47,6 @@ int main(int argc, const char **argv) {
 
   // Iterate over the content word by word
   for (Str word = {0}; str_try_chop_by_predicate(&content, predicate, &word);) {
-
     // calculate hash of the current word
     u64 hash = str_hash(word);
 
@@ -69,7 +68,7 @@ int main(int argc, const char **argv) {
 
   // print stats
   clib_log_info(STR_FMT, STR_ARG(file));
-  clib_log_info("contains: %" USIZE_FMT " words", words.len);
+  clib_log_info("contains: %" USIZE_FMT " unique words", words.len);
   // print out the first 3 words
   for (usize i = 0; i < 3; ++i) {
     clib_log_info("%" USIZE_FMT ": %d, " STR_FMT, i + 1,
