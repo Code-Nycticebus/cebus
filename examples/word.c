@@ -5,11 +5,16 @@
 // predicate function
 static bool predicate(char c) { return c_is_space(c) || c_is_punct(c); }
 
+typedef struct {
+  Str word;
+  i32 count;
+} WordOccurence;
+
 // sorting function
-static CmpOrdering sort_by_occurence(const void *context, const void *a,
-                                     const void *b) {
-  return u32_compare_gt(*hm_get_u32(context, str_hash(*(Str *)a)),
-                        *hm_get_u32(context, str_hash(*(Str *)b)));
+static CmpOrdering sort_by_occurence(const void *a_ptr, const void *b_ptr) {
+  const WordOccurence *a = a_ptr;
+  const WordOccurence *b = b_ptr;
+  return b->count - a->count;
 }
 
 int main(int argc, const char **argv) {
@@ -34,7 +39,7 @@ int main(int argc, const char **argv) {
   });
 
   // initialize the dynamic array
-  DA(Str) words = {0};
+  DA(WordOccurence) words = {0};
   da_init(&words, &arena);
 
   // intialize the HashMap
@@ -47,31 +52,28 @@ int main(int argc, const char **argv) {
     u64 hash = str_hash(word);
 
     // search for the word inside of the HashMap
-    u32 *count = hm_get_u32_mut(occurences, hash);
-
-    // If its not found
-    if (count == NULL) {
+    const usize *idx = hm_get_usize(occurences, hash);
+    if (idx == NULL) {
+      // Insert index into HashMap
+      hm_insert_usize(occurences, hash, words.len);
       // Push it into the dynamic array
-      da_push(&words, word);
-      // Insert it into HashMap with a count of one
-      hm_insert_u32(occurences, hash, 1);
+      da_push(&words, (WordOccurence){.word = word, .count = 1});
     } else {
       // increase the count
-      *count += 1;
+      da_get(&words, *idx).count++;
     }
   }
 
-  // Sort the array using the sorting function
-  da_sort_ctx(&words, &words, sort_by_occurence, occurences);
+  // Sort the array
+  da_sort(&words, &words, sort_by_occurence);
 
-  // stats
+  // print stats
   clib_log_info(STR_FMT, STR_ARG(file));
   clib_log_info("contains: %" USIZE_FMT " words", words.len);
   // print out the first 3 words
   for (usize i = 0; i < 3; ++i) {
     clib_log_info("%" USIZE_FMT ": %d, " STR_FMT, i + 1,
-                  *hm_get_u32(occurences, str_hash(da_get(&words, i))),
-                  STR_ARG(da_get(&words, i)));
+                  da_get(&words, i).count, STR_ARG(da_get(&words, i).word));
   }
 
   // free the memory
