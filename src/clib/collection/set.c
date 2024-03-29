@@ -148,7 +148,10 @@ bool set_contains(const Set *set, u64 hash) {
 
   usize idx = hash % set->cap;
   for (usize i = 0; i < set->cap; i++) {
-    if (set->items[idx] && set->items[idx] == hash) {
+    if (set->items[idx] == 0) {
+      return false;
+    }
+    if (set->items[idx] == hash) {
       return true;
     }
     idx = (idx + i * i) % set->cap;
