@@ -1,61 +1,34 @@
 #include "sorting.h"
 
-#if defined(WINDOWS)
-#include <malloc.h>
-#ifndef alloca
-#define alloca _alloca
-#endif
-#else
-#include <alloca.h>
-#endif
+#include <stdlib.h>
 #include <string.h>
 
 ////////////////////////////////////////////////////////////////////////////
-
-static void swap(void *a, void *b, usize size) {
-  u8 *temp = alloca(size);
-  memcpy(temp, a, size);
-  memcpy(a, b, size);
-  memcpy(b, temp, size);
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-static usize partition(u8 *base, usize size, usize low, usize high,
-                       CompareFn compare) {
-  u8 *pivot = &base[high * size];
-  usize i = low - 1;
-  for (usize j = low; j <= high - 1; j++) {
-    if (compare(&base[j * size], pivot) < 0) {
-      i++;
-      swap(&base[i * size], &base[j * size], size);
-    }
-  }
-  swap(&base[(i + 1) * size], pivot, size);
-  return (i + 1);
-}
-
-static void _quicksort(void *base, size_t size, usize low, usize high,
-                       CompareFn compare) {
-  if (low < high) {
-    usize pi = partition(base, size, low, high, compare);
-    _quicksort(base, size, low, pi ? pi - 1 : 0, compare);
-    _quicksort(base, size, pi + 1, high, compare);
-  }
-}
 
 void quicksort(const void *src, void *dest, usize size, usize nelem,
                CompareFn compare) {
   if (dest != src) {
     memcpy(dest, src, size * nelem);
   }
-  _quicksort(dest, size, 0, nelem - 1, compare);
+  qsort(dest, nelem, size, compare);
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-static usize partition_ctx(u8 *base, usize size, usize low, usize high,
-                           CompareCtxFn compare, const void *ctx) {
+static inline void swap(void *a, void *b, usize size) {
+  u8 *pa = a;
+  u8 *pb = b;
+  for (usize i = 0; i < size; ++i) {
+    u8 temp = pa[i];
+    pa[i] = pb[i];
+    pb[i] = temp;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+static inline usize partition_ctx(u8 *base, usize size, usize low, usize high,
+                                  CompareCtxFn compare, const void *ctx) {
   u8 *pivot = &base[high * size];
   usize i = low - 1;
   for (usize j = low; j <= high - 1; j++) {
