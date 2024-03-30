@@ -45,8 +45,11 @@ int main(int argc, const char **argv) {
   // intialize the HashMap
   HashMap *word_idx = hm_create(&arena);
 
+  usize total_words = 0;
   // Iterate over the content word by word
   for (Str word = {0}; str_try_chop_by_predicate(&content, predicate, &word);) {
+    total_words++;
+
     // calculate hash of the current word
     u64 hash = str_hash(word);
 
@@ -67,13 +70,15 @@ int main(int argc, const char **argv) {
   da_sort(&words, &words, sort_by_occurence);
 
   // print stats
-  clib_log_info(STR_FMT, STR_ARG(file));
-  clib_log_info("contains: %" USIZE_FMT " unique words", words.len);
-  // print out the first 3 words
+  clib_log_info("File: '" STR_FMT "'", STR_ARG(file));
+  clib_log_info("total words:  %" USIZE_FMT, total_words);
+  clib_log_info("unique words: %" USIZE_FMT, words.len);
+  // print out the 3 most occuring words
   for (usize i = 0; i < 3; ++i) {
-    clib_log_info("%" USIZE_FMT ": %d, " STR_FMT, i + 1,
+    clib_log_info(" %" USIZE_FMT ": %d times: '" STR_FMT "'", i + 1,
                   da_get(&words, i).count, STR_ARG(da_get(&words, i).word));
   }
+
   // free the memory
   arena_free(&arena);
 }
