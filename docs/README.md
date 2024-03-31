@@ -507,14 +507,18 @@ dll_close(myLib);
 ## Functions
 
 - **Reading Files**:
-  - `file_read_bytes(filename, arena, error)`: Reads the entire file into a byte array.
-  - `file_read_str(filename, arena, error)`: Reads the entire file into a string.
-  - `file_read_utf8(filename, arena, error)`: Reads the entire file into UTF-8 format.
+  - `file_read_bytes(filename, arena, error)`: Reads the entire file into a byte
+array.
+  - `file_read_str(filename, arena, error)`: Reads the entire file into a
+string.
+  - `file_read_utf8(filename, arena, error)`: Reads the entire file into UTF-8
+format.
 
 - **Writing Files**:
-  - `file_write(filename, bytes, error)`: Writes byte data to a file.
+  - `file_write_bytes(filename, bytes, error)`: Writes byte data to a file.
   - `file_write_str(filename, content, error)`: Writes a string to a file.
-  - `file_write_utf8(filename, content, error)`: Writes UTF-8 formatted data to a file.
+  - `file_write_utf8(filename, content, error)`: Writes UTF-8 formatted data to
+a file.
 
 - **File Management**:
   - `file_open(filename, mode, error)`: Opens a file with the specified mode.
@@ -539,12 +543,16 @@ arena_free(&arena);
 ## Functions
 
 - **Output**:
-  - `io_write(file, bytes, error)`: Writes byte data to a file or stream.
+  - `io_write(file, fmt, ...)`: Writes a formated string into the file
+  - `io_write_bytes(file, bytes, error)`: Writes byte data to a file or stream.
 
 - **Input**:
-  - `io_read(file, size, buffer, error)`: Reads a specified amount of byte data from a file or stream into a buffer.
-  - `io_read_line(file, size, buffer, error)`: Reads a line of text from a file or stream into a buffer.
-  - `input(prefix)`: Displays a prompt and reads a line of text from standard input.
+  - `io_read_bytes(file, size, buffer, error)`: Reads a specified amount of byte
+data from a file or stream into a buffer.
+  - `io_read_line(file, size, buffer, error)`: Reads a line of text from a file
+or stream into a buffer.
+  - `input(prefix)`: Displays a prompt and reads a line of text from standard
+input.
 
 ## Usage Example
 

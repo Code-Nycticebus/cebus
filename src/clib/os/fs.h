@@ -2,14 +2,18 @@
 ## Functions
 
 - **Reading Files**:
-  - `file_read_bytes(filename, arena, error)`: Reads the entire file into a byte array.
-  - `file_read_str(filename, arena, error)`: Reads the entire file into a string.
-  - `file_read_utf8(filename, arena, error)`: Reads the entire file into UTF-8 format.
+  - `file_read_bytes(filename, arena, error)`: Reads the entire file into a byte
+array.
+  - `file_read_str(filename, arena, error)`: Reads the entire file into a
+string.
+  - `file_read_utf8(filename, arena, error)`: Reads the entire file into UTF-8
+format.
 
 - **Writing Files**:
-  - `file_write(filename, bytes, error)`: Writes byte data to a file.
+  - `file_write_bytes(filename, bytes, error)`: Writes byte data to a file.
   - `file_write_str(filename, content, error)`: Writes a string to a file.
-  - `file_write_utf8(filename, content, error)`: Writes UTF-8 formatted data to a file.
+  - `file_write_utf8(filename, content, error)`: Writes UTF-8 formatted data to
+a file.
 
 - **File Management**:
   - `file_open(filename, mode, error)`: Opens a file with the specified mode.
@@ -58,7 +62,7 @@ Bytes file_read_bytes(Str filename, Arena *arena, Error *error);
 Str file_read_str(Str filename, Arena *arena, Error *error);
 Utf8 file_read_utf8(Str filename, Arena *arena, Error *error);
 
-void file_write(Str filename, Bytes bytes, Error *error);
+void file_write_bytes(Str filename, Bytes bytes, Error *error);
 void file_write_str(Str filename, Str content, Error *error);
 void file_write_utf8(Str filename, Utf8 content, Error *error);
 

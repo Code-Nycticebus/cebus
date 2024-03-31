@@ -56,7 +56,7 @@ Bytes file_read_bytes(Str filename, Arena *arena, Error *error) {
   error_propagate(error, { goto defer; });
 
   u8 *buffer = arena_alloc(arena, size);
-  result = io_read(handle, size, buffer, error);
+  result = io_read_bytes(handle, size, buffer, error);
   error_propagate(error, { goto defer; });
 
 defer:
@@ -81,11 +81,11 @@ Utf8 file_read_utf8(Str filename, Arena *arena, Error *error) {
   return res;
 }
 
-void file_write(Str filename, Bytes bytes, Error *error) {
+void file_write_bytes(Str filename, Bytes bytes, Error *error) {
   FILE *handle = file_open(filename, "w", error);
   error_propagate(error, { goto defer; });
 
-  io_write(handle, bytes, error);
+  io_write_bytes(handle, bytes, error);
   error_propagate(error, { goto defer; });
 
 defer:
@@ -95,13 +95,13 @@ defer:
 }
 
 void file_write_str(Str filename, Str content, Error *error) {
-  file_write(filename, str_to_bytes(content), error);
+  file_write_bytes(filename, str_to_bytes(content), error);
 }
 
 void file_write_utf8(Str filename, Utf8 content, Error *error) {
   Bytes bytes = utf8_encode(content, error);
   error_propagate(error, { return; });
-  file_write(filename, bytes, error);
+  file_write_bytes(filename, bytes, error);
 }
 
 void file_rename(Str old_name, Str new_name, Error *error) {

@@ -4,6 +4,7 @@
 #include "clib/type/string.h"
 
 #include <errno.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -13,7 +14,15 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-void io_write(FILE *file, Bytes bytes, Error *error) {
+usize io_write(FILE *file, const char *fmt, ...) {
+  va_list va;
+  va_start(va, fmt);
+  i32 size = vfprintf(file, fmt, va);
+  va_end(va);
+  return (usize)size;
+}
+
+void io_write_bytes(FILE *file, Bytes bytes, Error *error) {
   errno = 0;
   fwrite(bytes.data, sizeof(bytes.data[0]), bytes.size, file);
   if (ferror(file)) {
@@ -21,7 +30,7 @@ void io_write(FILE *file, Bytes bytes, Error *error) {
   }
 }
 
-Bytes io_read(FILE *file, usize size, void *buffer, Error *error) {
+Bytes io_read_bytes(FILE *file, usize size, void *buffer, Error *error) {
   errno = 0;
   const usize bytes_read = fread(buffer, sizeof(u8), size, file);
   if (ferror(file)) {
