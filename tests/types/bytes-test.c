@@ -101,6 +101,15 @@ static void test_bytes_from_hex(void) {
   clib_assert(b3.data[1] == 0x01, "conversion was not correct: %x", b1.data[1]);
 }
 
+static void test_bytes_hash(void) {
+  Bytes b1 = BYTES_STR("abc");
+  Bytes b2 = BYTES_STR("abc");
+  Bytes b3 = BYTES_STR("bcd");
+
+  clib_assert(bytes_hash(b1) == bytes_hash(b2), "should be equal");
+  clib_assert(bytes_hash(b1) != bytes_hash(b3), "should not be equal");
+}
+
 int main(void) {
   test_bytes();
   test_bytes_str();
@@ -109,4 +118,5 @@ int main(void) {
   test_bytes_slice();
   test_bytes_take();
   test_bytes_from_hex();
+  test_bytes_hash();
 }

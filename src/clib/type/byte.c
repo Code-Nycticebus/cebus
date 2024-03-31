@@ -47,6 +47,17 @@ bool bytes_eq(Bytes b1, Bytes b2) {
   return memcmp(b1.data, b2.data, b1.size) == 0;
 }
 
+u64 bytes_hash(Bytes bytes) {
+  const u64 offset = 2166136261UL;
+  const u64 prime = 16777619;
+  u64 hash = offset;
+  for (usize i = 0; i < bytes.size; i++) {
+    hash ^= (unsigned long)bytes.data[i];
+    hash *= prime;
+  }
+  return hash;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 Str bytes_to_hex(Bytes bytes, Arena *arena) {
