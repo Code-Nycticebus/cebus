@@ -1,4 +1,4 @@
-/* Converts a file into a .h file */
+/* Converts a files bytes into a byte array and saves it as a .h file */
 
 #include "clib/clib.h"
 
