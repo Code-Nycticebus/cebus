@@ -30,8 +30,6 @@ typedef enum {
   HM_TYPES(HM_DECLARE_ENUM)
 } HashTypes;
 
-#undef HM_DECLARE_ENUM
-
 #define HM_DECLARE_MEMBER(T) T T;
 
 typedef struct {
@@ -127,7 +125,6 @@ static const char *hm_type(HashTypes type) {
 
     HM_TYPES(RETURN_STR)
   }
-#undef RETURN_STR
   clib_assert(false, "UNREACHABLE: %d", type);
   return NULL;
 }
@@ -247,8 +244,6 @@ bool hm_remove(HashMap *hm, u64 hash) {
 
 HM_TYPES(HM_INSERT_IMPL)
 
-#undef HM_INSERT_IMPL
-
 bool hm_insert_mut_ptr(HashMap *hm, u64 hash, void *value) {
   TYPE_CHECK(hm, HM_PTR);
   hm->type = HM_PTR;
@@ -272,8 +267,6 @@ bool hm_insert_ptr(HashMap *hm, u64 hash, const void *value) {
 
 HM_TYPES(HM_GET_MUT_IMPL)
 
-#undef HM_GET_MUT_IMPL
-
 void *hm_get_ptr_mut(const HashMap *hm, u64 hash) {
   TYPE_CHECK(hm, HM_PTR);
   HashValue *value = hm_get(hm, hash);
@@ -288,8 +281,6 @@ void *hm_get_ptr_mut(const HashMap *hm, u64 hash) {
   }
 
 HM_TYPES(HM_GET_IMPL)
-
-#undef HM_GET_IMPL
 
 const void *hm_get_ptr(const HashMap *hm, u64 hash) {
   TYPE_CHECK(hm, HM_CONST_PTR && hm->type != HM_PTR);
