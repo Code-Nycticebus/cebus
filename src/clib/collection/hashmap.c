@@ -8,6 +8,19 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
+#define HM_TYPES(DO)                                                           \
+  DO(f32)                                                                      \
+  DO(f64)                                                                      \
+  DO(i8)                                                                       \
+  DO(u8)                                                                       \
+  DO(i16)                                                                      \
+  DO(u16)                                                                      \
+  DO(i32)                                                                      \
+  DO(u32)                                                                      \
+  DO(i64)                                                                      \
+  DO(u64)                                                                      \
+  DO(usize)
+
 #define HM_DECLARE_ENUM(T) HM_TYPE_##T,
 
 typedef enum {

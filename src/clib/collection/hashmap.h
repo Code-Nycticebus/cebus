@@ -81,40 +81,48 @@ bool hm_remove(HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define HM_TYPES(DO)                                                           \
-  DO(f32)                                                                      \
-  DO(f64)                                                                      \
-  DO(i8)                                                                       \
-  DO(u8)                                                                       \
-  DO(i16)                                                                      \
-  DO(u16)                                                                      \
-  DO(i32)                                                                      \
-  DO(u32)                                                                      \
-  DO(i64)                                                                      \
-  DO(u64)                                                                      \
-  DO(usize)
-
-#define HM_INSERT_DECL(T) bool hm_insert_##T(HashMap *hm, u64 hash, T value);
-HM_TYPES(HM_INSERT_DECL)
-#undef HM_INSERT_DECL
-
+bool hm_insert_f32(HashMap *hm, u64 hash, f32 value);
+bool hm_insert_f64(HashMap *hm, u64 hash, f64 value);
+bool hm_insert_i8(HashMap *hm, u64 hash, i8 value);
+bool hm_insert_u8(HashMap *hm, u64 hash, u8 value);
+bool hm_insert_i16(HashMap *hm, u64 hash, i16 value);
+bool hm_insert_u16(HashMap *hm, u64 hash, u16 value);
+bool hm_insert_i32(HashMap *hm, u64 hash, i32 value);
+bool hm_insert_u32(HashMap *hm, u64 hash, u32 value);
+bool hm_insert_i64(HashMap *hm, u64 hash, i64 value);
+bool hm_insert_u64(HashMap *hm, u64 hash, u64 value);
+bool hm_insert_usize(HashMap *hm, u64 hash, usize value);
 bool hm_insert_mut_ptr(HashMap *hm, u64 hash, void *value);
 bool hm_insert_ptr(HashMap *hm, u64 hash, const void *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define HM_GET_MUT_DECL(T) T *hm_get_##T##_mut(const HashMap *hm, u64 hash);
-HM_TYPES(HM_GET_MUT_DECL)
-#undef HM_GET_MUT_DECL
-
+f32 *hm_get_f32_mut(const HashMap *hm, u64 hash);
+f64 *hm_get_f64_mut(const HashMap *hm, u64 hash);
+i8 *hm_get_i8_mut(const HashMap *hm, u64 hash);
+u8 *hm_get_u8_mut(const HashMap *hm, u64 hash);
+i16 *hm_get_i16_mut(const HashMap *hm, u64 hash);
+u16 *hm_get_u16_mut(const HashMap *hm, u64 hash);
+i32 *hm_get_i32_mut(const HashMap *hm, u64 hash);
+u32 *hm_get_u32_mut(const HashMap *hm, u64 hash);
+i64 *hm_get_i64_mut(const HashMap *hm, u64 hash);
+u64 *hm_get_u64_mut(const HashMap *hm, u64 hash);
+usize *hm_get_usize_mut(const HashMap *hm, u64 hash);
 void *hm_get_ptr_mut(const HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define HM_GET_DECL(T) const T *hm_get_##T(const HashMap *hm, u64 hash);
-HM_TYPES(HM_GET_DECL)
-#undef HM_GET_DECL
-
+const f32 *hm_get_f32(const HashMap *hm, u64 hash);
+const f64 *hm_get_f64(const HashMap *hm, u64 hash);
+const i8 *hm_get_i8(const HashMap *hm, u64 hash);
+const u8 *hm_get_u8(const HashMap *hm, u64 hash);
+const i16 *hm_get_i16(const HashMap *hm, u64 hash);
+const u16 *hm_get_u16(const HashMap *hm, u64 hash);
+const i32 *hm_get_i32(const HashMap *hm, u64 hash);
+const u32 *hm_get_u32(const HashMap *hm, u64 hash);
+const i64 *hm_get_i64(const HashMap *hm, u64 hash);
+const u64 *hm_get_u64(const HashMap *hm, u64 hash);
+const usize *hm_get_usize(const HashMap *hm, u64 hash);
 const void *hm_get_ptr(const HashMap *hm, u64 hash);
 
 ///////////////////////////////////////////////////////////////////////////////
