@@ -57,7 +57,7 @@ int main(int argc, const char **argv) {
     }
     usize s = io_write(out, "0x%x,", content.data[i]);
     if (i % 12 != 11) {
-      io_write(out, "%*s", 6 - s, "");
+      io_write(out, "%*s", 6 - (int)s, "");
     }
   }
   io_write(out, "\n};\n\n");
