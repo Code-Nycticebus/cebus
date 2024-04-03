@@ -46,18 +46,18 @@ int main(int argc, const char **argv) {
   io_write(out, "#define __" STR_FMT "_H__\n\n", STR_ARG(upper_name));
 
   // Write size
-  io_write(out, "unsigned long long " STR_FMT "_size = %" USIZE_FMT ";\n",
+  io_write(out, "const unsigned long long " STR_FMT "_size = %" USIZE_FMT ";\n",
            STR_ARG(name), content.size);
 
   // Write content
-  io_write(out, "unsigned char " STR_FMT "[] = {", STR_ARG(name));
+  io_write(out, "const unsigned char " STR_FMT "[] = {", STR_ARG(name));
   for (usize i = 0; i < content.size; ++i) {
     if (i % 12 == 0) {
       io_write(out, "\n\t");
     }
     usize s = io_write(out, "0x%x,", content.data[i]);
     if (i % 12 != 11) {
-      io_write(out, "%*s", 6 - s, "");
+      io_write(out, "%*s", 6 - (int)s, "");
     }
   }
   io_write(out, "\n};\n\n");
