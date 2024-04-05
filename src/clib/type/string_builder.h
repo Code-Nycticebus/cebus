@@ -2,11 +2,6 @@
 The `StringBuilder` provides functionality for efficiently constructing
 strings.
 
-## Data Structures
-
-- **StringBuilder**: A structure holding the dynamic array used as the buffer
-for constructing strings.
-
 ## Functions
 
 - **`StringBuilder sb_init(Arena *arena);`**
