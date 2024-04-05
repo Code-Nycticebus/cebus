@@ -1,4 +1,4 @@
-/*DOCUMENTATION
+/* DOCUMENTATION
 The `StringBuilder` provides functionality for efficiently constructing
 strings.
 
