@@ -36,24 +36,28 @@ static void sb_append_str(StringBuilder *sb, Str str) {
 }
 
 static void sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
-  char buffer[512];
   va_list va;
   va_start(va, fmt);
-  usize size = (usize)vsnprintf(buffer, 512, fmt, va);
+  usize size = (usize)vsnprintf(NULL, 0, fmt, va) + 1;
   va_end(va);
-  sb_append_parts(sb, size, buffer);
+
+  da_reserve(&sb->buffer, size);
+  va_start(va, fmt);
+  vsnprintf(&da_last(&sb->buffer), size, fmt, va);
+  sb->buffer.len += size;
+  va_end(va);
 }
 
 int main(void) {
   Arena arena = {0};
   StringBuilder sb = sb_init(&arena);
 
+  (void)sb_append_cstr, (void)sb_append_str;
   sb_append_cstr(&sb, "Hello");
   sb_append_str(&sb, STR(", "));
-  sb_append_cstr(&sb, "World");
-  sb_append_fmt(&sb, " WHAT: %d", 420);
+  sb_append_cstr(&sb, "World ");
+  sb_append_fmt(&sb, "WHAT: %d", 420);
   Str s = sb_to_str(&sb);
-
   clib_log_info(STR_FMT, STR_ARG(s));
 
   arena_free(&arena);
