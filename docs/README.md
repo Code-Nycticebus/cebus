@@ -80,6 +80,7 @@ gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [float.h](#floath)
    - [integer.h](#integerh)
    - [string.h](#stringh)
+   - [string_builder.h](#string_builderh)
    - [utf8.h](#utf8h)
 
 # Clib
