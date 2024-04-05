@@ -1,3 +1,4 @@
+#include "clib/core/arena.h"
 #include "clib/type/char.h"
 
 #include "clib/core/assert.h"
@@ -280,6 +281,13 @@ static void test_hash(void) {
   }
 }
 
+static void test_format(void) {
+  Arena arena = {0};
+  Str s = str_format(&arena, "%d %d", 420, 69);
+  clib_assert(str_eq(s, STR("420 69")), "Should format correctly!");
+  arena_free(&arena);
+}
+
 int main(void) {
   test_compare();
   test_transform();
@@ -300,4 +308,5 @@ int main(void) {
   test_repeat();
   test_reverse();
   test_hash();
+  test_format();
 }
