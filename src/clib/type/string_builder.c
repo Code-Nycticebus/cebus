@@ -18,7 +18,7 @@ Str sb_to_str(StringBuilder *sb) {
 }
 
 void sb_append_parts(StringBuilder *sb, usize size, const char *s) {
-  da_pop(&sb->buffer);
+  (void)da_pop(&sb->buffer);
   da_extend(&sb->buffer, size, s);
   da_push(&sb->buffer, 0);
 }
