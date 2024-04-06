@@ -42,28 +42,29 @@ int main(int argc, const char **argv) {
 
   // Write Header guard
   Str upper_name = str_upper(name, &arena);
-  io_write(out, "#ifndef __" STR_FMT "_H__\n", STR_ARG(upper_name));
-  io_write(out, "#define __" STR_FMT "_H__\n\n", STR_ARG(upper_name));
+  io_write_fmt(out, "#ifndef __" STR_FMT "_H__\n", STR_ARG(upper_name));
+  io_write_fmt(out, "#define __" STR_FMT "_H__\n\n", STR_ARG(upper_name));
 
   // Write size
-  io_write(out, "const unsigned long long " STR_FMT "_size = %" USIZE_FMT ";\n",
-           STR_ARG(name), content.size);
+  io_write_fmt(out,
+               "const unsigned long long " STR_FMT "_size = %" USIZE_FMT ";\n",
+               STR_ARG(name), content.size);
 
   // Write content
-  io_write(out, "const unsigned char " STR_FMT "[] = {", STR_ARG(name));
+  io_write_fmt(out, "const unsigned char " STR_FMT "[] = {", STR_ARG(name));
   for (usize i = 0; i < content.size; ++i) {
     if (i % 12 == 0) {
-      io_write(out, "\n\t");
+      io_write_fmt(out, "\n\t");
     }
-    usize s = io_write(out, "0x%x,", content.data[i]);
+    usize s = io_write_fmt(out, "0x%x,", content.data[i]);
     if (i % 12 != 11) {
-      io_write(out, "%*s", 6 - (int)s, "");
+      io_write_fmt(out, "%*s", 6 - (int)s, "");
     }
   }
-  io_write(out, "\n};\n\n");
+  io_write_fmt(out, "\n};\n\n");
 
   // End header guard
-  io_write(out, "#endif /* !__" STR_FMT "_H__ */\n", STR_ARG(upper_name));
+  io_write_fmt(out, "#endif /* !__" STR_FMT "_H__ */\n", STR_ARG(upper_name));
 
   // cleanup
   file_close(out, &error);

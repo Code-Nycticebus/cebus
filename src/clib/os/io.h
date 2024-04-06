@@ -40,7 +40,7 @@ input: 'name'
 
 ////////////////////////////////////////////////////////////////////////////
 
-FMT(2) usize io_write(FILE *file, const char *fmt, ...);
+FMT(2) usize io_write_fmt(FILE *file, const char *fmt, ...);
 void io_write_bytes(FILE *file, Bytes bytes, Error *error);
 
 Bytes io_read_bytes(FILE *file, usize size, void *buffer, Error *error);

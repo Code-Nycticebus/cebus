@@ -14,7 +14,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-usize io_write(FILE *file, const char *fmt, ...) {
+usize io_write_fmt(FILE *file, const char *fmt, ...) {
   va_list va;
   va_start(va, fmt);
   i32 size = vfprintf(file, fmt, va);
