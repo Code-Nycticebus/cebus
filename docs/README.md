@@ -60,6 +60,7 @@ gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [da.h](#dah)
    - [hashmap.h](#hashmaph)
    - [set.h](#seth)
+   - [string_builder.h](#string_builderh)
 - [Core](#Core)
    - [arena.h](#arenah)
    - [assert.h](#asserth)
@@ -80,7 +81,6 @@ gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [float.h](#floath)
    - [integer.h](#integerh)
    - [string.h](#stringh)
-   - [string_builder.h](#string_builderh)
    - [utf8.h](#utf8h)
 
 # Clib
@@ -275,6 +275,36 @@ Combine sets or find their differences using algebraic set operations:
 - `set_intersection`: Find the intersection of two sets.
 - `set_difference`: Find the difference between two sets.
 - `set_union`: Combine two sets into a union.
+
+# [string_builder.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/string_builder.h)
+The `StringBuilder` provides functionality for efficiently constructing
+strings.
+
+## Functions
+
+- **`StringBuilder sb_init(Arena *arena);`**
+  Initializes a new `StringBuilder` instance, allocating its buffer using the
+provided memory `arena`.
+
+- **`Str sb_to_str(StringBuilder *sb);`**
+  Converts the contents of the `StringBuilder` to a `Str`, effectively
+finalizing the string construction.
+
+- **`void sb_append_parts(StringBuilder *sb, usize size, const char *s);`**
+  Appends parts of a string to the `StringBuilder`, where `size` specifies the
+number of characters to append, and `s` points to the string parts to be
+appended.
+
+- **`void sb_append_cstr(StringBuilder *sb, const char *cstr);`**
+  Appends a C-style null-terminated string to the `StringBuilder`.
+
+- **`void sb_append_str(StringBuilder *sb, Str str);`**
+  Appends a `Str` type string to the `StringBuilder`.
+
+- **`void sb_append_fmt(StringBuilder *sb, const char *fmt, ...);`**
+  Appends a formatted string to the `StringBuilder`, similar to `printf` style
+formatting.
+
 
 # Core
 
@@ -777,34 +807,4 @@ Str greeting = STR("Hello World");
 Str lower = str_lower(greeting, &arena);
 printf(STR_FMT"\n", STR_ARG(lower));
 ```
-
-# [string_builder.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/string_builder.h)
-The `StringBuilder` provides functionality for efficiently constructing
-strings.
-
-## Functions
-
-- **`StringBuilder sb_init(Arena *arena);`**
-  Initializes a new `StringBuilder` instance, allocating its buffer using the
-provided memory `arena`.
-
-- **`Str sb_to_str(StringBuilder *sb);`**
-  Converts the contents of the `StringBuilder` to a `Str`, effectively
-finalizing the string construction.
-
-- **`void sb_append_parts(StringBuilder *sb, usize size, const char *s);`**
-  Appends parts of a string to the `StringBuilder`, where `size` specifies the
-number of characters to append, and `s` points to the string parts to be
-appended.
-
-- **`void sb_append_cstr(StringBuilder *sb, const char *cstr);`**
-  Appends a C-style null-terminated string to the `StringBuilder`.
-
-- **`void sb_append_str(StringBuilder *sb, Str str);`**
-  Appends a `Str` type string to the `StringBuilder`.
-
-- **`void sb_append_fmt(StringBuilder *sb, const char *fmt, ...);`**
-  Appends a formatted string to the `StringBuilder`, similar to `printf` style
-formatting.
-
 

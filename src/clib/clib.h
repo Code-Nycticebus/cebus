@@ -13,6 +13,7 @@ Include this file to include all the header files that are listed below.
 #include "clib/collection/da.h"
 #include "clib/collection/hashmap.h"
 #include "clib/collection/set.h"
+#include "clib/collection/string_builder.h"
 #include "clib/core/arena.h"
 #include "clib/core/assert.h"
 #include "clib/core/error.h"
@@ -28,7 +29,6 @@ Include this file to include all the header files that are listed below.
 #include "clib/type/float.h"
 #include "clib/type/integer.h"
 #include "clib/type/string.h"
-#include "clib/type/string_builder.h"
 #include "clib/type/utf8.h"
 
 // IWYU pragma: end_exports
