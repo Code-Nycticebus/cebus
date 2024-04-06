@@ -2,12 +2,16 @@
 ## Functions
 
 - **Output**:
-  - `io_write(file, bytes, error)`: Writes byte data to a file or stream.
+  - `io_write(file, fmt, ...)`: Writes a formated string into the file
+  - `io_write_bytes(file, bytes, error)`: Writes byte data to a file or stream.
 
 - **Input**:
-  - `io_read(file, size, buffer, error)`: Reads a specified amount of byte data from a file or stream into a buffer.
-  - `io_read_line(file, size, buffer, error)`: Reads a line of text from a file or stream into a buffer.
-  - `input(prefix)`: Displays a prompt and reads a line of text from standard input.
+  - `io_read_bytes(file, size, buffer, error)`: Reads a specified amount of byte
+data from a file or stream into a buffer.
+  - `io_read_line(file, size, buffer, error)`: Reads a line of text from a file
+or stream into a buffer.
+  - `input(prefix)`: Displays a prompt and reads a line of text from standard
+input.
 
 ## Usage Example
 
@@ -36,8 +40,10 @@ input: 'name'
 
 ////////////////////////////////////////////////////////////////////////////
 
-void io_write(FILE *file, Bytes bytes, Error *error);
-Bytes io_read(FILE *file, usize size, void *buffer, Error *error);
+FMT(2) usize io_write(FILE *file, const char *fmt, ...);
+void io_write_bytes(FILE *file, Bytes bytes, Error *error);
+
+Bytes io_read_bytes(FILE *file, usize size, void *buffer, Error *error);
 Str io_read_line(FILE *file, usize size, char *buffer, Error *error);
 
 ////////////////////////////////////////////////////////////////////////////

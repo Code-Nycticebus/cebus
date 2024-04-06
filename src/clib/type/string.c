@@ -7,6 +7,7 @@
 #include "clib/type/integer.h"
 
 #include <inttypes.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -24,6 +25,19 @@ Bytes str_to_bytes(Str s) { return bytes_from_parts(s.len, s.data); }
 
 Str str_from_cstr(const char *cstr) {
   return (Str){.len = strlen(cstr), .data = cstr};
+}
+
+Str str_format(Arena *arena, const char *fmt, ...) {
+  va_list va;
+  va_start(va, fmt);
+  usize size = (usize)vsnprintf(NULL, 0, fmt, va) + 1;
+  va_end(va);
+
+  char *buffer = arena_calloc(arena, size);
+  va_start(va, fmt);
+  vsnprintf(buffer, size, fmt, va);
+  va_end(va);
+  return str_from_parts(size - 1, buffer);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

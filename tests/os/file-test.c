@@ -14,7 +14,7 @@ int main(void) {
 
   Error *PANIC = ErrPanic;
 
-  file_write(filename1, BYTES(0x69, 0x69), PANIC);
+  file_write_bytes(filename1, BYTES(0x69, 0x69), PANIC);
   clib_assert(file_exists(filename1), "This file should exist");
 
   file_rename(filename1, filename2, PANIC);

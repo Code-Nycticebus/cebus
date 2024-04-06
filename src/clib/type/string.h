@@ -64,6 +64,7 @@ Str str_from_parts(usize size, const char *cstr);
 Str str_from_bytes(Bytes bytes);
 Bytes str_to_bytes(Str s);
 Str str_from_cstr(const char *cstr);
+FMT(2) Str str_format(Arena *arena, const char *fmt, ...);
 
 ///////////////////////////////////////////////////////////////////////////////
 

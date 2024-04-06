@@ -80,6 +80,7 @@ gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
    - [float.h](#floath)
    - [integer.h](#integerh)
    - [string.h](#stringh)
+   - [string_builder.h](#string_builderh)
    - [utf8.h](#utf8h)
 
 # Clib
@@ -507,14 +508,18 @@ dll_close(myLib);
 ## Functions
 
 - **Reading Files**:
-  - `file_read_bytes(filename, arena, error)`: Reads the entire file into a byte array.
-  - `file_read_str(filename, arena, error)`: Reads the entire file into a string.
-  - `file_read_utf8(filename, arena, error)`: Reads the entire file into UTF-8 format.
+  - `file_read_bytes(filename, arena, error)`: Reads the entire file into a byte
+array.
+  - `file_read_str(filename, arena, error)`: Reads the entire file into a
+string.
+  - `file_read_utf8(filename, arena, error)`: Reads the entire file into UTF-8
+format.
 
 - **Writing Files**:
-  - `file_write(filename, bytes, error)`: Writes byte data to a file.
+  - `file_write_bytes(filename, bytes, error)`: Writes byte data to a file.
   - `file_write_str(filename, content, error)`: Writes a string to a file.
-  - `file_write_utf8(filename, content, error)`: Writes UTF-8 formatted data to a file.
+  - `file_write_utf8(filename, content, error)`: Writes UTF-8 formatted data to
+a file.
 
 - **File Management**:
   - `file_open(filename, mode, error)`: Opens a file with the specified mode.
@@ -539,12 +544,16 @@ arena_free(&arena);
 ## Functions
 
 - **Output**:
-  - `io_write(file, bytes, error)`: Writes byte data to a file or stream.
+  - `io_write(file, fmt, ...)`: Writes a formated string into the file
+  - `io_write_bytes(file, bytes, error)`: Writes byte data to a file or stream.
 
 - **Input**:
-  - `io_read(file, size, buffer, error)`: Reads a specified amount of byte data from a file or stream into a buffer.
-  - `io_read_line(file, size, buffer, error)`: Reads a line of text from a file or stream into a buffer.
-  - `input(prefix)`: Displays a prompt and reads a line of text from standard input.
+  - `io_read_bytes(file, size, buffer, error)`: Reads a specified amount of byte
+data from a file or stream into a buffer.
+  - `io_read_line(file, size, buffer, error)`: Reads a line of text from a file
+or stream into a buffer.
+  - `input(prefix)`: Displays a prompt and reads a line of text from standard
+input.
 
 ## Usage Example
 
@@ -768,4 +777,34 @@ Str greeting = STR("Hello World");
 Str lower = str_lower(greeting, &arena);
 printf(STR_FMT"\n", STR_ARG(lower));
 ```
+
+# [string_builder.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/string_builder.h)
+The `StringBuilder` provides functionality for efficiently constructing
+strings.
+
+## Functions
+
+- **`StringBuilder sb_init(Arena *arena);`**
+  Initializes a new `StringBuilder` instance, allocating its buffer using the
+provided memory `arena`.
+
+- **`Str sb_to_str(StringBuilder *sb);`**
+  Converts the contents of the `StringBuilder` to a `Str`, effectively
+finalizing the string construction.
+
+- **`void sb_append_parts(StringBuilder *sb, usize size, const char *s);`**
+  Appends parts of a string to the `StringBuilder`, where `size` specifies the
+number of characters to append, and `s` points to the string parts to be
+appended.
+
+- **`void sb_append_cstr(StringBuilder *sb, const char *cstr);`**
+  Appends a C-style null-terminated string to the `StringBuilder`.
+
+- **`void sb_append_str(StringBuilder *sb, Str str);`**
+  Appends a `Str` type string to the `StringBuilder`.
+
+- **`void sb_append_fmt(StringBuilder *sb, const char *fmt, ...);`**
+  Appends a formatted string to the `StringBuilder`, similar to `printf` style
+formatting.
+
 
