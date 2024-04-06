@@ -7,7 +7,8 @@ int main(void) {
 
   sb_append_cstr(&sb, "Hello");
   sb_append_str(&sb, STR(", World"));
-  sb_append_fmt(&sb, " %d", 420);
+  usize size = sb_append_fmt(&sb, " %d", 420);
+  clib_assert(size == 4, "Did not return the correct amount!");
   Str s = sb_to_str(&sb);
 
   clib_assert(str_eq(s, STR("Hello, World 420")), "");

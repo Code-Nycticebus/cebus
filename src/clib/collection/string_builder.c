@@ -31,7 +31,7 @@ void sb_append_str(StringBuilder *sb, Str str) {
   sb_append_parts(sb, str.len, str.data);
 }
 
-void sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
+usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
   va_list va;
   va_start(va, fmt);
   usize size = (usize)vsnprintf(NULL, 0, fmt, va) + 1;
@@ -42,4 +42,5 @@ void sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
   vsnprintf(&da_last(&sb->buffer), size, fmt, va);
   sb->buffer.len += size - 1;
   va_end(va);
+  return size - 1;
 }
