@@ -27,7 +27,7 @@ int main(void) {
 
   sb_append_str(&sb, STR("<ul>\n"));
   for (usize i = 0; i < user_count; i++) {
-    sb_append_str(&sb, STR("<li>"));
+    sb_append_str(&sb, STR("\t<li>"));
     user_to_html(&users[i], &sb);
     sb_append_str(&sb, STR("</li>\n"));
   }
