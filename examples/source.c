@@ -39,9 +39,9 @@ int main(int argc, const char **argv) {
   // Extract name from path
   Str name = str_chop_right_by_delim(&output_path, '/');
   name = str_chop_by_delim(&name, '.');
+  Str upper_name = str_upper(name, &arena);
 
   // Write Header guard
-  Str upper_name = str_upper(name, &arena);
   io_write_fmt(out, "#ifndef __" STR_FMT "_H__\n", STR_ARG(upper_name));
   io_write_fmt(out, "#define __" STR_FMT "_H__\n\n", STR_ARG(upper_name));
 
