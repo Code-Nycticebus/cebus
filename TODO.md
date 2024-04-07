@@ -14,7 +14,7 @@
 - [x] Dynamic array
 - [x] HashMap
 - [x] Set
-- [ ] Linked List
+- [ ] String Builder
 
 ### Base
 - [x] Arena allocator
