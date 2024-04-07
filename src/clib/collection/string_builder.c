@@ -8,19 +8,19 @@
 
 StringBuilder sb_init(Arena *arena) {
   StringBuilder sb = {0};
-  da_init(&sb.buffer, arena);
-  da_push(&sb.buffer, 0);
+  da_init(&sb, arena);
+  da_push(&sb, 0);
   return sb;
 }
 
 Str sb_to_str(StringBuilder *sb) {
-  return str_from_parts(sb->buffer.len - 1, sb->buffer.items);
+  return str_from_parts(sb->len - 1, sb->items);
 }
 
 void sb_append_parts(StringBuilder *sb, usize size, const char *s) {
-  (void)da_pop(&sb->buffer);
-  da_extend(&sb->buffer, size, s);
-  da_push(&sb->buffer, 0);
+  (void)da_pop(sb);
+  da_extend(sb, size, s);
+  da_push(sb, 0);
 }
 
 void sb_append_cstr(StringBuilder *sb, const char *cstr) {
@@ -37,10 +37,10 @@ usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
   usize size = (usize)vsnprintf(NULL, 0, fmt, va) + 1;
   va_end(va);
 
-  da_reserve(&sb->buffer, size);
+  da_reserve(sb, size);
   va_start(va, fmt);
-  vsnprintf(&da_last(&sb->buffer), size, fmt, va);
-  sb->buffer.len += size - 1;
+  vsnprintf(&da_last(sb), size, fmt, va);
+  sb->len += size - 1;
   va_end(va);
   return size - 1;
 }

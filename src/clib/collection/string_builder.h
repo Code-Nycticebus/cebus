@@ -37,9 +37,7 @@ formatting.
 #include "clib/collection/da.h"
 #include "clib/core/arena.h"
 
-typedef struct {
-  DA(char) buffer;
-} StringBuilder;
+typedef DA(char) StringBuilder;
 
 StringBuilder sb_init(Arena *arena);
 
