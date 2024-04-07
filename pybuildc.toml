@@ -12,6 +12,7 @@ cflags=[
 info="examples/info.c"
 word="examples/word.c"
 source="examples/source.c"
+json="examples/json.c"
 
 [[scripts.build]]
 cmd="python"
