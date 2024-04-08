@@ -15,6 +15,6 @@ source="examples/source.c"
 json="examples/json.c"
 
 [[scripts.build]]
-cmd="python"
+cmd="python3"
 args=["docs.py"]
 
