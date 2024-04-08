@@ -8,9 +8,9 @@ typedef struct {
 } User;
 
 const User users[] = {
-    {.name = STR("Loris"), .age = 25},
-    {.name = STR("Michi"), .age = 21},
-    {.name = STR("José"), .age = 22},
+    {.name = STR_STATIC("Loris"), .age = 25},
+    {.name = STR_STATIC("Michi"), .age = 21},
+    {.name = STR_STATIC("José"), .age = 22},
 };
 const usize user_count = ARRAY_LEN(users);
 
