@@ -319,7 +319,8 @@ Arena arena = {0};
 
 ## Memory Allocation
 
-Allocate memory from the arena using `arena_alloc` or `arena_calloc` for uninitialized or zero-initialized memory, respectively:
+Allocate memory from the arena using `arena_alloc` or `arena_calloc` for
+uninitialized or zero-initialized memory, respectively:
 
 ```c
 int* i1 = arena_alloc(&arena, sizeof(int));
@@ -329,15 +330,18 @@ int* i3 = arena_alloc(&arena, sizeof(int));
 
 ## Memory Deallocation
 
-Deallocate all memory associated with an arena at once using `arena_free`. This operation frees all memory chunks allocated from the arena, providing a significant performance advantage over individual deallocation:
+Deallocate all memory associated with an arena at once using `arena_free`. This
+operation frees all memory chunks allocated from the arena, providing a
+significant performance advantage over individual deallocation:
 
 ```c
 arena_free(&arena);
 ```
 
-## Chunk 
+## Chunk
 
-The library also provides functions for more granular control over memory chunks within an arena:
+The library also provides functions for more granular control over memory chunks
+within an arena:
 
 - `arena_alloc_chunk`: Allocate a new chunk of memory.
 - `arena_calloc_chunk`: Allocates a new, zero initialized, chunk of memory.
@@ -356,14 +360,19 @@ clib_assert(2 == 2, "It can even handle arguments: %d", 420);
 
 ## Available Macros
 
-- `clib_assert(EXPR, FMT, ...)`: Asserts a condition and logs an error if the condition is false.
-- `clib_assert_warn(EXPR, FMT, ...)`: Asserts a condition and logs a warning if the condition is false.
-- `clib_assert_debug(EXPR, FMT, ...)`: Debug-only assert that logs a debug message if the condition is false.
-- `clib_assert_return(EXPR, RETURN_VALUE)`: Asserts a condition and returns a value if the condition is false.
+- `clib_assert(EXPR, FMT, ...)`: Asserts a condition and logs an error if the
+condition is false.
+- `clib_assert_warn(EXPR, FMT, ...)`: Asserts a condition and logs a warning if
+the condition is false.
+- `clib_assert_debug(EXPR, FMT, ...)`: Debug-only assert that logs a debug
+message if the condition is false.
+- `clib_assert_return(EXPR, RETURN_VALUE)`: Asserts a condition and returns a
+value if the condition is false.
 
 ## Debug Break
 
-A `debugbreak` is triggered on assertion failure to facilitate debugging, with behavior varying by platform:
+A `debugbreak` is triggered on assertion failure to facilitate debugging, with
+behavior varying by platform:
 
 - **Linux**: Uses `raise(SIGTRAP)`.
 - **Windows**: Uses `__debugbreak()`.
@@ -610,8 +619,10 @@ input: 'name'
   - `os_getenv(env, error)`: Retrieves the value of an environment variable.
 
 - **Current Working Directory**:
-  - `os_getcwd(arena)`: Returns the current working directory, allocating memory from the specified `Arena`.
-  - `os_chdir(path)`: Changes the current working directory to the specified path.
+  - `os_getcwd(arena)`: Returns the current working directory, allocating memory
+from the specified `Arena`.
+  - `os_chdir(path)`: Changes the current working directory to the specified
+path.
 
 ## Usage Example
 

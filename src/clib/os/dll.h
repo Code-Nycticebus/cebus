@@ -27,7 +27,6 @@ dll_close(myLib);
 #include "clib/core/defines.h"
 #include "clib/core/error.h"
 
-
 typedef void Dll;
 typedef void (*Function)(void);
 

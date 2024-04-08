@@ -9,7 +9,8 @@ Arena arena = {0};
 
 ## Memory Allocation
 
-Allocate memory from the arena using `arena_alloc` or `arena_calloc` for uninitialized or zero-initialized memory, respectively:
+Allocate memory from the arena using `arena_alloc` or `arena_calloc` for
+uninitialized or zero-initialized memory, respectively:
 
 ```c
 int* i1 = arena_alloc(&arena, sizeof(int));
@@ -19,15 +20,18 @@ int* i3 = arena_alloc(&arena, sizeof(int));
 
 ## Memory Deallocation
 
-Deallocate all memory associated with an arena at once using `arena_free`. This operation frees all memory chunks allocated from the arena, providing a significant performance advantage over individual deallocation:
+Deallocate all memory associated with an arena at once using `arena_free`. This
+operation frees all memory chunks allocated from the arena, providing a
+significant performance advantage over individual deallocation:
 
 ```c
 arena_free(&arena);
 ```
 
-## Chunk 
+## Chunk
 
-The library also provides functions for more granular control over memory chunks within an arena:
+The library also provides functions for more granular control over memory chunks
+within an arena:
 
 - `arena_alloc_chunk`: Allocate a new chunk of memory.
 - `arena_calloc_chunk`: Allocates a new, zero initialized, chunk of memory.

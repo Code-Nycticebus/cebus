@@ -5,8 +5,10 @@
   - `os_getenv(env, error)`: Retrieves the value of an environment variable.
 
 - **Current Working Directory**:
-  - `os_getcwd(arena)`: Returns the current working directory, allocating memory from the specified `Arena`.
-  - `os_chdir(path)`: Changes the current working directory to the specified path.
+  - `os_getcwd(arena)`: Returns the current working directory, allocating memory
+from the specified `Arena`.
+  - `os_chdir(path)`: Changes the current working directory to the specified
+path.
 
 ## Usage Example
 
