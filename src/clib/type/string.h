@@ -1,7 +1,11 @@
 /* DOCUMENTATION
 ## Features and Functions
 - **String Creation and Printing**:
-  - `STR("Hello World")`: Create a new string.
+  - `STR("Hello World")`: Create a new string from a string literal.
+  - `STR_STATIC("Hello")`: Create a new static string from a string literal.
+  - `str_from_cstr(str)`: Create new string from a char array.
+  - `str_from_bytes(str)`: Create new string from bytes.
+  - `str_format(fmt, ...)`: Create new string as formated.
   - `printf(STR_FMT"\n", STR_ARG(str))`: Print strings using macros.
 
 - **String Manipulation**:
