@@ -38,21 +38,23 @@ elements.
 Elements of various types can be inserted into the hashmap, including integers,
 floating-point numbers, and pointers:
 
-- `hm_insert_<T>`: Insert `u8`, `i8`, `u32`, `i32`, `usize`, `f32` or `f64`
-values.
+- `hm_insert_<T>`: Insert `u8`, `i8`, `u32`, `i32`, `u64`, `i64`, `usize`, `f32`
+or `f64` values.
 - `hm_insert_mut_ptr`, `hm_insert_ptr`: Insert mutable or constant pointers.
 
 ## Querying Elements
 
 Retrieve pointers to the values stored in the hashmap by their key hashes,
-allowing for mutable or immutable access:
+allowing for mutable or immutable access. Returns `NULL` if key was not found:
 
 > :warning: Avoid storing pointers from the hashmap for extended periods.
 > Keeping these pointers beyond the immediate scope can lead to undefined
 behavior, as the underlying storage may change.
 
-- `hm_get_f32_mut`, `hm_get_f64_mut`, etc.: Retrieve mutable pointers to values.
-- `hm_get_f32`, `hm_get_f64`, etc.: Retrieve immutable pointers to values.
+- `hm_get_<T>`: Get `u8`, `i8`, `u32`, `i32`, `u64`, `i64`, `usize`, `f32`
+or `f64` pointers.
+- `hm_get_<T>_mut`: Get `u8`, `i8`, `u32`, `i32`, `u64`, `i64`, `usize`, `f32`
+or `f64` pointers.
 */
 
 #ifndef __CLIB_HASHMAP_H__
