@@ -8,12 +8,12 @@ static bool predicate(char c) { return c_is_space(c) || c_is_punct(c); }
 typedef struct {
   Str word;
   i32 count;
-} WordOccurence;
+} WordCount;
 
 // sorting function
 static CmpOrdering sort_by_occurence(const void *a_ptr, const void *b_ptr) {
-  const WordOccurence *a = a_ptr;
-  const WordOccurence *b = b_ptr;
+  const WordCount *a = a_ptr;
+  const WordCount *b = b_ptr;
   return b->count - a->count;
 }
 
@@ -39,7 +39,7 @@ int main(int argc, const char **argv) {
   });
 
   // initialize the dynamic array
-  DA(WordOccurence) words = {0};
+  DA(WordCount) words = {0};
   da_init(&words, &arena);
 
   // intialize the HashMap
@@ -59,7 +59,7 @@ int main(int argc, const char **argv) {
       // Insert index into HashMap
       hm_insert_usize(word_idx, hash, words.len);
       // Push it into the dynamic array
-      da_push(&words, (WordOccurence){.word = word, .count = 1});
+      da_push(&words, (WordCount){.word = word, .count = 1});
     } else {
       // increase the count
       da_get(&words, *idx).count++;
