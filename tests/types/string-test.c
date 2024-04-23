@@ -1,4 +1,5 @@
 #include "clib/core/arena.h"
+#include "clib/core/defines.h"
 #include "clib/type/char.h"
 
 #include "clib/core/assert.h"
@@ -136,13 +137,13 @@ static void test_chop_right(void) {
 static void test_u64(void) {
   Arena arena = {0};
   const u64 N = 64;
-  Str number = str_u64(&arena, N);
+  Str number = str_format(&arena, "%" U64_FMT, N);
   clib_assert(str_eq(number, STR("64")), "");
 
   Str n = str_append(number, STR(" bytes"), &arena);
   clib_assert(str_eq(n, STR("64 bytes")), "");
 
-  clib_assert(str_to_u64(n) == 64, "");
+  clib_assert(str_u64(n) == 64, "");
   clib_assert(str_chop_u64(&n) == 64, "");
   clib_assert(str_eq(n, STR(" bytes")), "");
 

@@ -138,8 +138,7 @@ Str str_substring(Str s, usize start, usize end);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Str str_u64(Arena *arena, u64 n);
-u64 str_to_u64(Str s);
+u64 str_u64(Str s);
 u64 str_chop_u64(Str *s);
 
 // Returns 'STR_NOT_FOUND' if 'needle' was not found.

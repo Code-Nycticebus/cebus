@@ -551,15 +551,7 @@ bool str_try_take(Str *s, usize count, Str *chunk) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Str str_u64(Arena *arena, u64 n) {
-  const usize number_max_chars = 21;
-  char *buffer = arena_alloc(arena, number_max_chars);
-  int len = snprintf(buffer, number_max_chars, "%" PRIu64, n);
-  clib_assert(0 < len, "Parsing failed");
-  return str_from_parts((usize)len, buffer);
-}
-
-u64 str_to_u64(Str s) {
+u64 str_u64(Str s) {
   u64 result = 0;
   for (usize i = 0; i < s.len && c_is_digit(s.data[i]); ++i) {
     result = result * 10 + c_to_u8(s.data[i]); // NOLINT
