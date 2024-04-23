@@ -25,9 +25,8 @@ static void test_vec(void) {
 
 static void test_da_init(void) {
   Arena arena = {0};
-  const usize array[] = {1, 2, 3, 4, 5};
   DA(usize) list = {0};
-  da_init_list(&list, &arena, ARRAY_LEN(array), array);
+  da_init_static(&list, &arena, (usize[]){1, 2, 3, 4, 5});
 
   clib_assert(list.len == 5, "Did not set len correctly");
   clib_assert(list.cap == 5, "Did not set cap correctly");

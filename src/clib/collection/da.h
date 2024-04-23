@@ -41,7 +41,8 @@ int popped = da_pop(&vec);
 - `da_empty`: Use to check if the array has no elements.
 - `da_len`: Get the length of the dynamic array.
 - `da_clear`: Reset the length of the array to zero.
-- `da_init_list`: Initialize dynamic array with elements from a static array.
+- `da_init_list`: Initialize dynamic array from a array.
+- `da_init_static`: Initialize dynamic array from a static array.
 - `da_copy`: Duplicate the contents of one dynamic array into another.
 
 ## Removing and inserting
@@ -122,6 +123,11 @@ destination.
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[__e_i] = (array)[__e_i];                                   \
     }                                                                          \
+  } while (0)
+
+#define da_init_static(list, _arena, ...)                                      \
+  do {                                                                         \
+    da_init_list(list, _arena, ARRAY_LEN((__VA_ARGS__)), (__VA_ARGS__));       \
   } while (0)
 
 #define da_copy(src, dest)                                                     \
