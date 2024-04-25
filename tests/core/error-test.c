@@ -45,12 +45,16 @@ static void test_error_function(void) {
   clib_assert(err.failure == true, "did not set err.failure correctly");
   clib_assert(err.info.code == 69, "did not set err.error correctly");
   clib_assert(i == 0, "Did not return correctly");
+
+  error_context(&err, { error_except(); });
 }
 
 static void test_error_note_adding(void) {
   Error err = ErrNew;
   fn_that_fails_and_adds_note(true, &err);
   clib_assert(err.info.code == 420, "did not set err2.error correctly");
+
+  error_context(&err, { error_except(); });
 }
 
 static void test_error_except(void) {
@@ -83,8 +87,7 @@ static void test_error_propagate(void) {
   clib_assert(err.info.locations.len == 3,
               "Propagate did not add any more locations!");
 
-  // Else there is a memory leak
-  _error_internal_except(&err);
+  error_context(&err, { error_except(); });
 }
 
 int main(void) {
