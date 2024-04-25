@@ -1,5 +1,6 @@
 #include "error.h"
 
+#include "clib/core/error.h"
 #include "clib/type/string.h"
 
 #include <stdarg.h>
@@ -33,6 +34,13 @@ static void error_dump(ErrorInfo *info) {
 
 void _error_internal_emit(Error *err, i32 code, const char *file, int line,
                           const char *fmt, ...) {
+  if (err == ErrDefault) {
+    err = ((Error[]){{
+        .panic_on_emit = true,
+        .info = {.location = {file, line}},
+    }});
+  }
+
   err->failure = true;
   err->info.code = code;
 

@@ -99,8 +99,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define error_emit(E, code, ...)                                               \
-  _error_internal_emit((E) == ErrDefault ? ErrPanic : (E), code, FILE_LOC,     \
-                       __VA_ARGS__);
+  _error_internal_emit(E, code, FILE_LOC, __VA_ARGS__);
 
 #define error_context(E, ...)                                                  \
   do {                                                                         \
