@@ -256,8 +256,8 @@ static void test_insert(void) {
   clib_assert(list.len == 4, "");
   clib_assert(da_get(&list, 0) == 1, "");
   clib_assert(da_get(&list, 1) == 2, "");
-  clib_assert(da_get(&list, 2) == 3, "");
-  clib_assert(da_get(&list, 3) == 4, "");
+  clib_assert(da_get(&list, 2) == 3, "%" USIZE_FMT, da_get(&list, 2));
+  clib_assert(da_get(&list, 3) == 4, "%" USIZE_FMT, da_get(&list, 3));
 
   arena_free(&arena);
 }

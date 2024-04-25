@@ -183,7 +183,8 @@ destination.
 
 #define da_insert(list, value, idx)                                            \
   do {                                                                         \
-    for (usize __r_i = idx + 1; __r_i < da_len(list); __r_i++) {               \
+    da_reserve(list, 1);                                                       \
+    for (usize __r_i = idx + 1; __r_i < da_len(list) + 1; __r_i++) {           \
       da_get(list, __r_i) = da_get(list, __r_i - 1);                           \
     }                                                                          \
     da_get(list, idx) = value;                                                 \
