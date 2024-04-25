@@ -1,6 +1,7 @@
 #include "clib/clib.h"
 #include "clib/collection/string_builder.h"
 #include "clib/core/arena.h"
+#include "clib/core/assert.h"
 #include "clib/core/defines.h"
 #include "clib/core/logging.h"
 #include <stdarg.h>
@@ -34,6 +35,9 @@ int main(void) {
   clib_assert(str_eq(s, STR("Hello, World 420!")), "");
 
   sb_va_test("%d %d", 420, 69);
+
+  sb_clear(&sb);
+  clib_assert(sb.len == 1, "Did not reset correctly");
 
   arena_free(&arena);
 }

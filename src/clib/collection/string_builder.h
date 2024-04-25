@@ -40,6 +40,7 @@ formatting.
 typedef DA(char) StringBuilder;
 
 StringBuilder sb_init(Arena *arena);
+void sb_clear(StringBuilder *sb);
 
 Str sb_to_str(StringBuilder *sb);
 

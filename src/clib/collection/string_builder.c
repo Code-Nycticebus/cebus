@@ -14,6 +14,11 @@ StringBuilder sb_init(Arena *arena) {
   return sb;
 }
 
+void sb_clear(StringBuilder *sb) {
+  da_clear(sb);
+  da_push(sb, 0);
+}
+
 Str sb_to_str(StringBuilder *sb) {
   return str_from_parts(sb->len - 1, sb->items);
 }
