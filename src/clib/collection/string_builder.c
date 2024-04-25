@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <vadefs.h>
 
 StringBuilder sb_init(Arena *arena) {
   StringBuilder sb = {0};
@@ -42,5 +43,14 @@ usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
   vsnprintf(&da_last(sb), size, fmt, va);
   sb->len += size - 1;
   va_end(va);
+  return size - 1;
+}
+
+usize sb_append_va(StringBuilder *sb, const char *fmt, va_list va) {
+  usize size = (usize)vsnprintf(NULL, 0, fmt, va) + 1;
+
+  da_reserve(sb, size);
+  vsnprintf(&da_last(sb), size, fmt, va);
+  sb->len += size - 1;
   return size - 1;
 }

@@ -46,6 +46,7 @@ Str sb_to_str(StringBuilder *sb);
 void sb_append_parts(StringBuilder *sb, usize size, const char *s);
 void sb_append_cstr(StringBuilder *sb, const char *cstr);
 void sb_append_str(StringBuilder *sb, Str str);
-usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...);
+FMT(2) usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...);
+usize sb_append_va(StringBuilder *sb, const char *fmt, va_list va);
 
 #endif /* !__CLIB_STRING_BUILDER_H__ */

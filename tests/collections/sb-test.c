@@ -1,5 +1,24 @@
 #include "clib/clib.h"
-#include "clib/core/assert.h"
+#include "clib/collection/string_builder.h"
+#include "clib/core/arena.h"
+#include "clib/core/defines.h"
+#include "clib/core/logging.h"
+#include <stdarg.h>
+
+static void sb_va_test(const char *fmt, ...) {
+  Arena arena = {0};
+  StringBuilder sb = sb_init(&arena);
+  va_list va;
+  va_start(va, fmt);
+  sb_append_va(&sb, fmt, va);
+  va_end(va);
+
+  Str s = sb_to_str(&sb);
+
+  clib_assert(str_eq(s, STR("420 69")), "");
+
+  arena_free(&arena);
+}
 
 int main(void) {
   Arena arena = {0};
@@ -12,6 +31,8 @@ int main(void) {
   Str s = sb_to_str(&sb);
 
   clib_assert(str_eq(s, STR("Hello, World 420")), "");
+
+  sb_va_test("%d %d", 420, 69);
 
   arena_free(&arena);
 }
