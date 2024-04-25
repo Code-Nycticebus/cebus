@@ -76,8 +76,7 @@ void _error_internal_set_msg(Error *err, const char *fmt, ...) {
   usize size = sb_append_va(&err->info.message, fmt, va);
   va_end(va);
 
-  err->info.msg = str_from_parts(
-      size, &err->info.message.items[err->info.message.len - size - 1]);
+  err->info.msg = str_from_parts(size, &da_last(&err->info.message) - size - 1);
   sb_append_c(&err->info.message, '\n');
 }
 
