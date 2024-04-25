@@ -22,6 +22,7 @@ TEST(decode) {
   Error error = {0};
   utf8_decode(garbage, &error);
   clib_assert(error.failure == true, "This should be a invalid utf-8");
+  error_context(&error, { error_except(); });
 }
 
 TEST(creation) {
