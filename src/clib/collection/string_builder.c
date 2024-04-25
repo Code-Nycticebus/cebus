@@ -32,6 +32,8 @@ void sb_append_str(StringBuilder *sb, Str str) {
   sb_append_parts(sb, str.len, str.data);
 }
 
+void sb_append_c(StringBuilder *sb, char c) { sb_append_parts(sb, 1, &c); }
+
 usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
   va_list va;
   va_start(va, fmt);

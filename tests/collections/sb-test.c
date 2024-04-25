@@ -28,9 +28,10 @@ int main(void) {
   sb_append_str(&sb, STR(", World"));
   usize size = sb_append_fmt(&sb, " %d", 420);
   clib_assert(size == 4, "Did not return the correct amount!");
+  sb_append_c(&sb, '!');
   Str s = sb_to_str(&sb);
 
-  clib_assert(str_eq(s, STR("Hello, World 420")), "");
+  clib_assert(str_eq(s, STR("Hello, World 420!")), "");
 
   sb_va_test("%d %d", 420, 69);
 
