@@ -1,10 +1,5 @@
 #include "error.h"
 
-#include "clib/collection/da.h"
-#include "clib/collection/string_builder.h"
-#include "clib/core/arena.h"
-#include "clib/core/defines.h"
-#include "clib/core/error.h"
 #include "clib/type/string.h"
 
 #include <stdarg.h>

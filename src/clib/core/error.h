@@ -117,7 +117,7 @@ typedef struct {
   do {                                                                         \
     if (_error_internal_occured(E)) {                                          \
       Error *__error_context__ = (E);                                          \
-      _error_internal_add_location();                                          \
+      error_add_location();                                                    \
       __VA_ARGS__                                                              \
     }                                                                          \
   } while (0)
