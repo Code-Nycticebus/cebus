@@ -26,18 +26,12 @@ static void error_dump(ErrorInfo *info) {
 
   // Stack trace
   fprintf(stderr, "[STACK TRACE]\n");
-  for (usize i = 0; i < ERROR_LOCATION_MAX; ++i) {
-    if (info->locations.len <= i) {
-      break;
-    }
+  usize location_count = info->locations.len;
+  for (usize i = 0; i < location_count; ++i) {
     ErrorLocation *location = &da_pop(&info->locations);
     fprintf(stderr, "  [%" USIZE_FMT "]: %s:%d\n", i + 1, location->file,
             location->line);
   }
-}
-
-static void error_location_push(ErrorInfo *info, const char *file, int line) {
-  da_push(&info->locations, (ErrorLocation){file, line});
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -50,7 +44,7 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
   err->info.message = sb_init(&err->info.arena);
   da_init(&err->info.locations, &err->info.arena);
 
-  error_location_push(&err->info, file, line);
+  da_push(&err->info.locations, (ErrorLocation){file, line});
 
   va_list va;
   va_start(va, fmt);
@@ -102,7 +96,7 @@ void _error_add_note(Error *err, const char *fmt, ...) {
 }
 
 void _error_add_location(Error *err, const char *file, int line) {
-  error_location_push(&err->info, file, line);
+  da_push(&err->info.locations, (ErrorLocation){file, line});
 }
 
 ////////////////////////////////////////////////////////////////////////////

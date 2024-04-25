@@ -76,12 +76,15 @@ static void test_error_match(void) {
 
 static void test_error_propagate(void) {
   Error err = ErrNew;
-  fn_that_fails(true, &err);
+  fn_that_fails_and_adds_note(true, &err);
   error_propagate(&err, {
     break; // Jump out of context!
   });
-  clib_assert(err.info.locations.len == 2,
+  clib_assert(err.info.locations.len == 3,
               "Propagate did not add any more locations!");
+
+  // Else there is a memory leak
+  _error_except(&err);
 }
 
 int main(void) {
