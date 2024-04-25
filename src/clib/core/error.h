@@ -51,27 +51,28 @@ error_propagate(&error, {
 #ifndef __CLIB_ERROR_H__
 #define __CLIB_ERROR_H__
 
+#include "clib/collection/da.h"
+#include "clib/collection/string_builder.h"
+#include "clib/core/arena.h"
 #include "clib/core/defines.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define ERROR_BUFFER_MAX 512
-#define ERROR_LOCATIONS_MAX 10
+#define ERROR_LOCATION_MAX 10
 #define FILE_LOC __FILE__, __LINE__
 
 typedef struct {
-  i64 code;
   const char *file;
-  i32 line;
+  int line;
+} ErrorLocation;
+
+typedef struct {
+  ErrorLocation location;
+  Arena arena;
+  i64 code;
   Str msg;
-  usize msg_len;
-  char msg_buffer[ERROR_BUFFER_MAX];
-  usize location_count;
-  usize location_idx;
-  struct {
-    const char *file;
-    int line;
-  } locations[ERROR_LOCATIONS_MAX];
+  StringBuilder message;
+  DA(ErrorLocation) locations;
 } ErrorInfo;
 
 typedef struct {
@@ -83,15 +84,13 @@ typedef struct {
 #define ErrNew                                                                 \
   ((Error){                                                                    \
       .panic_on_emit = false,                                                  \
-      .info.line = __LINE__,                                                   \
-      .info.file = __FILE__,                                                   \
+      .info = {.location = {__FILE__, __LINE__}},                              \
   })
 
 #define ErrPanic                                                               \
   ((Error[]){{                                                                 \
       .panic_on_emit = true,                                                   \
-      .info.line = __LINE__,                                                   \
-      .info.file = __FILE__,                                                   \
+      .info = {.location = {__FILE__, __LINE__}},                              \
   }})
 
 #define ErrDefault ((Error *)NULL)

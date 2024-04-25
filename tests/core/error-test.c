@@ -26,8 +26,9 @@ static void test_error_creation(void) {
   Error e1 = ErrNew;
   clib_assert(e1.failure == false, "Init failed");
   clib_assert(e1.panic_on_emit == false, "Init failed");
-  clib_assert(e1.info.file, "This should be set");
-  clib_assert(e1.info.line, "This should be set");
+  clib_assert(e1.info.location.file, "This should be set");
+  clib_assert(e1.info.location.line, "This should be set");
+  clib_assert(e1.info.arena.begin == NULL, "This should be set to NULL");
 
   Error *e2 = ErrPanic;
   clib_assert(e2->failure == false, "Init failed");
@@ -79,7 +80,7 @@ static void test_error_propagate(void) {
   error_propagate(&err, {
     break; // Jump out of context!
   });
-  clib_assert(err.info.location_count == 2,
+  clib_assert(err.info.locations.len == 2,
               "Propagate did not add any more locations!");
 }
 
