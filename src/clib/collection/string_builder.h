@@ -37,6 +37,8 @@ formatting.
 #include "clib/collection/da.h"
 #include "clib/core/arena.h"
 
+#include <stdarg.h>
+
 typedef DA(char) StringBuilder;
 
 StringBuilder sb_init(Arena *arena);

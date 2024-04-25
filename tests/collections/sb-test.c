@@ -12,7 +12,7 @@ static void sb_va_test(const char *fmt, ...) {
 
   Str s = sb_to_str(&sb);
 
-  clib_assert(str_eq(s, STR("420 69")), "");
+  clib_assert(str_eq(s, STR("420 69")), STR_FMT, STR_ARG(s));
 
   arena_free(&arena);
 }
