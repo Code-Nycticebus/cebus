@@ -36,8 +36,8 @@ static void error_dump(ErrorInfo *info) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_emit(Error *err, i32 code, const char *file, int line,
-                 const char *fmt, ...) {
+void _error_internal_emit(Error *err, i32 code, const char *file, int line,
+                          const char *fmt, ...) {
   err->failure = true;
   err->info.code = code;
 
@@ -54,27 +54,27 @@ void _error_emit(Error *err, i32 code, const char *file, int line,
   sb_append_c(&err->info.message, '\n');
 
   if (err->panic_on_emit) {
-    _error_panic(err);
+    _error_internal_panic(err);
   }
 }
 
-bool _error_occured(Error *err) { return err && err->failure; }
+bool _error_internal_occured(Error *err) { return err && err->failure; }
 
-void _error_panic(Error *err) {
+void _error_internal_panic(Error *err) {
   error_dump(&err->info);
   arena_free(&err->info.arena);
   abort();
 }
 
-void _error_except(Error *err) {
+void _error_internal_except(Error *err) {
   arena_free(&err->info.arena);
   err->info = (ErrorInfo){0};
   err->failure = false;
 }
 
-void _error_set_code(Error *err, i32 code) { err->info.code = code; }
+void _error_internal_set_code(Error *err, i32 code) { err->info.code = code; }
 
-void _error_set_msg(Error *err, const char *fmt, ...) {
+void _error_internal_set_msg(Error *err, const char *fmt, ...) {
   (void)err;
   va_list va;
   va_start(va, fmt);
@@ -86,7 +86,7 @@ void _error_set_msg(Error *err, const char *fmt, ...) {
   sb_append_c(&err->info.message, '\n');
 }
 
-void _error_add_note(Error *err, const char *fmt, ...) {
+void _error_internal_add_note(Error *err, const char *fmt, ...) {
   (void)err;
   va_list va;
   va_start(va, fmt);
@@ -95,7 +95,7 @@ void _error_add_note(Error *err, const char *fmt, ...) {
   va_end(va);
 }
 
-void _error_add_location(Error *err, const char *file, int line) {
+void _error_internal_add_location(Error *err, const char *file, int line) {
   da_push(&err->info.locations, (ErrorLocation){file, line});
 }
 

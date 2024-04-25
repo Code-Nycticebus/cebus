@@ -84,7 +84,7 @@ static void test_error_propagate(void) {
               "Propagate did not add any more locations!");
 
   // Else there is a memory leak
-  _error_except(&err);
+  _error_internal_except(&err);
 }
 
 int main(void) {

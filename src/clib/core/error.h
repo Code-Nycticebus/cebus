@@ -5,7 +5,7 @@
 - `ErrDefault`: Empty Error that will panic on `error_emit()`.
 
 ### Error Emitting and Context
-- `error_emit()` initializes the passed in error.
+- `error_emit(E, code, fmt, ...)` initializes the passed in error.
 ```c
 void function_that_fails(Error *error) {
   // ...
@@ -28,6 +28,7 @@ error_context(&error, {
 
 - `error_propagate()` creates a context. Does not panic if it falls through but
 also does not reset the error.
+:warning: if the error is never handled there will be a memory leak.
 ```c
 Error error = ErrNew;
 function_that_fails(&error);
@@ -42,9 +43,9 @@ error_propagate(&error, {
 - `error_msg()`: Retrieves the error message.
 - `error_code(T)`: Retrieves the error code and casts it to `T`.
 - `error_set_code()`: Sets a new error code.
-- `error_set_msg()`: Sets a new error message.
+- `error_set_msg(fmt, ...)`: Sets a new error message.
 - `error_add_location()`: Adds current file and line location.
-- `error_add_note()`: Adds a note to the error.
+- `error_add_note(fmt, ...)`: Adds a note to the error.
 
 */
 
@@ -98,55 +99,57 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define error_emit(E, code, ...)                                               \
-  _error_emit((E) == ErrDefault ? ErrPanic : (E), code, FILE_LOC, __VA_ARGS__);
+  _error_internal_emit((E) == ErrDefault ? ErrPanic : (E), code, FILE_LOC,     \
+                       __VA_ARGS__);
 
 #define error_context(E, ...)                                                  \
   do {                                                                         \
-    if (_error_occured(E)) {                                                   \
+    if (_error_internal_occured(E)) {                                          \
       Error *__error_context__ = (E);                                          \
       __VA_ARGS__                                                              \
       if ((E)->failure) {                                                      \
-        _error_panic(E);                                                       \
+        _error_internal_panic(E);                                              \
       }                                                                        \
     }                                                                          \
   } while (0)
 
 #define error_propagate(E, ...)                                                \
   do {                                                                         \
-    if (_error_occured(E)) {                                                   \
+    if (_error_internal_occured(E)) {                                          \
       Error *__error_context__ = (E);                                          \
-      error_add_location();                                                    \
+      _error_internal_add_location();                                          \
       __VA_ARGS__                                                              \
     }                                                                          \
   } while (0)
 
-#define error_panic() _error_panic(__error_context__)
-#define error_except() _error_except(__error_context__)
+#define error_panic() _error_internal_panic(__error_context__)
+#define error_except() _error_internal_except(__error_context__)
 
 #define error_msg() (__error_context__->info.msg)
 #define error_code(T) ((T)__error_context__->info.code)
 
-#define error_set_code(code) _error_set_code(__error_context__, (i64)code)
-#define error_set_msg(...) _error_set_msg(__error_context__, __VA_ARGS__)
+#define error_set_code(code)                                                   \
+  _error_internal_set_code(__error_context__, (i64)code)
+#define error_set_msg(...)                                                     \
+  _error_internal_set_msg(__error_context__, __VA_ARGS__)
 
-#define error_add_location(...) _error_add_location(__error_context__, FILE_LOC)
-#define error_add_note(...) _error_add_note(__error_context__, __VA_ARGS__)
+#define error_add_location(...)                                                \
+  _error_internal_add_location(__error_context__, FILE_LOC)
+#define error_add_note(...)                                                    \
+  _error_internal_add_note(__error_context__, __VA_ARGS__)
+
+////////////////////////////////////////////////////////////////////////////
+
+void FMT(5) _error_internal_emit(Error *err, i32 code, const char *file,
+                                 int line, const char *fmt, ...);
+bool _error_internal_occured(Error *err);
+void NORETURN _error_internal_panic(Error *err);
+void _error_internal_except(Error *err);
+void _error_internal_set_code(Error *err, i32 code);
+void FMT(2) _error_internal_set_msg(Error *err, const char *fmt, ...);
+void _error_internal_add_location(Error *err, const char *file, int line);
+void FMT(2) _error_internal_add_note(Error *err, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
 
-void FMT(5) _error_emit(Error *err, i32 code, const char *file, int line,
-                        const char *fmt, ...);
-
-bool _error_occured(Error *err);
-
-void NORETURN _error_panic(Error *err);
-void _error_except(Error *err);
-
-void _error_set_code(Error *err, i32 code);
-void FMT(2) _error_set_msg(Error *err, const char *fmt, ...);
-void _error_add_location(Error *err, const char *file, int line);
-void FMT(2) _error_add_note(Error *err, const char *fmt, ...);
-
-////////////////////////////////////////////////////////////////////////////
-///
 #endif /* !__CLIB_ERROR_H__ */

@@ -411,7 +411,7 @@ enhancing type safety with `printf`-like functions.
 - `ErrDefault`: Empty Error that will panic on `error_emit()`.
 
 ### Error Emitting and Context
-- `error_emit()` initializes the passed in error.
+- `error_emit(E, code, fmt, ...)` initializes the passed in error.
 ```c
 void function_that_fails(Error *error) {
   // ...
@@ -434,6 +434,7 @@ error_context(&error, {
 
 - `error_propagate()` creates a context. Does not panic if it falls through but
 also does not reset the error.
+:warning: if the error is never handled there will be a memory leak.
 ```c
 Error error = ErrNew;
 function_that_fails(&error);
@@ -448,9 +449,9 @@ error_propagate(&error, {
 - `error_msg()`: Retrieves the error message.
 - `error_code(T)`: Retrieves the error code and casts it to `T`.
 - `error_set_code()`: Sets a new error code.
-- `error_set_msg()`: Sets a new error message.
+- `error_set_msg(fmt, ...)`: Sets a new error message.
 - `error_add_location()`: Adds current file and line location.
-- `error_add_note()`: Adds a note to the error.
+- `error_add_note(fmt, ...)`: Adds a note to the error.
 
 
 # [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/logging.h)
