@@ -197,6 +197,19 @@ typedef struct _iobuf FILE;
 
 ////////////////////////////////////////////////////////////////////////////
 
+#if defined(LINUX)
+#include <signal.h> // IWYU pragma: export
+#define debugbreak() raise(SIGTRAP)
+#elif defined(WINDOWS)
+#include <intrin.h> // IWYU pragma: export
+#define debugbreak() __debugbreak()
+#else
+#include <stdlib.h> // IWYU pragma: export
+#define debugbreak(...) abort()
+#endif
+
+////////////////////////////////////////////////////////////////////////////
+
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 
 #define EXPORT __attribute__((used))

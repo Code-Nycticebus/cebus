@@ -30,8 +30,6 @@ behavior varying by platform:
 - **Linux**: Uses `raise(SIGTRAP)`.
 - **Windows**: Uses `__debugbreak()`.
 - **Other Platforms**: Uses `abort()`.
-
-
 */
 
 #include "clib/core/platform.h"
@@ -39,21 +37,8 @@ behavior varying by platform:
 
 ////////////////////////////////////////////////////////////////////////////
 
-#if defined(LINUX)
-#include <signal.h> // IWYU pragma: export
-#define debugbreak() raise(SIGTRAP)
-#elif defined(WINDOWS)
-#include <intrin.h> // IWYU pragma: export
-#define debugbreak() __debugbreak()
-#else
-#include <stdlib.h> // IWYU pragma: export
-#define debugbreak(...) abort()
-#endif
-
-////////////////////////////////////////////////////////////////////////////
-
 #define _clib_assert_print(level, expr, ...)                                   \
-  clib_log_level(level, "%s:%d: assert '%s' failed", __FILE__, __LINE__, expr);      \
+  clib_log_level(level, "%s:%d: '%s' failed", __FILE__, __LINE__, expr);       \
   clib_log_level(level, "Description: "__VA_ARGS__)
 
 #define clib_assert(expression, ...)                                           \
