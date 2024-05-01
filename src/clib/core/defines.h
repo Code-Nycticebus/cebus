@@ -223,7 +223,6 @@ typedef struct _iobuf FILE;
 #define LIKELY(exp) __builtin_expect(((exp) != 0), 1)
 #define UNLIKELY(exp) __builtin_expect(((exp) != 0), 0)
 #define FMT(__fmt_arg) __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
-#define UNREACHABLE() __builtin_UNREACHABLE()
 
 #elif defined(MSVC)
 
@@ -233,7 +232,6 @@ typedef struct _iobuf FILE;
 #define UNUSED __pragma(warning(suppress : 4100))
 #define PURE_FN _Check_return
 #define CONST_FN _Check_return
-#define UNREACHABLE() __assume(0)
 
 #endif
 
@@ -269,8 +267,20 @@ typedef struct _iobuf FILE;
 #define FMT(...)
 #endif
 
-#ifndef UNREACHABLE
-#define UNREACHABLE() DEBUGBREAK()
+////////////////////////////////////////////////////////////////////////////
+
+#if defined(NDEBUG)
+#if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
+#define UNREACHABLE() __builtin_unreachable()
+#elif defined(MSVC)
+#define UNREACHABLE() __assume(0)
+#else
+#define UNREACHABLE()
+#endif
+#else
+#define UNREACHABLE()                                                          \
+  clib_log_error("UNREACHABLE");                                               \
+  DEBUGBREAK();
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
