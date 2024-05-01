@@ -1,6 +1,7 @@
 #include "hashmap.h"
 
 #include "clib/core/assert.h"
+#include "clib/core/defines.h"
 #include "clib/type/integer.h"
 
 #include <stdio.h>
@@ -125,7 +126,7 @@ static const char *hm_type(HashTypes type) {
 
     HM_TYPES(RETURN_STR)
   }
-  clib_assert(false, "UNREACHABLE: %d", type);
+  UNREACHABLE();
   return NULL;
 }
 
