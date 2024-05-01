@@ -11,8 +11,7 @@ This is the hello world of clib. I will call it `hello-clib.c`.
 #include <clib/clib.h>
 
 int main(void) {
-  Str name = input(STR("Enter your name: "));
-  clib_log_info("Hello " STR_FMT, STR_ARG(name));
+  clib_log("Hello, World");
 }
 ```
 
@@ -380,8 +379,6 @@ behavior varying by platform:
 - **Linux**: Uses `raise(SIGTRAP)`.
 - **Windows**: Uses `__debugbreak()`.
 - **Other Platforms**: Uses `abort()`.
-
-
 
 # [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/defines.h)
 ## Key Definitions and Macros
