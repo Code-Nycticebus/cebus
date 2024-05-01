@@ -146,6 +146,9 @@ typedef double f64;
 #define F64_E 2.71828182845904523536
 #define F32_E 2.7182818284f
 
+#define BOOL_FMT "%s"
+#define BOOL_ARG(b) (b ? "true" : "false")
+
 ////////////////////////////////////////////////////////////////////////////
 
 #define BYTES(...)                                                             \
