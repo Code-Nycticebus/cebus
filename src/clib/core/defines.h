@@ -199,13 +199,13 @@ typedef struct _iobuf FILE;
 
 #if defined(LINUX)
 #include <signal.h> // IWYU pragma: export
-#define debugbreak() raise(SIGTRAP)
+#define DEBUGBREAK() raise(SIGTRAP)
 #elif defined(WINDOWS)
 #include <intrin.h> // IWYU pragma: export
-#define debugbreak() __debugbreak()
+#define DEBUGBREAK() __debugbreak()
 #else
 #include <stdlib.h> // IWYU pragma: export
-#define debugbreak(...) abort()
+#define DEBUGBREAK(...) abort()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
@@ -220,7 +220,7 @@ typedef struct _iobuf FILE;
 #define LIKELY(exp) __builtin_expect(((exp) != 0), 1)
 #define UNLIKELY(exp) __builtin_expect(((exp) != 0), 0)
 #define FMT(__fmt_arg) __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
-#define UNREACHABLE() __builtin_unreachable()
+#define UNREACHABLE() __builtin_UNREACHABLE()
 
 #elif defined(MSVC)
 
@@ -267,7 +267,7 @@ typedef struct _iobuf FILE;
 #endif
 
 #ifndef UNREACHABLE
-#define UNREACHABLE() debugbreak()
+#define UNREACHABLE() DEBUGBREAK()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////

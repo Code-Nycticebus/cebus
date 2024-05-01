@@ -45,7 +45,7 @@ behavior varying by platform:
   do {                                                                         \
     if (!(expression)) {                                                       \
       _clib_assert_print(CLIB_LOG_ERROR, #expression, __VA_ARGS__);            \
-      debugbreak();                                                            \
+      DEBUGBREAK();                                                            \
     }                                                                          \
   } while (0)
 
@@ -68,7 +68,7 @@ behavior varying by platform:
   do {                                                                         \
     if (!(expression)) {                                                       \
       _clib_assert_print(CLIB_LOG_DEBUG, #expression, __VA_ARGS__);            \
-      debugbreak();                                                            \
+      DEBUGBREAK();                                                            \
     }                                                                          \
   } while (0)
 #else
