@@ -30,7 +30,6 @@ struct CmLogLevelPrefix {
 };
 
 static const struct CmLogLevelPrefix log_level_str[] = {
-    [CLIB_LOG] = {"", "", STDOUT_FILENO},
     [CLIB_LOG_FATAL] = {"FATAL", "\033[1m\033[91m", STDERR_FILENO},
     [CLIB_LOG_ERROR] = {"ERROR", "\033[91m", STDERR_FILENO},
     [CLIB_LOG_WARNING] = {"WARNING", "\033[33m", STDERR_FILENO},
@@ -44,16 +43,14 @@ static const struct CmLogLevelPrefix log_level_str[] = {
 ////////////////////////////////////////////////////////////////////////////
 
 #define _LOG(__log_level, __fmt)                                               \
-  if (__log_level != CLIB_LOG) {					       			     	   \
-    _clib_log(__log_level);                                                    \
-  }      																	   \
+  _clib_log(__log_level);                                                      \
   va_list __args;                                                              \
   va_start(__args, __fmt);                                                     \
   vfprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout, \
            __fmt, __args);                                                     \
   va_end(__args);                                                              \
   fprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout,  \
-          "%s\n", __log_level && display_colors ? FMT_RESET : "");
+          "%s\n", display_colors ? FMT_RESET : "");
 
 static bool display_colors = false;
 static bool tty_checked = false;
@@ -73,7 +70,13 @@ static void _clib_log(LogLevel log_level) {
 
 void clib_log_level(LogLevel level, const char *fmt, ...) { _LOG(level, fmt); }
 
-void clib_log(const char *fmt, ...) { _LOG(CLIB_LOG, fmt); }
+void clib_log(const char *fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  vprintf(fmt, args);
+  printf("\n");
+  va_end(args);
+}
 void clib_log_fatal(const char *fmt, ...) { _LOG(CLIB_LOG_FATAL, fmt); }
 void clib_log_error(const char *fmt, ...) { _LOG(CLIB_LOG_ERROR, fmt); }
 void clib_log_warning(const char *fmt, ...) { _LOG(CLIB_LOG_WARNING, fmt); }
