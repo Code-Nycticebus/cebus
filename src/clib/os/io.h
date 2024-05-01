@@ -42,6 +42,7 @@ input: 'name'
 
 FMT(2) usize io_write_fmt(FILE *file, const char *fmt, ...);
 void io_write_bytes(FILE *file, Bytes bytes, Error *error);
+void io_write_str(FILE *file, Str string, Error *error);
 
 Bytes io_read_bytes(FILE *file, usize size, void *buffer, Error *error);
 Str io_read_line(FILE *file, usize size, char *buffer, Error *error);

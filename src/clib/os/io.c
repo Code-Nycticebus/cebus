@@ -30,6 +30,10 @@ void io_write_bytes(FILE *file, Bytes bytes, Error *error) {
   }
 }
 
+void io_write_str(FILE *file, Str string, Error *error) {
+  io_write_bytes(file, str_to_bytes(string), error);
+}
+
 Bytes io_read_bytes(FILE *file, usize size, void *buffer, Error *error) {
   errno = 0;
   const usize bytes_read = fread(buffer, sizeof(u8), size, file);
