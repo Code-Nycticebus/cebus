@@ -220,6 +220,7 @@ typedef struct _iobuf FILE;
 #define LIKELY(exp) __builtin_expect(((exp) != 0), 1)
 #define UNLIKELY(exp) __builtin_expect(((exp) != 0), 0)
 #define FMT(__fmt_arg) __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
+#define UNREACHABLE() __builtin_unreachable()
 
 #elif defined(MSVC)
 
@@ -229,6 +230,7 @@ typedef struct _iobuf FILE;
 #define UNUSED __pragma(warning(suppress : 4100))
 #define PURE_FN _Check_return
 #define CONST_FN _Check_return
+#define UNREACHABLE() __assume(0)
 
 #endif
 
@@ -262,6 +264,10 @@ typedef struct _iobuf FILE;
 
 #ifndef FMT
 #define FMT(...)
+#endif
+
+#ifndef UNREACHABLE
+#define UNREACHABLE() debugbreak()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
