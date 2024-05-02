@@ -1,12 +1,10 @@
 #include "string.h"
 
 #include "clib/core/arena.h"
-#include "clib/core/assert.h"
 #include "clib/type/byte.h"
 #include "clib/type/char.h"
 #include "clib/type/integer.h"
 
-#include <inttypes.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>

@@ -9,7 +9,8 @@ clib_log_error("This is an error message: %s", error_details);
 
 ## Functions
 
-- `clib_log_level(log_level, fmt, ...)`: Logs a message with the specified log level.
+- `clib_log_level(log_level, fmt, ...)`: Logs a message with the specified log
+level.
 - `clib_log(fmt, ...)`: Logs a message.
 - `clib_log_fatal(fmt, ...)`: Logs a fatal message.
 - `clib_log_error(fmt, ...)`: Logs an error message.

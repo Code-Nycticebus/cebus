@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 static void error_dump(ErrorInfo *info) {
-  fprintf(stderr, "[Error]: %s:%d: %s()\n", info->location.file, info->location.line, info->location.func);
+  fprintf(stderr, "[Error]: %s:%d: %s()\n", info->location.file,
+          info->location.line, info->location.func);
   fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(info->msg));
   Str message = sb_to_str(&info->message);
   for (Str note = {0}; str_try_chop_by_delim(&message, '\n', &note);) {
@@ -31,8 +32,8 @@ static void error_dump(ErrorInfo *info) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_internal_emit(Error *err, i32 code, const char *file, int line, const char* func,
-                          const char *fmt, ...) {
+void _error_internal_emit(Error *err, i32 code, const char *file, int line,
+                          const char *func, const char *fmt, ...) {
   if (err == ErrDefault) {
     err = ((Error[]){{
         .panic_on_emit = true,
@@ -96,7 +97,8 @@ void _error_internal_add_note(Error *err, const char *fmt, ...) {
   va_end(va);
 }
 
-void _error_internal_add_location(Error *err, const char *file, int line, const char* func) {
+void _error_internal_add_location(Error *err, const char *file, int line,
+                                  const char *func) {
   da_push(&err->info.locations, (ErrorLocation){file, line, func});
 }
 
