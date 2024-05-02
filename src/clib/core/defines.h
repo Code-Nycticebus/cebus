@@ -230,8 +230,8 @@ typedef struct _iobuf FILE;
 #define EXPORT __declspec(dllexport)
 #define NORETURN __declspec(noreturn)
 #define UNUSED __pragma(warning(suppress : 4100))
-#define PURE_FN _Check_return
-#define CONST_FN _Check_return
+#define PURE_FN _Check_return_
+#define CONST_FN _Check_return_
 
 #endif
 
@@ -281,7 +281,7 @@ typedef struct _iobuf FILE;
 #else
 #include <stdlib.h> // IWYU pragma: export
 #define UNREACHABLE()                                                          \
-  clib_log_error("UNREACHABLE: %s: %d: %s()", __FILE__, __LINE__, __func__);                                               \
+  clib_log_error("UNREACHABLE: %s: %d: %s()", __FILE__, __LINE__, __func__);   \
   abort()
 #endif
 
