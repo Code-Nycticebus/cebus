@@ -157,7 +157,7 @@ MSVC.
 #define ENDIAN_BIG 0x80000000
 #define CLIB_BYTE_ORDER ENDIAN_LITTLE
 #else
-UNDEFINED_BYTE_ORDER
+#error "No Byte Order detected!"
 #endif
 /* !Byte-Order */
 
