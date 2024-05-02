@@ -37,9 +37,6 @@ pybuildc run
 
 ## Build Script
 
-Set the `CLIB_DIRECTORY` variable (or just replace $CLIB_DIRECTORY with the directory path)
-and add `-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib` to your compiler flags. 
-
 Build the static library. When inside the clib directory, run:
 
 ### Windows
@@ -47,10 +44,16 @@ Build the static library. When inside the clib directory, run:
 ./build.bat
 ```
 
+Set the `CLIB_DIRECTORY` variable (or just replace `%CLIB_DIRECTORY%` with the directory path)
+and add `/I"%CLIB_DIRECTORY%/src" /link /LIBPATH:"%CLIB_DIRECTORY%" clib.lib` to your compiler flags. 
+
 ### Linux
 ```console
 ./build.sh
 ```
+
+Set the `CLIB_DIRECTORY` variable (or just replace `$CLIB_DIRECTORY` with the directory path) and add 
+`-I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib` to your compiler flags.
 
 # Documentation
 
