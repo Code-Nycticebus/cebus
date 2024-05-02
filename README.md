@@ -145,7 +145,7 @@ int popped = da_pop(&vec);
 - `da_copy`: Duplicate the contents of one dynamic array into another.
 
 ## Removing and inserting
-:warning: These operations do not perform any bound checks.
+> :warning: These operations do not perform any bound checks.
 
 - `da_insert`: Insert a value at a specified index.
 - `da_remove`: Remove a value at a specified index.
