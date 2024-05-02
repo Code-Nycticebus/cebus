@@ -275,12 +275,14 @@ typedef struct _iobuf FILE;
 #elif defined(MSVC)
 #define UNREACHABLE() __assume(0)
 #else
-#define UNREACHABLE()
+#include <stdlib.h> // IWYU pragma: export
+#define UNREACHABLE() abort()
 #endif
 #else
+#include <stdlib.h> // IWYU pragma: export
 #define UNREACHABLE()                                                          \
-  clib_log_error("UNREACHABLE");                                               \
-  DEBUGBREAK();
+  clib_log_error("UNREACHABLE: %s: %d", __FILE__, __LINE__);                                               \
+  abort()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
