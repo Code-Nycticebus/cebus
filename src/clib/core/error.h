@@ -69,8 +69,6 @@ typedef struct {
 } ErrorLocation;
 
 typedef struct {
-  ErrorLocation location;
-  Arena arena;
   i64 code;
   Str msg;
   StringBuilder message;
@@ -78,21 +76,27 @@ typedef struct {
 } ErrorInfo;
 
 typedef struct {
+  Arena arena;
   bool failure;
   bool panic_on_emit;
-  ErrorInfo info;
+  ErrorLocation location;
+  ErrorInfo *info;
 } Error;
 
 #define ErrNew                                                                 \
   ((Error){                                                                    \
+      .failure = false,                                                        \
       .panic_on_emit = false,                                                  \
-      .info = {.location = {FILE_LOC}},                                        \
+      .location = {FILE_LOC},                                                  \
+      .arena = {0},                                                            \
   })
 
 #define ErrPanic                                                               \
   ((Error[]){{                                                                 \
+      .failure = false,                                                        \
       .panic_on_emit = true,                                                   \
-      .info = {.location = {FILE_LOC}},                                        \
+      .location = {FILE_LOC},                                                  \
+      .arena = {0},                                                            \
   }})
 
 #define ErrDefault ((Error *)NULL)
@@ -125,8 +129,8 @@ typedef struct {
 #define error_panic() _error_internal_panic(__error_context__)
 #define error_except() _error_internal_except(__error_context__)
 
-#define error_msg() (__error_context__->info.msg)
-#define error_code(T) ((T)__error_context__->info.code)
+#define error_msg() (__error_context__->info->msg)
+#define error_code(T) ((T)__error_context__->info->code)
 
 #define error_set_code(code)                                                   \
   _error_internal_set_code(__error_context__, (i64)code)
