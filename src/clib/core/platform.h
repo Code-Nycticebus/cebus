@@ -153,8 +153,8 @@ MSVC.
 #define CLIB_BYTE_ORDER __BYTE_ORDER__
 
 #elif defined(_MSC_VER)
-#define ENDIAN_LITTLE 0x00000001
-#define ENDIAN_BIG 0x80000000
+#define ENDIAN_LITTLE 1234
+#define ENDIAN_BIG 4321
 #define CLIB_BYTE_ORDER ENDIAN_LITTLE
 #else
 #error "No Byte Order detected!"
