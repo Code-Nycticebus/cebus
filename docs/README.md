@@ -35,19 +35,21 @@ And then run your project with.
 pybuildc run
 ```
 
-## Gcc or Clang
-
-Build the static library. When inside the clib directory, run:
-
-```console
-gcc -I./src -c ./src/**/*.c && ar rcs libclib.a *.o && rm *.o
-```
+## Build Script
 
 Set the `CLIB_DIRECTORY` variable (or just replace $CLIB_DIRECTORY with the directory path)
 and add `-I"$CLIB DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib` to your compiler flags. 
 
+Build the static library. When inside the clib directory, run:
+
+### Windows
 ```console
-gcc -o hello hello-clib.c -I"$CLIB_DIRECTORY/src" -L"$CLIB_DIRECTORY" -lclib
+./build.bat
+```
+
+### Linux
+```console
+./build.sh
 ```
 
 # Documentation
