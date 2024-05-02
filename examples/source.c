@@ -1,6 +1,6 @@
 /* Converts a files bytes into a byte array and saves it as a .h file */
 
-#include "clib/clib.h"
+#include "clib.h"
 
 int main(int argc, const char **argv) {
   if (argc < 3) {

@@ -1,6 +1,6 @@
 /* counts the all the occurunces of words of a specified text file. */
 
-#include "clib/clib.h"
+#include "clib.h"
 
 // predicate function
 static bool predicate(char c) { return c_is_space(c) || c_is_punct(c); }

@@ -1,4 +1,4 @@
-#include "clib/clib.h"
+#include "clib.h"
 
 #include <stdio.h>
 
