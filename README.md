@@ -92,7 +92,7 @@ Set the `CLIB_DIRECTORY` variable (or just replace `$CLIB_DIRECTORY` with the di
 # [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib.h)
 Include this file to include all the header files that are listed below.
 ```c
-#include <clib/clib.h>
+#include <clib.h>
 ```
 
 # Collection
