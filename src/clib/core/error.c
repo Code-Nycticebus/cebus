@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 static void error_dump(ErrorInfo *info) {
-  fprintf(stderr, "[Error]: %s:%d\n", info->location.file, info->location.line);
+  fprintf(stderr, "[Error]: %s:%d: %s()\n", info->location.file, info->location.line, info->location.func);
   fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(info->msg));
   Str message = sb_to_str(&info->message);
   for (Str note = {0}; str_try_chop_by_delim(&message, '\n', &note);) {
