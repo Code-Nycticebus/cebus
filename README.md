@@ -8,7 +8,7 @@ This is an extension of the C standart library.
 
 This is the hello world of clib. I will call it `hello-clib.c`.
 ```c
-#include <clib/clib.h>
+#include <clib.h>
 
 int main(void) {
   clib_log("Hello, World");
@@ -89,7 +89,7 @@ Set the `CLIB_DIRECTORY` variable (or just replace `$CLIB_DIRECTORY` with the di
 
 # Clib
 
-# [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/clib.h)
+# [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib.h)
 Include this file to include all the header files that are listed below.
 ```c
 #include <clib/clib.h>
