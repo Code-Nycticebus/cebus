@@ -1,4 +1,4 @@
-#include <clib/clib.h>
+#include <clib.h>
 
 int main(void) {
   clib_log_info("CLIB version 1.0.0");
