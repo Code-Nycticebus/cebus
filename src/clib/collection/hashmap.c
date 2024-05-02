@@ -126,8 +126,8 @@ static const char *hm_type(HashTypes type) {
 
     HM_TYPES(RETURN_STR)
   }
+
   UNREACHABLE();
-  return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////
