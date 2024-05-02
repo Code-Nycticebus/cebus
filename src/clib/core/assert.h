@@ -38,8 +38,9 @@ behavior varying by platform:
 ////////////////////////////////////////////////////////////////////////////
 
 #define _clib_assert_print(level, expr, ...)                                   \
-  clib_log_level(level, "%s:%d: '%s' failed", __FILE__, __LINE__, expr);       \
-  clib_log_level(level, "Description: "__VA_ARGS__)
+  clib_log_level(level, "%s:%d: %s():", __FILE__, __LINE__, __func__);         \
+  clib_log_level(level, "  Assertion '%s' failed", expr);					   \
+  clib_log_level(level, "  Description: "__VA_ARGS__)
 
 #define clib_assert(expression, ...)                                           \
   do {                                                                         \

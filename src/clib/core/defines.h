@@ -281,7 +281,7 @@ typedef struct _iobuf FILE;
 #else
 #include <stdlib.h> // IWYU pragma: export
 #define UNREACHABLE()                                                          \
-  clib_log_error("UNREACHABLE: %s: %d", __FILE__, __LINE__);                                               \
+  clib_log_error("UNREACHABLE: %s: %d: %s()", __FILE__, __LINE__, __func__);                                               \
   abort()
 #endif
 

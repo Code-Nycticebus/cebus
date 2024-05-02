@@ -24,19 +24,19 @@ static void error_dump(ErrorInfo *info) {
   usize location_count = info->locations.len;
   for (usize i = 0; i < location_count; ++i) {
     ErrorLocation *location = &da_pop(&info->locations);
-    fprintf(stderr, "  [%" USIZE_FMT "]: %s:%d\n", i + 1, location->file,
-            location->line);
+    fprintf(stderr, "  [%" USIZE_FMT "]: %s:%d: %s()\n", i + 1, location->file,
+            location->line, location->func);
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_internal_emit(Error *err, i32 code, const char *file, int line,
+void _error_internal_emit(Error *err, i32 code, const char *file, int line, const char* func,
                           const char *fmt, ...) {
   if (err == ErrDefault) {
     err = ((Error[]){{
         .panic_on_emit = true,
-        .info = {.location = {file, line}},
+        .info = {.location = {file, line, func}},
     }});
   }
 
@@ -46,7 +46,7 @@ void _error_internal_emit(Error *err, i32 code, const char *file, int line,
   err->info.message = sb_init(&err->info.arena);
   da_init(&err->info.locations, &err->info.arena);
 
-  da_push(&err->info.locations, (ErrorLocation){file, line});
+  da_push(&err->info.locations, (ErrorLocation){file, line, func});
 
   va_list va;
   va_start(va, fmt);
@@ -96,8 +96,8 @@ void _error_internal_add_note(Error *err, const char *fmt, ...) {
   va_end(va);
 }
 
-void _error_internal_add_location(Error *err, const char *file, int line) {
-  da_push(&err->info.locations, (ErrorLocation){file, line});
+void _error_internal_add_location(Error *err, const char *file, int line, const char* func) {
+  da_push(&err->info.locations, (ErrorLocation){file, line, func});
 }
 
 ////////////////////////////////////////////////////////////////////////////

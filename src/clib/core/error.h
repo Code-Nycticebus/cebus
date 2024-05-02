@@ -60,11 +60,12 @@ error_propagate(&error, {
 ////////////////////////////////////////////////////////////////////////////
 
 #define ERROR_LOCATION_MAX 10
-#define FILE_LOC __FILE__, __LINE__
+#define FILE_LOC __FILE__, __LINE__, __func__
 
 typedef struct {
   const char *file;
   int line;
+  const char* func;
 } ErrorLocation;
 
 typedef struct {
@@ -85,13 +86,13 @@ typedef struct {
 #define ErrNew                                                                 \
   ((Error){                                                                    \
       .panic_on_emit = false,                                                  \
-      .info = {.location = {__FILE__, __LINE__}},                              \
+      .info = {.location = {FILE_LOC}},                              \
   })
 
 #define ErrPanic                                                               \
   ((Error[]){{                                                                 \
       .panic_on_emit = true,                                                   \
-      .info = {.location = {__FILE__, __LINE__}},                              \
+      .info = {.location = {FILE_LOC}},                              \
   }})
 
 #define ErrDefault ((Error *)NULL)
@@ -139,14 +140,14 @@ typedef struct {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void FMT(5) _error_internal_emit(Error *err, i32 code, const char *file,
-                                 int line, const char *fmt, ...);
+void FMT(6) _error_internal_emit(Error *err, i32 code, const char *file,
+                                 int line, const char* func, const char *fmt, ...);
 bool _error_internal_occured(Error *err);
 void NORETURN _error_internal_panic(Error *err);
 void _error_internal_except(Error *err);
 void _error_internal_set_code(Error *err, i32 code);
 void FMT(2) _error_internal_set_msg(Error *err, const char *fmt, ...);
-void _error_internal_add_location(Error *err, const char *file, int line);
+void _error_internal_add_location(Error *err, const char *file, int line, const char* func);
 void FMT(2) _error_internal_add_note(Error *err, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
