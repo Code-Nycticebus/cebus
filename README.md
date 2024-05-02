@@ -287,6 +287,8 @@ Combine sets or find their differences using algebraic set operations:
 The `StringBuilder` provides functionality for efficiently constructing
 strings.
 
+> :warning: StringBuilder does not construct '\0' terminated strings.
+
 ## Functions
 
 - **`StringBuilder sb_init(Arena *arena);`**
@@ -311,6 +313,10 @@ appended.
 - **`void sb_append_fmt(StringBuilder *sb, const char *fmt, ...);`**
   Appends a formatted string to the `StringBuilder`, similar to `printf` style
 formatting.
+
+- **`void sb_append_va(StringBuilder *sb, const char *fmt, va_list va);`**
+  Appends a formatted string and va_list to the `StringBuilder`, similar to
+`vprintf` style formatting.
 
 
 # Core
@@ -467,7 +473,8 @@ clib_log_error("This is an error message: %s", error_details);
 
 ## Functions
 
-- `clib_log_level(log_level, fmt, ...)`: Logs a message with the specified log level.
+- `clib_log_level(log_level, fmt, ...)`: Logs a message with the specified log
+level.
 - `clib_log(fmt, ...)`: Logs a message.
 - `clib_log_fatal(fmt, ...)`: Logs a fatal message.
 - `clib_log_error(fmt, ...)`: Logs an error message.

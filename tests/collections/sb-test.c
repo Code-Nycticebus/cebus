@@ -28,12 +28,12 @@ int main(void) {
   sb_append_c(&sb, '!');
   Str s = sb_to_str(&sb);
 
-  clib_assert(str_eq(s, STR("Hello, World 420!")), "");
+  clib_assert(str_eq(s, STR("Hello, World 420!")), STR_FMT, STR_ARG(s));
 
   sb_va_test("%d %d", 420, 69);
 
   sb_clear(&sb);
-  clib_assert(sb.len == 1, "Did not reset correctly");
+  clib_assert(sb.len == 0, "Did not reset correctly");
 
   arena_free(&arena);
 }

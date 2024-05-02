@@ -2,6 +2,8 @@
 The `StringBuilder` provides functionality for efficiently constructing
 strings.
 
+> :warning: StringBuilder does not construct '\0' terminated strings.
+
 ## Functions
 
 - **`StringBuilder sb_init(Arena *arena);`**
@@ -26,6 +28,10 @@ appended.
 - **`void sb_append_fmt(StringBuilder *sb, const char *fmt, ...);`**
   Appends a formatted string to the `StringBuilder`, similar to `printf` style
 formatting.
+
+- **`void sb_append_va(StringBuilder *sb, const char *fmt, va_list va);`**
+  Appends a formatted string and va_list to the `StringBuilder`, similar to
+`vprintf` style formatting.
 
 */
 

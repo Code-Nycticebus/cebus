@@ -9,56 +9,60 @@
 StringBuilder sb_init(Arena *arena) {
   StringBuilder sb = {0};
   da_init(&sb, arena);
-  da_push(&sb, 0);
   return sb;
 }
 
-void sb_clear(StringBuilder *sb) {
-  da_clear(sb);
-  da_push(sb, 0);
-}
+void sb_clear(StringBuilder *sb) { da_clear(sb); }
 
-Str sb_to_str(StringBuilder *sb) {
-  return str_from_parts(sb->len - 1, sb->items);
-}
+Str sb_to_str(StringBuilder *sb) { return str_from_parts(sb->len, sb->items); }
 
 void sb_append_parts(StringBuilder *sb, usize size, const char *s) {
-  (void)da_pop(sb);
   da_extend(sb, size, s);
-  da_push(sb, 0);
 }
 
 void sb_append_cstr(StringBuilder *sb, const char *cstr) {
-  sb_append_parts(sb, strlen(cstr), cstr);
+  da_extend(sb, strlen(cstr), cstr);
 }
 
 void sb_append_str(StringBuilder *sb, Str str) {
-  sb_append_parts(sb, str.len, str.data);
+  da_extend(sb, str.len, str.data);
 }
 
-void sb_append_c(StringBuilder *sb, char c) { sb_append_parts(sb, 1, &c); }
+void sb_append_c(StringBuilder *sb, char c) { da_push(sb, c); }
 
 usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
   va_list va;
+
+  // get the size size without '\0'
   va_start(va, fmt);
-  usize size = (usize)vsnprintf(NULL, 0, fmt, va) + 1;
+  usize size = (usize)vsnprintf(NULL, 0, fmt, va);
   va_end(va);
 
-  da_reserve(sb, size);
+  // allocate +1 so it does not overwrite
+  da_reserve(sb, size + 1);
+  // write into buffer
   va_start(va, fmt);
-  vsnprintf(&da_last(sb), size, fmt, va);
-  sb->len += size - 1;
+  vsnprintf(&da_last(sb) + 1, size + 1, fmt, va);
   va_end(va);
-  return size - 1;
+  sb->len += size;
+
+  return size;
 }
 
 usize sb_append_va(StringBuilder *sb, const char *fmt, va_list va) {
+  // copy the va_list
   va_list va2;
   va_copy(va2, va);
-  usize size = (usize)vsnprintf(NULL, 0, fmt, va) + 1;
 
-  da_reserve(sb, size);
-  vsnprintf(&da_last(sb), size, fmt, va2);
-  sb->len += size - 1;
-  return size - 1;
+  // get the size size without '\0'
+  usize size = (usize)vsnprintf(NULL, 0, fmt, va);
+
+  // allocate +1 so it does not overwrite
+  da_reserve(sb, size + 1);
+
+  // write into buffer
+  vsnprintf(&da_last(sb) + 1, size + 1, fmt, va2);
+  sb->len += size;
+
+  return size;
 }
