@@ -200,19 +200,6 @@ typedef struct _iobuf FILE;
 
 ////////////////////////////////////////////////////////////////////////////
 
-#if defined(LINUX)
-#include <signal.h> // IWYU pragma: export
-#define DEBUGBREAK() raise(SIGTRAP)
-#elif defined(WINDOWS)
-#include <intrin.h> // IWYU pragma: export
-#define DEBUGBREAK() __debugbreak()
-#else
-#include <stdlib.h> // IWYU pragma: export
-#define DEBUGBREAK(...) abort()
-#endif
-
-////////////////////////////////////////////////////////////////////////////
-
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
 
 #define EXPORT __attribute__((used))
@@ -265,22 +252,6 @@ typedef struct _iobuf FILE;
 
 #ifndef FMT
 #define FMT(...)
-#endif
-
-////////////////////////////////////////////////////////////////////////////
-
-#if defined(NDEBUG)
-#if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
-#define UNREACHABLE() __builtin_unreachable()
-#elif defined(MSVC)
-#define UNREACHABLE() __assume(0)
-#else
-#define UNREACHABLE()
-#endif
-#else
-#define UNREACHABLE()                                                          \
-  clib_log_error("UNREACHABLE: %s:%d: %s()", __FILE__, __LINE__, __func__);    \
-  DEBUGBREAK()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
