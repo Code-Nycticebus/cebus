@@ -11,7 +11,7 @@ clib_assert(1 == 1, "It needs a message");
 clib_assert(2 == 2, "It can even handle arguments: %d", 420);
 ```
 
-## Available Macros
+## Assert Macros
 
 - `clib_assert(EXPR, FMT, ...)`: Asserts a condition and logs an error if the
 condition is false.
@@ -22,14 +22,12 @@ message if the condition is false.
 - `clib_assert_return(EXPR, RETURN_VALUE)`: Asserts a condition and returns a
 value if the condition is false.
 
-## Debug Break
+## Debug Macros
 
-A `debugbreak` is triggered on assertion failure to facilitate debugging, with
-behavior varying by platform:
-
-- **Linux**: Uses `raise(SIGTRAP)`.
-- **Windows**: Uses `__debugbreak()`.
-- **Other Platforms**: Uses `abort()`.
+- `DEBUGBREAK()`: Uses platform specific debug break.
+- `UNREACHABLE()`: Prints error message in debug mode. In release mode it uses
+compiler intrensics.
+- `NOT_IMPLEMENTED()`: Prints error message
 */
 
 #include "clib/core/platform.h" // IWYU pragma: export
@@ -42,7 +40,7 @@ behavior varying by platform:
 #define DEBUGBREAK() raise(SIGTRAP)
 #elif defined(WINDOWS)
 #include <intrin.h> // IWYU pragma: export
-#define DEBUGBREAK() __debugbreak();
+#define DEBUGBREAK() __debugbreak()
 #else
 #include <stdlib.h> // IWYU pragma: export
 #define DEBUGBREAK(...) abort()
