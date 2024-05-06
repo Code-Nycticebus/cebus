@@ -67,6 +67,18 @@ behavior varying by platform:
 
 ////////////////////////////////////////////////////////////////////////////
 
+#if defined(NDEBUG)
+#define NOT_IMPLEMENTED()
+#else
+#include <stdlib.h> // IWYU pragma: export
+#define NOT_IMPLEMENTED()                                                      \
+  clib_log_error("NOT IMPLEMENTED: %s:%d: %s()", __FILE__, __LINE__,           \
+                 __func__);                                                    \
+  abort()
+#endif
+
+////////////////////////////////////////////////////////////////////////////
+
 #define _clib_assert_print(level, expr, ...)                                   \
   clib_log_level(level, "%s:%d: %s():", __FILE__, __LINE__, __func__);         \
   clib_log_level(level, "  Assertion '%s' failed", expr);                      \
