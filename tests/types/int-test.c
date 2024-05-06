@@ -1,6 +1,6 @@
 #include "clib/type/integer.h"
 
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/type/byte.h"
 
 /* u8 */

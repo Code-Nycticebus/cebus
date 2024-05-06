@@ -1,5 +1,5 @@
 #include "char.h"
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 
 #include <ctype.h>
 

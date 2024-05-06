@@ -1,7 +1,7 @@
 #include "clib/collection/hashmap.h"
 
 #include "clib/collection/da.h"
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/type/integer.h"
 #include "clib/type/string.h"
 

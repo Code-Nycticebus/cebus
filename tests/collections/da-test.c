@@ -1,7 +1,7 @@
 #include "clib/collection/da.h"
 
 #include "clib/core/arena.h"
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/type/integer.h"
 
 static void test_vec(void) {

@@ -67,7 +67,7 @@ Set the `CLIB_DIRECTORY` variable (or just replace `$CLIB_DIRECTORY` with the di
    - [string_builder.h](#string_builderh)
 - [Core](#Core)
    - [arena.h](#arenah)
-   - [assert.h](#asserth)
+   - [debug.h](#debugh)
    - [defines.h](#definesh)
    - [error.h](#errorh)
    - [logging.h](#loggingh)
@@ -361,7 +361,7 @@ within an arena:
 - `arena_realloc_chunk`: Reallocate a previously allocated chunk to a new size.
 - `arena_free_chunk`: Free a specific chunk of memory (advanced use cases).
 
-# [assert.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/assert.h)
+# [debug.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/debug.h)
 ## Usage
 
 Use the assertion macros to validate conditions and log failures:

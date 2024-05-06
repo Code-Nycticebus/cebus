@@ -1,7 +1,7 @@
 #include "clib/os/fs.h"
 
 #include "clib/collection/da.h"
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/core/defines.h"
 
 int main(void) {

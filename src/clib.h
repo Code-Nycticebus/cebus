@@ -16,7 +16,7 @@ Include this file to include all the header files that are listed below.
 #include "clib/collection/string_builder.h"
 
 #include "clib/core/arena.h"
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/core/error.h"
 #include "clib/core/logging.h"
 #include "clib/core/platform.h"

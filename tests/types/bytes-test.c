@@ -1,6 +1,6 @@
 #include "clib/type/byte.h"
 
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/type/string.h"
 
 static void test_bytes(void) {

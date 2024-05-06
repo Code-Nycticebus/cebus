@@ -1,6 +1,6 @@
 #include "clib/core/error.h"
 
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 
 #include <stdio.h>
 #include <stdlib.h>

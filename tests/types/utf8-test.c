@@ -1,7 +1,7 @@
 #include "clib/type/utf8.h"
 
 #include "../test.h"
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 
 #include <locale.h>
 #include <string.h>

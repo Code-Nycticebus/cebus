@@ -1,6 +1,6 @@
 #include "hashmap.h"
 
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/core/defines.h"
 #include "clib/type/integer.h"
 

@@ -1,7 +1,7 @@
 #include "clib/collection/set.h"
 
 #include "clib/collection/da.h"
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/type/integer.h"
 #include "clib/type/string.h"
 
@@ -255,7 +255,8 @@ static void test_example_deduplicate(void) {
   da_filter_ctx(&list, &list, filter_duplicates, &unique);
   arena_free(&temp);
 
-  clib_assert(list.len == 3, "Did not find the unique strings correctly: %" USIZE_FMT,
+  clib_assert(list.len == 3,
+              "Did not find the unique strings correctly: %" USIZE_FMT,
               list.len);
   clib_assert(str_eq(list.items[0], STR("Apple")),
               "Did not filter out correctly");

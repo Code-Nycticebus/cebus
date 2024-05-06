@@ -1,7 +1,7 @@
 #include "utf8.h"
 
 #include "clib/core/arena.h"
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/type/byte.h"
 #include "clib/type/char.h"
 #include "clib/type/integer.h"

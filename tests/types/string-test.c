@@ -2,7 +2,7 @@
 #include "clib/core/defines.h"
 #include "clib/type/char.h"
 
-#include "clib/core/assert.h"
+#include "clib/core/debug.h"
 #include "clib/type/string.h"
 
 #include <stdlib.h>
