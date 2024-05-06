@@ -65,7 +65,7 @@ static void test_error_except(void) {
   error_context(&err, { error_except(); });
 
   clib_assert(err.failure == false, "Did not ignore correctly");
-  clib_assert(err.info->msg.len == 0, "Did not ignore correctly");
+  clib_assert(err.info == NULL, "Did not ignore correctly");
 }
 
 static void test_error_match(void) {
