@@ -33,6 +33,8 @@ compiler intrensics.
 #include "clib/core/platform.h" // IWYU pragma: export
 #include "logging.h"            // IWYU pragma: export
 
+NORETURN void abort(void);
+
 ////////////////////////////////////////////////////////////////////////////
 
 #if defined(LINUX)
@@ -42,7 +44,6 @@ compiler intrensics.
 #include <intrin.h> // IWYU pragma: export
 #define DEBUGBREAK() __debugbreak()
 #else
-#include <stdlib.h> // IWYU pragma: export
 #define DEBUGBREAK(...) abort()
 #endif
 
@@ -50,14 +51,17 @@ compiler intrensics.
 
 #if defined(NDEBUG)
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
-#define UNREACHABLE() __builtin_unreachable()
+#define UNREACHABLE()                                                          \
+  __builtin_unreachable();                                                     \
+  abort()
 #elif defined(MSVC)
-#define UNREACHABLE() __assume(0)
+#define UNREACHABLE()                                                          \
+  __assume(0);                                                                 \
+  abort()
 #else
-#define UNREACHABLE()
+#define UNREACHABLE() abort()
 #endif
 #else
-#include <stdlib.h> // IWYU pragma: export
 #define UNREACHABLE()                                                          \
   clib_log_error("UNREACHABLE: %s:%d: %s()", __FILE__, __LINE__, __func__);    \
   abort()
@@ -66,9 +70,8 @@ compiler intrensics.
 ////////////////////////////////////////////////////////////////////////////
 
 #if defined(NDEBUG)
-#define NOT_IMPLEMENTED()
+#define NOT_IMPLEMENTED() abort()
 #else
-#include <stdlib.h> // IWYU pragma: export
 #define NOT_IMPLEMENTED()                                                      \
   clib_log_error("NOT IMPLEMENTED: %s:%d: %s()", __FILE__, __LINE__,           \
                  __func__);                                                    \
