@@ -141,6 +141,14 @@ Str str_substring(Str s, usize start, usize end);
 u64 str_u64(Str s);
 u64 str_chop_u64(Str *s);
 
+i64 str_i64(Str s);
+i64 str_chop_i64(Str *s);
+
+f64 str_f64(Str s);
+f64 str_chop_f64(Str *s);
+
+///////////////////////////////////////////////////////////////////////////////
+
 // Returns 'STR_NOT_FOUND' if 'needle' was not found.
 usize str_find(Str haystack, Str needle);
 // Returns 'STR_NOT_FOUND' if 'needle' was not found.

@@ -7,6 +7,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -550,22 +551,74 @@ bool str_try_take(Str *s, usize count, Str *chunk) {
 ///////////////////////////////////////////////////////////////////////////////
 
 u64 str_u64(Str s) {
-  u64 result = 0;
-  for (usize i = 0; i < s.len && c_is_digit(s.data[i]); ++i) {
-    result = result * 10 + c_to_u8(s.data[i]); // NOLINT
-  }
-  return result;
+  const int radix = 10;
+  Arena arena = {0};
+  Str owned = str_copy(s, &arena);
+  u64 value = strtoull(owned.data, NULL, radix);
+  arena_free(&arena);
+  return value;
 }
 
 u64 str_chop_u64(Str *s) {
-  u64 result = 0;
-  usize i = 0;
-  for (; i < s->len && c_is_digit(s->data[i]); ++i) {
-    result = result * 10 + c_to_u8(s->data[i]); // NOLINT
-  }
-  s->len -= i;
-  s->data += i;
-  return result;
+  const int radix = 10;
+  Arena arena = {0};
+  Str owned = str_copy(*s, &arena);
+  char *endptr;
+  u64 value = strtoull(owned.data, &endptr, radix);
+
+  const usize size = (usize)(endptr - owned.data);
+  s->data += size;
+  s->len -= size;
+
+  arena_free(&arena);
+  return value;
+}
+
+i64 str_i64(Str s) {
+  const int radix = 10;
+  Arena arena = {0};
+  Str owned = str_copy(s, &arena);
+  i64 value = strtoll(owned.data, NULL, radix);
+  arena_free(&arena);
+  return value;
+}
+
+i64 str_chop_i64(Str *s) {
+  const int radix = 10;
+  Arena arena = {0};
+  Str owned = str_copy(*s, &arena);
+  char *endptr;
+  i64 value = strtoll(owned.data, &endptr, radix);
+
+  const usize size = (usize)(endptr - owned.data);
+  s->data += size;
+  s->len -= size;
+
+  arena_free(&arena);
+  return value;
+}
+
+f64 str_f64(Str s) {
+  Arena arena = {0};
+  Str owned = str_copy(s, &arena);
+  double value = strtod(owned.data, NULL);
+  arena_free(&arena);
+  return value;
+}
+
+f64 str_chop_f64(Str *s) {
+  Arena arena = {0};
+  Str owned = str_copy(*s, &arena);
+
+  char *endptr;
+  f64 value = strtod(owned.data, &endptr);
+
+  const usize size = (usize)(endptr - owned.data);
+  s->data += size;
+  s->len -= size;
+
+  arena_free(&arena);
+  return value;
 }
 
 usize str_find(Str haystack, Str needle) {

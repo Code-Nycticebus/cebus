@@ -5,8 +5,6 @@
 #include "clib/core/debug.h"
 #include "clib/type/string.h"
 
-#include <stdlib.h>
-
 static void test_compare(void) {
   Str s = STR("Hello, World");
 
@@ -134,18 +132,27 @@ static void test_chop_right(void) {
   clib_assert(str_eq(rest3, STR("")), "");
 }
 
-static void test_u64(void) {
+static void test_number_converting(void) {
   Arena arena = {0};
+
   const u64 N = 64;
   Str number = str_format(&arena, "%" U64_FMT, N);
   clib_assert(str_eq(number, STR("64")), "");
 
   Str n = str_append(number, STR(" bytes"), &arena);
-  clib_assert(str_eq(n, STR("64 bytes")), "");
+  clib_assert(str_eq(n, STR("64 bytes")), STR_FMT, STR_ARG(n));
 
   clib_assert(str_u64(n) == 64, "");
   clib_assert(str_chop_u64(&n) == 64, "");
-  clib_assert(str_eq(n, STR(" bytes")), "");
+  clib_assert(n.len == 6, "%" USIZE_FMT, n.len);
+  clib_assert(str_eq(n, STR(" bytes")), STR_FMT, STR_ARG(n));
+
+  Str f = STR("420.69");
+  clib_assert(str_f64(f) == 420.69, "");
+
+  clib_assert(str_chop_f64(&f) == 420.69, "");
+  clib_assert(f.len == 0, "%" USIZE_FMT, f.len);
+  clib_assert(str_eq(f, STR("")), STR_FMT, STR_ARG(f));
 
   arena_free(&arena);
 }
@@ -298,7 +305,7 @@ int main(void) {
   test_chop();
   test_try_chop();
   test_chop_right();
-  test_u64();
+  test_number_converting();
   test_find();
   test_count();
   test_replace();
