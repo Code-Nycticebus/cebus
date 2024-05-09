@@ -15,6 +15,10 @@ source="examples/source.c"
 json="examples/json.c"
 
 [[scripts.build]]
-cmd="python3"
+cmd="python"
 args=["docs.py"]
 
+
+[[scripts.build]]
+cmd="python"
+args=["single_header.py"]
