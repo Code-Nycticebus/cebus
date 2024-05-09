@@ -16,9 +16,9 @@ json="examples/json.c"
 
 [[scripts.build]]
 cmd="python"
-args=["docs.py"]
+args=["scripts/docs.py"]
 
 
 [[scripts.build]]
 cmd="python"
-args=["single_header.py"]
+args=["scripts/single_header.py"]
