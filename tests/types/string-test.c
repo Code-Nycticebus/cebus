@@ -5,6 +5,8 @@
 #include "clib/core/debug.h"
 #include "clib/type/string.h"
 
+#include <stdlib.h>
+
 static void test_compare(void) {
   Str s = STR("Hello, World");
 
