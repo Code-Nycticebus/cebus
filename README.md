@@ -37,7 +37,8 @@ pybuildc run
 
 ## Single Header
 
-Do this:
+
+Download the [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/clib.h) file in your directory and do this:
 ```c
 #define CLIB_IMPLEMENTATION
 #include "clib.h"
