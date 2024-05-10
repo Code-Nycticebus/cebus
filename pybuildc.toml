@@ -2,10 +2,6 @@
 name="clib"
 cflags=[
   "-std=c99",
-  "-Wconversion",
-  "-Wmissing-prototypes",
-  "-Wmissing-declarations",
-  "-Wstrict-prototypes",
 ]
 
 [exe]
