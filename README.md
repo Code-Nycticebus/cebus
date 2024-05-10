@@ -37,13 +37,13 @@ pybuildc run
 
 ## Single Header
 
+Download the [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/clib.h) file and place it in your project directory.
 
-Download the [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/clib.h) file in your directory and do this:
+In your C source file, include the library header and define the implementation as follows:
 ```c
 #define CLIB_IMPLEMENTATION
 #include "clib.h"
 ```
-before you include this file in *one* C file to create the implementation.
 
 # Documentation
 

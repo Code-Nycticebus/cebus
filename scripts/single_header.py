@@ -14,14 +14,19 @@ def copy(file, src):
 
 if __name__ == "__main__":
     with open(output, "w") as f:
-        f.write("""/* DOCUMENTATION
-Do this:
+        f.write("/* ")
+        copy(f, Path("LICENSE"))
+        f.write("*/\n")
+
+        f.write("""
+/* DOCUMENTATION
+In your C source file, include the library header and define the implementation as follows:
 ```c
 #define CLIB_IMPLEMENTATION
 #include "clib.h"
 ```
-before you include this file in *one* C file to create the implementation.
 */
+
 """)
 
         for first in FIRST:
