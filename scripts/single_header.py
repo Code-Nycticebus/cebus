@@ -32,6 +32,6 @@ before you include this file in *one* C file to create the implementation.
                 copy(f, header)
         
         f.write("#ifdef CLIB_IMPLEMENTATION\n")
-        for source in Path(src).rglob("*.c"):
+        for source in sorted(Path(src).rglob("*.c")):
             copy(f, source)
         f.write("#endif // !CLIB_IMPLEMENTATION\n")

@@ -11,14 +11,12 @@ cflags=[
 [exe]
 info="examples/info.c"
 word="examples/word.c"
-source="examples/source.c"
-json="examples/json.c"
 
 [[scripts.build]]
-cmd="python"
+cmd="python3"
 args=["scripts/docs.py"]
 
 
 [[scripts.build]]
-cmd="python"
+cmd="python3"
 args=["scripts/single_header.py"]
