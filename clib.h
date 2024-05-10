@@ -23,7 +23,8 @@ SOFTWARE.
 */
 
 /* DOCUMENTATION
-In your C source file, include the library header and define the implementation as follows:
+In your C source file, include the library header and define the implementation
+as follows:
 ```c
 #define CLIB_IMPLEMENTATION
 #include "clib.h"
@@ -228,6 +229,7 @@ enhancing type safety with `printf`-like functions.
 #ifndef __CLIB_DEFINES_H__
 #define __CLIB_DEFINES_H__
 
+// #include "platform.h"
 
 #include <float.h>
 #include <stdbool.h>
@@ -506,6 +508,7 @@ within an arena:
 #ifndef __CLIB_ARENA_H__
 #define __CLIB_ARENA_H__
 
+// #include "clib/core/defines.h"
 
 typedef struct Chunk Chunk;
 
@@ -611,6 +614,9 @@ destination.
 #ifndef __CLIB_DA_H__
 #define __CLIB_DA_H__
 
+// #include "clib/core/arena.h"   // IWYU pragma: export
+// #include "clib/core/defines.h" // IWYU pragma: export
+// #include "clib/core/sorting.h" // IWYU pragma: export
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -864,6 +870,8 @@ or `f64` pointers.
 #ifndef __CLIB_HASHMAP_H__
 #define __CLIB_HASHMAP_H__
 
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h"
 
 typedef struct HashMap HashMap;
 
@@ -990,6 +998,8 @@ Combine sets or find their differences using algebraic set operations:
 #ifndef __CLIB_SET_H__
 #define __CLIB_SET_H__
 
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h"
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -1078,7 +1088,10 @@ formatting.
 #ifndef __CLIB_STRING_BUILDER_H__
 #define __CLIB_STRING_BUILDER_H__
 
+// #include "clib/core/defines.h"
 
+// #include "clib/collection/da.h"
+// #include "clib/core/arena.h"
 
 #include <stdarg.h>
 
@@ -1097,76 +1110,6 @@ FMT(2) usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...);
 usize sb_append_va(StringBuilder *sb, const char *fmt, va_list va);
 
 #endif /* !__CLIB_STRING_BUILDER_H__ */
-
-/* DOCUMENTATION
-## Initialization
-
-To start using the library, initialize an `Arena` struct:
-
-```c
-Arena arena = {0};
-```
-
-## Memory Allocation
-
-Allocate memory from the arena using `arena_alloc` or `arena_calloc` for
-uninitialized or zero-initialized memory, respectively:
-
-```c
-int* i1 = arena_alloc(&arena, sizeof(int));
-int* i2 = arena_alloc(&arena, sizeof(int));
-int* i3 = arena_alloc(&arena, sizeof(int));
-```
-
-## Memory Deallocation
-
-Deallocate all memory associated with an arena at once using `arena_free`. This
-operation frees all memory chunks allocated from the arena, providing a
-significant performance advantage over individual deallocation:
-
-```c
-arena_free(&arena);
-```
-
-## Chunk
-
-The library also provides functions for more granular control over memory chunks
-within an arena:
-
-- `arena_alloc_chunk`: Allocate a new chunk of memory.
-- `arena_calloc_chunk`: Allocates a new, zero initialized, chunk of memory.
-- `arena_realloc_chunk`: Reallocate a previously allocated chunk to a new size.
-- `arena_free_chunk`: Free a specific chunk of memory (advanced use cases).
-*/
-
-#ifndef __CLIB_ARENA_H__
-#define __CLIB_ARENA_H__
-
-
-typedef struct Chunk Chunk;
-
-typedef struct {
-  Chunk *begin;
-} Arena;
-
-////////////////////////////////////////////////////////////////////////////
-
-void arena_free(Arena *arena);
-
-void *arena_alloc(Arena *arena, usize size);
-void *arena_calloc(Arena *arena, usize size);
-void arena_reset(Arena *arena);
-
-////////////////////////////////////////////////////////////////////////////
-
-void *arena_alloc_chunk(Arena *arena, usize size);
-void *arena_calloc_chunk(Arena *arena, usize size);
-void *arena_realloc_chunk(Arena *arena, void *ptr, usize size);
-void arena_free_chunk(Arena *arena, void *ptr);
-
-////////////////////////////////////////////////////////////////////////////
-
-#endif /* !__CLIB_ARENA_H__ */
 
 #ifndef __CLIB_ASSERTS_H__
 #define __CLIB_ASSERTS_H__
@@ -1200,6 +1143,8 @@ compiler intrensics.
 - `NOT_IMPLEMENTED()`: Prints error message
 */
 
+// #include "clib/core/platform.h" // IWYU pragma: export
+// #include "logging.h"            // IWYU pragma: export
 
 NORETURN void abort(void);
 
@@ -1292,265 +1237,6 @@ NORETURN void abort(void);
 #endif /* !__CLIB_ASSERTS_H__ */
 
 /* DOCUMENTATION
-## Key Definitions and Macros
-
-- **Data Types**: Defines types such as `u8`, `i8`, `u32`, `i32`,
-`usize`, `f32`, `f64`, `Bytes`, `Str`, and `Utf8`.
-- **Mathematical Constants**: Defines `F64_PI` and `F64_E` for mathematical
-operations.
-- **Memory Units**: Macros for `KILOBYTES`, `MEGABYTES`, and `GIGABYTES` to
-easily specify memory sizes.
-- **Array Length**: `ARRAY_LEN(A)` calculates the number of elements in an
-array.
-- **Comparison Ordering**: Enum `CmpOrdering` for less than, equal, and greater
-than comparisons.
-- **Compiler Attributes**: Macros such as `EXPORT`, `NORETURN`, `UNUSED`,
-`PURE_FN`, `CONST_FN` for compiler-specific attributes.
-- **Likely and Unlikely**: `LIKELY` and `UNLIKELY` macros to hint the compiler
-about branch prediction.
-- **Format Attribute**: `FMT` macro to specify format strings for functions,
-enhancing type safety with `printf`-like functions.
-
-*/
-
-#ifndef __CLIB_DEFINES_H__
-#define __CLIB_DEFINES_H__
-
-
-#include <float.h>
-#include <stdbool.h>
-#include <stddef.h> // IWYU pragma: export
-#include <stdint.h>
-
-////////////////////////////////////////////////////////////////////////////
-
-#define KILOBYTES(s) ((usize)(s) * (usize)1e+3)
-#define MEGABYTES(s) ((usize)(s) * (usize)1e+6)
-#define GIGABYTES(s) ((usize)(s) * (usize)1e+9)
-
-#define ARRAY_LEN(A) (sizeof((A)) / sizeof((A)[0]))
-
-////////////////////////////////////////////////////////////////////////////
-
-typedef enum {
-  CMP_LESS = -1,
-  CMP_EQUAL = 0,
-  CMP_GREATER = 1,
-} CmpOrdering;
-
-typedef CmpOrdering (*CompareFn)(const void *, const void *);
-typedef CmpOrdering (*CompareCtxFn)(const void *, const void *, const void *);
-
-////////////////////////////////////////////////////////////////////////////
-
-typedef uint8_t u8;
-#define U8_MAX UINT8_MAX
-#define U8_MIN 0
-#define U8_BITS 8
-#define U8_FMT "hhu"
-#define U8_HEX "hhx"
-
-typedef int8_t i8;
-#define I8_MAX INT8_MAX
-#define I8_MIN INT8_MIN
-#define I8_BITS 8
-#define I8_FMT "hhd"
-#define I8_HEX "hhx"
-
-typedef uint16_t u16;
-#define U16_MAX UINT16_MAX
-#define U16_MIN 0
-#define U16_BITS 16
-#define U16_FMT "hd"
-#define U16_HEX "hx"
-
-typedef int16_t i16;
-#define I16_MAX INT16_MAX
-#define I16_MIN INT16_MIN
-#define I16_BITS 16
-
-typedef uint32_t u32;
-#define U32_MAX UINT32_MAX
-#define U32_MIN 0
-#define U32_BITS 32
-
-typedef int32_t i32;
-#define I32_MAX INT32_MAX
-#define I32_MIN INT32_MIN
-#define I32_BITS 32
-
-typedef uint64_t u64;
-#define U64_MAX UINT64_MAX
-#define U64_MIN 0
-#define U64_BITS 64
-#if defined(LINUX)
-#define U64_FMT "lu"
-#define U64_HEX "lx"
-#elif defined(WINDOWS)
-#define U64_FMT "llu"
-#define U64_HEX "llx"
-#else
-#define U64_FMT "lu"
-#define U64_HEX "lx"
-#endif
-
-typedef int64_t i64;
-#define I64_MAX INT64_MAX
-#define I64_MIN INT64_MIN
-#define I64_BITS 64
-#if defined(LINUX)
-#define I64_FMT "lu"
-#define I64_HEX "lx"
-#elif defined(WINDOWS)
-#define I64_FMT "llu"
-#define I64_HEX "llx"
-#else
-#define I64_FMT "lu"
-#define I32_FMT "lx"
-#endif
-
-typedef size_t usize;
-#define USIZE_MAX SIZE_MAX
-#define USIZE_MIN 0
-#define USIZE_BITS (sizeof(usize) * 8)
-#if defined(WINDOWS) && defined(GCC)
-#define USIZE_FMT "llu"
-#else
-#define USIZE_FMT "zu"
-#endif
-
-typedef float f32;
-#define F32_MAX FLT_MAX
-#define F32_MIN FLT_MIN
-#define F32_EPSILON FLT_EPSILON
-
-typedef double f64;
-#define F64_MAX DBL_MAX
-#define F64_MIN DBL_MIN
-#define F64_EPSILON DBL_EPSILON
-
-#define F32_INF (*(const f32 *)(const u32[]){0x7F800000})
-#define F64_INF (*(const f64 *)(const u64[]){0x7FF0000000000000})
-#define F32_NAN (0.0f / 0.0f)
-#define F64_NAN (0.0 / 0.0)
-#define F64_PI 3.14159265358979323846
-#define F32_PI 3.1415926535f
-#define F64_E 2.71828182845904523536
-#define F32_E 2.7182818284f
-
-#define BOOL_FMT "%s"
-#define BOOL_ARG(b) (b ? "true" : "false")
-
-////////////////////////////////////////////////////////////////////////////
-
-#define BYTES(...)                                                             \
-  (Bytes) {                                                                    \
-    sizeof((const u8[]){__VA_ARGS__}), (const u8[]) { __VA_ARGS__ }            \
-  }
-
-#define BYTES_STR(s)                                                           \
-  (Bytes) { sizeof(s) - 1, (const u8 *)(s) }
-
-typedef struct {
-  usize size;
-  const u8 *data;
-} Bytes;
-
-////////////////////////////////////////////////////////////////////////////
-
-#define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
-#define STR_STATIC(str)                                                        \
-  { .len = sizeof(str) - 1, .data = (str) }
-#define STR_FMT "%.*s"
-#define STR_ARG(str) (i32)(str).len, (str).data
-
-typedef struct {
-  usize len;
-  const char *data;
-} Str;
-
-////////////////////////////////////////////////////////////////////////////
-
-#define UTF8(s) utf8_decode(BYTES_STR(s), ErrDefault)
-#define UTF8_FMT "%.*s"
-#define UTF8_ARG(s) (i32)(s).size, (s).data
-
-typedef struct {
-  usize size;
-  const char *data;
-  usize len;
-} Utf8;
-
-////////////////////////////////////////////////////////////////////////////
-
-#if defined(LINUX)
-#include <bits/types/FILE.h>
-#elif defined(WINDOWS)
-#define _FILE_DEFINED
-typedef struct _iobuf FILE;
-#endif
-
-////////////////////////////////////////////////////////////////////////////
-
-#if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
-
-#define EXPORT __attribute__((used))
-#define NORETURN __attribute__((noreturn))
-#define UNUSED __attribute__((unused))
-#define PURE_FN __attribute__((pure)) __attribute__((warn_unused_result))
-#define CONST_FN __attribute__((const)) __attribute__((warn_unused_result))
-#define LIKELY(exp) __builtin_expect(((exp) != 0), 1)
-#define UNLIKELY(exp) __builtin_expect(((exp) != 0), 0)
-#define FMT(__fmt_arg) __attribute__((format(printf, __fmt_arg, __fmt_arg + 1)))
-
-#elif defined(MSVC)
-
-#include <sal.h>
-#define EXPORT __declspec(dllexport)
-#define NORETURN __declspec(noreturn)
-#define UNUSED __pragma(warning(suppress : 4100))
-#define PURE_FN _Check_return_
-#define CONST_FN _Check_return_
-
-#endif
-
-#ifndef EXPORT
-#define EXPORT
-#endif
-
-#ifndef NORETURN
-#define NORETURN
-#endif
-
-#ifndef UNUSED
-#define UNUSED
-#endif
-
-#ifndef PURE_FN
-#define PURE_FN
-#endif
-
-#ifndef CONST_FN
-#define CONST_FN
-#endif
-
-#ifndef LIKELY
-#define LIKELY(...) (__VA_ARGS__)
-#endif
-
-#ifndef UNLIKELY
-#define UNLIKELY(...) (__VA_ARGS__)
-#endif
-
-#ifndef FMT
-#define FMT(...)
-#endif
-
-////////////////////////////////////////////////////////////////////////////
-
-#endif /* !__CLIB_DEFINES_H__ */
-
-/* DOCUMENTATION
 ### Initialization Macros
 - `ErrNew`: Initializes a new Error instance.
 - `ErrPanic`: Initializes an Error that will trigger a panic on `error_emit()`.
@@ -1604,6 +1290,10 @@ error_propagate(&error, {
 #ifndef __CLIB_ERROR_H__
 #define __CLIB_ERROR_H__
 
+// #include "clib/collection/da.h"
+// #include "clib/collection/string_builder.h"
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -1733,6 +1423,7 @@ level.
 #ifndef __CLIB_LOGGING_H__
 #define __CLIB_LOGGING_H__
 
+// #include "clib/core/defines.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -1773,179 +1464,6 @@ void FMT(1) _clib_log_trace(const char *fmt, ...);
 #endif /* !__CLIB_LOGGING_H__ */
 
 /* DOCUMENTATION
-## Features
-
-- **Platform Detection**: Identifies the operating system, such as Linux or
-Windows.
-- **Architecture Detection**: Determines the CPU architecture, such as x86_64 or
-ARM.
-- **Compiler Detection**: Identifies the compiler used, such as GCC, Clang, or
-MSVC.
-- **CPU Bitness**: Distinguishes between 32-bit and 64-bit environments.
-- **Byte Order**: Defines the system's byte order (endianness).
-*/
-
-#ifndef __CLIB_PLATFORM_H__
-#define __CLIB_PLATFORM_H__
-
-////////////////////////////////////////////////////////////////////////////
-/* System */
-#if defined(__linux__)
-#define LINUX
-#define CLIB_SYSTEM "Linux"
-#elif defined(_WIN32) || defined(_WIN64)
-#define WINDOWS
-#define CLIB_SYSTEM "Windows"
-#define _CRT_SECURE_NO_WARNINGS
-#define WIN32_LEAN_AND_MEAN
-#else
-#error "Platform not supported!"
-#endif
-/* !System */
-
-////////////////////////////////////////////////////////////////////////////
-/* Architecture */
-#if defined(__x86_64__) || defined(_M_X64)
-#define x86_64
-#define CLIB_ARCHITECTURE "x86_64"
-#elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
-#define x86_32
-#define CLIB_ARCHITECTURE "x86_32"
-#elif defined(__ARM_ARCH_2__)
-#define ARM2
-#define CLIB_ARCHITECTURE "ARM2"
-#elif defined(__ARM_ARCH_3__) || defined(__ARM_ARCH_3M__)
-#define ARM3
-#define CLIB_ARCHITECTURE "ARM3"
-#elif defined(__ARM_ARCH_4T__) || defined(__TARGET_ARM_4T)
-#define ARM4T
-#define CLIB_ARCHITECTURE "ARM4T"
-#elif defined(__ARM_ARCH_5_) || defined(__ARM_ARCH_5E_)
-#define ARM5
-#define CLIB_ARCHITECTURE "ARM5"
-#elif defined(__ARM_ARCH_6T2_) || defined(__ARM_ARCH_6T2_)
-#define ARM6T2
-#define CLIB_ARCHITECTURE "ARM6T2"
-#elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) ||                   \
-    defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6Z__) ||                    \
-    defined(__ARM_ARCH_6ZK__)
-#define ARM6
-#define CLIB_ARCHITECTURE "ARM6"
-#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) ||                   \
-    defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) ||                    \
-    defined(__ARM_ARCH_7S__)
-#define ARM7
-#define CLIB_ARCHITECTURE "ARM7"
-#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) ||                  \
-    defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__)
-#define ARM7A
-#define CLIB_ARCHITECTURE "ARM7A"
-#elif defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) ||                  \
-    defined(__ARM_ARCH_7S__)
-#define ARM7R
-#define CLIB_ARCHITECTURE "ARM7R"
-#elif defined(__ARM_ARCH_7M__)
-#define ARM7M
-#define CLIB_ARCHITECTURE "ARM7M"
-#elif defined(__ARM_ARCH_7S__)
-#define ARM7S
-#define CLIB_ARCHITECTURE "ARM7S"
-#elif defined(__aarch64__) || defined(_M_ARM64)
-#define ARM64
-#define CLIB_ARCHITECTURE "ARM64"
-#elif defined(mips) || defined(__mips__) || defined(__mips)
-#define MIPS
-#define CLIB_ARCHITECTURE "MIPS"
-#elif defined(__sh__)
-#define SUPERH
-#define CLIB_ARCHITECTURE "SUPERH"
-#elif defined(__powerpc) || defined(__powerpc__) || defined(__powerpc64__) ||  \
-    defined(__POWERPC__) || defined(__ppc__) || defined(__PPC__) ||            \
-    defined(_ARCH_PPC)
-#define POWERPC
-#define CLIB_ARCHITECTURE "POWERPC"
-#elif defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
-#define POWERPC64
-#define CLIB_ARCHITECTURE "POWERPC64"
-#elif defined(__sparc__) || defined(__sparc)
-#define SPARC
-#define CLIB_ARCHITECTURE "SPARC"
-#elif defined(__m68k__)
-#define M68K
-#define CLIB_ARCHITECTURE "M68K"
-#else
-#define ARCHITECTURE_UNKNOWN 0
-#define CLIB_ARCHITECTURE "ARCHITECTURE UNKNOWN"
-#endif
-/* !Architecture */
-
-////////////////////////////////////////////////////////////////////////////
-/* Compiler */
-#if defined(__GNUC__) && !defined(__clang__)
-#define GCC
-#define CLIB_COMPILER "GCC"
-#elif defined(__clang__)
-#define CLANG
-#define CLIB_COMPILER "Clang"
-#elif defined(__TINYC__)
-#define TINYC
-#define CLIB_COMPILER "TinyC"
-#elif defined(_MSC_VER)
-#define MSVC
-#define CLIB_COMPILER "MSVC"
-#elif defined(__MINGW32__)
-#define MINGW32
-#define CLIB_COMPILER "MinGW32"
-#elif defined(__MINGW64__)
-#define MINGW64
-#define CLIB_COMPILER "MinGW64"
-#elif defined(__INTEL_COMPILER)
-#define INTEL_COMPILER
-#define CLIB_COMPILER "Intel Compiler"
-#else
-#define COMPILER_UNKOWN
-#define CLIB_COMPILER "COMPILER UNKOWN"
-#endif
-/* !Compiler */
-
-////////////////////////////////////////////////////////////////////////////
-/* CPU */
-#if defined(__LP64__) || defined(_LP64)
-#define CLIB_64BIT
-#else
-#define CLIB_32BIT
-#endif
-/* !CPU */
-
-////////////////////////////////////////////////////////////////////////////
-/* Byte-Order */
-#if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) &&                \
-    defined(__ORDER_LITTLE_ENDIAN__)
-
-#define ENDIAN_LITTLE __ORDER_LITTLE_ENDIAN__
-#define ENDIAN_BIG __ORDER_BIG_ENDIAN__
-#define CLIB_BYTE_ORDER __BYTE_ORDER__
-
-#elif defined(_MSC_VER)
-#define ENDIAN_LITTLE 1234
-#define ENDIAN_BIG 4321
-#define CLIB_BYTE_ORDER ENDIAN_LITTLE
-#else
-#error "No Byte Order detected!"
-#endif
-/* !Byte-Order */
-
-////////////////////////////////////////////////////////////////////////////
-
-#ifdef __cross__
-#define CLIB_CROSS_COMPILATION
-#endif
-
-////////////////////////////////////////////////////////////////////////////
-
-#endif /*  !__CLIB_PLATFORM_H__ */
-
-/* DOCUMENTATION
 ## Usage
 
 Sort an array by providing the array, its size, the number of elements, and a
@@ -1964,6 +1482,7 @@ that takes an additional context parameter.
 #ifndef __CLIB_SORTING_H__
 #define __CLIB_SORTING_H__
 
+// #include "clib/core/defines.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -2008,6 +1527,8 @@ error_context(&error, {
 #ifndef __CLIB_CMD_H__
 #define __CLIB_CMD_H__
 
+// #include "clib/core/defines.h"
+// #include "clib/core/error.h"
 
 typedef enum {
   CMD_OK,
@@ -2045,6 +1566,8 @@ dll_close(myLib);
 #ifndef __CLIB_DLL_H__
 #define __CLIB_DLL_H__
 
+// #include "clib/core/defines.h"
+// #include "clib/core/error.h"
 
 typedef void Dll;
 typedef void (*Function)(void);
@@ -2096,6 +1619,9 @@ arena_free(&arena);
 #ifndef __CLIB_FS_H__
 #define __CLIB_FS_H__
 
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h"
+// #include "clib/core/error.h"
 
 #include <errno.h>
 
@@ -2168,6 +1694,8 @@ input: 'name'
 #ifndef __CLIB_IO_H__
 #define __CLIB_IO_H__
 
+// #include "clib/core/defines.h"
+// #include "clib/core/error.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -2216,6 +1744,9 @@ printf("Home directory: " STR_FMT "\n", STR_ARG(home));
 #ifndef __CLIB_OS_H__
 #define __CLIB_OS_H__
 
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h"
+// #include "clib/core/error.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -2283,6 +1814,8 @@ Bytes owned_bytes = bytes_copy(bytes, &arena);
 #ifndef __CLIB_BYTES_H__
 #define __CLIB_BYTES_H__
 
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -2344,6 +1877,7 @@ character (uppercase).
 #ifndef __CLIB_CHAR_H__
 #define __CLIB_CHAR_H__
 
+// #include "clib/core/defines.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -2395,6 +1929,7 @@ These functions are available for `f32` and `f64`.
 #ifndef __CLIB_FLOATS_H__
 #define __CLIB_FLOATS_H__
 
+// #include "clib/core/defines.h"
 
 #define FLOAT_DECL(T)                                                          \
   CONST_FN bool T##_eq(T a, T b);                                              \
@@ -2460,6 +1995,8 @@ suitable for `qsort`.
 #ifndef __CLIB_INTEGERS_H__
 #define __CLIB_INTEGERS_H__
 
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h"
 
 #define INTEGER_DECL(T)                                                        \
   /* BIT OPERATIONS */                                                         \
@@ -2566,6 +2103,8 @@ printf(STR_FMT"\n", STR_ARG(lower));
 #ifndef __CLIB_STR_H__
 #define __CLIB_STR_H__
 
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h" // IWYU pragma: private: include "str.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -2684,6 +2223,9 @@ u64 str_hash(Str s);
 #ifndef __CLIB_UTF8_H__
 #define __CLIB_UTF8_H__
 
+// #include "clib/core/arena.h"
+// #include "clib/core/defines.h" // IWYU pragma: private: include "utf8.h"
+// #include "clib/core/error.h"
 
 typedef enum {
   UTF8_OK,
@@ -2719,28 +2261,12 @@ bool utf8_validate(Utf8 s);
 
 #endif /* !__CLIB_UTF8_H__ */
 
-/* DOCUMENTATION
-Include this file to include all the header files that are listed below.
-```c
-#include <clib.h>
-```
-*/
-
-#ifndef __CLIB_H__
-#define __CLIB_H__
-
-// IWYU pragma: begin_exports
-
-
-
-
-
-// IWYU pragma: end_exports
-
-#endif /* !__CLIB_H__ */
-
 #ifdef CLIB_IMPLEMENTATION
+// #include "hashmap.h"
 
+// #include "clib/core/debug.h"
+// #include "clib/core/defines.h"
+// #include "clib/type/integer.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -3029,7 +2555,9 @@ const void *hm_get_ptr(const HashMap *hm, u64 hash) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// #include "set.h"
 
+// #include "clib/type/integer.h"
 
 #include <string.h>
 
@@ -3298,7 +2826,9 @@ Set set_union(const Set *set, const Set *other, Arena *arena) {
 
 //////////////////////////////////////////////////////////////////////////////
 
+// #include "string_builder.h"
 
+// #include "clib/type/string.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -3365,7 +2895,11 @@ usize sb_append_va(StringBuilder *sb, const char *fmt, va_list va) {
   return size;
 }
 
+// #include "arena.h"
 
+// #include "clib/core/debug.h"
+// #include "clib/core/defines.h"
+// #include "clib/type/integer.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -3508,7 +3042,11 @@ void arena_free_chunk(Arena *arena, void *ptr) {
 
 ////////////////////////////////////////////////////////////////////////////
 
+// #include "error.h"
 
+// #include "clib/core/arena.h"
+// #include "clib/core/error.h"
+// #include "clib/type/string.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -3617,6 +3155,7 @@ void _error_internal_add_location(Error *err, const char *file, int line,
 
 ////////////////////////////////////////////////////////////////////////////
 
+// #include "logging.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -3707,6 +3246,7 @@ void _clib_log_trace(const char *fmt, ...) { _LOG(CLIB_LOG_TRACE, fmt); }
 
 ////////////////////////////////////////////////////////////////////////////
 
+// #include "sorting.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -3768,7 +3308,10 @@ void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
 
 ////////////////////////////////////////////////////////////////////////////
 
+// #include "cmd.h"
 
+// #include "clib/collection/da.h"
+// #include "clib/core/arena.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -3821,6 +3364,7 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 ////////////////////////////////////////////////////////////////////////////
 #elif defined(WINDOWS)
 
+// #include "clib/type/string.h"
 
 #include <windows.h>
 
@@ -3876,7 +3420,12 @@ defer:
 ////////////////////////////////////////////////////////////////////////////
 #endif
 
+// #include "dll.h"
 
+// #include "clib/core/platform.h"
+// #include "clib/os/fs.h"
+// #include "clib/type/integer.h"
+// #include "clib/type/string.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -3977,7 +3526,12 @@ defer:
 //////////////////////////////////////////////////////////////////////////////
 #endif
 
+// #include "fs.h"
 
+// #include "clib/core/error.h"
+// #include "clib/type/string.h"
+// #include "clib/type/utf8.h"
+// #include "io.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -4130,7 +3684,10 @@ bool file_exists(Str filename) {
 //////////////////////////////////////////////////////////////////////////////
 #endif
 
+// #include "io.h"
 
+// #include "clib/type/byte.h"
+// #include "clib/type/string.h"
 
 #include <errno.h>
 #include <stdarg.h>
@@ -4198,7 +3755,11 @@ Str input(Str prefix) {
 
 ////////////////////////////////////////////////////////////////////////////
 
+// #include "os.h"
 
+// #include "clib/core/debug.h"
+// #include "clib/type/integer.h"
+// #include "clib/type/string.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -4261,7 +3822,11 @@ Str os_getcwd(Arena *arena) {
 
 #endif
 
+// #include "byte.h"
 
+// #include "clib/type/char.h"
+// #include "clib/type/integer.h"
+// #include "clib/type/string.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -4352,6 +3917,8 @@ Bytes bytes_from_hex(Str s, Arena *arena) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// #include "char.h"
+// #include "clib/core/debug.h"
 
 #include <ctype.h>
 
@@ -4426,6 +3993,7 @@ char c_u8_to_HEX(u8 d) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// #include "float.h" // IWYU pragma: keep
 
 #define FLOAT_IMPL(T, BITS)                                                    \
   bool T##_eq(T a, T b) { return T##_abs(a - b) < F##BITS##_EPSILON; }         \
@@ -4447,7 +4015,11 @@ char c_u8_to_HEX(u8 d) {
 FLOAT_IMPL(f32, 32)
 FLOAT_IMPL(f64, 64)
 
+// #include "integer.h" // IWYU pragma: keep
 
+// #include "clib/core/debug.h"
+// #include "clib/core/platform.h"
+// #include "clib/type/byte.h"
 
 #define INTEGER_IMPL(T, BITS)                                                  \
   /* BIT OPERATIONS */                                                         \
@@ -4686,7 +4258,12 @@ INTEGER_IMPL(u64, U64_BITS)
 INTEGER_IMPL(i64, I64_BITS)
 INTEGER_IMPL(usize, USIZE_BITS)
 
+// #include "string.h"
 
+// #include "clib/core/arena.h"
+// #include "clib/type/byte.h"
+// #include "clib/type/char.h"
+// #include "clib/type/integer.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -5360,7 +4937,13 @@ u64 str_hash(Str s) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// #include "utf8.h"
 
+// #include "clib/core/arena.h"
+// #include "clib/core/debug.h"
+// #include "clib/type/byte.h"
+// #include "clib/type/char.h"
+// #include "clib/type/integer.h"
 
 #include <string.h>
 
