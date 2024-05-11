@@ -2,6 +2,7 @@
 
 This is an extension of the C standart library. 
 
+# Usage
 ## Single Header
 
 Download the [clib.h](https://raw.githubusercontent.com/Code-Nycticebus/clib/main/clib.h) file and place it in your project directory.
