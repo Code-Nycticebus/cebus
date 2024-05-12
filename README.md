@@ -2,47 +2,24 @@
 
 This is an extension of the C standart library. 
 
-# Quickstart
+# Usage
+## Single Header
 
-## Hello World
+Download the [clib.h](https://raw.githubusercontent.com/Code-Nycticebus/clib/main/clib.h) file and place it in your project directory.
 
-This is the hello world of clib. I will call it `hello-clib.c`.
+In your C source file, include the library header and define the implementation as follows:
 ```c
-#include <clib.h>
-
-int main(void) {
-  clib_log("Hello, World");
-}
+#define CLIB_IMPLEMENTATION
+#include "clib.h"
 ```
 
 ## [pybuildc](https://github.com/Code-Nycticebus/pybuildc)
-
-Create a new project with `pybuildc`. 
-```console
-pybuildc new hello-clib
-```
-
-Paste the above [Hello World](#hello-world) in the `src/hello-clib.c`.
 
 You can add clib as dependency in the `pybuildc.toml` file.
 ```toml
 [deps]
 clib = { dir = "path/to/clib", type = "pybuildc" }
 ```
-
-And then run your project with.
-```console
-pybuildc run
-```
-
-## Single Header
-
-Do this:
-```c
-#define CLIB_IMPLEMENTATION
-#include "clib.h"
-```
-before you include this file in *one* C file to create the implementation.
 
 # Documentation
 

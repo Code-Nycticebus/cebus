@@ -8,28 +8,36 @@ FIRST = [Path("src/clib/core/platform.h"), Path("src/clib/core/defines.h"), Path
 def copy(file, src):
     with open(src, "r") as f:
         for line in f.readlines():
-            if not line.startswith("#include \""):
-               file.write(line)
+            if line.startswith("#include \""):
+               file.write("// ")
+            file.write(line)
+            
         file.write("\n")
 
 if __name__ == "__main__":
     with open(output, "w") as f:
-        f.write("""/* DOCUMENTATION
-Do this:
+        f.write("/* ")
+        copy(f, Path("LICENSE"))
+        f.write("*/\n")
+
+        f.write("""
+/* DOCUMENTATION
+In your C source file, include the library header and define the implementation
+as follows:
 ```c
 #define CLIB_IMPLEMENTATION
 #include "clib.h"
 ```
-before you include this file in *one* C file to create the implementation.
 */
+
 """)
 
         for first in FIRST:
             copy(f, first)
 
         for header in sorted(Path(src).rglob("*.h")):
-            if header != Path("src/clib.h") or header not in FIRST:
-                copy(f, header)
+            if header.name != "clib.h" and header not in FIRST:
+               copy(f, header)
         
         f.write("#ifdef CLIB_IMPLEMENTATION\n")
         for source in sorted(Path(src).rglob("*.c")):
