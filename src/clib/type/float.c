@@ -2,6 +2,7 @@
 
 #define FLOAT_IMPL(T, BITS)                                                    \
   bool T##_eq(T a, T b) { return T##_abs(a - b) < F##BITS##_EPSILON; }         \
+  bool T##_eq_eps(T a, T b, T epsilon) { return T##_abs(a - b) < epsilon; }    \
   bool T##_isnan(T value) { return value != value; }                           \
   T T##_abs(T value) {                                                         \
     u##BITS *i = (u##BITS *)&value;                                            \

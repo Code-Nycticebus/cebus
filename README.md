@@ -728,6 +728,7 @@ character (uppercase).
 These functions are available for `f32` and `f64`.
 
 - `f32_eq(a, b)`: Tests if two `f32` are equal.
+- `f32_eq_eps(a, b)`: Tests if two `f32` are equal within a give epsilon.
 - `f32_isnan(value)`: Tests if `f32` is `nan`.
 - `f32_abs(value)`: Returns the absolute value.
 - `f32_min(a, b)`: Returns the min of `a` or `b`.

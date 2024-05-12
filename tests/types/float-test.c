@@ -7,6 +7,11 @@ static void test_f32_eq(void) {
   clib_assert(f32_eq(.14f, .15f) == false, "Floats should not be eq"); // NOLINT
 }
 
+static void test_f32_eq_eps(void) {
+  clib_assert(f32_eq_eps(3.143f, 3.14f, 1e-2f), "should be eq");   // NOLINT
+  clib_assert(!f32_eq_eps(.14f, .15f, 1e-2f), "should not be eq"); // NOLINT
+}
+
 static void test_f32_abs(void) {
   const f32 value = f32_abs(-3.14f);
   clib_assert(f32_eq(value, 3.14f), // NOLINT
@@ -42,6 +47,11 @@ static void test_f64_eq(void) {
   clib_assert(f64_eq(.14, .15) == false, "Floats should not be eq"); // NOLINT
 }
 
+static void test_f64_eq_eps(void) {
+  clib_assert(f64_eq_eps(3.143, 3.14, 1e-2), "should be eq");   // NOLINT
+  clib_assert(!f64_eq_eps(.14, .16, 1e-2), "should not be eq"); // NOLINT
+}
+
 static void test_f64_abs(void) {
   const f64 value = f64_abs(-3.14);
   clib_assert(f64_eq(value, 3.14), // NOLINT
@@ -75,11 +85,13 @@ static void test_f64_math(void) {
 
 int main(void) {
   test_f32_eq();
+  test_f32_eq_eps();
   test_f32_abs();
   test_f32_isnan();
   test_f32_math();
 
   test_f64_eq();
+  test_f64_eq_eps();
   test_f64_abs();
   test_f64_isnan();
   test_f64_math();
