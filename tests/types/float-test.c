@@ -3,8 +3,8 @@
 #include "cebus/core/debug.h"
 
 static void test_f32_eq(void) {
-  cebus_assert(f32_eq(3.14f, 3.14f) == true, "Floats should be eq");    // NOLINT
-  cebus_assert(f32_eq(.14f, .15f) == false, "Floats should not be eq"); // NOLINT
+  cebus_assert(f32_eq(3.14f, 3.14f) == true, "Floats should be eq"); // NOLINT
+  cebus_assert(!f32_eq(.14f, .15f), "Floats should not be eq");      // NOLINT
 }
 
 static void test_f32_eq_eps(void) {
@@ -15,7 +15,7 @@ static void test_f32_eq_eps(void) {
 static void test_f32_abs(void) {
   const f32 value = f32_abs(-3.14f);
   cebus_assert(f32_eq(value, 3.14f), // NOLINT
-              "Absolute value was not calculated correctly");
+               "Absolute value was not calculated correctly");
 }
 
 static void test_f32_isnan(void) {
@@ -55,7 +55,7 @@ static void test_f64_eq_eps(void) {
 static void test_f64_abs(void) {
   const f64 value = f64_abs(-3.14);
   cebus_assert(f64_eq(value, 3.14), // NOLINT
-              "Absolute value was not calculated correctly");
+               "Absolute value was not calculated correctly");
 }
 
 static void test_f64_isnan(void) {
@@ -73,7 +73,8 @@ static void test_f64_math(void) {
   cebus_assert(f64_eq(max, 4.2), "max was not correct"); // NOLINT
 
   const f64 clamp = f64_clamp(3.1, 3.5, 5.);
-  cebus_assert(f64_eq(clamp, 3.5), "Did not clamp// NOLINT correctly"); // NOLINT
+  cebus_assert(f64_eq(clamp, 3.5),
+               "Did not clamp// NOLINT correctly"); // NOLINT
 
   const f64 lerp = f64_lerp(10., 20., .5);
   cebus_assert(f64_eq(lerp, 15.), "Did not lerp correctly"); // NOLINT

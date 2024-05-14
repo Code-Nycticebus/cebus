@@ -1144,7 +1144,7 @@ compiler intrensics.
 */
 
 // #include "cebus/core/platform.h" // IWYU pragma: export
-// #include "logging.h"            // IWYU pragma: export
+// #include "logging.h"             // IWYU pragma: export
 
 NORETURN void abort(void);
 
@@ -1176,7 +1176,7 @@ NORETURN void abort(void);
 #endif
 #else
 #define UNREACHABLE()                                                          \
-  cebus_log_error("UNREACHABLE: %s:%d: %s()", __FILE__, __LINE__, __func__);    \
+  cebus_log_error("UNREACHABLE: %s:%d: %s()", __FILE__, __LINE__, __func__);   \
   abort()
 #endif
 
@@ -1186,45 +1186,45 @@ NORETURN void abort(void);
 #define NOT_IMPLEMENTED() abort()
 #else
 #define NOT_IMPLEMENTED()                                                      \
-  cebus_log_error("NOT IMPLEMENTED: %s:%d: %s()", __FILE__, __LINE__,           \
-                 __func__);                                                    \
+  cebus_log_error("NOT IMPLEMENTED: %s:%d: %s()", __FILE__, __LINE__,          \
+                  __func__);                                                   \
   abort()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define _cebus_assert_print(level, expr, ...)                                   \
-  cebus_log_level(level, "%s:%d: %s():", __FILE__, __LINE__, __func__);         \
-  cebus_log_level(level, "  Assertion '%s' failed", expr);                      \
+#define _cebus_assert_print(level, expr, ...)                                  \
+  cebus_log_level(level, "%s:%d: %s():", __FILE__, __LINE__, __func__);        \
+  cebus_log_level(level, "  Assertion '%s' failed", expr);                     \
   cebus_log_level(level, "  Description: "__VA_ARGS__)
 
-#define cebus_assert(expression, ...)                                           \
+#define cebus_assert(expression, ...)                                          \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_ERROR, #expression, __VA_ARGS__);            \
+      _cebus_assert_print(CEBUS_LOG_ERROR, #expression, __VA_ARGS__);          \
       DEBUGBREAK();                                                            \
     }                                                                          \
   } while (0)
 
-#define cebus_assert_return(expression, ret)                                    \
+#define cebus_assert_return(expression, ret)                                   \
   do {                                                                         \
     if (!(expression)) {                                                       \
       return ret;                                                              \
     }                                                                          \
   } while (0)
 
-#define cebus_assert_warn(expression, ...)                                      \
+#define cebus_assert_warn(expression, ...)                                     \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_WARNING, #expression, __VA_ARGS__);          \
+      _cebus_assert_print(CEBUS_LOG_WARNING, #expression, __VA_ARGS__);        \
     }                                                                          \
   } while (0)
 
 #ifndef NDEBUG
-#define cebus_assert_debug(expression, ...)                                     \
+#define cebus_assert_debug(expression, ...)                                    \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_DEBUG, #expression, __VA_ARGS__);            \
+      _cebus_assert_print(CEBUS_LOG_DEBUG, #expression, __VA_ARGS__);          \
       DEBUGBREAK();                                                            \
     }                                                                          \
   } while (0)
@@ -2496,8 +2496,8 @@ bool hm_remove(HashMap *hm, u64 hash) {
 #define TYPE_CHECK(hm, T, ret)                                                 \
   do {                                                                         \
     if (hm->type != HM_NONE && (hm->type != T)) {                              \
-      cebus_log_warning("HashMap Type Error: expected '%s' got '%s'",           \
-                       hm_type(hm->type), #T);                                 \
+      cebus_log_warning("HashMap Type Error: expected '%s' got '%s'",          \
+                        hm_type(hm->type), #T);                                \
       return ret;                                                              \
     }                                                                          \
   } while (0)
@@ -3202,7 +3202,7 @@ static const struct CmLogLevelPrefix log_level_str[] = {
 ////////////////////////////////////////////////////////////////////////////
 
 #define _LOG(__log_level, __fmt)                                               \
-  _cebus_log(__log_level);                                                      \
+  _cebus_log(__log_level);                                                     \
   va_list __args;                                                              \
   va_start(__args, __fmt);                                                     \
   vfprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout, \
@@ -3789,8 +3789,8 @@ void os_chdir(Str path) {
   char pathname[FILENAME_MAX] = {0};
   memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
   cebus_assert(chdir(pathname) == -1,
-              "Could not change directory to '" STR_FMT "': %s", STR_ARG(path),
-              strerror(errno));
+               "Could not change directory to '" STR_FMT "': %s", STR_ARG(path),
+               strerror(errno));
 }
 
 Str os_getcwd(Arena *arena) {
@@ -4118,24 +4118,24 @@ FLOAT_IMPL(f64, 64)
                                                                                \
   /*  BIG ENDIAN OPERATIONS */                                                 \
   T T##_to_be(T value) {                                                       \
-    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
+    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                   \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
                                                                                \
   T T##_from_be(T value) {                                                     \
-    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
+    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                   \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
                                                                                \
   T T##_from_be_bytes(Bytes bytes) {                                           \
-    cebus_assert(sizeof(T) == bytes.size,                                       \
-                "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
-                sizeof(T), bytes.size);                                        \
-    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
+    cebus_assert(sizeof(T) == bytes.size,                                      \
+                 "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,          \
+                 sizeof(T), bytes.size);                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                   \
       return T##_swap_bytes(*(const T *)bytes.data);                           \
     }                                                                          \
     return *(const T *)bytes.data;                                             \
@@ -4145,7 +4145,7 @@ FLOAT_IMPL(f64, 64)
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
     for (usize i = 0; i < sizeof(value); i++) {                                \
-      if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                     \
+      if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                    \
         buffer[i] = bytes[i];                                                  \
       } else {                                                                 \
         buffer[sizeof(value) - i - 1] = bytes[i];                              \
@@ -4156,24 +4156,24 @@ FLOAT_IMPL(f64, 64)
                                                                                \
   /*  LITTLE ENDIAN OPERATIONS */                                              \
   T T##_to_le(T value) {                                                       \
-    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                      \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
                                                                                \
   T T##_from_le(T value) {                                                     \
-    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                      \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
                                                                                \
   T T##_from_le_bytes(Bytes bytes) {                                           \
-    cebus_assert(sizeof(T) == bytes.size,                                       \
-                "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
-                sizeof(T), bytes.size);                                        \
-    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                       \
+    cebus_assert(sizeof(T) == bytes.size,                                      \
+                 "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,          \
+                 sizeof(T), bytes.size);                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                      \
       return T##_swap_bytes(*(const T *)bytes.data);                           \
     }                                                                          \
     return *(const T *)bytes.data;                                             \
@@ -4183,7 +4183,7 @@ FLOAT_IMPL(f64, 64)
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
     for (usize i = 0; i < sizeof(value); i++) {                                \
-      if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                  \
+      if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                 \
         buffer[i] = bytes[i];                                                  \
       } else {                                                                 \
         buffer[sizeof(value) - i - 1] = bytes[i];                              \
@@ -4194,14 +4194,14 @@ FLOAT_IMPL(f64, 64)
                                                                                \
   /*  NATIVE ENDIAN OPERATIONS */                                              \
   T T##_from_ne_bytes(Bytes bytes) {                                           \
-    cebus_assert(sizeof(T) == bytes.size,                                       \
-                "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
-                sizeof(T), bytes.size);                                        \
+    cebus_assert(sizeof(T) == bytes.size,                                      \
+                 "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,          \
+                 sizeof(T), bytes.size);                                       \
     return *(const T *)bytes.data;                                             \
   }                                                                            \
                                                                                \
   Bytes T##_to_ne_bytes(T value, Arena *arena) {                               \
-    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                      \
       return T##_to_be_bytes(value, arena);                                    \
     }                                                                          \
     return T##_to_le_bytes(value, arena);                                      \

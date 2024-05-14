@@ -15,7 +15,7 @@ static void test_vec(void) {
 
   for (usize i = 0; i < list.len; ++i) {
     cebus_assert(list.items[i] == i + 1,
-                "Numbers were not pushed on the stack correctly");
+                 "Numbers were not pushed on the stack correctly");
   }
   da_clear(&list);
   cebus_assert(list.len == 0, "Clearing did not reset list.len");
@@ -126,7 +126,7 @@ static void test_extend(void) {
   da_extend(&list, 3, ((int[]){1, 2, 3}));
   cebus_assert(list.len == 3, "List did not extend correctly");
   cebus_assert(list.items[0] == 1 && list.items[1] == 2 && list.items[2] == 3,
-              "List did not extend correctly");
+               "List did not extend correctly");
 
   arena_free(&arena);
 }
@@ -137,10 +137,10 @@ static void test_reserve(void) {
   da_init(&list, &arena);
   da_resize(&list, 20);
   cebus_assert(list.cap == 20, "Capacity was not increased: %" USIZE_FMT,
-              list.cap);
+               list.cap);
   da_reserve(&list, 50);
   cebus_assert(list.cap == 80, "Capacity was not increased: %" USIZE_FMT,
-              list.cap);
+               list.cap);
   arena_free(&arena);
 }
 

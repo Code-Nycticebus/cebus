@@ -64,7 +64,7 @@ static void test_append(void) {
 
   Str prepend = str_prepend(STR("filename.c"), STR("used_mark__"), &arena);
   cebus_assert(str_eq(prepend, STR("used_mark__filename.c")),
-              "did not prepend correctly");
+               "did not prepend correctly");
 
   Str wrap = str_wrap(STR("command here"), STR("'"), &arena);
   cebus_assert(str_eq(wrap, STR("'command here'")), "did not wrap correctly");
@@ -185,7 +185,7 @@ static void test_replace(void) {
 
   cebus_assert(str_eq(s, STR("Hello, World")), "");
   cebus_assert(str_eq(goodbye, STR("Goodbye, World")), STR_FMT,
-              STR_ARG(goodbye));
+               STR_ARG(goodbye));
   cebus_assert(str_eq(all, STR("Hello, All!")), "");
 
   Str max_test = STR("test test test");
@@ -286,8 +286,8 @@ static void test_hash(void) {
   for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
     const u64 hash = str_hash(tests[i].s);
     cebus_assert(hash == tests[i].hash,
-                "'" STR_FMT "': has 0x%" U64_HEX " expected 0x%" U64_HEX,
-                STR_ARG(tests[i].s), hash, tests[i].hash);
+                 "'" STR_FMT "': has 0x%" U64_HEX " expected 0x%" U64_HEX,
+                 STR_ARG(tests[i].s), hash, tests[i].hash);
   }
 }
 

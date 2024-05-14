@@ -230,8 +230,8 @@ bool hm_remove(HashMap *hm, u64 hash) {
 #define TYPE_CHECK(hm, T, ret)                                                 \
   do {                                                                         \
     if (hm->type != HM_NONE && (hm->type != T)) {                              \
-      cebus_log_warning("HashMap Type Error: expected '%s' got '%s'",           \
-                       hm_type(hm->type), #T);                                 \
+      cebus_log_warning("HashMap Type Error: expected '%s' got '%s'",          \
+                        hm_type(hm->type), #T);                                \
       return ret;                                                              \
     }                                                                          \
   } while (0)

@@ -18,12 +18,18 @@ static void test_set_insert(void) {
     set_add(&set, i);
   }
 
-  cebus_assert(set_contains(&set, 0) == true, "Set should contain this number!");
-  cebus_assert(set_contains(&set, 1) == true, "Set should contain this number!");
-  cebus_assert(set_contains(&set, 2) == true, "Set should contain this number!");
-  cebus_assert(set_contains(&set, 3) == true, "Set should contain this number!");
-  cebus_assert(set_contains(&set, 4) == true, "Set should contain this number!");
-  cebus_assert(set_contains(&set, 5) == true, "Set should contain this number!");
+  cebus_assert(set_contains(&set, 0) == true,
+               "Set should contain this number!");
+  cebus_assert(set_contains(&set, 1) == true,
+               "Set should contain this number!");
+  cebus_assert(set_contains(&set, 2) == true,
+               "Set should contain this number!");
+  cebus_assert(set_contains(&set, 3) == true,
+               "Set should contain this number!");
+  cebus_assert(set_contains(&set, 4) == true,
+               "Set should contain this number!");
+  cebus_assert(set_contains(&set, 5) == true,
+               "Set should contain this number!");
 
   arena_free(&arena);
 }
@@ -39,11 +45,11 @@ static void test_set_remove(void) {
 
   set_remove(&set, usize_hash(1));
   cebus_assert(set_add(&set, usize_hash(5)) == false,
-              "5 should already be in set");
+               "5 should already be in set");
 
   cebus_assert(set_remove(&set, usize_hash(5)) == true, "Should remove 5");
   cebus_assert(set_contains(&set, usize_hash(5)) == false,
-              "Set should not contain 5");
+               "Set should not contain 5");
 
   arena_free(&arena);
 }
@@ -103,12 +109,13 @@ static void test_eq(void) {
   set_add(&set3, 3);
   set_add(&set3, 4);
 
-  cebus_assert(set_eq(&set1, &set2) == true, "'set1' should be equal to 'set2'");
+  cebus_assert(set_eq(&set1, &set2) == true,
+               "'set1' should be equal to 'set2'");
 
   cebus_assert(set_eq(&set1, &set3) == false,
-              "'set1' should not be equal to 'set3'");
+               "'set1' should not be equal to 'set3'");
   cebus_assert(set_eq(&set2, &set3) == false,
-              "'set2' should not be equal to 'set2'");
+               "'set2' should not be equal to 'set2'");
 
   arena_free(&arena);
 }
@@ -129,13 +136,13 @@ static void test_subset(void) {
   set_extend(&set3, 4, n3);
 
   cebus_assert(set_subset(&set1, &set2) == false,
-              "'set1' should not be a subset of 'set2'");
+               "'set1' should not be a subset of 'set2'");
   cebus_assert(set_subset(&set1, &set1) == true,
-              "'set1' should be a subset of 'set1'");
+               "'set1' should be a subset of 'set1'");
   cebus_assert(set_subset(&set1, &set3) == true,
-              "'set1' should be a subset of 'set3'");
+               "'set1' should be a subset of 'set3'");
   cebus_assert(set_subset(&set2, &set3) == true,
-              "'set2' should be a subset of 'set3'");
+               "'set2' should be a subset of 'set3'");
   arena_free(&arena);
 }
 
@@ -256,14 +263,14 @@ static void test_example_deduplicate(void) {
   arena_free(&temp);
 
   cebus_assert(list.len == 3,
-              "Did not find the unique strings correctly: %" USIZE_FMT,
-              list.len);
+               "Did not find the unique strings correctly: %" USIZE_FMT,
+               list.len);
   cebus_assert(str_eq(list.items[0], STR("Apple")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
   cebus_assert(str_eq(list.items[1], STR("Banana")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
   cebus_assert(str_eq(list.items[2], STR("Cherry")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
 
   arena_free(&arena);
 }
@@ -296,11 +303,11 @@ static void test_example_duplicates(void) {
   da_filter_ctx(&list, &unique_strings, !filter_with_set, &duplicates);
 
   cebus_assert(unique_strings.len == 2,
-              "Did not find the unique strings correctly");
+               "Did not find the unique strings correctly");
   cebus_assert(str_eq(unique_strings.items[0], STR("Banana")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
   cebus_assert(str_eq(unique_strings.items[1], STR("Cherry")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
 
   arena_free(&arena);
 }
@@ -336,16 +343,16 @@ static void test_example_intersection(void) {
   da_filter_ctx(&first, &common, filter_with_set, &intersection);
 
   cebus_assert(common.len == 4,
-              "Did not find the intersection correctly: %" USIZE_FMT,
-              common.len);
+               "Did not find the intersection correctly: %" USIZE_FMT,
+               common.len);
   cebus_assert(str_eq(common.items[0], STR("Apple")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
   cebus_assert(str_eq(common.items[1], STR("Banana")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
   cebus_assert(str_eq(common.items[2], STR("Cherry")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
   cebus_assert(str_eq(common.items[3], STR("Pear")),
-              "Did not filter out correctly");
+               "Did not filter out correctly");
 
   arena_free(&arena);
 }

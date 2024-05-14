@@ -10,7 +10,7 @@ REMOTE = (
 )
 CWD = Path.cwd()
 SRC = Path(CWD, "src")
-DOC = CWD 
+DOC = CWD
 README = DOC / "README.md"
 
 DOCUMENTATION_START = "/* DOCUMENTATION"

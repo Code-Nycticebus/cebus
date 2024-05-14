@@ -16,7 +16,7 @@ TEST(decode) {
   );
   Utf8 s3 = utf8_decode(bytes, ErrPanic);
   cebus_assert(memcmp(s3.data, "🎉✅😁CA", s3.size) == 0,
-              "Was not decoded correctly");
+               "Was not decoded correctly");
 
   Bytes garbage = BYTES(0xF0, 0x01);
   Error error = {0};
@@ -28,7 +28,7 @@ TEST(decode) {
 TEST(creation) {
   Utf8 s = UTF8("🎉✅😁 Hellö  Wörld 💩");
   cebus_assert(memcmp(s.data, "🎉✅😁 Hellö  Wörld 💩", s.size) == 0,
-              "Was not created correctly");
+               "Was not created correctly");
 }
 
 TEST(cmp) {
@@ -39,18 +39,18 @@ TEST(cmp) {
   cebus_assert(utf8_eq(s1, s3) == false, "Strings should not be equal");
 
   cebus_assert(utf8_starts_with(s1, UTF8("🎉✅")) == true,
-              "Did not handle prefix correctly");
+               "Did not handle prefix correctly");
   cebus_assert(utf8_starts_with(s1, UTF8("🎉✅🎉✅🎉✅🎉✅")) == false,
-              "Should detect that prefix is bigger");
+               "Should detect that prefix is bigger");
   cebus_assert(utf8_starts_with(s1, UTF8("✅")) == false,
-              "Should not start with ✅");
+               "Should not start with ✅");
 
   cebus_assert(utf8_ends_with(s1, UTF8("😁CA")) == true,
-              "Did not detect suffix");
+               "Did not detect suffix");
   cebus_assert(utf8_ends_with(s1, UTF8("😁CA😁CA")) == false,
-              "Should detect that suffix is bigger");
+               "Should detect that suffix is bigger");
   cebus_assert(utf8_ends_with(s1, UTF8("😁")) == false,
-              "Should not end with 😁");
+               "Should not end with 😁");
 }
 
 TEST(copy) {
@@ -58,7 +58,7 @@ TEST(copy) {
   Utf8 s2 = utf8_copy(s, arena);
   cebus_assert(utf8_eq(s, s2) == true, "Utf8 strings not equal");
   cebus_assert(memcmp(s2.data, "🎉✅😁 Hellö  Wörld 💩", s.size) == 0,
-              "Was not created correctly");
+               "Was not created correctly");
 }
 
 TEST(append) {
@@ -76,7 +76,7 @@ TEST(join) {
                        (Utf8[3]){UTF8("🎉"), UTF8("✅"), UTF8("🎉")}, arena);
 
   cebus_assert(utf8_eq(res, UTF8("🎉 ✅ 🎉")),
-              "String was not joined correctly");
+               "String was not joined correctly");
 }
 
 TEST(case_transform) {
@@ -85,11 +85,11 @@ TEST(case_transform) {
 
   Utf8 upper = utf8_upper(f, arena);
   cebus_assert(utf8_eq(upper, UTF8("HELLO, 🌎")),
-              "Did not transform correctly: " UTF8_FMT, UTF8_ARG(upper));
+               "Did not transform correctly: " UTF8_FMT, UTF8_ARG(upper));
 
   Utf8 lower = utf8_lower(f, arena);
   cebus_assert(utf8_eq(lower, UTF8("hello, 🌎")),
-              "Did not transform correctly: " UTF8_FMT, UTF8_ARG(upper));
+               "Did not transform correctly: " UTF8_FMT, UTF8_ARG(upper));
 }
 
 TEST(next) {

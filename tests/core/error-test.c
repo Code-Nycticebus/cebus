@@ -86,7 +86,7 @@ static void test_error_propagate(void) {
     break; // Jump out of context!
   });
   cebus_assert(err.info->locations.len == 3,
-              "Propagate did not add any more locations!");
+               "Propagate did not add any more locations!");
 
   error_context(&err, { error_except(); });
 }

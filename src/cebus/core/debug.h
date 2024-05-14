@@ -31,7 +31,7 @@ compiler intrensics.
 */
 
 #include "cebus/core/platform.h" // IWYU pragma: export
-#include "logging.h"            // IWYU pragma: export
+#include "logging.h"             // IWYU pragma: export
 
 NORETURN void abort(void);
 
@@ -63,7 +63,7 @@ NORETURN void abort(void);
 #endif
 #else
 #define UNREACHABLE()                                                          \
-  cebus_log_error("UNREACHABLE: %s:%d: %s()", __FILE__, __LINE__, __func__);    \
+  cebus_log_error("UNREACHABLE: %s:%d: %s()", __FILE__, __LINE__, __func__);   \
   abort()
 #endif
 
@@ -73,45 +73,45 @@ NORETURN void abort(void);
 #define NOT_IMPLEMENTED() abort()
 #else
 #define NOT_IMPLEMENTED()                                                      \
-  cebus_log_error("NOT IMPLEMENTED: %s:%d: %s()", __FILE__, __LINE__,           \
-                 __func__);                                                    \
+  cebus_log_error("NOT IMPLEMENTED: %s:%d: %s()", __FILE__, __LINE__,          \
+                  __func__);                                                   \
   abort()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define _cebus_assert_print(level, expr, ...)                                   \
-  cebus_log_level(level, "%s:%d: %s():", __FILE__, __LINE__, __func__);         \
-  cebus_log_level(level, "  Assertion '%s' failed", expr);                      \
+#define _cebus_assert_print(level, expr, ...)                                  \
+  cebus_log_level(level, "%s:%d: %s():", __FILE__, __LINE__, __func__);        \
+  cebus_log_level(level, "  Assertion '%s' failed", expr);                     \
   cebus_log_level(level, "  Description: "__VA_ARGS__)
 
-#define cebus_assert(expression, ...)                                           \
+#define cebus_assert(expression, ...)                                          \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_ERROR, #expression, __VA_ARGS__);            \
+      _cebus_assert_print(CEBUS_LOG_ERROR, #expression, __VA_ARGS__);          \
       DEBUGBREAK();                                                            \
     }                                                                          \
   } while (0)
 
-#define cebus_assert_return(expression, ret)                                    \
+#define cebus_assert_return(expression, ret)                                   \
   do {                                                                         \
     if (!(expression)) {                                                       \
       return ret;                                                              \
     }                                                                          \
   } while (0)
 
-#define cebus_assert_warn(expression, ...)                                      \
+#define cebus_assert_warn(expression, ...)                                     \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_WARNING, #expression, __VA_ARGS__);          \
+      _cebus_assert_print(CEBUS_LOG_WARNING, #expression, __VA_ARGS__);        \
     }                                                                          \
   } while (0)
 
 #ifndef NDEBUG
-#define cebus_assert_debug(expression, ...)                                     \
+#define cebus_assert_debug(expression, ...)                                    \
   do {                                                                         \
     if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_DEBUG, #expression, __VA_ARGS__);            \
+      _cebus_assert_print(CEBUS_LOG_DEBUG, #expression, __VA_ARGS__);          \
       DEBUGBREAK();                                                            \
     }                                                                          \
   } while (0)

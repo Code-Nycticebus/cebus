@@ -32,19 +32,19 @@ static void test_to_hex(void) {
   Bytes b = BYTES(0x41, 0x42, 0x43);
   Str s = bytes_to_hex(b, &arena);
   cebus_assert(str_eq(s, STR("414243")),
-              "String conversion was not correct: '" STR_FMT "'", STR_ARG(s));
+               "String conversion was not correct: '" STR_FMT "'", STR_ARG(s));
 
   Bytes b2 = BYTES(0x02, 0xFF, 0xAA, 0xBB, 0x01, 0x02, 0x03);
   Str s2 = bytes_to_hex(b2, &arena);
   cebus_assert(str_eq(s2, STR("2ffaabb010203")),
-              "String conversion was not correct: \n'" STR_FMT "'",
-              STR_ARG(s2));
+               "String conversion was not correct: \n'" STR_FMT "'",
+               STR_ARG(s2));
 
   Bytes b3 = BYTES(0xaa, 0xbb, 0xcc, 0xdd, 0x41, 0x41, 0x41, 0x41, 0x42, 0x42,
                    0x42, 0x42);
   Str s3 = bytes_to_hex(b3, &arena);
   cebus_assert(str_eq(s3, STR("aabbccdd4141414142424242")),
-              "String conversion was not correct: \n" STR_FMT "", STR_ARG(s3));
+               "String conversion was not correct: \n" STR_FMT "", STR_ARG(s3));
 
   arena_free(&arena);
 }
@@ -52,16 +52,16 @@ static void test_to_hex(void) {
 static void test_bytes_cmp(void) {
   Bytes b1 = BYTES(0xFF);
   cebus_assert(bytes_eq(b1, BYTES(0xFF)) == true,
-              "Bytes not compared correctly");
+               "Bytes not compared correctly");
   cebus_assert(bytes_eq(b1, BYTES(0x0F)) == false,
-              "Bytes not compared correctly");
+               "Bytes not compared correctly");
 }
 
 static void test_bytes_slice(void) {
   Bytes b = BYTES_STR("ABC");
   Bytes slice = bytes_slice(b, 1, 3);
   cebus_assert(bytes_eq(slice, BYTES_STR("BC")),
-              "Bytes were not sliced correctly");
+               "Bytes were not sliced correctly");
 
   Bytes invalid = bytes_slice(b, b.size, 2);
   cebus_assert(bytes_eq(invalid, BYTES_STR("")), "Bytes were not invalidated");
@@ -75,7 +75,7 @@ static void test_bytes_take(void) {
   Bytes take = bytes_take(&bytes, 3);
   cebus_assert(bytes_eq(bytes, BYTES(0x78)), "Did not take the correct bytes");
   cebus_assert(bytes_eq(take, BYTES(0x12, 0x34, 0x56)),
-              "Did not take the correct bytes");
+               "Did not take the correct bytes");
   Bytes rest = bytes_take(&bytes, 3);
   cebus_assert(bytes_eq(rest, BYTES(0x78)), "Did not take the correct bytes");
 
@@ -87,18 +87,23 @@ static void test_bytes_from_hex(void) {
   Arena arena = {0};
   Bytes b1 = bytes_from_hex(STR("0xA0"), &arena);
   cebus_assert(b1.size == 1, "conversion was not done correctly");
-  cebus_assert(b1.data[0] == 0xa0, "conversion was not correct: %x", b1.data[0]);
+  cebus_assert(b1.data[0] == 0xa0, "conversion was not correct: %x",
+               b1.data[0]);
 
   Bytes b2 = bytes_from_hex(STR("0xA0B1C2"), &arena);
   cebus_assert(b2.size == 3, "conversion was not done correctly");
-  cebus_assert(b2.data[0] == 0xa0, "conversion was not correct: %x", b2.data[0]);
-  cebus_assert(b2.data[1] == 0xb1, "conversion was not correct: %x", b2.data[1]);
-  cebus_assert(b2.data[2] == 0xc2, "conversion was not correct: %x", b2.data[2]);
+  cebus_assert(b2.data[0] == 0xa0, "conversion was not correct: %x",
+               b2.data[0]);
+  cebus_assert(b2.data[1] == 0xb1, "conversion was not correct: %x",
+               b2.data[1]);
+  cebus_assert(b2.data[2] == 0xc2, "conversion was not correct: %x",
+               b2.data[2]);
 
   Bytes b3 = bytes_from_hex(STR("0x101"), &arena);
   cebus_assert(b3.size == 2, "conversion was not done correctly");
   cebus_assert(b3.data[0] == 0x1, "conversion was not correct: %x", b1.data[0]);
-  cebus_assert(b3.data[1] == 0x01, "conversion was not correct: %x", b1.data[1]);
+  cebus_assert(b3.data[1] == 0x01, "conversion was not correct: %x",
+               b1.data[1]);
 
   arena_free(&arena);
 }

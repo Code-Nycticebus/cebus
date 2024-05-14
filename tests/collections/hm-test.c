@@ -15,9 +15,9 @@ static void test_insert(void) {
   hm_insert_i64(hm, str_hash(STR("Hello2")), -69); // NOLINT
 
   cebus_assert(*hm_get_i64(hm, str_hash(STR("Hello"))) == 420,
-              "ht should get the value correctly");
+               "ht should get the value correctly");
   cebus_assert(*hm_get_i64(hm, str_hash(STR("Hello2"))) == -69,
-              "ht should get the value correctly");
+               "ht should get the value correctly");
 
   arena_free(&arena);
 }
@@ -86,19 +86,19 @@ static void test_example(void) {
   da_sort_ctx(&keys, &keys, sort_by_occurence, hm);
 
   cebus_assert(str_eq(keys.items[0], STR("Apple")),
-              "Apple does occure the most");
+               "Apple does occure the most");
   cebus_assert(*hm_get_u64(hm, str_hash(keys.items[0])) == 3,
-              "Apple should occure 3 times");
+               "Apple should occure 3 times");
 
   cebus_assert(str_eq(keys.items[1], STR("Banana")),
-              "Banana does occure the second most");
+               "Banana does occure the second most");
   cebus_assert(*hm_get_u64(hm, str_hash(keys.items[1])) == 2,
-              "Banana should occure 2 times");
+               "Banana should occure 2 times");
 
   cebus_assert(str_eq(keys.items[2], STR("Strawberry")),
-              "Strawberry does occure the least");
+               "Strawberry does occure the least");
   cebus_assert(*hm_get_u64(hm, str_hash(keys.items[2])) == 1,
-              "Strawberry should occure 1 time");
+               "Strawberry should occure 1 time");
 
   arena_free(&arena);
 }

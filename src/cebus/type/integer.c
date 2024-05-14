@@ -98,24 +98,24 @@
                                                                                \
   /*  BIG ENDIAN OPERATIONS */                                                 \
   T T##_to_be(T value) {                                                       \
-    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
+    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                   \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
                                                                                \
   T T##_from_be(T value) {                                                     \
-    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
+    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                   \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
                                                                                \
   T T##_from_be_bytes(Bytes bytes) {                                           \
-    cebus_assert(sizeof(T) == bytes.size,                                       \
-                "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
-                sizeof(T), bytes.size);                                        \
-    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                    \
+    cebus_assert(sizeof(T) == bytes.size,                                      \
+                 "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,          \
+                 sizeof(T), bytes.size);                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                   \
       return T##_swap_bytes(*(const T *)bytes.data);                           \
     }                                                                          \
     return *(const T *)bytes.data;                                             \
@@ -125,7 +125,7 @@
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
     for (usize i = 0; i < sizeof(value); i++) {                                \
-      if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                     \
+      if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                    \
         buffer[i] = bytes[i];                                                  \
       } else {                                                                 \
         buffer[sizeof(value) - i - 1] = bytes[i];                              \
@@ -136,24 +136,24 @@
                                                                                \
   /*  LITTLE ENDIAN OPERATIONS */                                              \
   T T##_to_le(T value) {                                                       \
-    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                      \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
                                                                                \
   T T##_from_le(T value) {                                                     \
-    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                      \
       return T##_swap_bytes(value);                                            \
     }                                                                          \
     return value;                                                              \
   }                                                                            \
                                                                                \
   T T##_from_le_bytes(Bytes bytes) {                                           \
-    cebus_assert(sizeof(T) == bytes.size,                                       \
-                "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
-                sizeof(T), bytes.size);                                        \
-    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                       \
+    cebus_assert(sizeof(T) == bytes.size,                                      \
+                 "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,          \
+                 sizeof(T), bytes.size);                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                      \
       return T##_swap_bytes(*(const T *)bytes.data);                           \
     }                                                                          \
     return *(const T *)bytes.data;                                             \
@@ -163,7 +163,7 @@
     u8 *buffer = arena_alloc(arena, sizeof(value));                            \
     u8 *bytes = (u8 *)&value;                                                  \
     for (usize i = 0; i < sizeof(value); i++) {                                \
-      if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                  \
+      if (CEBUS_BYTE_ORDER == ENDIAN_LITTLE) {                                 \
         buffer[i] = bytes[i];                                                  \
       } else {                                                                 \
         buffer[sizeof(value) - i - 1] = bytes[i];                              \
@@ -174,14 +174,14 @@
                                                                                \
   /*  NATIVE ENDIAN OPERATIONS */                                              \
   T T##_from_ne_bytes(Bytes bytes) {                                           \
-    cebus_assert(sizeof(T) == bytes.size,                                       \
-                "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,           \
-                sizeof(T), bytes.size);                                        \
+    cebus_assert(sizeof(T) == bytes.size,                                      \
+                 "expected %" USIZE_FMT " bytes but got %" USIZE_FMT,          \
+                 sizeof(T), bytes.size);                                       \
     return *(const T *)bytes.data;                                             \
   }                                                                            \
                                                                                \
   Bytes T##_to_ne_bytes(T value, Arena *arena) {                               \
-    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                       \
+    if (CEBUS_BYTE_ORDER == ENDIAN_BIG) {                                      \
       return T##_to_be_bytes(value, arena);                                    \
     }                                                                          \
     return T##_to_le_bytes(value, arena);                                      \

@@ -43,7 +43,7 @@ static const struct CmLogLevelPrefix log_level_str[] = {
 ////////////////////////////////////////////////////////////////////////////
 
 #define _LOG(__log_level, __fmt)                                               \
-  _cebus_log(__log_level);                                                      \
+  _cebus_log(__log_level);                                                     \
   va_list __args;                                                              \
   va_start(__args, __fmt);                                                     \
   vfprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout, \
