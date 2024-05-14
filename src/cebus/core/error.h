@@ -60,26 +60,19 @@ error_propagate(&error, {
 ////////////////////////////////////////////////////////////////////////////
 
 #define ERROR_LOCATION_MAX 10
-#define FILE_LOC __FILE__, __LINE__, __func__
-
-typedef struct {
-  const char *file;
-  int line;
-  const char *func;
-} ErrorLocation;
 
 typedef struct {
   i64 code;
   Str msg;
   StringBuilder message;
-  DA(ErrorLocation) locations;
+  DA(FileLocation) locations;
 } ErrorInfo;
 
 typedef struct {
   Arena arena;
   bool failure;
   bool panic_on_emit;
-  ErrorLocation location;
+  FileLocation location;
   ErrorInfo *info;
 } Error;
 
@@ -87,7 +80,7 @@ typedef struct {
   ((Error){                                                                    \
       .failure = false,                                                        \
       .panic_on_emit = false,                                                  \
-      .location = {FILE_LOC},                                                  \
+      .location = FILE_LOCATION_CURRENT,                                       \
       .arena = {0},                                                            \
   })
 
@@ -95,7 +88,7 @@ typedef struct {
   ((Error[]){{                                                                 \
       .failure = false,                                                        \
       .panic_on_emit = true,                                                   \
-      .location = {FILE_LOC},                                                  \
+      .location = FILE_LOCATION_CURRENT,                                       \
       .arena = {0},                                                            \
   }})
 
@@ -104,7 +97,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define error_emit(E, code, ...)                                               \
-  _error_internal_emit(E, code, FILE_LOC, __VA_ARGS__);
+  _error_internal_emit(E, code, FILE_LOCATION_CURRENT, __VA_ARGS__);
 
 #define error_context(E, ...)                                                  \
   do {                                                                         \
@@ -138,22 +131,20 @@ typedef struct {
   _error_internal_set_msg(__error_context__, __VA_ARGS__)
 
 #define error_add_location(...)                                                \
-  _error_internal_add_location(__error_context__, FILE_LOC)
+  _error_internal_add_location(__error_context__, FILE_LOCATION_CURRENT)
 #define error_add_note(...)                                                    \
   _error_internal_add_note(__error_context__, __VA_ARGS__)
 
 ////////////////////////////////////////////////////////////////////////////
 
-void FMT(6)
-    _error_internal_emit(Error *err, i32 code, const char *file, int line,
-                         const char *func, const char *fmt, ...);
+void FMT(4) _error_internal_emit(Error *err, i32 code, FileLocation location,
+                                 const char *fmt, ...);
 bool _error_internal_occured(Error *err);
 void NORETURN _error_internal_panic(Error *err);
 void _error_internal_except(Error *err);
 void _error_internal_set_code(Error *err, i32 code);
 void FMT(2) _error_internal_set_msg(Error *err, const char *fmt, ...);
-void _error_internal_add_location(Error *err, const char *file, int line,
-                                  const char *func);
+void _error_internal_add_location(Error *err, FileLocation location);
 void FMT(2) _error_internal_add_note(Error *err, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////

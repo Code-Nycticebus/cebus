@@ -246,6 +246,20 @@ enhancing type safety with `printf`-like functions.
 
 ////////////////////////////////////////////////////////////////////////////
 
+typedef struct {
+  const char *file;
+  int line;
+  const char *function;
+} FileLocation;
+
+#define FILE_LOCATION_FMT "%s:%d: %s()"
+#define FILE_LOCATION_ARG(fl) (fl).file, (fl).line, (fl).function
+#define FILE_LOCATION_ARG_CURRENT __FILE__, __LINE__, __func__
+#define FILE_LOCATION_CURRENT                                                  \
+  (FileLocation) { __FILE__, __LINE__, __func__ }
+
+////////////////////////////////////////////////////////////////////////////
+
 typedef enum {
   CMP_LESS = -1,
   CMP_EQUAL = 0,
@@ -1179,7 +1193,8 @@ NORETURN int raise(int);
 #endif
 #else
 #define UNREACHABLE()                                                          \
-  cebus_log_error("UNREACHABLE: %s:%d: %s()", __FILE__, __LINE__, __func__);   \
+  cebus_log_error("UNREACHABLE: " FILE_LOCATION_FMT,                           \
+                  FILE_LOCATION_ARG_CURRENT);                                  \
   abort()
 #endif
 
@@ -1189,15 +1204,15 @@ NORETURN int raise(int);
 #define NOT_IMPLEMENTED() abort()
 #else
 #define NOT_IMPLEMENTED()                                                      \
-  cebus_log_error("NOT IMPLEMENTED: %s:%d: %s()", __FILE__, __LINE__,          \
-                  __func__);                                                   \
+  cebus_log_error("NOT IMPLEMENTED: " FILE_LOCATION_FMT,                       \
+                  FILE_LOCATION_ARG_CURRENT);                                  \
   abort()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
 
 #define _cebus_assert_print(level, expr, ...)                                  \
-  cebus_log_level(level, "%s:%d: %s():", __FILE__, __LINE__, __func__);        \
+  cebus_log_level(level, FILE_LOCATION_FMT, FILE_LOCATION_ARG_CURRENT);        \
   cebus_log_level(level, "  Assertion '%s' failed", expr);                     \
   cebus_log_level(level, "  Description: "__VA_ARGS__)
 
@@ -1301,26 +1316,19 @@ error_propagate(&error, {
 ////////////////////////////////////////////////////////////////////////////
 
 #define ERROR_LOCATION_MAX 10
-#define FILE_LOC __FILE__, __LINE__, __func__
-
-typedef struct {
-  const char *file;
-  int line;
-  const char *func;
-} ErrorLocation;
 
 typedef struct {
   i64 code;
   Str msg;
   StringBuilder message;
-  DA(ErrorLocation) locations;
+  DA(FileLocation) locations;
 } ErrorInfo;
 
 typedef struct {
   Arena arena;
   bool failure;
   bool panic_on_emit;
-  ErrorLocation location;
+  FileLocation location;
   ErrorInfo *info;
 } Error;
 
@@ -1328,7 +1336,7 @@ typedef struct {
   ((Error){                                                                    \
       .failure = false,                                                        \
       .panic_on_emit = false,                                                  \
-      .location = {FILE_LOC},                                                  \
+      .location = FILE_LOCATION_CURRENT,                                       \
       .arena = {0},                                                            \
   })
 
@@ -1336,7 +1344,7 @@ typedef struct {
   ((Error[]){{                                                                 \
       .failure = false,                                                        \
       .panic_on_emit = true,                                                   \
-      .location = {FILE_LOC},                                                  \
+      .location = FILE_LOCATION_CURRENT,                                       \
       .arena = {0},                                                            \
   }})
 
@@ -1345,7 +1353,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define error_emit(E, code, ...)                                               \
-  _error_internal_emit(E, code, FILE_LOC, __VA_ARGS__);
+  _error_internal_emit(E, code, FILE_LOCATION_CURRENT, __VA_ARGS__);
 
 #define error_context(E, ...)                                                  \
   do {                                                                         \
@@ -1379,22 +1387,20 @@ typedef struct {
   _error_internal_set_msg(__error_context__, __VA_ARGS__)
 
 #define error_add_location(...)                                                \
-  _error_internal_add_location(__error_context__, FILE_LOC)
+  _error_internal_add_location(__error_context__, FILE_LOCATION_CURRENT)
 #define error_add_note(...)                                                    \
   _error_internal_add_note(__error_context__, __VA_ARGS__)
 
 ////////////////////////////////////////////////////////////////////////////
 
-void FMT(6)
-    _error_internal_emit(Error *err, i32 code, const char *file, int line,
-                         const char *func, const char *fmt, ...);
+void FMT(4) _error_internal_emit(Error *err, i32 code, FileLocation location,
+                                 const char *fmt, ...);
 bool _error_internal_occured(Error *err);
 void NORETURN _error_internal_panic(Error *err);
 void _error_internal_except(Error *err);
 void _error_internal_set_code(Error *err, i32 code);
 void FMT(2) _error_internal_set_msg(Error *err, const char *fmt, ...);
-void _error_internal_add_location(Error *err, const char *file, int line,
-                                  const char *func);
+void _error_internal_add_location(Error *err, FileLocation location);
 void FMT(2) _error_internal_add_note(Error *err, const char *fmt, ...);
 
 ////////////////////////////////////////////////////////////////////////////
@@ -3061,7 +3067,7 @@ void arena_free_chunk(Arena *arena, void *ptr) {
 static void error_dump(Error *error) {
 
   fprintf(stderr, "[Error]: %s:%d: %s()\n", error->location.file,
-          error->location.line, error->location.func);
+          error->location.line, error->location.function);
   fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(error->info->msg));
   Str message = sb_to_str(&error->info->message);
   for (Str note = {0}; str_try_chop_by_delim(&message, '\n', &note);) {
@@ -3074,21 +3080,21 @@ static void error_dump(Error *error) {
   fprintf(stderr, "[STACK TRACE]\n");
   usize location_count = error->info->locations.len;
   for (usize i = 0; i < location_count; ++i) {
-    ErrorLocation *location = &da_pop(&error->info->locations);
+    FileLocation *location = &da_pop(&error->info->locations);
     fprintf(stderr, "  [%" USIZE_FMT "]: %s:%d: %s()\n", i + 1, location->file,
-            location->line, location->func);
+            location->line, location->function);
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_internal_emit(Error *err, i32 code, const char *file, int line,
-                          const char *func, const char *fmt, ...) {
+void _error_internal_emit(Error *err, i32 code, FileLocation location,
+                          const char *fmt, ...) {
   if (err == ErrDefault) {
     err = ((Error[]){{
         .failure = true,
         .panic_on_emit = true,
-        .location = {file, line, func},
+        .location = location,
         .arena = {0},
     }});
   }
@@ -3101,7 +3107,7 @@ void _error_internal_emit(Error *err, i32 code, const char *file, int line,
   err->info->message = sb_init(&err->arena);
   da_init(&err->info->locations, &err->arena);
 
-  da_push(&err->info->locations, (ErrorLocation){file, line, func});
+  da_push(&err->info->locations, location);
 
   va_list va;
   va_start(va, fmt);
@@ -3152,9 +3158,8 @@ void _error_internal_add_note(Error *err, const char *fmt, ...) {
   va_end(va);
 }
 
-void _error_internal_add_location(Error *err, const char *file, int line,
-                                  const char *func) {
-  da_push(&err->info->locations, (ErrorLocation){file, line, func});
+void _error_internal_add_location(Error *err, FileLocation location) {
+  da_push(&err->info->locations, location);
 }
 
 ////////////////////////////////////////////////////////////////////////////

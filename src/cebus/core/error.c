@@ -13,7 +13,7 @@
 static void error_dump(Error *error) {
 
   fprintf(stderr, "[Error]: %s:%d: %s()\n", error->location.file,
-          error->location.line, error->location.func);
+          error->location.line, error->location.function);
   fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(error->info->msg));
   Str message = sb_to_str(&error->info->message);
   for (Str note = {0}; str_try_chop_by_delim(&message, '\n', &note);) {
@@ -26,21 +26,21 @@ static void error_dump(Error *error) {
   fprintf(stderr, "[STACK TRACE]\n");
   usize location_count = error->info->locations.len;
   for (usize i = 0; i < location_count; ++i) {
-    ErrorLocation *location = &da_pop(&error->info->locations);
+    FileLocation *location = &da_pop(&error->info->locations);
     fprintf(stderr, "  [%" USIZE_FMT "]: %s:%d: %s()\n", i + 1, location->file,
-            location->line, location->func);
+            location->line, location->function);
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_internal_emit(Error *err, i32 code, const char *file, int line,
-                          const char *func, const char *fmt, ...) {
+void _error_internal_emit(Error *err, i32 code, FileLocation location,
+                          const char *fmt, ...) {
   if (err == ErrDefault) {
     err = ((Error[]){{
         .failure = true,
         .panic_on_emit = true,
-        .location = {file, line, func},
+        .location = location,
         .arena = {0},
     }});
   }
@@ -53,7 +53,7 @@ void _error_internal_emit(Error *err, i32 code, const char *file, int line,
   err->info->message = sb_init(&err->arena);
   da_init(&err->info->locations, &err->arena);
 
-  da_push(&err->info->locations, (ErrorLocation){file, line, func});
+  da_push(&err->info->locations, location);
 
   va_list va;
   va_start(va, fmt);
@@ -104,9 +104,8 @@ void _error_internal_add_note(Error *err, const char *fmt, ...) {
   va_end(va);
 }
 
-void _error_internal_add_location(Error *err, const char *file, int line,
-                                  const char *func) {
-  da_push(&err->info->locations, (ErrorLocation){file, line, func});
+void _error_internal_add_location(Error *err, FileLocation location) {
+  da_push(&err->info->locations, location);
 }
 
 ////////////////////////////////////////////////////////////////////////////

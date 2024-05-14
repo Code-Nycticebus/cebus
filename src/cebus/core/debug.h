@@ -66,7 +66,8 @@ NORETURN int raise(int);
 #endif
 #else
 #define UNREACHABLE()                                                          \
-  cebus_log_error("UNREACHABLE: %s:%d: %s()", __FILE__, __LINE__, __func__);   \
+  cebus_log_error("UNREACHABLE: " FILE_LOCATION_FMT,                           \
+                  FILE_LOCATION_ARG_CURRENT);                                  \
   abort()
 #endif
 
@@ -76,15 +77,15 @@ NORETURN int raise(int);
 #define NOT_IMPLEMENTED() abort()
 #else
 #define NOT_IMPLEMENTED()                                                      \
-  cebus_log_error("NOT IMPLEMENTED: %s:%d: %s()", __FILE__, __LINE__,          \
-                  __func__);                                                   \
+  cebus_log_error("NOT IMPLEMENTED: " FILE_LOCATION_FMT,                       \
+                  FILE_LOCATION_ARG_CURRENT);                                  \
   abort()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
 
 #define _cebus_assert_print(level, expr, ...)                                  \
-  cebus_log_level(level, "%s:%d: %s():", __FILE__, __LINE__, __func__);        \
+  cebus_log_level(level, FILE_LOCATION_FMT, FILE_LOCATION_ARG_CURRENT);        \
   cebus_log_level(level, "  Assertion '%s' failed", expr);                     \
   cebus_log_level(level, "  Description: "__VA_ARGS__)
 

@@ -28,7 +28,7 @@ static void test_error_creation(void) {
   cebus_assert(e1.panic_on_emit == false, "Init failed");
   cebus_assert(e1.location.file, "This should be set");
   cebus_assert(e1.location.line, "This should be set");
-  cebus_assert(e1.location.func, "This should be set");
+  cebus_assert(e1.location.function, "This should be set");
   cebus_assert(e1.arena.begin == NULL, "This should be set to NULL");
 
   Error *e2 = ErrPanic;

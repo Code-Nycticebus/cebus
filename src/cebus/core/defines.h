@@ -40,6 +40,20 @@ enhancing type safety with `printf`-like functions.
 
 ////////////////////////////////////////////////////////////////////////////
 
+typedef struct {
+  const char *file;
+  int line;
+  const char *function;
+} FileLocation;
+
+#define FILE_LOCATION_FMT "%s:%d: %s()"
+#define FILE_LOCATION_ARG(fl) (fl).file, (fl).line, (fl).function
+#define FILE_LOCATION_ARG_CURRENT __FILE__, __LINE__, __func__
+#define FILE_LOCATION_CURRENT                                                  \
+  (FileLocation) { __FILE__, __LINE__, __func__ }
+
+////////////////////////////////////////////////////////////////////////////
+
 typedef enum {
   CMP_LESS = -1,
   CMP_EQUAL = 0,
