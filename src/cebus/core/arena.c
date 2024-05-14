@@ -88,9 +88,8 @@ void *arena_calloc(Arena *arena, usize size) {
 ////////////////////////////////////////////////////////////////////////////
 
 void *arena_alloc_chunk(Arena *arena, usize size) {
-  usize chunk_size = usize_max(size, CHUNK_DEFAULT_SIZE);
-  Chunk *chunk = chunk_allocate(chunk_size);
-  chunk->allocated = chunk_size;
+  Chunk *chunk = chunk_allocate(size);
+  chunk->allocated = size;
   chunk->next = arena->begin;
   if (arena->begin) {
     arena->begin->prev = chunk;
