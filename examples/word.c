@@ -1,6 +1,6 @@
 /* counts the all the occurunces of words of a specified text file. */
 
-#include "clib.h"
+#include "cebus.h"
 
 // predicate function
 static bool predicate(char c) { return c_is_space(c) || c_is_punct(c); }
@@ -33,7 +33,7 @@ int main(int argc, const char **argv) {
     // catch a FILE_NOT_FOUND error
     if (error_code(FileError) == FILE_NOT_FOUND) {
       // log error message
-      clib_log_error(STR_FMT, STR_ARG(error_msg()));
+      cebus_log_error(STR_FMT, STR_ARG(error_msg()));
       return -1;
     }
   });
@@ -70,12 +70,12 @@ int main(int argc, const char **argv) {
   da_sort(&words, &words, sort_by_occurence);
 
   // print stats
-  clib_log_info("File: '" STR_FMT "'", STR_ARG(file));
-  clib_log_info("total words:  %" USIZE_FMT, total_words);
-  clib_log_info("unique words: %" USIZE_FMT, words.len);
+  cebus_log_info("File: '" STR_FMT "'", STR_ARG(file));
+  cebus_log_info("total words:  %" USIZE_FMT, total_words);
+  cebus_log_info("unique words: %" USIZE_FMT, words.len);
   // print out the 3 most occuring words
   for (usize i = 0; i < 3; ++i) {
-    clib_log_info(" %" USIZE_FMT ": %d times: '" STR_FMT "'", i + 1,
+    cebus_log_info(" %" USIZE_FMT ": %d times: '" STR_FMT "'", i + 1,
                   da_get(&words, i).count, STR_ARG(da_get(&words, i).word));
   }
 

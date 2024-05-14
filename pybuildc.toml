@@ -1,5 +1,5 @@
 [pybuildc]
-name="clib"
+name="cebus"
 cflags=[
   "-std=c99",
 ]

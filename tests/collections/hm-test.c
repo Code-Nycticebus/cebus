@@ -1,9 +1,9 @@
-#include "clib/collection/hashmap.h"
+#include "cebus/collection/hashmap.h"
 
-#include "clib/collection/da.h"
-#include "clib/core/debug.h"
-#include "clib/type/integer.h"
-#include "clib/type/string.h"
+#include "cebus/collection/da.h"
+#include "cebus/core/debug.h"
+#include "cebus/type/integer.h"
+#include "cebus/type/string.h"
 
 #include <stdio.h>
 
@@ -14,9 +14,9 @@ static void test_insert(void) {
   hm_insert_i64(hm, str_hash(STR("Hello")), 420);  // NOLINT
   hm_insert_i64(hm, str_hash(STR("Hello2")), -69); // NOLINT
 
-  clib_assert(*hm_get_i64(hm, str_hash(STR("Hello"))) == 420,
+  cebus_assert(*hm_get_i64(hm, str_hash(STR("Hello"))) == 420,
               "ht should get the value correctly");
-  clib_assert(*hm_get_i64(hm, str_hash(STR("Hello2"))) == -69,
+  cebus_assert(*hm_get_i64(hm, str_hash(STR("Hello2"))) == -69,
               "ht should get the value correctly");
 
   arena_free(&arena);
@@ -32,7 +32,7 @@ static void test_hm(void) {
   }
 
   for (size_t i = 0; i < test_count; i++) {
-    clib_assert(*hm_get_usize(hm, i) == i * 4, "Hashing was wrong");
+    cebus_assert(*hm_get_usize(hm, i) == i * 4, "Hashing was wrong");
   }
 
   arena_free(&arena);
@@ -48,9 +48,9 @@ static void test_hm_ptr(void) {
   const int b = 34;
   hm_insert_ptr(hm, (u64)b, &b);
 
-  clib_assert(hm_get_ptr(hm, (u64)a) == &a, "");
-  clib_assert(hm_get_ptr(hm, (u64)b) == &b, "");
-  clib_assert(hm_get_ptr(hm, (u64)15) == NULL, "");
+  cebus_assert(hm_get_ptr(hm, (u64)a) == &a, "");
+  cebus_assert(hm_get_ptr(hm, (u64)b) == &b, "");
+  cebus_assert(hm_get_ptr(hm, (u64)15) == NULL, "");
 
   arena_free(&arena);
 }
@@ -85,19 +85,19 @@ static void test_example(void) {
 
   da_sort_ctx(&keys, &keys, sort_by_occurence, hm);
 
-  clib_assert(str_eq(keys.items[0], STR("Apple")),
+  cebus_assert(str_eq(keys.items[0], STR("Apple")),
               "Apple does occure the most");
-  clib_assert(*hm_get_u64(hm, str_hash(keys.items[0])) == 3,
+  cebus_assert(*hm_get_u64(hm, str_hash(keys.items[0])) == 3,
               "Apple should occure 3 times");
 
-  clib_assert(str_eq(keys.items[1], STR("Banana")),
+  cebus_assert(str_eq(keys.items[1], STR("Banana")),
               "Banana does occure the second most");
-  clib_assert(*hm_get_u64(hm, str_hash(keys.items[1])) == 2,
+  cebus_assert(*hm_get_u64(hm, str_hash(keys.items[1])) == 2,
               "Banana should occure 2 times");
 
-  clib_assert(str_eq(keys.items[2], STR("Strawberry")),
+  cebus_assert(str_eq(keys.items[2], STR("Strawberry")),
               "Strawberry does occure the least");
-  clib_assert(*hm_get_u64(hm, str_hash(keys.items[2])) == 1,
+  cebus_assert(*hm_get_u64(hm, str_hash(keys.items[2])) == 1,
               "Strawberry should occure 1 time");
 
   arena_free(&arena);

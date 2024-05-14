@@ -1,9 +1,9 @@
-#include "clib/collection/set.h"
+#include "cebus/collection/set.h"
 
-#include "clib/collection/da.h"
-#include "clib/core/debug.h"
-#include "clib/type/integer.h"
-#include "clib/type/string.h"
+#include "cebus/collection/da.h"
+#include "cebus/core/debug.h"
+#include "cebus/type/integer.h"
+#include "cebus/type/string.h"
 
 #define TEST_SET_DEFAULT_SIZE 10
 
@@ -12,18 +12,18 @@ static void test_set_insert(void) {
   Set set = set_create(&arena);
 
   set_reserve(&set, TEST_SET_DEFAULT_SIZE + 1);
-  clib_assert(set.cap == 16, "Did not increase cap the correct way");
+  cebus_assert(set.cap == 16, "Did not increase cap the correct way");
 
   for (usize i = 0; i < TEST_SET_DEFAULT_SIZE * 2; i++) {
     set_add(&set, i);
   }
 
-  clib_assert(set_contains(&set, 0) == true, "Set should contain this number!");
-  clib_assert(set_contains(&set, 1) == true, "Set should contain this number!");
-  clib_assert(set_contains(&set, 2) == true, "Set should contain this number!");
-  clib_assert(set_contains(&set, 3) == true, "Set should contain this number!");
-  clib_assert(set_contains(&set, 4) == true, "Set should contain this number!");
-  clib_assert(set_contains(&set, 5) == true, "Set should contain this number!");
+  cebus_assert(set_contains(&set, 0) == true, "Set should contain this number!");
+  cebus_assert(set_contains(&set, 1) == true, "Set should contain this number!");
+  cebus_assert(set_contains(&set, 2) == true, "Set should contain this number!");
+  cebus_assert(set_contains(&set, 3) == true, "Set should contain this number!");
+  cebus_assert(set_contains(&set, 4) == true, "Set should contain this number!");
+  cebus_assert(set_contains(&set, 5) == true, "Set should contain this number!");
 
   arena_free(&arena);
 }
@@ -38,11 +38,11 @@ static void test_set_remove(void) {
   }
 
   set_remove(&set, usize_hash(1));
-  clib_assert(set_add(&set, usize_hash(5)) == false,
+  cebus_assert(set_add(&set, usize_hash(5)) == false,
               "5 should already be in set");
 
-  clib_assert(set_remove(&set, usize_hash(5)) == true, "Should remove 5");
-  clib_assert(set_contains(&set, usize_hash(5)) == false,
+  cebus_assert(set_remove(&set, usize_hash(5)) == true, "Should remove 5");
+  cebus_assert(set_contains(&set, usize_hash(5)) == false,
               "Set should not contain 5");
 
   arena_free(&arena);
@@ -58,7 +58,7 @@ static void test_set_extend(void) {
   set_extend(&set, ARRAY_LEN(n1), n1);
   set_extend(&set, ARRAY_LEN(n2), n2);
 
-  clib_assert(set.cap == 16, "Did not increase size the proper way");
+  cebus_assert(set.cap == 16, "Did not increase size the proper way");
 
   arena_free(&arena);
 }
@@ -75,12 +75,12 @@ static void test_set_update(void) {
 
   set_update(&s1, &s2);
 
-  clib_assert(set_contains(&s1, 1), "set should contain 1");
-  clib_assert(set_contains(&s1, 2), "set should contain 2");
-  clib_assert(set_contains(&s1, 3), "set should contain 3");
-  clib_assert(set_contains(&s1, 4), "set should contain 4");
-  clib_assert(set_contains(&s1, 5), "set should contain 5");
-  clib_assert(set_contains(&s1, 6), "set should contain 6");
+  cebus_assert(set_contains(&s1, 1), "set should contain 1");
+  cebus_assert(set_contains(&s1, 2), "set should contain 2");
+  cebus_assert(set_contains(&s1, 3), "set should contain 3");
+  cebus_assert(set_contains(&s1, 4), "set should contain 4");
+  cebus_assert(set_contains(&s1, 5), "set should contain 5");
+  cebus_assert(set_contains(&s1, 6), "set should contain 6");
 
   arena_free(&arena);
 }
@@ -103,11 +103,11 @@ static void test_eq(void) {
   set_add(&set3, 3);
   set_add(&set3, 4);
 
-  clib_assert(set_eq(&set1, &set2) == true, "'set1' should be equal to 'set2'");
+  cebus_assert(set_eq(&set1, &set2) == true, "'set1' should be equal to 'set2'");
 
-  clib_assert(set_eq(&set1, &set3) == false,
+  cebus_assert(set_eq(&set1, &set3) == false,
               "'set1' should not be equal to 'set3'");
-  clib_assert(set_eq(&set2, &set3) == false,
+  cebus_assert(set_eq(&set2, &set3) == false,
               "'set2' should not be equal to 'set2'");
 
   arena_free(&arena);
@@ -128,13 +128,13 @@ static void test_subset(void) {
   Set set3 = set_create(&arena);
   set_extend(&set3, 4, n3);
 
-  clib_assert(set_subset(&set1, &set2) == false,
+  cebus_assert(set_subset(&set1, &set2) == false,
               "'set1' should not be a subset of 'set2'");
-  clib_assert(set_subset(&set1, &set1) == true,
+  cebus_assert(set_subset(&set1, &set1) == true,
               "'set1' should be a subset of 'set1'");
-  clib_assert(set_subset(&set1, &set3) == true,
+  cebus_assert(set_subset(&set1, &set3) == true,
               "'set1' should be a subset of 'set3'");
-  clib_assert(set_subset(&set2, &set3) == true,
+  cebus_assert(set_subset(&set2, &set3) == true,
               "'set2' should be a subset of 'set3'");
   arena_free(&arena);
 }
@@ -157,10 +157,10 @@ static void test_set_disjoint(void) {
   Set set3 = set_create(&arena);
   set_extend(&set3, count3, test_numbers3);
 
-  clib_assert(set_disjoint(&set1, &set2) == false, "Should not be disjoint");
-  clib_assert(set_disjoint(&set2, &set1) == false, "Should not be disjoint");
-  clib_assert(set_disjoint(&set3, &set2) == true, "Should be disjoint");
-  clib_assert(set_disjoint(&set3, &set1) == true, "Should be disjoint");
+  cebus_assert(set_disjoint(&set1, &set2) == false, "Should not be disjoint");
+  cebus_assert(set_disjoint(&set2, &set1) == false, "Should not be disjoint");
+  cebus_assert(set_disjoint(&set3, &set2) == true, "Should be disjoint");
+  cebus_assert(set_disjoint(&set3, &set1) == true, "Should be disjoint");
 
   arena_free(&arena);
 }
@@ -182,7 +182,7 @@ static void test_intersection(void) {
 
   Set inter = set_intersection(&set1, &set2, &arena);
 
-  clib_assert(set_subset(&inter, &set2) == true, "inter should be a subset");
+  cebus_assert(set_subset(&inter, &set2) == true, "inter should be a subset");
 
   arena_free(&arena);
 }
@@ -204,11 +204,11 @@ static void test_difference(void) {
 
   Set diff = set_difference(&set1, &set2, &arena);
 
-  clib_assert(set_contains(&diff, 1) == true, "should be different");
-  clib_assert(set_contains(&diff, 2) == true, "should be different");
-  clib_assert(set_contains(&diff, 3) == false, "should not be different");
-  clib_assert(set_contains(&diff, 4) == false, "should not be symetrical");
-  clib_assert(set_contains(&diff, 5) == false, "should not be symetrical");
+  cebus_assert(set_contains(&diff, 1) == true, "should be different");
+  cebus_assert(set_contains(&diff, 2) == true, "should be different");
+  cebus_assert(set_contains(&diff, 3) == false, "should not be different");
+  cebus_assert(set_contains(&diff, 4) == false, "should not be symetrical");
+  cebus_assert(set_contains(&diff, 5) == false, "should not be symetrical");
 
   arena_free(&arena);
 }
@@ -228,11 +228,11 @@ static void test_set_union(void) {
 
   Set _unique = set_union(&set1, &set2, &arena);
 
-  clib_assert(set_contains(&_unique, 1) == true, "Set should contain 1");
-  clib_assert(set_contains(&_unique, 2) == true, "Set should contain 2");
-  clib_assert(set_contains(&_unique, 3) == false, "Set should not contain 3");
-  clib_assert(set_contains(&_unique, 4) == true, "Set should contain 4");
-  clib_assert(set_contains(&_unique, 5) == true, "Set should contain 6");
+  cebus_assert(set_contains(&_unique, 1) == true, "Set should contain 1");
+  cebus_assert(set_contains(&_unique, 2) == true, "Set should contain 2");
+  cebus_assert(set_contains(&_unique, 3) == false, "Set should not contain 3");
+  cebus_assert(set_contains(&_unique, 4) == true, "Set should contain 4");
+  cebus_assert(set_contains(&_unique, 5) == true, "Set should contain 6");
 
   arena_free(&arena);
 }
@@ -255,14 +255,14 @@ static void test_example_deduplicate(void) {
   da_filter_ctx(&list, &list, filter_duplicates, &unique);
   arena_free(&temp);
 
-  clib_assert(list.len == 3,
+  cebus_assert(list.len == 3,
               "Did not find the unique strings correctly: %" USIZE_FMT,
               list.len);
-  clib_assert(str_eq(list.items[0], STR("Apple")),
+  cebus_assert(str_eq(list.items[0], STR("Apple")),
               "Did not filter out correctly");
-  clib_assert(str_eq(list.items[1], STR("Banana")),
+  cebus_assert(str_eq(list.items[1], STR("Banana")),
               "Did not filter out correctly");
-  clib_assert(str_eq(list.items[2], STR("Cherry")),
+  cebus_assert(str_eq(list.items[2], STR("Cherry")),
               "Did not filter out correctly");
 
   arena_free(&arena);
@@ -295,11 +295,11 @@ static void test_example_duplicates(void) {
   da_init(&unique_strings, &arena);
   da_filter_ctx(&list, &unique_strings, !filter_with_set, &duplicates);
 
-  clib_assert(unique_strings.len == 2,
+  cebus_assert(unique_strings.len == 2,
               "Did not find the unique strings correctly");
-  clib_assert(str_eq(unique_strings.items[0], STR("Banana")),
+  cebus_assert(str_eq(unique_strings.items[0], STR("Banana")),
               "Did not filter out correctly");
-  clib_assert(str_eq(unique_strings.items[1], STR("Cherry")),
+  cebus_assert(str_eq(unique_strings.items[1], STR("Cherry")),
               "Did not filter out correctly");
 
   arena_free(&arena);
@@ -335,16 +335,16 @@ static void test_example_intersection(void) {
   da_init(&common, &arena);
   da_filter_ctx(&first, &common, filter_with_set, &intersection);
 
-  clib_assert(common.len == 4,
+  cebus_assert(common.len == 4,
               "Did not find the intersection correctly: %" USIZE_FMT,
               common.len);
-  clib_assert(str_eq(common.items[0], STR("Apple")),
+  cebus_assert(str_eq(common.items[0], STR("Apple")),
               "Did not filter out correctly");
-  clib_assert(str_eq(common.items[1], STR("Banana")),
+  cebus_assert(str_eq(common.items[1], STR("Banana")),
               "Did not filter out correctly");
-  clib_assert(str_eq(common.items[2], STR("Cherry")),
+  cebus_assert(str_eq(common.items[2], STR("Cherry")),
               "Did not filter out correctly");
-  clib_assert(str_eq(common.items[3], STR("Pear")),
+  cebus_assert(str_eq(common.items[3], STR("Pear")),
               "Did not filter out correctly");
 
   arena_free(&arena);

@@ -1,14 +1,14 @@
-#include <clib.h>
+#include <cebus.h>
 
 int main(void) {
-  clib_log_info("CLIB version 1.0.0");
-  clib_log_info("%s-%s", CLIB_SYSTEM, CLIB_ARCHITECTURE);
-  clib_log_info("%s", CLIB_COMPILER);
-#if defined(CLIB_64BIT)
-  clib_log_info("64-bit");
+  cebus_log_info("CEBUS version 1.0.0");
+  cebus_log_info("%s-%s", CEBUS_SYSTEM, CEBUS_ARCHITECTURE);
+  cebus_log_info("%s", CEBUS_COMPILER);
+#if defined(CEBUS_64BIT)
+  cebus_log_info("64-bit");
 #else
-  clib_log_info("Bit:\t32-bit");
+  cebus_log_info("Bit:\t32-bit");
 #endif
-  clib_log_info("%s endian",
-                CLIB_BYTE_ORDER == ENDIAN_LITTLE ? "little" : "big");
+  cebus_log_info("%s endian",
+                CEBUS_BYTE_ORDER == ENDIAN_LITTLE ? "little" : "big");
 }

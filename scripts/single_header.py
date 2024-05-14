@@ -1,9 +1,9 @@
 from pathlib import Path
 
-output = "clib.h"
+output = "cebus.h"
 src = "src"
 
-FIRST = [Path("src/clib/core/platform.h"), Path("src/clib/core/defines.h"), Path("src/clib/core/arena.h")]
+FIRST = [Path("src/cebus/core/platform.h"), Path("src/cebus/core/defines.h"), Path("src/cebus/core/arena.h")]
 
 def copy(file, src):
     with open(src, "r") as f:
@@ -25,8 +25,8 @@ if __name__ == "__main__":
 In your C source file, include the library header and define the implementation
 as follows:
 ```c
-#define CLIB_IMPLEMENTATION
-#include "clib.h"
+#define CEBUS_IMPLEMENTATION
+#include "cebus.h"
 ```
 */
 
@@ -36,10 +36,10 @@ as follows:
             copy(f, first)
 
         for header in sorted(Path(src).rglob("*.h")):
-            if header.name != "clib.h" and header not in FIRST:
+            if header.name != "cebus.h" and header not in FIRST:
                copy(f, header)
         
-        f.write("#ifdef CLIB_IMPLEMENTATION\n")
+        f.write("#ifdef CEBUS_IMPLEMENTATION\n")
         for source in sorted(Path(src).rglob("*.c")):
             copy(f, source)
-        f.write("#endif // !CLIB_IMPLEMENTATION\n")
+        f.write("#endif // !CEBUS_IMPLEMENTATION\n")

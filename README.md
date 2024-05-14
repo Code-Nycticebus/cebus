@@ -5,27 +5,27 @@ This is an extension of the C standart library.
 # Usage
 ## Single Header
 
-Download the [clib.h](https://raw.githubusercontent.com/Code-Nycticebus/clib/main/clib.h) file and place it in your project directory.
+Download the [cebus.h](https://raw.githubusercontent.com/Code-Nycticebus/cebus/main/cebus.h) file and place it in your project directory.
 
 In your C source file, include the library header and define the implementation as follows:
 ```c
-#define CLIB_IMPLEMENTATION
-#include "clib.h"
+#define CEBUS_IMPLEMENTATION
+#include "cebus.h"
 ```
 
 ## [pybuildc](https://github.com/Code-Nycticebus/pybuildc)
 
-You can add clib as dependency in the `pybuildc.toml` file.
+You can add cebus as dependency in the `pybuildc.toml` file.
 ```toml
 [deps]
-clib = { dir = "path/to/clib", type = "pybuildc" }
+cebus = { dir = "path/to/cebus", type = "pybuildc" }
 ```
 
 # Documentation
 
 <!-- DOCUMENTATION -->
-- [Clib](#Clib)
-   - [clib.h](#clibh)
+- [Cebus](#Cebus)
+   - [cebus.h](#cebush)
 - [Collection](#Collection)
    - [da.h](#dah)
    - [hashmap.h](#hashmaph)
@@ -53,17 +53,17 @@ clib = { dir = "path/to/clib", type = "pybuildc" }
    - [string.h](#stringh)
    - [utf8.h](#utf8h)
 
-# Clib
+# Cebus
 
-# [clib.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib.h)
+# [cebus.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus.h)
 Include this file to include all the header files that are listed below.
 ```c
-#include <clib.h>
+#include <cebus.h>
 ```
 
 # Collection
 
-# [da.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/da.h)
+# [da.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/collection/da.h)
 ## Initialization
 
 To start using the dynamic array, you first need to create an instance of
@@ -138,12 +138,12 @@ destination.
 `void*` as a context.
 - `da_reverse`: Reverse the order of elements in the array.
 
-# [hashmap.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/hashmap.h)
+# [hashmap.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/collection/hashmap.h)
 My HashMap takes a unique approach: it stores only the hashes of keys, not the
 keys themselves. Most of the time, you don’t really need the original keys
 hanging around. If you find yourself in a situation where you do, just pair it
 with a dynamic array to cover those bases. See
-[this](https://github.com/Code-Nycticebus/clib/blob/main/examples/word.c)
+[this](https://github.com/Code-Nycticebus/cebus/blob/main/examples/word.c)
 example.
 
 As for the values, the HashMap is set up to work with simple, primitive
@@ -196,7 +196,7 @@ or `f64` pointers.
 - `hm_get_<T>_mut`: Get `u8`, `i8`, `u32`, `i32`, `u64`, `i64`, `usize`, `f32`
 or `f64` pointers.
 
-# [set.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/set.h)
+# [set.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/collection/set.h)
 My `Set` implementation follows the same principle as my `HashMap`: it stores
 only the hashes for lookup. This means you get efficient way to check
 if something is in the set without the overhead of storing the actual elements.
@@ -249,7 +249,7 @@ Combine sets or find their differences using algebraic set operations:
 - `set_difference`: Find the difference between two sets.
 - `set_union`: Combine two sets into a union.
 
-# [string_builder.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/collection/string_builder.h)
+# [string_builder.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/collection/string_builder.h)
 The `StringBuilder` provides functionality for efficiently constructing
 strings.
 
@@ -287,7 +287,7 @@ formatting.
 
 # Core
 
-# [arena.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/arena.h)
+# [arena.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/arena.h)
 ## Initialization
 
 To start using the library, initialize an `Arena` struct:
@@ -327,25 +327,25 @@ within an arena:
 - `arena_realloc_chunk`: Reallocate a previously allocated chunk to a new size.
 - `arena_free_chunk`: Free a specific chunk of memory (advanced use cases).
 
-# [debug.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/debug.h)
+# [debug.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/debug.h)
 ## Usage
 
 Use the assertion macros to validate conditions and log failures:
 
 ```c
-clib_assert(1 == 1, "It needs a message");
-clib_assert(2 == 2, "It can even handle arguments: %d", 420);
+cebus_assert(1 == 1, "It needs a message");
+cebus_assert(2 == 2, "It can even handle arguments: %d", 420);
 ```
 
 ## Assert Macros
 
-- `clib_assert(EXPR, FMT, ...)`: Asserts a condition and logs an error if the
+- `cebus_assert(EXPR, FMT, ...)`: Asserts a condition and logs an error if the
 condition is false.
-- `clib_assert_warn(EXPR, FMT, ...)`: Asserts a condition and logs a warning if
+- `cebus_assert_warn(EXPR, FMT, ...)`: Asserts a condition and logs a warning if
 the condition is false.
-- `clib_assert_debug(EXPR, FMT, ...)`: Debug-only assert that logs a debug
+- `cebus_assert_debug(EXPR, FMT, ...)`: Debug-only assert that logs a debug
 message if the condition is false.
-- `clib_assert_return(EXPR, RETURN_VALUE)`: Asserts a condition and returns a
+- `cebus_assert_return(EXPR, RETURN_VALUE)`: Asserts a condition and returns a
 value if the condition is false.
 
 ## Debug Macros
@@ -355,7 +355,7 @@ value if the condition is false.
 compiler intrensics.
 - `NOT_IMPLEMENTED()`: Prints error message
 
-# [defines.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/defines.h)
+# [defines.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/defines.h)
 ## Key Definitions and Macros
 
 - **Data Types**: Defines types such as `u8`, `i8`, `u32`, `i32`,
@@ -376,7 +376,7 @@ about branch prediction.
 enhancing type safety with `printf`-like functions.
 
 
-# [error.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/error.h)
+# [error.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/error.h)
 ### Initialization Macros
 - `ErrNew`: Initializes a new Error instance.
 - `ErrPanic`: Initializes an Error that will trigger a panic on `error_emit()`.
@@ -426,28 +426,28 @@ error_propagate(&error, {
 - `error_add_note(fmt, ...)`: Adds a note to the error.
 
 
-# [logging.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/logging.h)
+# [logging.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/logging.h)
 ## Usage
 
 Call the function with the message format and arguments:
 
 ```c
-clib_log_error("This is an error message: %s", error_details);
+cebus_log_error("This is an error message: %s", error_details);
 ```
 
 ## Functions
 
-- `clib_log_level(log_level, fmt, ...)`: Logs a message with the specified log
+- `cebus_log_level(log_level, fmt, ...)`: Logs a message with the specified log
 level.
-- `clib_log(fmt, ...)`: Logs a message.
-- `clib_log_fatal(fmt, ...)`: Logs a fatal message.
-- `clib_log_error(fmt, ...)`: Logs an error message.
-- `clib_log_warning(fmt, ...)`: Logs a warning message.
-- `clib_log_info(fmt, ...)`: Logs an info message.
-- `clib_log_debug(fmt, ...)`: Logs a debug message (only in debug builds).
-- `clib_log_trace(fmt, ...)`: Logs a trace message (only in debug builds).
+- `cebus_log(fmt, ...)`: Logs a message.
+- `cebus_log_fatal(fmt, ...)`: Logs a fatal message.
+- `cebus_log_error(fmt, ...)`: Logs an error message.
+- `cebus_log_warning(fmt, ...)`: Logs a warning message.
+- `cebus_log_info(fmt, ...)`: Logs an info message.
+- `cebus_log_debug(fmt, ...)`: Logs a debug message (only in debug builds).
+- `cebus_log_trace(fmt, ...)`: Logs a trace message (only in debug builds).
 
-# [platform.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/platform.h)
+# [platform.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/platform.h)
 ## Features
 
 - **Platform Detection**: Identifies the operating system, such as Linux or
@@ -459,7 +459,7 @@ MSVC.
 - **CPU Bitness**: Distinguishes between 32-bit and 64-bit environments.
 - **Byte Order**: Defines the system's byte order (endianness).
 
-# [sorting.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/core/sorting.h)
+# [sorting.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/sorting.h)
 ## Usage
 
 Sort an array by providing the array, its size, the number of elements, and a
@@ -476,7 +476,7 @@ that takes an additional context parameter.
 
 # Os
 
-# [cmd.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/cmd.h)
+# [cmd.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/cmd.h)
 ## Functions
 
 - **`cmd_exec(error, argc, argv)`**: Executes a system command.
@@ -499,7 +499,7 @@ error_context(&error, {
 });
 ```
 
-# [dll.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/dll.h)
+# [dll.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/dll.h)
 ## Functions
 
 - **`dll_load(path, error)`**: Loads a dynamic link library.
@@ -521,7 +521,7 @@ Function *myFunction = dll_symbol(myLib, "myFunctionName", &error);
 dll_close(myLib);
 ```
 
-# [fs.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/fs.h)
+# [fs.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/fs.h)
 ## Functions
 
 - **Reading Files**:
@@ -557,7 +557,7 @@ error_context(&error, {
 arena_free(&arena);
 ```
 
-# [io.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/io.h)
+# [io.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/io.h)
 ## Functions
 
 - **Output**:
@@ -590,7 +590,7 @@ input: 'name'
 ```
 
 
-# [os.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/os/os.h)
+# [os.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/os.h)
 ## Functions
 
 - **Environment Variables**:
@@ -618,7 +618,7 @@ printf("Home directory: " STR_FMT "\n", STR_ARG(home));
 
 # Type
 
-# [byte.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/byte.h)
+# [byte.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/byte.h)
 ## Features and Functions
 
 - **Creating Byte Arrays**:
@@ -670,7 +670,7 @@ Arena arena = {0};
 Bytes owned_bytes = bytes_copy(bytes, &arena);
 ```
 
-# [char.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/char.h)
+# [char.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/char.h)
 ## Character Classification Functions
 
 - `c_is_alnum(c)`: Checks if a character is alphanumeric.
@@ -699,7 +699,7 @@ character (lowercase).
 - `c_u8_to_HEX(d)`: Converts an unsigned 8-bit integer to a hexadecimal
 character (uppercase).
 
-# [float.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/float.h)
+# [float.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/float.h)
 ## Functions
 
 These functions are available for `f32` and `f64`.
@@ -715,7 +715,7 @@ These functions are available for `f32` and `f64`.
 - `f32_rad(deg)`: Converts degrees to radians.
 - `f32_deg(rad)`: Converts radians to degrees.
 
-# [integer.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/integer.h)
+# [integer.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/integer.h)
 
 All these functions are defined for these types: `u8`, `i8`, `u16`, `i16`,
 `u32`, `i32`, `u64`, `i64`, `usize`.
@@ -757,7 +757,7 @@ Basic math operations including max, min, and clamp are provided.
 suitable for `qsort`.
 
 
-# [string.h](https://github.com/Code-Nycticebus/clib/blob/main/src/clib/type/string.h)
+# [string.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/string.h)
 ## Features and Functions
 - **String Creation and Printing**:
   - `STR("Hello World")`: Create a new string from a string literal.

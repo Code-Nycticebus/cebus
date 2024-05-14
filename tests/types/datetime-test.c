@@ -1,5 +1,5 @@
-#include "clib/core/defines.h"
-#include "clib/type/string.h"
+#include "cebus/core/defines.h"
+#include "cebus/type/string.h"
 
 #include <stdio.h>
 #include <time.h>

@@ -1,7 +1,7 @@
 #ifndef __TEST_H__
 #define __TEST_H__
 
-#include "clib/core/arena.h" // IWYU pragma: export
+#include "cebus/core/arena.h" // IWYU pragma: export
 
 #define TEST(name) static void name##_test(UNUSED Arena *arena)
 
