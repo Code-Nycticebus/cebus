@@ -1146,12 +1146,15 @@ compiler intrensics.
 // #include "cebus/core/platform.h" // IWYU pragma: export
 // #include "logging.h"             // IWYU pragma: export
 
+#if defined(LINUX)
+#include <signal.h> // IWYU pragma: export
+#endif
+
 NORETURN void abort(void);
 
 ////////////////////////////////////////////////////////////////////////////
 
 #if defined(LINUX)
-#include <signal.h> // IWYU pragma: keep
 #define DEBUGBREAK() raise(SIGTRAP)
 #elif defined(WINDOWS)
 #include <intrin.h> // IWYU pragma: export
