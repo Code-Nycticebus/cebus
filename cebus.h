@@ -3069,13 +3069,10 @@ static void error_dump(Error *error) {
   fprintf(stderr, "[Error]: %s:%d: %s()\n", error->location.file,
           error->location.line, error->location.function);
   Str message = sb_to_str(&error->info->message);
-  Str note = {0};
-  for (usize i = 0; str_try_chop_by_delim(&message, '\n', &note); ++i) {
-    if (i == 0) {
-      fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(note));
-    } else {
-      fprintf(stderr, "  [NOTE]: " STR_FMT "\n", STR_ARG(note));
-    }
+  Str msg = str_chop_by_delim(&message, '\n');
+  fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(msg));
+  for (Str note = {0}; str_try_chop_by_delim(&message, '\n', &note);) {
+    fprintf(stderr, "  [NOTE]: " STR_FMT "\n", STR_ARG(note));
   }
 
   // Stack trace
