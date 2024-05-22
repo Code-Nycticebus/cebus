@@ -1,6 +1,7 @@
 #include "cebus/core/error.h"
 
 #include "cebus/core/debug.h"
+#include "cebus/type/string.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,6 +92,19 @@ static void test_error_propagate(void) {
   error_context(&err, { error_except(); });
 }
 
+static void test_error_message(void) {
+  Error error = ErrNew;
+  error_emit(&error, -1, "MESSAGE");
+
+  error_context(&error, {
+    error_add_note("Note here!");
+    cebus_assert(str_eq(error_msg(), STR("MESSAGE")), "Error message is wrong");
+    error_set_msg("What");
+    cebus_assert(str_eq(error_msg(), STR("What")), "Error message is wrong");
+    error_except();
+  });
+}
+
 int main(void) {
   test_error_creation();
   test_error_function();
@@ -98,4 +112,5 @@ int main(void) {
   test_error_except();
   test_error_match();
   test_error_propagate();
+  test_error_message();
 }

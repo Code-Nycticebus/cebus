@@ -421,7 +421,7 @@ error_propagate(&error, {
 - `error_msg()`: Retrieves the error message.
 - `error_code(T)`: Retrieves the error code and casts it to `T`.
 - `error_set_code()`: Sets a new error code.
-- `error_set_msg(fmt, ...)`: Sets a new error message.
+- `error_set_msg(fmt, ...)`: Sets a new error message and clears all notes.
 - `error_add_location()`: Adds current file and line location.
 - `error_add_note(fmt, ...)`: Adds a note to the error.
 

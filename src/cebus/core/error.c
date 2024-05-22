@@ -14,10 +14,12 @@ static void error_dump(Error *error) {
 
   fprintf(stderr, "[Error]: %s:%d: %s()\n", error->location.file,
           error->location.line, error->location.function);
-  fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(error->info->msg));
   Str message = sb_to_str(&error->info->message);
-  for (Str note = {0}; str_try_chop_by_delim(&message, '\n', &note);) {
-    if (!str_eq(note, error->info->msg)) {
+  Str note = {0};
+  for (usize i = 0; str_try_chop_by_delim(&message, '\n', &note); ++i) {
+    if (i == 0) {
+      fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(note));
+    } else {
       fprintf(stderr, "  [NOTE]: " STR_FMT "\n", STR_ARG(note));
     }
   }
@@ -60,7 +62,6 @@ void _error_internal_emit(Error *err, i32 code, FileLocation location,
   sb_append_va(&err->info->message, fmt, va);
   va_end(va);
   err->info->msg = sb_to_str(&err->info->message);
-  sb_append_c(&err->info->message, '\n');
 
   if (err->panic_on_emit) {
     _error_internal_panic(err);
@@ -84,24 +85,22 @@ void _error_internal_except(Error *err) {
 void _error_internal_set_code(Error *err, i32 code) { err->info->code = code; }
 
 void _error_internal_set_msg(Error *err, const char *fmt, ...) {
-  (void)err;
-  va_list va;
-  va_start(va, fmt);
-  usize size = sb_append_va(&err->info->message, fmt, va);
-  va_end(va);
-
-  err->info->msg =
-      str_from_parts(size, &da_last(&err->info->message) - size - 1);
-  sb_append_c(&err->info->message, '\n');
-}
-
-void _error_internal_add_note(Error *err, const char *fmt, ...) {
-  (void)err;
+  sb_clear(&err->info->message);
   va_list va;
   va_start(va, fmt);
   sb_append_va(&err->info->message, fmt, va);
-  sb_append_c(&err->info->message, '\n');
   va_end(va);
+  err->info->msg = sb_to_str(&err->info->message);
+}
+
+void _error_internal_add_note(Error *err, const char *fmt, ...) {
+  va_list va;
+  va_start(va, fmt);
+  sb_append_c(&err->info->message, '\n');
+  sb_append_va(&err->info->message, fmt, va);
+  va_end(va);
+
+  err->info->msg.data = err->info->message.items;
 }
 
 void _error_internal_add_location(Error *err, FileLocation location) {
