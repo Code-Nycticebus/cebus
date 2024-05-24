@@ -5,14 +5,14 @@ cflags=[
 ]
 
 [exe]
-info="examples/info.c"
-word="examples/word.c"
+info = "examples/info.c"
+word = "examples/word.c"
 
 [[scripts.build]]
-cmd="python3"
-args=["scripts/docs.py"]
+cmd = "python3"
+args = ["scripts/docs.py"]
 
 
 [[scripts.build]]
-cmd="python3"
-args=["scripts/single_header.py"]
+cmd = "python3"
+args = ["scripts/single_header.py"]
