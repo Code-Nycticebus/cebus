@@ -172,11 +172,11 @@ destination.
     da_get(list, da_len(list)++) = (__VA_ARGS__);                              \
   } while (0)
 
-#define da_extend(list, count, _items)                                         \
+#define da_extend(list, count, ...)                                            \
   do {                                                                         \
     da_reserve((list), (count));                                               \
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
-      da_get(list, da_len(list) + __e_i) = (_items)[__e_i];                    \
+      da_get(list, da_len(list) + __e_i) = (__VA_ARGS__)[__e_i];               \
     }                                                                          \
     (list)->len += count;                                                      \
   } while (0)
