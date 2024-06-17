@@ -55,7 +55,7 @@ cebus = { dir = "path/to/cebus", type = "pybuildc" }
 
 # Cebus
 
-# [cebus.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus.h)
+# [cebus.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus.h)
 Include this file to include all the header files that are listed below.
 ```c
 #include <cebus.h>
@@ -63,7 +63,7 @@ Include this file to include all the header files that are listed below.
 
 # Collection
 
-# [da.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/collection/da.h)
+# [da.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/collection/da.h)
 ## Initialization
 
 To start using the dynamic array, you first need to create an instance of
@@ -72,8 +72,7 @@ specific type.
 
 ```c
 Arena arena = {0};
-DA(int) vec = {0};
-da_init(&vec, &arena);
+DA(int) vec = da_new(&arena);
 ```
 
 ## Adding Elements
@@ -106,6 +105,7 @@ int popped = da_pop(&vec);
 - `da_empty`: Use to check if the array has no elements.
 - `da_len`: Get the length of the dynamic array.
 - `da_clear`: Reset the length of the array to zero.
+- `da_init`:  :warning: depricated :warning: Initialize dynamic array.
 - `da_init_list`: Initialize dynamic array from a array.
 - `da_init_static`: Initialize dynamic array from a static array.
 - `da_copy`: Duplicate the contents of one dynamic array into another.
@@ -138,7 +138,7 @@ destination.
 `void*` as a context.
 - `da_reverse`: Reverse the order of elements in the array.
 
-# [hashmap.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/collection/hashmap.h)
+# [hashmap.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/collection/hashmap.h)
 My HashMap takes a unique approach: it stores only the hashes of keys, not the
 keys themselves. Most of the time, you don’t really need the original keys
 hanging around. If you find yourself in a situation where you do, just pair it
@@ -196,7 +196,7 @@ or `f64` pointers.
 - `hm_get_<T>_mut`: Get `u8`, `i8`, `u32`, `i32`, `u64`, `i64`, `usize`, `f32`
 or `f64` pointers.
 
-# [set.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/collection/set.h)
+# [set.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/collection/set.h)
 My `Set` implementation follows the same principle as my `HashMap`: it stores
 only the hashes for lookup. This means you get efficient way to check
 if something is in the set without the overhead of storing the actual elements.
@@ -249,7 +249,7 @@ Combine sets or find their differences using algebraic set operations:
 - `set_difference`: Find the difference between two sets.
 - `set_union`: Combine two sets into a union.
 
-# [string_builder.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/collection/string_builder.h)
+# [string_builder.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/collection/string_builder.h)
 The `StringBuilder` provides functionality for efficiently constructing
 strings.
 
@@ -287,7 +287,7 @@ formatting.
 
 # Core
 
-# [arena.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/core/arena.h)
+# [arena.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/arena.h)
 ## Initialization
 
 To start using the library, initialize an `Arena` struct:
@@ -327,7 +327,7 @@ within an arena:
 - `arena_realloc_chunk`: Reallocate a previously allocated chunk to a new size.
 - `arena_free_chunk`: Free a specific chunk of memory (advanced use cases).
 
-# [debug.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/core/debug.h)
+# [debug.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/debug.h)
 ## Usage
 
 Use the assertion macros to validate conditions and log failures:
@@ -355,7 +355,7 @@ value if the condition is false.
 compiler intrensics.
 - `NOT_IMPLEMENTED()`: Prints error message
 
-# [defines.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/core/defines.h)
+# [defines.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/defines.h)
 ## Key Definitions and Macros
 
 - **Data Types**: Defines types such as `u8`, `i8`, `u32`, `i32`,
@@ -376,7 +376,7 @@ about branch prediction.
 enhancing type safety with `printf`-like functions.
 
 
-# [error.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/core/error.h)
+# [error.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/error.h)
 ### Initialization Macros
 - `ErrNew`: Initializes a new Error instance.
 - `ErrPanic`: Initializes an Error that will trigger a panic on `error_emit()`.
@@ -426,7 +426,7 @@ error_propagate(&error, {
 - `error_add_note(fmt, ...)`: Adds a note to the error.
 
 
-# [logging.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/core/logging.h)
+# [logging.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/logging.h)
 ## Usage
 
 Call the function with the message format and arguments:
@@ -447,7 +447,7 @@ level.
 - `cebus_log_debug(fmt, ...)`: Logs a debug message (only in debug builds).
 - `cebus_log_trace(fmt, ...)`: Logs a trace message (only in debug builds).
 
-# [platform.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/core/platform.h)
+# [platform.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/platform.h)
 ## Features
 
 - **Platform Detection**: Identifies the operating system, such as Linux or
@@ -459,7 +459,7 @@ MSVC.
 - **CPU Bitness**: Distinguishes between 32-bit and 64-bit environments.
 - **Byte Order**: Defines the system's byte order (endianness).
 
-# [sorting.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/core/sorting.h)
+# [sorting.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/sorting.h)
 ## Usage
 
 Sort an array by providing the array, its size, the number of elements, and a
@@ -476,7 +476,7 @@ that takes an additional context parameter.
 
 # Os
 
-# [cmd.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/os/cmd.h)
+# [cmd.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/cmd.h)
 ## Functions
 
 - **`cmd_exec(error, argc, argv)`**: Executes a system command.
@@ -485,8 +485,9 @@ that takes an additional context parameter.
 ## Construction a da
 
 ```c
+Arena arena = {0};
 Cmd cmd = {0};
-cmd_init(&cmd);
+cmd_init(&cmd, &arena);
 
 cmd_push(&cmd, STR("gcc"), STR("-o"), STR("main"));
 
@@ -494,11 +495,15 @@ Str cflags[] = {STR("-Wall"), STR("-Wextra")};
 cmd_extend(&cmd, words);
 
 DA(Str) files = {0};
+da_init(&files, &arena);
+
+// contruct files
 
 cmd_extend_da(&cmd, &files);
 
 cmd_exec_da(ErrPanic, &cmd);
 
+arena_free(&arena);
 ```
 
 ## Error Handling
@@ -519,7 +524,7 @@ error_context(&error, {
 });
 ```
 
-# [dll.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/os/dll.h)
+# [dll.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/dll.h)
 ## Functions
 
 - **`dll_load(path, error)`**: Loads a dynamic link library.
@@ -541,7 +546,7 @@ Function *myFunction = dll_symbol(myLib, "myFunctionName", &error);
 dll_close(myLib);
 ```
 
-# [fs.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/os/fs.h)
+# [fs.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/fs.h)
 ## Functions
 
 - **Reading Files**:
@@ -577,7 +582,7 @@ error_context(&error, {
 arena_free(&arena);
 ```
 
-# [io.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/os/io.h)
+# [io.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/io.h)
 ## Functions
 
 - **Output**:
@@ -610,7 +615,7 @@ input: 'name'
 ```
 
 
-# [os.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/os/os.h)
+# [os.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/os.h)
 ## Functions
 
 - **Environment Variables**:
@@ -638,7 +643,7 @@ printf("Home directory: " STR_FMT "\n", STR_ARG(home));
 
 # Type
 
-# [byte.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/type/byte.h)
+# [byte.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/byte.h)
 ## Features and Functions
 
 - **Creating Byte Arrays**:
@@ -690,7 +695,7 @@ Arena arena = {0};
 Bytes owned_bytes = bytes_copy(bytes, &arena);
 ```
 
-# [char.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/type/char.h)
+# [char.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/char.h)
 ## Character Classification Functions
 
 - `c_is_alnum(c)`: Checks if a character is alphanumeric.
@@ -719,7 +724,7 @@ character (lowercase).
 - `c_u8_to_HEX(d)`: Converts an unsigned 8-bit integer to a hexadecimal
 character (uppercase).
 
-# [float.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/type/float.h)
+# [float.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/float.h)
 ## Functions
 
 These functions are available for `f32` and `f64`.
@@ -735,7 +740,7 @@ These functions are available for `f32` and `f64`.
 - `f32_rad(deg)`: Converts degrees to radians.
 - `f32_deg(rad)`: Converts radians to degrees.
 
-# [integer.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/type/integer.h)
+# [integer.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/integer.h)
 
 All these functions are defined for these types: `u8`, `i8`, `u16`, `i16`,
 `u32`, `i32`, `u64`, `i64`, `usize`.
@@ -777,7 +782,7 @@ Basic math operations including max, min, and clamp are provided.
 suitable for `qsort`.
 
 
-# [string.h](https://github.com/Code-Nycticebus/c/blob/main/src/cebus/type/string.h)
+# [string.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/type/string.h)
 ## Features and Functions
 - **String Creation and Printing**:
   - `STR("Hello World")`: Create a new string from a string literal.

@@ -558,8 +558,7 @@ specific type.
 
 ```c
 Arena arena = {0};
-DA(int) vec = {0};
-da_init(&vec, &arena);
+DA(int) vec = da_new(&arena);
 ```
 
 ## Adding Elements
@@ -592,6 +591,7 @@ int popped = da_pop(&vec);
 - `da_empty`: Use to check if the array has no elements.
 - `da_len`: Get the length of the dynamic array.
 - `da_clear`: Reset the length of the array to zero.
+- `da_init`:  :warning: depricated :warning: Initialize dynamic array.
 - `da_init_list`: Initialize dynamic array from a array.
 - `da_init_static`: Initialize dynamic array from a static array.
 - `da_copy`: Duplicate the contents of one dynamic array into another.
@@ -638,7 +638,6 @@ destination.
   struct {                                                                     \
     usize cap;                                                                 \
     usize len;                                                                 \
-    usize _size;                                                               \
     Arena *arena;                                                              \
     T *items;                                                                  \
   }
@@ -654,13 +653,16 @@ destination.
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#define da_new(_arena)                                                         \
+  { .arena = (_arena), .items = NULL, }
+
+// depricated
 #define da_init(list, _arena)                                                  \
   do {                                                                         \
     (list)->len = 0;                                                           \
     (list)->cap = 0;                                                           \
     (list)->arena = _arena;                                                    \
     (list)->items = NULL;                                                      \
-    (list)->_size = sizeof(*(list)->items);                                    \
   } while (0)
 
 #define da_init_list(list, _arena, count, array)                               \
@@ -669,7 +671,6 @@ destination.
     (list)->cap = 0;                                                           \
     (list)->arena = _arena;                                                    \
     (list)->items = NULL;                                                      \
-    (list)->_size = sizeof(*(list)->items);                                    \
     da_resize(list, count);                                                    \
     for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
       (list)->items[__e_i] = (array)[__e_i];                                   \
@@ -699,7 +700,7 @@ destination.
     }                                                                          \
     (list)->cap = size;                                                        \
     (list)->items = arena_realloc_chunk((list)->arena, (list)->items,          \
-                                        (list)->cap * (list)->_size);          \
+                                        (list)->cap * sizeof(*(list)->items)); \
   } while (0)
 
 #define da_reserve(list, size)                                                 \
@@ -1518,8 +1519,9 @@ void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
 ## Construction a da
 
 ```c
+Arena arena = {0};
 Cmd cmd = {0};
-cmd_init(&cmd);
+cmd_init(&cmd, &arena);
 
 cmd_push(&cmd, STR("gcc"), STR("-o"), STR("main"));
 
@@ -1527,11 +1529,15 @@ Str cflags[] = {STR("-Wall"), STR("-Wextra")};
 cmd_extend(&cmd, words);
 
 DA(Str) files = {0};
+da_init(&files, &arena);
+
+// contruct files
 
 cmd_extend_da(&cmd, &files);
 
 cmd_exec_da(ErrPanic, &cmd);
 
+arena_free(&arena);
 ```
 
 ## Error Handling

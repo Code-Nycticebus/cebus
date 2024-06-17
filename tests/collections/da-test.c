@@ -43,8 +43,7 @@ static usize times_two(usize v) { return v * 2; }
 static void test_map(void) { // NOLINT
   Arena arena = {0};
   const usize n = 10;
-  DA(usize) list = {0};
-  da_init(&list, &arena);
+  DA(usize) list = da_new(&arena);
   for (usize i = 0; i < n; ++i) {
     da_push(&list, i);
   }
