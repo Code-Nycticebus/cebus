@@ -105,7 +105,7 @@ int popped = da_pop(&vec);
 - `da_empty`: Use to check if the array has no elements.
 - `da_len`: Get the length of the dynamic array.
 - `da_clear`: Reset the length of the array to zero.
-- `da_init`:  :warning: depricated :warning: Initialize dynamic array.
+- `da_init`:  Initialize dynamic array.
 - `da_init_list`: Initialize dynamic array from a array.
 - `da_init_static`: Initialize dynamic array from a static array.
 - `da_copy`: Duplicate the contents of one dynamic array into another.
