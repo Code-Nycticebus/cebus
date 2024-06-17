@@ -36,7 +36,7 @@ enhancing type safety with `printf`-like functions.
 #define MEGABYTES(s) ((usize)(s) * (usize)1e+6)
 #define GIGABYTES(s) ((usize)(s) * (usize)1e+9)
 
-#define ARRAY_LEN(A) (sizeof((A)) / sizeof((A)[0]))
+#define ARRAY_LEN(...) (sizeof((__VA_ARGS__)) / sizeof((__VA_ARGS__)[0]))
 
 ////////////////////////////////////////////////////////////////////////////
 

@@ -242,7 +242,7 @@ enhancing type safety with `printf`-like functions.
 #define MEGABYTES(s) ((usize)(s) * (usize)1e+6)
 #define GIGABYTES(s) ((usize)(s) * (usize)1e+9)
 
-#define ARRAY_LEN(A) (sizeof((A)) / sizeof((A)[0]))
+#define ARRAY_LEN(...) (sizeof((__VA_ARGS__)) / sizeof((__VA_ARGS__)[0]))
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -1513,6 +1513,26 @@ void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
 ## Functions
 
 - **`cmd_exec(error, argc, argv)`**: Executes a system command.
+- **`cmd_exec_da(error, da)`**: Executes a with a dynamic array.
+
+## Construction a da
+
+```c
+Cmd cmd = {0};
+cmd_init(&cmd);
+
+cmd_push(&cmd, STR("gcc"), STR("-o"), STR("main"));
+
+Str cflags[] = {STR("-Wall"), STR("-Wextra")};
+cmd_extend(&cmd, words);
+
+DA(Str) files = {0};
+
+cmd_extend_da(&cmd, &files);
+
+cmd_exec_da(ErrPanic, &cmd);
+
+```
 
 ## Error Handling
 
@@ -1536,6 +1556,7 @@ error_context(&error, {
 #ifndef __CEBUS_CMD_H__
 #define __CEBUS_CMD_H__
 
+// #include "cebus/collection/da.h"
 // #include "cebus/core/defines.h"
 // #include "cebus/core/error.h"
 
@@ -1546,6 +1567,17 @@ typedef enum {
 } CmdError;
 
 void cmd_exec(Error *error, size_t argc, Str *argv);
+
+typedef DA(Str) Cmd;
+
+#define cmd_init(cmd, arena) da_init(cmd, arena)
+#define cmd_push(cmd, ...)                                                     \
+  da_extend(cmd, ARRAY_LEN((Str[]){__VA_ARGS__}), (Str[]){__VA_ARGS__})
+#define cmd_extend(cmd, ...)                                                   \
+  da_extend(cmd, ARRAY_LEN(__VA_ARGS__), (__VA_ARGS__))
+#define cmd_extend_da(cmd, da) da_extend(cmd, (da)->len, (da)->items)
+
+void cmd_exec_da(Error *error, const Cmd *cmd);
 
 #endif // !__CEBUS_CMD_H__
 
@@ -3321,6 +3353,10 @@ void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+void cmd_exec_da(Error *error, const Cmd *cmd) {
+  cmd_exec(error, cmd->len, cmd->items);
+}
 
 ////////////////////////////////////////////////////////////////////////////
 #if defined(LINUX)

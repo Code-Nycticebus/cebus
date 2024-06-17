@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+void cmd_exec_da(Error *error, const Cmd *cmd) {
+  cmd_exec(error, cmd->len, cmd->items);
+}
+
 ////////////////////////////////////////////////////////////////////////////
 #if defined(LINUX)
 

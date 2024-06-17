@@ -480,6 +480,26 @@ that takes an additional context parameter.
 ## Functions
 
 - **`cmd_exec(error, argc, argv)`**: Executes a system command.
+- **`cmd_exec_da(error, da)`**: Executes a with a dynamic array.
+
+## Construction a da
+
+```c
+Cmd cmd = {0};
+cmd_init(&cmd);
+
+cmd_push(&cmd, STR("gcc"), STR("-o"), STR("main"));
+
+Str cflags[] = {STR("-Wall"), STR("-Wextra")};
+cmd_extend(&cmd, words);
+
+DA(Str) files = {0};
+
+cmd_extend_da(&cmd, &files);
+
+cmd_exec_da(ErrPanic, &cmd);
+
+```
 
 ## Error Handling
 
