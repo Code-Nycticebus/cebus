@@ -2,6 +2,7 @@
 name="cebus"
 cflags=[
   "-std=c99",
+  # "-fsanitize=address",
 ]
 
 [exe]
