@@ -52,7 +52,9 @@ void arena_free(Arena *arena) {
 
 void arena_reset(Arena *arena) {
   for (Chunk *next = arena->begin; next != NULL; next = next->next) {
-    next->allocated = 0;
+    if (next->cap != 0) {
+      next->allocated = 0;
+    }
   }
 }
 
@@ -89,6 +91,7 @@ void *arena_calloc(Arena *arena, usize size) {
 
 void *arena_alloc_chunk(Arena *arena, usize size) {
   Chunk *chunk = chunk_allocate(size);
+  chunk->cap = 0;
   chunk->allocated = size;
   chunk->next = arena->begin;
   if (arena->begin) {

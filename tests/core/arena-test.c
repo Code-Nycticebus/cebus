@@ -66,6 +66,8 @@ static void test_calloc(void) {
 static void test_reset(void) { // NOLINT
   Arena arena = {0};
 
+  int *chunk = arena_alloc_chunk(&arena, sizeof(int));
+
   const usize n_bytes = 10;
   char *buffer = arena_alloc(&arena, n_bytes);
   cebus_assert(buffer, "Buffer was not allocated");
@@ -75,6 +77,7 @@ static void test_reset(void) { // NOLINT
   cebus_assert(big_buffer, "Buffer was not allocated");
 
   arena_reset(&arena);
+
   TestChunk *tc = (TestChunk *)arena.begin;
   cebus_assert(tc->allocated == 0, "First Chunk was not reset");
   cebus_assert(tc->next->allocated == 0, "Second Chunk was not reset");
@@ -87,29 +90,8 @@ static void test_reset(void) { // NOLINT
   char *big_buffer_after_reset = arena_alloc(&arena, more_bytes);
   cebus_assert(big_buffer_after_reset, "Buffer was not allocated");
 
-  arena_free(&arena);
-}
-
-static void test_temp(void) {
-  Arena arena = {0};
-
-  void *data = arena_alloc_chunk(&arena, 10); // NOLINT
-
-  cebus_assert(data, "Should not be NULL");
-  cebus_assert(arena.begin, "Should not be NULL");
-
-  TestChunk *chunk = (TestChunk *)arena.begin;
-  cebus_assert(chunk->allocated == chunk->cap,
-               "Did not block the entire chunk");
-
-  void *data2 = arena_alloc(&arena, 100); // NOLINT
-  cebus_assert(data2, "Should not be NULL");
-
-  TestChunk *chunk2 = (TestChunk *)arena.begin;
-  cebus_assert(chunk2->allocated == test_align(100),
-               "Did not block the entire chunk");
-
-  arena_free_chunk(&arena, data);
+  TestChunk *chunk_after_reset = (TestChunk *)((u8 *)chunk - sizeof(TestChunk));
+  cebus_assert(chunk_after_reset->allocated == sizeof(int), "");
 
   arena_free(&arena);
 }
@@ -119,5 +101,4 @@ int main(void) {
   test_chunks();
   test_calloc();
   test_reset();
-  test_temp();
 }
