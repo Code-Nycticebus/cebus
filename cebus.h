@@ -1521,7 +1521,7 @@ void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
 ```c
 Arena arena = {0};
 
-Cmd cmd = da_new(&arena);
+Cmd cmd = cmd_new(&arena);
 
 cmd_push(&cmd, STR("gcc"), STR("-o"), STR("main"));
 
@@ -1573,7 +1573,7 @@ void cmd_exec(Error *error, size_t argc, Str *argv);
 
 typedef DA(Str) Cmd;
 
-#define cmd_init(cmd, arena) da_init(cmd, arena)
+#define cmd_new(arena) da_new(arena)
 #define cmd_push(cmd, ...)                                                     \
   da_extend(cmd, ARRAY_LEN((Str[]){__VA_ARGS__}), (Str[]){__VA_ARGS__})
 #define cmd_extend(cmd, ...)                                                   \

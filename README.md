@@ -487,7 +487,7 @@ that takes an additional context parameter.
 ```c
 Arena arena = {0};
 
-Cmd cmd = da_new(&arena);
+Cmd cmd = cmd_new(&arena);
 
 cmd_push(&cmd, STR("gcc"), STR("-o"), STR("main"));
 
