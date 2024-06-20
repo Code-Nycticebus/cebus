@@ -58,6 +58,26 @@ void arena_reset(Arena *arena) {
   }
 }
 
+usize arena_size(Arena *arena) {
+  usize size = 0;
+  for (Chunk *chunk = arena->begin; chunk != NULL; chunk = chunk->next) {
+    size += chunk->allocated;
+  }
+  return size;
+}
+
+usize arena_real_size(Arena *arena) {
+  usize size = 0;
+  for (Chunk *chunk = arena->begin; chunk != NULL; chunk = chunk->next) {
+    if (chunk->cap == 0) {
+      size += chunk->allocated;
+    } else {
+      size += chunk->cap;
+    }
+  }
+  return size;
+}
+
 void *arena_alloc(Arena *arena, usize size) {
   size = align(size);
   Chunk *chunk = arena->begin;

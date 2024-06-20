@@ -510,13 +510,19 @@ arena_free(&arena);
 
 ## Chunk
 
-The library also provides functions for more granular control over memory chunks
+The module also provides functions for more granular control over memory chunks
 within an arena:
 
 - `arena_alloc_chunk`: Allocate a new chunk of memory.
 - `arena_calloc_chunk`: Allocates a new, zero initialized, chunk of memory.
 - `arena_realloc_chunk`: Reallocate a previously allocated chunk to a new size.
 - `arena_free_chunk`: Free a specific chunk of memory (advanced use cases).
+
+## Utils
+
+- `arena_reset`: Reset all the allocations (does not free any memory).
+- `arena_size`: Gets the number of bytes allocated inside the arena.
+- `arena_real_size`: Gets the number of bytes allocated by the arena.
 */
 
 #ifndef __CEBUS_ARENA_H__
@@ -537,6 +543,9 @@ void arena_free(Arena *arena);
 void *arena_alloc(Arena *arena, usize size);
 void *arena_calloc(Arena *arena, usize size);
 void arena_reset(Arena *arena);
+
+usize arena_size(Arena *arena);
+usize arena_real_size(Arena *arena);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -2999,6 +3008,26 @@ void arena_reset(Arena *arena) {
       next->allocated = 0;
     }
   }
+}
+
+usize arena_size(Arena *arena) {
+  usize size = 0;
+  for (Chunk *chunk = arena->begin; chunk != NULL; chunk = chunk->next) {
+    size += chunk->allocated;
+  }
+  return size;
+}
+
+usize arena_real_size(Arena *arena) {
+  usize size = 0;
+  for (Chunk *chunk = arena->begin; chunk != NULL; chunk = chunk->next) {
+    if (chunk->cap == 0) {
+      size += chunk->allocated;
+    } else {
+      size += chunk->cap;
+    }
+  }
+  return size;
 }
 
 void *arena_alloc(Arena *arena, usize size) {

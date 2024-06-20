@@ -96,9 +96,22 @@ static void test_reset(void) { // NOLINT
   arena_free(&arena);
 }
 
+static void test_size(void) {
+  Arena arena = {0};
+
+  int *i = arena_alloc(&arena, sizeof(*i));
+  cebus_assert(arena_size(&arena) == test_align(sizeof(*i)),
+               "size not matching: %zu", arena_size(&arena));
+  cebus_assert(arena_real_size(&arena) == KILOBYTES(8), // NOLINT
+               "chunk size does not match. did the default chunk size change?");
+
+  arena_free(&arena);
+}
+
 int main(void) {
   test_arena();
   test_chunks();
   test_calloc();
   test_reset();
+  test_size();
 }
