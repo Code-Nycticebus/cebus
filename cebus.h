@@ -2317,6 +2317,8 @@ bool utf8_validate(Utf8 s);
 #endif /* !__CEBUS_UTF8_H__ */
 
 #ifdef CEBUS_IMPLEMENTATION
+#ifndef __CEBUS_IMPLEMENTATION_H__
+#define __CEBUS_IMPLEMENTATION_H__
 // #include "hashmap.h"
 
 // #include "cebus/core/debug.h"
@@ -5195,4 +5197,5 @@ bool utf8_validate(Utf8 s) {
   return utf8_validate_bytes(bytes_from_parts(s.size, (const u8 *)s.data));
 }
 
-#endif // !CEBUS_IMPLEMENTATION
+#endif /* !__CEBUS_IMPLEMENTATION_H__ */
+#endif /* !CEBUS_IMPLEMENTATION */
