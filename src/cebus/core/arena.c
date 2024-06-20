@@ -69,11 +69,7 @@ usize arena_size(Arena *arena) {
 usize arena_real_size(Arena *arena) {
   usize size = 0;
   for (Chunk *chunk = arena->begin; chunk != NULL; chunk = chunk->next) {
-    if (chunk->cap == 0) {
-      size += chunk->allocated;
-    } else {
-      size += chunk->cap;
-    }
+    size += chunk->cap ? chunk->cap : chunk->allocated;
   }
   return size;
 }
