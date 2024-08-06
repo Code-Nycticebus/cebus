@@ -101,7 +101,7 @@ int main(void) {
   error_context(&err, { error_panic(); });
 }
 ```
- * */
+*/
 
 typedef struct {
   bool is_dir;

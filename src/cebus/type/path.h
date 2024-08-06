@@ -18,6 +18,7 @@ Str path_stem(Path path);
 Path path_parent(Path path);
 
 // TODO
+// keep it io-less. i want a "pure" path api
 // bool path_relative(Path path);
 // bool path_absolute(Path path);
 // bool path_relative_to(Path p1, Path p2);

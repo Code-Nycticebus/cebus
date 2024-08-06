@@ -59,7 +59,3 @@ Path path_parent(Path path) {
   (void)str_chop_right_by_delim(&path, '/');
   return path;
 }
-
-#if defined(__CEBUS_FS_H__) || defined(__CEBUS_OS_H__)
-#error "fs or os was included. pls dont use any io in this module"
-#endif

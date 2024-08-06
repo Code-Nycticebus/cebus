@@ -7,6 +7,7 @@ FIRST = [
     Path("src/cebus/core/platform.h"),
     Path("src/cebus/core/defines.h"),
     Path("src/cebus/core/arena.h"),
+    Path("src/cebus/core/debug.h"),
 ]
 
 
@@ -48,9 +49,6 @@ as follows:
                 copy(f, header)
 
         f.write("#ifdef CEBUS_IMPLEMENTATION\n")
-        f.write("#ifndef __CEBUS_IMPLEMENTATION_H__\n")
-        f.write("#define __CEBUS_IMPLEMENTATION_H__\n")
         for source in sorted(Path(src).rglob("*.c")):
             copy(f, source)
-        f.write("#endif /* !__CEBUS_IMPLEMENTATION_H__ */\n")
         f.write("#endif /* !CEBUS_IMPLEMENTATION */\n")

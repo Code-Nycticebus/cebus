@@ -612,33 +612,6 @@ int main(void) {
   error_context(&err, { error_panic(); });
 }
 ```
- * */
-
-typedef struct {
-  bool is_dir;
-  Path path;
-} FsEntity;
-
-typedef struct {
-  Error error;
-  Arena scratch;
-  bool recursive;
-  FsEntity current;
-  void *_stack;
-} FsIter;
-
-FsIter fs_iter_begin(Path directory, bool recursive);
-void fs_iter_end(FsIter *it, Error *error);
-
-bool fs_iter_next(FsIter *it);
-bool fs_iter_next_filter(FsIter *it, bool (*filter)(const FsEntity *entity));
-bool fs_iter_next_directory(FsIter *it);
-bool fs_iter_next_files(FsIter *it);
-bool fs_iter_next_suffix(FsIter *it, Str suffix);
-
-////////////////////////////////////////////////////////////////////////////
-
-#endif /* !__CEBUS_FS_H__ */
 
 # [io.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/io.h)
 ## Functions
