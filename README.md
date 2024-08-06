@@ -589,15 +589,13 @@ arena_free(&arena);
 ## Directory Iteration
 
 ```c
-Str dir = STR("src");
-for (FsIterator it = fs_iter_begin(dir, true, ErrPanic); fs_iter_next(&it);) {
-  if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
-    Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
-    error_propagate(it.error, { continue; });
-    cebus_log_debug(STR_FMT, STR_ARG(data));
-  }
-}
-```
+  fs_iter(it, STR("src"), true, ErrPanic) {
+    if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
+      Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
+      error_propagate(it.error, { continue; });
+      cebus_log(STR_FMT, STR_ARG(data));
+    }
+  }```
  * */
 
 typedef struct {
@@ -615,6 +613,9 @@ typedef struct {
 
 FsIter fs_iter_begin(Str dir, bool recursive, Error *error);
 bool fs_iter_next(FsIter *it);
+
+#define fs_iter(it, dir, recursive, error)                                     \
+  for (FsIter it = fs_iter_begin(dir, recursive, error); fs_iter_next(&it);)
 
 ////////////////////////////////////////////////////////////////////////////
 

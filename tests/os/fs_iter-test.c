@@ -6,8 +6,7 @@
 #include "cebus/type/string.h"
 
 int main(void) {
-  Str dir = STR("src");
-  fs_iter(it, dir, true, ErrPanic) {
+  fs_iter(it, STR("src"), true, ErrPanic) {
     if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
       Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
       error_propagate(it.error, { continue; });
