@@ -100,24 +100,20 @@ typedef struct {
   _error_internal_emit(E, code, FILE_LOCATION_CURRENT, __VA_ARGS__);
 
 #define error_context(E, ...)                                                  \
-  do {                                                                         \
-    if (_error_internal_occured(E)) {                                          \
-      Error *__error_context__ = (E);                                          \
-      __VA_ARGS__                                                              \
-      if ((E)->failure) {                                                      \
-        _error_internal_panic(E);                                              \
-      }                                                                        \
+  if (_error_internal_occured(E)) {                                            \
+    Error *__error_context__ = (E);                                            \
+    __VA_ARGS__                                                                \
+    if ((E)->failure) {                                                        \
+      _error_internal_panic(E);                                                \
     }                                                                          \
-  } while (0)
+  }
 
 #define error_propagate(E, ...)                                                \
-  do {                                                                         \
-    if (_error_internal_occured(E)) {                                          \
-      Error *__error_context__ = (E);                                          \
-      error_add_location();                                                    \
-      __VA_ARGS__                                                              \
-    }                                                                          \
-  } while (0)
+  if (_error_internal_occured(E)) {                                            \
+    Error *__error_context__ = (E);                                            \
+    error_add_location();                                                      \
+    __VA_ARGS__                                                                \
+  }
 
 #define error_panic() _error_internal_panic(__error_context__)
 #define error_except() _error_internal_except(__error_context__)

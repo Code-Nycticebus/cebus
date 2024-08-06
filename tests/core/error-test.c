@@ -83,9 +83,7 @@ static void test_error_match(void) {
 static void test_error_propagate(void) {
   Error err = ErrNew;
   fn_that_fails_and_adds_note(true, &err);
-  error_propagate(&err, {
-    break; // Jump out of context!
-  });
+  error_propagate(&err, {});
   cebus_assert(err.info->locations.len == 3,
                "Propagate did not add any more locations!");
 
