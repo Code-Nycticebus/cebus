@@ -73,6 +73,24 @@ bool fs_is_dir(Str path);
 
 ////////////////////////////////////////////////////////////////////////////
 
+typedef struct {
+  bool directory;
+  Str path;
+} FsEntity;
+
+typedef struct {
+  Error *error;
+  Arena *arena;
+  Arena scratch;
+  bool recursive;
+  FsEntity current;
+  void *stack;
+} FsIterator;
+
+FsIterator fs_iter_begin(Str dir, bool recursive, Arena *arena, Error *error);
+void fs_iter_next(FsIterator *it);
+bool fs_iter_end(FsIterator *it);
+
 ////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CEBUS_FS_H__ */
