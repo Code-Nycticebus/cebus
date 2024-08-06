@@ -2,7 +2,12 @@
 name="cebus"
 cflags=[
   "-std=c99",
-  # "-fsanitize=address",
+  "-Werror",
+  "-Wall",
+  "-Wextra",
+  "-Wconversion",
+  "-Wpedantic",
+   "-fsanitize=address",
 ]
 
 [exe]

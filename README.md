@@ -585,6 +585,41 @@ error_context(&error, {
 arena_free(&arena);
 ```
 
+
+## Directory Iteration
+
+```c
+Str dir = STR("src");
+for (FsIterator it = fs_iter_begin(dir, true, ErrPanic); fs_iter_next(&it);) {
+  if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
+    Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
+    error_propagate(it.error, { continue; });
+    cebus_log_debug(STR_FMT, STR_ARG(data));
+  }
+}
+```
+ * */
+
+typedef struct {
+  bool directory;
+  Str path;
+} FsEntity;
+
+typedef struct {
+  Error *error;
+  Arena scratch;
+  bool recursive;
+  FsEntity current;
+  void *_stack;
+} FsIter;
+
+FsIter fs_iter_begin(Str dir, bool recursive, Error *error);
+bool fs_iter_next(FsIter *it);
+
+////////////////////////////////////////////////////////////////////////////
+
+#endif /* !__CEBUS_FS_H__ */
+
 # [io.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/os/io.h)
 ## Functions
 

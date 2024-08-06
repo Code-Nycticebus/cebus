@@ -3,14 +3,15 @@
 #include "cebus/collection/da.h"
 #include "cebus/core/debug.h"
 #include "cebus/core/defines.h"
+#include "cebus/type/string.h"
 
 int main(void) {
-  Arena arena = {0};
-  Str dir = STR(".");
-  FsIterator it = fs_iter_begin(dir, true, &arena, ErrPanic);
-  for (u32 i = 0; fs_iter_end(&it); fs_iter_next(&it), ++i) {
-    cebus_log_debug("%d: " STR_FMT, i, STR_ARG(it.current.path));
+  Str dir = STR("src");
+  fs_iter(it, dir, true, ErrPanic) {
+    if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
+      Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
+      error_propagate(it.error, { continue; });
+      cebus_log_debug(STR_FMT, STR_ARG(data));
+    }
   }
-
-  arena_free(&arena);
 }

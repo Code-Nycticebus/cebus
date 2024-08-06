@@ -155,7 +155,6 @@ bool fs_is_dir(Str path) {
   char _path[FILENAME_MAX] = {0};
   memcpy(_path, path.data, path.len);
 
-  // Get entry information
   struct stat entry_info;
   if (stat(_path, &entry_info) == -1) {
     return false;
@@ -164,8 +163,8 @@ bool fs_is_dir(Str path) {
   return S_ISDIR(entry_info.st_mode);
 }
 
-FsIterator fs_iter_begin(Str dir, bool recursive, Arena *arena, Error *error) {
-  FsIterator it = {.arena = arena, .recursive = recursive, .error = error};
+FsIter fs_iter_begin(Str dir, bool recursive, Error *error) {
+  FsIter it = {.recursive = recursive, .error = error};
 
   Node *node = arena_calloc_chunk(&it.scratch, sizeof(Node));
   node->dir = str_copy(dir, &it.scratch);
@@ -176,70 +175,59 @@ FsIterator fs_iter_begin(Str dir, bool recursive, Arena *arena, Error *error) {
     return it;
   }
 
-  it.stack = node;
-  fs_iter_next(&it);
+  it._stack = node;
   return it;
 }
 
-void fs_iter_next(FsIterator *it) {
-  while (it->stack != NULL) {
-    Node *current = it->stack;
+bool fs_iter_next(FsIter *it) {
+  while (it->_stack != NULL) {
+    Node *current = it->_stack;
 
     struct dirent *entry = readdir(current->handle);
     if (entry == NULL) {
       closedir(current->handle);
-      it->stack = current->next;
+      it->_stack = current->next;
       arena_free_chunk(&it->scratch, current);
       continue;
     }
 
+    // TODO: enable invisible directories
     // skip "." and ".." directories
     if (strncmp(entry->d_name, ".", 1) == 0 ||
         strncmp(entry->d_name, "..", 2) == 0) {
       continue;
     }
 
-    Str fullpath = str_format(it->arena, STR_FMT "/%s", STR_ARG(current->dir),
-                              entry->d_name);
+    Str fullpath = str_format(&it->scratch, STR_FMT "/%s",
+                              STR_ARG(current->dir), entry->d_name);
 
-    // Get entry information
     struct stat entry_info;
     if (stat(fullpath.data, &entry_info) == -1) {
       error_emit(it->error, errno, "stat failed: %s", strerror(errno));
-      return;
+      goto defer;
     }
 
     it->current.path = fullpath;
     it->current.directory = S_ISDIR(entry_info.st_mode);
 
     if (it->current.directory && it->recursive) {
-      printf("DIR: " STR_FMT "\n", STR_ARG(it->current.path));
       Node *node = arena_calloc_chunk(&it->scratch, sizeof(Node));
       node->handle = opendir(fullpath.data);
       if (node->handle == NULL) {
         error_emit(it->error, errno, "opendir failed: %s", strerror(errno));
-        return;
+        goto defer;
       }
       node->dir = fullpath;
-      node->next = it->stack;
-      it->stack = node;
+      node->next = it->_stack;
+      it->_stack = node;
     }
 
-    return;
-  }
-}
-
-bool fs_iter_end(FsIterator *it) {
-  error_propagate(it->error, {
-    arena_free(&it->scratch);
-    return false;
-  });
-  if (it->stack == NULL) {
-    arena_free(&it->scratch);
-    return false;
+    return true;
   }
 
-  return true;
+defer:
+  arena_free(&it->scratch);
+  return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////

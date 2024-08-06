@@ -33,6 +33,8 @@ error_context(&error, {
 });
 arena_free(&arena);
 ```
+
+
 */
 
 #ifndef __CEBUS_FS_H__
@@ -73,6 +75,21 @@ bool fs_is_dir(Str path);
 
 ////////////////////////////////////////////////////////////////////////////
 
+/* DOCUMENTATION
+## Directory Iteration
+
+```c
+Str dir = STR("src");
+for (FsIterator it = fs_iter_begin(dir, true, ErrPanic); fs_iter_next(&it);) {
+  if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
+    Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
+    error_propagate(it.error, { continue; });
+    cebus_log_debug(STR_FMT, STR_ARG(data));
+  }
+}
+```
+ * */
+
 typedef struct {
   bool directory;
   Str path;
@@ -80,16 +97,17 @@ typedef struct {
 
 typedef struct {
   Error *error;
-  Arena *arena;
   Arena scratch;
   bool recursive;
   FsEntity current;
-  void *stack;
-} FsIterator;
+  void *_stack;
+} FsIter;
 
-FsIterator fs_iter_begin(Str dir, bool recursive, Arena *arena, Error *error);
-void fs_iter_next(FsIterator *it);
-bool fs_iter_end(FsIterator *it);
+FsIter fs_iter_begin(Str dir, bool recursive, Error *error);
+bool fs_iter_next(FsIter *it);
+
+#define fs_iter(it, dir, recursive, error)                                     \
+  for (FsIter it = fs_iter_begin(dir, recursive, error); fs_iter_next(&it);)
 
 ////////////////////////////////////////////////////////////////////////////
 

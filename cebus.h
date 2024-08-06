@@ -1366,24 +1366,20 @@ typedef struct {
   _error_internal_emit(E, code, FILE_LOCATION_CURRENT, __VA_ARGS__);
 
 #define error_context(E, ...)                                                  \
-  do {                                                                         \
-    if (_error_internal_occured(E)) {                                          \
-      Error *__error_context__ = (E);                                          \
-      __VA_ARGS__                                                              \
-      if ((E)->failure) {                                                      \
-        _error_internal_panic(E);                                              \
-      }                                                                        \
+  if (_error_internal_occured(E)) {                                            \
+    Error *__error_context__ = (E);                                            \
+    __VA_ARGS__                                                                \
+    if ((E)->failure) {                                                        \
+      _error_internal_panic(E);                                                \
     }                                                                          \
-  } while (0)
+  }
 
 #define error_propagate(E, ...)                                                \
-  do {                                                                         \
-    if (_error_internal_occured(E)) {                                          \
-      Error *__error_context__ = (E);                                          \
-      error_add_location();                                                    \
-      __VA_ARGS__                                                              \
-    }                                                                          \
-  } while (0)
+  if (_error_internal_occured(E)) {                                            \
+    Error *__error_context__ = (E);                                            \
+    error_add_location();                                                      \
+    __VA_ARGS__                                                                \
+  }
 
 #define error_panic() _error_internal_panic(__error_context__)
 #define error_except() _error_internal_except(__error_context__)
@@ -1667,6 +1663,8 @@ error_context(&error, {
 });
 arena_free(&arena);
 ```
+
+
 */
 
 #ifndef __CEBUS_FS_H__
@@ -1707,6 +1705,21 @@ bool fs_is_dir(Str path);
 
 ////////////////////////////////////////////////////////////////////////////
 
+/* DOCUMENTATION
+## Directory Iteration
+
+```c
+Str dir = STR("src");
+for (FsIterator it = fs_iter_begin(dir, true, ErrPanic); fs_iter_next(&it);) {
+  if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
+    Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
+    error_propagate(it.error, { continue; });
+    cebus_log_debug(STR_FMT, STR_ARG(data));
+  }
+}
+```
+ * */
+
 typedef struct {
   bool directory;
   Str path;
@@ -1714,16 +1727,14 @@ typedef struct {
 
 typedef struct {
   Error *error;
-  Arena *arena;
   Arena scratch;
   bool recursive;
   FsEntity current;
-  void *stack;
-} FsIterator;
+  void *_stack;
+} FsIter;
 
-FsIterator fs_iter_begin(Str dir, bool recursive, Arena *arena, Error *error);
-void fs_iter_next(FsIterator *it);
-bool fs_iter_end(FsIterator *it);
+FsIter fs_iter_begin(Str dir, bool recursive, Error *error);
+bool fs_iter_next(FsIter *it);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -3776,7 +3787,6 @@ bool fs_is_dir(Str path) {
   char _path[FILENAME_MAX] = {0};
   memcpy(_path, path.data, path.len);
 
-  // Get entry information
   struct stat entry_info;
   if (stat(_path, &entry_info) == -1) {
     return false;
@@ -3785,8 +3795,8 @@ bool fs_is_dir(Str path) {
   return S_ISDIR(entry_info.st_mode);
 }
 
-FsIterator fs_iter_begin(Str dir, bool recursive, Arena *arena, Error *error) {
-  FsIterator it = {.arena = arena, .recursive = recursive, .error = error};
+FsIter fs_iter_begin(Str dir, bool recursive, Error *error) {
+  FsIter it = {.recursive = recursive, .error = error};
 
   Node *node = arena_calloc_chunk(&it.scratch, sizeof(Node));
   node->dir = str_copy(dir, &it.scratch);
@@ -3797,70 +3807,59 @@ FsIterator fs_iter_begin(Str dir, bool recursive, Arena *arena, Error *error) {
     return it;
   }
 
-  it.stack = node;
-  fs_iter_next(&it);
+  it._stack = node;
   return it;
 }
 
-void fs_iter_next(FsIterator *it) {
-  while (it->stack != NULL) {
-    Node *current = it->stack;
+bool fs_iter_next(FsIter *it) {
+  while (it->_stack != NULL) {
+    Node *current = it->_stack;
 
     struct dirent *entry = readdir(current->handle);
     if (entry == NULL) {
       closedir(current->handle);
-      it->stack = current->next;
+      it->_stack = current->next;
       arena_free_chunk(&it->scratch, current);
       continue;
     }
 
+    // TODO: enable invisible directories
     // skip "." and ".." directories
     if (strncmp(entry->d_name, ".", 1) == 0 ||
         strncmp(entry->d_name, "..", 2) == 0) {
       continue;
     }
 
-    Str fullpath = str_format(it->arena, STR_FMT "/%s", STR_ARG(current->dir),
-                              entry->d_name);
+    Str fullpath = str_format(&it->scratch, STR_FMT "/%s",
+                              STR_ARG(current->dir), entry->d_name);
 
-    // Get entry information
     struct stat entry_info;
     if (stat(fullpath.data, &entry_info) == -1) {
       error_emit(it->error, errno, "stat failed: %s", strerror(errno));
-      return;
+      goto defer;
     }
 
     it->current.path = fullpath;
     it->current.directory = S_ISDIR(entry_info.st_mode);
 
     if (it->current.directory && it->recursive) {
-      printf("DIR: " STR_FMT "\n", STR_ARG(it->current.path));
       Node *node = arena_calloc_chunk(&it->scratch, sizeof(Node));
       node->handle = opendir(fullpath.data);
       if (node->handle == NULL) {
         error_emit(it->error, errno, "opendir failed: %s", strerror(errno));
-        return;
+        goto defer;
       }
       node->dir = fullpath;
-      node->next = it->stack;
-      it->stack = node;
+      node->next = it->_stack;
+      it->_stack = node;
     }
 
-    return;
-  }
-}
-
-bool fs_iter_end(FsIterator *it) {
-  error_propagate(it->error, {
-    arena_free(&it->scratch);
-    return false;
-  });
-  if (it->stack == NULL) {
-    arena_free(&it->scratch);
-    return false;
+    return true;
   }
 
-  return true;
+defer:
+  arena_free(&it->scratch);
+  return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////
