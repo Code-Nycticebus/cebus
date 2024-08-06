@@ -22,7 +22,7 @@ Path _path_new(Arena *arena, ...) {
 }
 
 Path path_join(Arena *arena, PathDa *da) {
-  // TODO: operationg system dependent
+  // TODO: operating system dependent
   return str_join(STR("/"), da->len, da->items, arena);
 }
 

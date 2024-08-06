@@ -3674,7 +3674,6 @@ defer:
 // #include "fs.h"
 
 // #include "cebus/core/error.h"
-// #include "cebus/type/path.h"
 // #include "cebus/type/string.h"
 // #include "cebus/type/utf8.h"
 // #include "io.h"
@@ -3845,7 +3844,6 @@ bool fs_iter_next_extension(FsIter *it, Str file_extension) {
 ////////////////////////////////////////////////////////////////////////////
 #if defined(LINUX)
 
-#define _BSD_SOURCE
 #include <dirent.h>
 #include <sys/stat.h> // For struct stat and S_ISDIR
 #include <unistd.h>
@@ -4576,7 +4574,7 @@ Path _path_new(Arena *arena, ...) {
 }
 
 Path path_join(Arena *arena, PathDa *da) {
-  // TODO: operationg system dependent
+  // TODO: operating system dependent
   return str_join(STR("/"), da->len, da->items, arena);
 }
 

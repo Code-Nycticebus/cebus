@@ -1,7 +1,6 @@
 #include "fs.h"
 
 #include "cebus/core/error.h"
-#include "cebus/type/path.h"
 #include "cebus/type/string.h"
 #include "cebus/type/utf8.h"
 #include "io.h"
@@ -172,7 +171,6 @@ bool fs_iter_next_extension(FsIter *it, Str file_extension) {
 ////////////////////////////////////////////////////////////////////////////
 #if defined(LINUX)
 
-#define _BSD_SOURCE
 #include <dirent.h>
 #include <sys/stat.h> // For struct stat and S_ISDIR
 #include <unistd.h>
