@@ -121,9 +121,9 @@ void fs_iter_end(FsIter *it, Error *error);
 
 bool fs_iter_next(FsIter *it);
 bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
-bool fs_iter_next_extension(FsIter *it, Str file_extension);
 bool fs_iter_next_directory(FsIter *it);
 bool fs_iter_next_files(FsIter *it);
+bool fs_iter_next_extension(FsIter *it, Str file_extension);
 
 ////////////////////////////////////////////////////////////////////////////
 
