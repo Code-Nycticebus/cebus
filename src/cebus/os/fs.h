@@ -79,13 +79,28 @@ bool fs_is_dir(Str path);
 ## Directory Iteration
 
 ```c
-  fs_iter(it, STR("src"), true, ErrPanic) {
-    if (!it.current.is_dir && str_endswith(it.current.path, STR(".c"))) {
-      Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
-      error_propagate(it.error, { continue; });
-      cebus_log(STR_FMT, STR_ARG(data));
-    }
-  }```
+int main(void) {
+  // initialize and configure iterator
+  FsIter it = fs_iter_begin(STR("."), true);
+
+  // iterate over directory with certain filters
+  while (fs_iter_next_extension(&it, STR(".clangd"))) {
+    // every allocation in the scratch buffer gets reset after each iteration
+    Str data = fs_file_read_str(it.current.path, &it.scratch, &it.error);
+
+    // do not return before you call 'fs_iter_end'
+    error_propagate(&it.error, { break; });
+
+    // do something with data...
+    cebus_log_debug(STR_FMT, STR_ARG(data));
+  }
+
+  // collect errors and deinitializes iterator
+  Error err = ErrNew;
+  fs_iter_end(&it, &err);
+  error_context(&err, { error_panic(); });
+}
+```
  * */
 
 typedef struct {
@@ -94,18 +109,20 @@ typedef struct {
 } FsEntity;
 
 typedef struct {
-  Error *error;
+  Error error;
   Arena scratch;
   bool recursive;
   FsEntity current;
   void *_stack;
 } FsIter;
 
-FsIter fs_iter_begin(Str dir, bool recursive, Error *error);
-bool fs_iter_next(FsIter *it);
+FsIter fs_iter_begin(Str dir, bool recursive);
+void fs_iter_end(FsIter *it, Error *error);
 
-#define fs_iter(it, dir, recursive, error)                                     \
-  for (FsIter it = fs_iter_begin(dir, recursive, error); fs_iter_next(&it);)
+bool fs_iter_next(FsIter *it);
+bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
+bool fs_iter_next_extension(FsIter *it, Str file_extension);
+bool fs_iter_next_directory(FsIter *it);
 
 ////////////////////////////////////////////////////////////////////////////
 

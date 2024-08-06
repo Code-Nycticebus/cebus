@@ -1648,9 +1648,9 @@ to a file.
 - **File Management**:
   - `fs_file_open(filename, mode, error)`: Opens a file with the specified mode.
   - `fs_file_close(file, error)`: Closes an open file.
-  - `fs_file_rename(old_name, new_name, error)`: Renames a file.
-  - `fs_file_remove(filename, error)`: Removes a file.
-  - `fs_file_exists(filename)`: Checks if a file exists.
+  - `fs_rename(old_name, new_name, error)`: Renames a file.
+  - `fs_remove(filename, error)`: Removes a file.
+  - `fs_exists(filename)`: Checks if a file exists.
 
 ## Usage Example
 
@@ -1709,13 +1709,29 @@ bool fs_is_dir(Str path);
 ## Directory Iteration
 
 ```c
-  fs_iter(it, STR("src"), true, ErrPanic) {
-    if (!it.current.is_dir && str_endswith(it.current.path, STR(".c"))) {
-      Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
-      error_propagate(it.error, { continue; });
-      cebus_log(STR_FMT, STR_ARG(data));
+int main(void) {
+  // initialize iterator
+  FsIter it = fs_iter_begin(STR("."), true);
+  // iterate
+  while (fs_iter_next(&it)) {
+    // filter files
+    if (!it.current.is_dir && str_endswith(it.current.path, STR(".txt"))) {
+      // every allocation in the scratch buffer gets reset after each iteration
+      Str data = fs_file_read_str(it.current.path, &it.scratch, &it.error);
+      // do not return before you call 'fs_iter_end'
+      error_propagate(&it.error, { break; });
+
+      // do something with data...
+      cebus_log_debug(STR_FMT, STR_ARG(data));
     }
-  }```
+  }
+
+  // collect errors and deinitializes iterator
+  Error err = ErrNew;
+  fs_iter_end(&it, &err);
+  error_context(&err, { error_panic(); });
+}
+```
  * */
 
 typedef struct {
@@ -1724,18 +1740,18 @@ typedef struct {
 } FsEntity;
 
 typedef struct {
-  Error *error;
+  Error error;
   Arena scratch;
   bool recursive;
   FsEntity current;
   void *_stack;
 } FsIter;
 
-FsIter fs_iter_begin(Str dir, bool recursive, Error *error);
+FsIter fs_iter_begin(Str dir, bool recursive);
 bool fs_iter_next(FsIter *it);
-
-#define fs_iter(it, dir, recursive, error)                                     \
-  for (FsIter it = fs_iter_begin(dir, recursive, error); fs_iter_next(&it);)
+bool fs_iter_next_extension(FsIter *it, Str file_extension);
+bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
+void fs_iter_end(FsIter *it, Error *error);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -3701,6 +3717,7 @@ defer:
 
 Str fs_file_read_str(Str filename, Arena *arena, Error *error) {
   Bytes bytes = fs_file_read_bytes(filename, arena, error);
+  // error_emit(error, 0, "FUCK");
   error_propagate(error, { return (Str){0}; });
   return str_from_bytes(bytes);
 }
@@ -3773,9 +3790,9 @@ void fs_remove(Str path, Error *error) {
 #include <unistd.h>
 
 typedef struct Node {
-  Str dir;
   DIR *handle;
   struct Node *next;
+  char dir[];
 } Node;
 
 bool fs_exists(Str path) {
@@ -3796,24 +3813,25 @@ bool fs_is_dir(Str path) {
   return S_ISDIR(entry_info.st_mode);
 }
 
-FsIter fs_iter_begin(Str dir, bool recursive, Error *error) {
-  FsIter it = {.recursive = recursive, .error = error};
+FsIter fs_iter_begin(Str dir, bool recursive) {
+  FsIter it = {.recursive = recursive, .error = ErrNew};
 
-  Node *node = arena_calloc_chunk(&it.scratch, sizeof(Node));
-  node->dir = str_copy(dir, &it.scratch);
-  // Open the directory
-  node->handle = opendir(node->dir.data);
+  const usize size = sizeof(Node) + dir.len + 1;
+  Node *node = arena_calloc_chunk(&it.scratch, size);
+  memcpy(node->dir, dir.data, dir.len);
+
+  node->handle = opendir(node->dir);
   if (node->handle == NULL) {
-    error_emit(error, errno, "opendir failed: %s", strerror(errno));
+    error_emit(&it.error, errno, "opendir failed: %s", strerror(errno));
     return it;
   }
-
   it._stack = node;
   return it;
 }
 
 bool fs_iter_next(FsIter *it) {
   while (it->_stack != NULL) {
+    arena_reset(&it->scratch);
     Node *current = it->_stack;
 
     struct dirent *entry = readdir(current->handle);
@@ -3826,31 +3844,30 @@ bool fs_iter_next(FsIter *it) {
 
     // TODO: enable invisible directories
     // skip "." and ".." directories
-    if (strncmp(entry->d_name, ".", 1) == 0 ||
-        strncmp(entry->d_name, "..", 2) == 0) {
+    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
       continue;
     }
 
-    Str fullpath = str_format(&it->scratch, STR_FMT "/%s",
-                              STR_ARG(current->dir), entry->d_name);
+    Str path = str_format(&it->scratch, "%s/%s", current->dir, entry->d_name);
 
     struct stat entry_info;
-    if (stat(fullpath.data, &entry_info) == -1) {
-      error_emit(it->error, errno, "stat failed: %s", strerror(errno));
-      goto defer;
+    if (stat(path.data, &entry_info) == -1) {
+      error_emit(&it->error, errno, "stat failed: %s", strerror(errno));
+      return false;
     }
 
-    it->current.path = fullpath;
+    it->current.path = path;
     it->current.is_dir = S_ISDIR(entry_info.st_mode);
 
     if (it->current.is_dir && it->recursive) {
-      Node *node = arena_calloc_chunk(&it->scratch, sizeof(Node));
-      node->handle = opendir(fullpath.data);
+      const usize size = sizeof(Node) + path.len + 1;
+      Node *node = arena_calloc_chunk(&it->scratch, size);
+      memcpy(node->dir, path.data, path.len);
+      node->handle = opendir(path.data);
       if (node->handle == NULL) {
-        error_emit(it->error, errno, "opendir failed: %s", strerror(errno));
-        goto defer;
+        error_emit(&it->error, errno, "opendir failed: %s", strerror(errno));
+        return false;
       }
-      node->dir = fullpath;
       node->next = it->_stack;
       it->_stack = node;
     }
@@ -3858,9 +3875,44 @@ bool fs_iter_next(FsIter *it) {
     return true;
   }
 
-defer:
-  arena_free(&it->scratch);
   return false;
+}
+
+bool fs_iter_next_extension(FsIter *it, Str file_extension) {
+  while (fs_iter_next(it)) {
+    if (str_endswith(it->current.path, file_extension)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity)) {
+  while (fs_iter_next(it)) {
+    if (filter(&it->current)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void fs_iter_end(FsIter *it, Error *error) {
+  error_propagate(&it->error, {
+    if (error) {
+      const FileLocation loc = error->location;
+      *error = it->error;
+      error->location = loc;
+    } else {
+      error_panic();
+    }
+  });
+  while (it->_stack != NULL) {
+    Node *current = it->_stack;
+    it->_stack = current->next;
+    closedir(current->handle);
+    arena_free_chunk(&it->scratch, current);
+  }
+  arena_free(&it->scratch);
 }
 
 //////////////////////////////////////////////////////////////////////////////
