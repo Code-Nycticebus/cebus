@@ -1756,7 +1756,7 @@ bool fs_iter_next(FsIter *it);
 bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
 bool fs_iter_next_directory(FsIter *it);
 bool fs_iter_next_files(FsIter *it);
-bool fs_iter_next_extension(FsIter *it, Str file_extension);
+bool fs_iter_next_suffix(FsIter *it, Str suffix);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -2178,9 +2178,14 @@ Path path_join(Arena *arena, PathDa *da);
 Str path_name(Path path);
 Str path_suffix(Path path);
 Str path_stem(Path path);
-Str path_parent(Path path);
+Path path_parent(Path path);
 
 // TODO
+// bool path_relative(Path path);
+// bool path_absolute(Path path);
+// bool path_relative_to(Path p1, Path p2);
+// Path path_resolve(Path path);
+// void path_collect_parts(Path path, PathDa* da);
 // void path_collect_parents(Path path, PathDa* da);
 
 #endif /* !__CEBUS_PATH_H__ */
@@ -3678,7 +3683,9 @@ defer:
 
 // #include "fs.h"
 
+// #include "cebus/core/debug.h"
 // #include "cebus/core/error.h"
+// #include "cebus/type/path.h"
 // #include "cebus/type/string.h"
 // #include "cebus/type/utf8.h"
 // #include "io.h"
@@ -3746,7 +3753,6 @@ defer:
 
 Str fs_file_read_str(Path filename, Arena *arena, Error *error) {
   Bytes bytes = fs_file_read_bytes(filename, arena, error);
-  // error_emit(error, 0, "FUCK");
   error_propagate(error, { return (Str){0}; });
   return str_from_bytes(bytes);
 }
@@ -3837,9 +3843,9 @@ bool fs_iter_next_files(FsIter *it) {
   return false;
 }
 
-bool fs_iter_next_extension(FsIter *it, Str file_extension) {
+bool fs_iter_next_suffix(FsIter *it, Str suffix) {
   while (fs_iter_next_files(it)) {
-    if (str_endswith(it->current.path, file_extension)) {
+    if (str_eq(path_suffix(it->current.path), suffix)) {
       return true;
     }
   }
@@ -3895,11 +3901,14 @@ FsIter fs_iter_begin(Path directory, bool recursive) {
 
 void fs_iter_end(FsIter *it, Error *error) {
   error_propagate(&it->error, {
-    if (error) {
-      const FileLocation loc = error->location;
-      *error = it->error;
-      error->location = loc;
-    } else {
+    if (!error) {
+      error_panic();
+    }
+    const FileLocation loc = error->location;
+    bool panic = error->panic_on_emit;
+    *error = it->error;
+    error->location = loc;
+    if (panic) {
       error_panic();
     }
   });
@@ -4556,7 +4565,6 @@ INTEGER_IMPL(i64, I64_BITS)
 INTEGER_IMPL(usize, USIZE_BITS)
 
 // #include "path.h"
-// #include "cebus/collection/da.h"
 // #include "cebus/type/string.h"
 
 #include <stdarg.h>
@@ -4618,10 +4626,13 @@ Path path_parent(Path path) {
   return path;
 }
 
+#if defined(__CEBUS_FS_H__) || defined(__CEBUS_OS_H__)
+#error "fs or os was included. pls dont use any io in this module"
+#endif
+
 // #include "./string.h"
 
 // #include "cebus/core/arena.h"
-// #include "cebus/core/logging.h"
 // #include "cebus/type/byte.h"
 // #include "cebus/type/char.h"
 // #include "cebus/type/integer.h"

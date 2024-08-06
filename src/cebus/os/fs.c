@@ -1,6 +1,8 @@
 #include "fs.h"
 
+#include "cebus/core/debug.h"
 #include "cebus/core/error.h"
+#include "cebus/type/path.h"
 #include "cebus/type/string.h"
 #include "cebus/type/utf8.h"
 #include "io.h"
@@ -68,7 +70,6 @@ defer:
 
 Str fs_file_read_str(Path filename, Arena *arena, Error *error) {
   Bytes bytes = fs_file_read_bytes(filename, arena, error);
-  // error_emit(error, 0, "FUCK");
   error_propagate(error, { return (Str){0}; });
   return str_from_bytes(bytes);
 }
@@ -159,9 +160,9 @@ bool fs_iter_next_files(FsIter *it) {
   return false;
 }
 
-bool fs_iter_next_extension(FsIter *it, Str file_extension) {
+bool fs_iter_next_suffix(FsIter *it, Str suffix) {
   while (fs_iter_next_files(it)) {
-    if (str_endswith(it->current.path, file_extension)) {
+    if (str_eq(path_suffix(it->current.path), suffix)) {
       return true;
     }
   }
@@ -217,11 +218,14 @@ FsIter fs_iter_begin(Path directory, bool recursive) {
 
 void fs_iter_end(FsIter *it, Error *error) {
   error_propagate(&it->error, {
-    if (error) {
-      const FileLocation loc = error->location;
-      *error = it->error;
-      error->location = loc;
-    } else {
+    if (!error) {
+      error_panic();
+    }
+    const FileLocation loc = error->location;
+    bool panic = error->panic_on_emit;
+    *error = it->error;
+    error->location = loc;
+    if (panic) {
       error_panic();
     }
   });

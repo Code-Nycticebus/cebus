@@ -9,7 +9,7 @@ int main(void) {
   FsIter it = fs_iter_begin(STR("."), true);
 
   // iterate over directory with certain filters
-  while (fs_iter_next_extension(&it, STR(".clangd"))) {
+  while (fs_iter_next_suffix(&it, STR(".toml"))) {
     // every allocation in the scratch buffer gets reset after each iteration
     Str data = fs_file_read_str(it.current.path, &it.scratch, &it.error);
 
@@ -17,7 +17,7 @@ int main(void) {
     error_propagate(&it.error, { break; });
 
     // do something with data...
-    cebus_log_debug(STR_FMT, STR_ARG(data));
+    cebus_log(STR_FMT, STR_ARG(data));
   }
 
   // collect errors and deinitializes iterator
