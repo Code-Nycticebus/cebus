@@ -274,6 +274,15 @@ bool fs_iter_next_directory(FsIter *it) {
   return false;
 }
 
+bool fs_iter_next_files(FsIter *it) {
+  while (fs_iter_next(it)) {
+    if (!it->current.is_dir) {
+      return true;
+    }
+  }
+  return false;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 #elif defined(WINDOWS)
 

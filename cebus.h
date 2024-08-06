@@ -1756,6 +1756,7 @@ bool fs_iter_next(FsIter *it);
 bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
 bool fs_iter_next_extension(FsIter *it, Str file_extension);
 bool fs_iter_next_directory(FsIter *it);
+bool fs_iter_next_files(FsIter *it);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -3940,6 +3941,15 @@ bool fs_iter_next_extension(FsIter *it, Str file_extension) {
 bool fs_iter_next_directory(FsIter *it) {
   while (fs_iter_next(it)) {
     if (it->current.is_dir) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool fs_iter_next_files(FsIter *it) {
+  while (fs_iter_next(it)) {
+    if (!it->current.is_dir) {
       return true;
     }
   }
