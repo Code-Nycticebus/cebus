@@ -2171,7 +2171,7 @@ INTEGER_DECL(usize)
 typedef DA(Path) PathDa;
 
 Path _path_new(Arena *arena, ...);
-#define path_new(arena, ...) _path_new(arena, __VA_ARGS__, STR(""))
+#define path_new(arena, ...) _path_new(arena, __VA_ARGS__, (Str){0})
 
 Path path_join(Arena *arena, PathDa *da);
 
@@ -4562,8 +4562,10 @@ Path _path_new(Arena *arena, ...) {
   va_list va;
   va_start(va, arena);
   Path path = va_arg(va, Path);
-  while (path.len > 0) {
-    da_push(&paths, path);
+  while (path.data != NULL) {
+    if (path.len) {
+      da_push(&paths, path);
+    }
     path = va_arg(va, Path);
   }
   va_end(va);

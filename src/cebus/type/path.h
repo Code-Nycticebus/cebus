@@ -8,7 +8,7 @@
 typedef DA(Path) PathDa;
 
 Path _path_new(Arena *arena, ...);
-#define path_new(arena, ...) _path_new(arena, __VA_ARGS__, STR(""))
+#define path_new(arena, ...) _path_new(arena, __VA_ARGS__, (Str){0})
 
 Path path_join(Arena *arena, PathDa *da);
 
