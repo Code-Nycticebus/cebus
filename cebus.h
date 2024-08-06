@@ -1710,7 +1710,7 @@ bool fs_is_dir(Str path);
 
 ```c
   fs_iter(it, STR("src"), true, ErrPanic) {
-    if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
+    if (!it.current.is_dir && str_endswith(it.current.path, STR(".c"))) {
       Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
       error_propagate(it.error, { continue; });
       cebus_log(STR_FMT, STR_ARG(data));
@@ -1719,7 +1719,7 @@ bool fs_is_dir(Str path);
  * */
 
 typedef struct {
-  bool directory;
+  bool is_dir;
   Str path;
 } FsEntity;
 
@@ -3841,9 +3841,9 @@ bool fs_iter_next(FsIter *it) {
     }
 
     it->current.path = fullpath;
-    it->current.directory = S_ISDIR(entry_info.st_mode);
+    it->current.is_dir = S_ISDIR(entry_info.st_mode);
 
-    if (it->current.directory && it->recursive) {
+    if (it->current.is_dir && it->recursive) {
       Node *node = arena_calloc_chunk(&it->scratch, sizeof(Node));
       node->handle = opendir(fullpath.data);
       if (node->handle == NULL) {

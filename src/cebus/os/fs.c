@@ -208,9 +208,9 @@ bool fs_iter_next(FsIter *it) {
     }
 
     it->current.path = fullpath;
-    it->current.directory = S_ISDIR(entry_info.st_mode);
+    it->current.is_dir = S_ISDIR(entry_info.st_mode);
 
-    if (it->current.directory && it->recursive) {
+    if (it->current.is_dir && it->recursive) {
       Node *node = arena_calloc_chunk(&it->scratch, sizeof(Node));
       node->handle = opendir(fullpath.data);
       if (node->handle == NULL) {

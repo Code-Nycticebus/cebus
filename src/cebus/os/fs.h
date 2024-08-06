@@ -18,9 +18,9 @@ to a file.
 - **File Management**:
   - `fs_file_open(filename, mode, error)`: Opens a file with the specified mode.
   - `fs_file_close(file, error)`: Closes an open file.
-  - `fs_file_rename(old_name, new_name, error)`: Renames a file.
-  - `fs_file_remove(filename, error)`: Removes a file.
-  - `fs_file_exists(filename)`: Checks if a file exists.
+  - `fs_rename(old_name, new_name, error)`: Renames a file.
+  - `fs_remove(filename, error)`: Removes a file.
+  - `fs_exists(filename)`: Checks if a file exists.
 
 ## Usage Example
 
@@ -80,7 +80,7 @@ bool fs_is_dir(Str path);
 
 ```c
   fs_iter(it, STR("src"), true, ErrPanic) {
-    if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
+    if (!it.current.is_dir && str_endswith(it.current.path, STR(".c"))) {
       Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
       error_propagate(it.error, { continue; });
       cebus_log(STR_FMT, STR_ARG(data));
@@ -89,7 +89,7 @@ bool fs_is_dir(Str path);
  * */
 
 typedef struct {
-  bool directory;
+  bool is_dir;
   Str path;
 } FsEntity;
 

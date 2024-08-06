@@ -7,7 +7,7 @@
 
 int main(void) {
   fs_iter(it, STR("src"), true, ErrPanic) {
-    if (!it.current.directory && str_endswith(it.current.path, STR(".c"))) {
+    if (!it.current.is_dir && str_endswith(it.current.path, STR(".c"))) {
       Str data = fs_file_read_str(it.current.path, &it.scratch, it.error);
       error_propagate(it.error, { continue; });
       cebus_log_debug(STR_FMT, STR_ARG(data));
