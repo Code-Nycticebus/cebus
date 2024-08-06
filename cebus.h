@@ -2176,7 +2176,12 @@ Path _path_new(Arena *arena, ...);
 Path path_join(Arena *arena, PathDa *da);
 
 Str path_name(Path path);
+Str path_suffix(Path path);
+Str path_stem(Path path);
 Str path_parent(Path path);
+
+// TODO
+// void path_collect_parents(Path path, PathDa* da);
 
 #endif /* !__CEBUS_PATH_H__ */
 
@@ -4581,8 +4586,31 @@ Path path_join(Arena *arena, PathDa *da) {
 }
 
 Str path_name(Path path) {
-  Str file = str_chop_right_by_delim(&path, '/');
-  return str_chop_by_delim(&file, '.');
+  if (str_eq(path, STR("."))) {
+    return STR("");
+  }
+  return str_chop_right_by_delim(&path, '/');
+}
+
+Str path_suffix(Path path) {
+  if (str_eq(path, STR("."))) {
+    return STR("");
+  }
+  Str name = str_chop_right_by_delim(&path, '/');
+  usize idx = str_find_last(name, STR("."));
+  if (idx == STR_NOT_FOUND) {
+    return STR("");
+  }
+  return str_substring(name, idx, name.len);
+}
+
+Str path_stem(Path path) {
+  Str name = str_chop_right_by_delim(&path, '/');
+  usize idx = str_find_last(name, STR("."));
+  if (idx == STR_NOT_FOUND) {
+    return name;
+  }
+  return str_substring(name, 0, idx);
 }
 
 Path path_parent(Path path) {
@@ -4593,6 +4621,7 @@ Path path_parent(Path path) {
 // #include "./string.h"
 
 // #include "cebus/core/arena.h"
+// #include "cebus/core/logging.h"
 // #include "cebus/type/byte.h"
 // #include "cebus/type/char.h"
 // #include "cebus/type/integer.h"

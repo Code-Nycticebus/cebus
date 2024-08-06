@@ -1,5 +1,4 @@
 #include "path.h"
-#include "cebus/collection/da.h"
 #include "cebus/type/string.h"
 
 #include <stdarg.h>
@@ -29,8 +28,31 @@ Path path_join(Arena *arena, PathDa *da) {
 }
 
 Str path_name(Path path) {
-  Str file = str_chop_right_by_delim(&path, '/');
-  return str_chop_by_delim(&file, '.');
+  if (str_eq(path, STR("."))) {
+    return STR("");
+  }
+  return str_chop_right_by_delim(&path, '/');
+}
+
+Str path_suffix(Path path) {
+  if (str_eq(path, STR("."))) {
+    return STR("");
+  }
+  Str name = str_chop_right_by_delim(&path, '/');
+  usize idx = str_find_last(name, STR("."));
+  if (idx == STR_NOT_FOUND) {
+    return STR("");
+  }
+  return str_substring(name, idx, name.len);
+}
+
+Str path_stem(Path path) {
+  Str name = str_chop_right_by_delim(&path, '/');
+  usize idx = str_find_last(name, STR("."));
+  if (idx == STR_NOT_FOUND) {
+    return name;
+  }
+  return str_substring(name, 0, idx);
 }
 
 Path path_parent(Path path) {
