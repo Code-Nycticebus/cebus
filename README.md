@@ -50,6 +50,7 @@ cebus = { dir = "path/to/cebus", type = "pybuildc" }
    - [char.h](#charh)
    - [float.h](#floath)
    - [integer.h](#integerh)
+   - [path.h](#pathh)
    - [string.h](#stringh)
    - [utf8.h](#utf8h)
 
@@ -590,20 +591,19 @@ arena_free(&arena);
 
 ```c
 int main(void) {
-  // initialize iterator
+  // initialize and configure iterator
   FsIter it = fs_iter_begin(STR("."), true);
-  // iterate
-  while (fs_iter_next(&it)) {
-    // filter files
-    if (!it.current.is_dir && str_endswith(it.current.path, STR(".txt"))) {
-      // every allocation in the scratch buffer gets reset after each iteration
-      Str data = fs_file_read_str(it.current.path, &it.scratch, &it.error);
-      // do not return before you call 'fs_iter_end'
-      error_propagate(&it.error, { break; });
 
-      // do something with data...
-      cebus_log_debug(STR_FMT, STR_ARG(data));
-    }
+  // iterate over directory with certain filters
+  while (fs_iter_next_extension(&it, STR(".clangd"))) {
+    // every allocation in the scratch buffer gets reset after each iteration
+    Str data = fs_file_read_str(it.current.path, &it.scratch, &it.error);
+
+    // do not return before you call 'fs_iter_end'
+    error_propagate(&it.error, { break; });
+
+    // do something with data...
+    cebus_log_debug(STR_FMT, STR_ARG(data));
   }
 
   // collect errors and deinitializes iterator
@@ -616,7 +616,7 @@ int main(void) {
 
 typedef struct {
   bool is_dir;
-  Str path;
+  Path path;
 } FsEntity;
 
 typedef struct {
@@ -627,11 +627,13 @@ typedef struct {
   void *_stack;
 } FsIter;
 
-FsIter fs_iter_begin(Str dir, bool recursive);
-bool fs_iter_next(FsIter *it);
-bool fs_iter_next_extension(FsIter *it, Str file_extension);
-bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
+FsIter fs_iter_begin(Path directory, bool recursive);
 void fs_iter_end(FsIter *it, Error *error);
+
+bool fs_iter_next(FsIter *it);
+bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
+bool fs_iter_next_extension(FsIter *it, Str file_extension);
+bool fs_iter_next_directory(FsIter *it);
 
 ////////////////////////////////////////////////////////////////////////////
 

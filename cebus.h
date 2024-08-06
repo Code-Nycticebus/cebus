@@ -387,8 +387,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
-#define STR_STATIC(str)                                                        \
-  { .len = sizeof(str) - 1, .data = (str) }
+#define STR_STATIC(str) {.len = sizeof(str) - 1, .data = (str)}
 #define STR_FMT "%.*s"
 #define STR_ARG(str) (i32)(str).len, (str).data
 
@@ -396,6 +395,10 @@ typedef struct {
   usize len;
   const char *data;
 } Str;
+
+#define PATH(...) STR(__VA_ARGS__)
+
+typedef Str Path;
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -1621,7 +1624,7 @@ dll_close(myLib);
 typedef void Dll;
 typedef void (*Function)(void);
 
-Dll *dll_load(Str path, Error *error);
+Dll *dll_load(Path path, Error *error);
 void dll_close(Dll *handle);
 
 Function dll_symbol(Dll *handle, Str symbol, Error *error);
@@ -1687,21 +1690,21 @@ typedef enum {
 
 ////////////////////////////////////////////////////////////////////////////
 
-FILE *fs_file_open(Str filename, const char *mode, Error *error);
+FILE *fs_file_open(Path path, const char *mode, Error *error);
 void fs_file_close(FILE *file, Error *error);
 
-Bytes fs_file_read_bytes(Str filename, Arena *arena, Error *error);
-Str fs_file_read_str(Str filename, Arena *arena, Error *error);
-Utf8 fs_file_read_utf8(Str filename, Arena *arena, Error *error);
+Bytes fs_file_read_bytes(Path filename, Arena *arena, Error *error);
+Str fs_file_read_str(Path filename, Arena *arena, Error *error);
+Utf8 fs_file_read_utf8(Path filename, Arena *arena, Error *error);
 
-void fs_file_write_bytes(Str filename, Bytes bytes, Error *error);
-void fs_file_write_str(Str filename, Str content, Error *error);
-void fs_file_write_utf8(Str filename, Utf8 content, Error *error);
+void fs_file_write_bytes(Path filename, Bytes bytes, Error *error);
+void fs_file_write_str(Path filename, Str content, Error *error);
+void fs_file_write_utf8(Path filename, Utf8 content, Error *error);
 
-void fs_rename(Str old_path, Str new_path, Error *error);
-void fs_remove(Str path, Error *error);
-bool fs_exists(Str path);
-bool fs_is_dir(Str path);
+void fs_rename(Path old_path, Path new_path, Error *error);
+void fs_remove(Path path, Error *error);
+bool fs_exists(Path path);
+bool fs_is_dir(Path path);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -1710,20 +1713,19 @@ bool fs_is_dir(Str path);
 
 ```c
 int main(void) {
-  // initialize iterator
+  // initialize and configure iterator
   FsIter it = fs_iter_begin(STR("."), true);
-  // iterate
-  while (fs_iter_next(&it)) {
-    // filter files
-    if (!it.current.is_dir && str_endswith(it.current.path, STR(".txt"))) {
-      // every allocation in the scratch buffer gets reset after each iteration
-      Str data = fs_file_read_str(it.current.path, &it.scratch, &it.error);
-      // do not return before you call 'fs_iter_end'
-      error_propagate(&it.error, { break; });
 
-      // do something with data...
-      cebus_log_debug(STR_FMT, STR_ARG(data));
-    }
+  // iterate over directory with certain filters
+  while (fs_iter_next_extension(&it, STR(".clangd"))) {
+    // every allocation in the scratch buffer gets reset after each iteration
+    Str data = fs_file_read_str(it.current.path, &it.scratch, &it.error);
+
+    // do not return before you call 'fs_iter_end'
+    error_propagate(&it.error, { break; });
+
+    // do something with data...
+    cebus_log_debug(STR_FMT, STR_ARG(data));
   }
 
   // collect errors and deinitializes iterator
@@ -1736,7 +1738,7 @@ int main(void) {
 
 typedef struct {
   bool is_dir;
-  Str path;
+  Path path;
 } FsEntity;
 
 typedef struct {
@@ -1747,11 +1749,13 @@ typedef struct {
   void *_stack;
 } FsIter;
 
-FsIter fs_iter_begin(Str dir, bool recursive);
-bool fs_iter_next(FsIter *it);
-bool fs_iter_next_extension(FsIter *it, Str file_extension);
-bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
+FsIter fs_iter_begin(Path directory, bool recursive);
 void fs_iter_end(FsIter *it, Error *error);
+
+bool fs_iter_next(FsIter *it);
+bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity));
+bool fs_iter_next_extension(FsIter *it, Str file_extension);
+bool fs_iter_next_directory(FsIter *it);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -1851,8 +1855,8 @@ printf("Home directory: " STR_FMT "\n", STR_ARG(home));
 ////////////////////////////////////////////////////////////////////////////
 
 Str os_getenv(const char *env, Error *error);
-void os_chdir(Str path);
-Str os_getcwd(Arena *arena);
+void os_chdir(Path path);
+Path os_getcwd(Arena *arena);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -2155,6 +2159,25 @@ INTEGER_DECL(usize)
 #undef INTEGER_DECL
 
 #endif /* !__CEBUS_INTEGERS_H__ */
+
+#ifndef __CEBUS_PATH_H__
+#define __CEBUS_PATH_H__
+
+// #include "cebus/collection/da.h"
+// #include "cebus/core/arena.h"
+// #include "cebus/core/defines.h" // IWYU pragma: export
+
+typedef DA(Path) PathDa;
+
+Path _path_new(Arena *arena, ...);
+#define path_new(arena, ...) _path_new(arena, __VA_ARGS__, STR(""))
+
+Path path_join(Arena *arena, PathDa *da);
+
+Str path_name(Path path);
+Str path_parent(Path path);
+
+#endif /* !__CEBUS_PATH_H__ */
 
 /* DOCUMENTATION
 ## Features and Functions
@@ -3555,7 +3578,7 @@ defer:
 #if defined(LINUX)
 #include <dlfcn.h>
 
-Dll *dll_load(Str path, Error *error) {
+Dll *dll_load(Path path, Error *error) {
   if (!fs_exists(path)) {
     error_emit(error, FS_NOT_FOUND, "dll: library does not exist: " STR_FMT,
                STR_ARG(path));
@@ -3673,9 +3696,9 @@ static usize file_size(FILE *handle, Error *error) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-FILE *fs_file_open(Str filename, const char *mode, Error *error) {
+FILE *fs_file_open(Path path, const char *mode, Error *error) {
   char _filename[FILENAME_MAX] = {0};
-  memcpy(_filename, filename.data, filename.len);
+  memcpy(_filename, path.data, path.len);
   errno = 0;
   FILE *handle = fopen(_filename, mode);
   if (handle == NULL) {
@@ -3697,7 +3720,7 @@ void fs_file_close(FILE *file, Error *error) {
   }
 }
 
-Bytes fs_file_read_bytes(Str filename, Arena *arena, Error *error) {
+Bytes fs_file_read_bytes(Path filename, Arena *arena, Error *error) {
   Bytes result = {0};
   FILE *handle = fs_file_open(filename, "r", error);
   error_propagate(error, { goto defer; });
@@ -3715,14 +3738,14 @@ defer:
   return result;
 }
 
-Str fs_file_read_str(Str filename, Arena *arena, Error *error) {
+Str fs_file_read_str(Path filename, Arena *arena, Error *error) {
   Bytes bytes = fs_file_read_bytes(filename, arena, error);
   // error_emit(error, 0, "FUCK");
   error_propagate(error, { return (Str){0}; });
   return str_from_bytes(bytes);
 }
 
-Utf8 fs_file_read_utf8(Str filename, Arena *arena, Error *error) {
+Utf8 fs_file_read_utf8(Path filename, Arena *arena, Error *error) {
   Utf8 res = {0};
   Bytes bytes = fs_file_read_bytes(filename, arena, error);
   error_propagate(error, { return (Utf8){0}; });
@@ -3731,7 +3754,7 @@ Utf8 fs_file_read_utf8(Str filename, Arena *arena, Error *error) {
   return res;
 }
 
-void fs_file_write_bytes(Str filename, Bytes bytes, Error *error) {
+void fs_file_write_bytes(Path filename, Bytes bytes, Error *error) {
   FILE *handle = fs_file_open(filename, "w", error);
   error_propagate(error, { goto defer; });
 
@@ -3744,17 +3767,17 @@ defer:
   }
 }
 
-void fs_file_write_str(Str filename, Str content, Error *error) {
+void fs_file_write_str(Path filename, Str content, Error *error) {
   fs_file_write_bytes(filename, str_to_bytes(content), error);
 }
 
-void fs_file_write_utf8(Str filename, Utf8 content, Error *error) {
+void fs_file_write_utf8(Path filename, Utf8 content, Error *error) {
   Bytes bytes = utf8_encode(content, error);
   error_propagate(error, { return; });
   fs_file_write_bytes(filename, bytes, error);
 }
 
-void fs_rename(Str old_path, Str new_path, Error *error) {
+void fs_rename(Path old_path, Path new_path, Error *error) {
   char _old_path[FILENAME_MAX] = {0};
   memcpy(_old_path, old_path.data, old_path.len);
 
@@ -3769,7 +3792,7 @@ void fs_rename(Str old_path, Str new_path, Error *error) {
   }
 }
 
-void fs_remove(Str path, Error *error) {
+void fs_remove(Path path, Error *error) {
   char _path[FILENAME_MAX] = {0};
   memcpy(_path, path.data, path.len);
 
@@ -3795,13 +3818,13 @@ typedef struct Node {
   char dir[];
 } Node;
 
-bool fs_exists(Str path) {
+bool fs_exists(Path path) {
   char _path[FILENAME_MAX] = {0};
   memcpy(_path, path.data, path.len);
   return access(_path, 0) == 0;
 }
 
-bool fs_is_dir(Str path) {
+bool fs_is_dir(Path path) {
   char _path[FILENAME_MAX] = {0};
   memcpy(_path, path.data, path.len);
 
@@ -3813,12 +3836,12 @@ bool fs_is_dir(Str path) {
   return S_ISDIR(entry_info.st_mode);
 }
 
-FsIter fs_iter_begin(Str dir, bool recursive) {
+FsIter fs_iter_begin(Path directory, bool recursive) {
   FsIter it = {.recursive = recursive, .error = ErrNew};
 
-  const usize size = sizeof(Node) + dir.len + 1;
+  const usize size = sizeof(Node) + directory.len + 1;
   Node *node = arena_calloc_chunk(&it.scratch, size);
-  memcpy(node->dir, dir.data, dir.len);
+  memcpy(node->dir, directory.data, directory.len);
 
   node->handle = opendir(node->dir);
   if (node->handle == NULL) {
@@ -3827,6 +3850,25 @@ FsIter fs_iter_begin(Str dir, bool recursive) {
   }
   it._stack = node;
   return it;
+}
+
+void fs_iter_end(FsIter *it, Error *error) {
+  error_propagate(&it->error, {
+    if (error) {
+      const FileLocation loc = error->location;
+      *error = it->error;
+      error->location = loc;
+    } else {
+      error_panic();
+    }
+  });
+  while (it->_stack != NULL) {
+    Node *current = it->_stack;
+    it->_stack = current->next;
+    closedir(current->handle);
+    arena_free_chunk(&it->scratch, current);
+  }
+  arena_free(&it->scratch);
 }
 
 bool fs_iter_next(FsIter *it) {
@@ -3842,7 +3884,6 @@ bool fs_iter_next(FsIter *it) {
       continue;
     }
 
-    // TODO: enable invisible directories
     // skip "." and ".." directories
     if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
       continue;
@@ -3878,15 +3919,6 @@ bool fs_iter_next(FsIter *it) {
   return false;
 }
 
-bool fs_iter_next_extension(FsIter *it, Str file_extension) {
-  while (fs_iter_next(it)) {
-    if (str_endswith(it->current.path, file_extension)) {
-      return true;
-    }
-  }
-  return false;
-}
-
 bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity)) {
   while (fs_iter_next(it)) {
     if (filter(&it->current)) {
@@ -3896,23 +3928,22 @@ bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity)) {
   return false;
 }
 
-void fs_iter_end(FsIter *it, Error *error) {
-  error_propagate(&it->error, {
-    if (error) {
-      const FileLocation loc = error->location;
-      *error = it->error;
-      error->location = loc;
-    } else {
-      error_panic();
+bool fs_iter_next_extension(FsIter *it, Str file_extension) {
+  while (fs_iter_next(it)) {
+    if (!it->current.is_dir && str_endswith(it->current.path, file_extension)) {
+      return true;
     }
-  });
-  while (it->_stack != NULL) {
-    Node *current = it->_stack;
-    it->_stack = current->next;
-    closedir(current->handle);
-    arena_free_chunk(&it->scratch, current);
   }
-  arena_free(&it->scratch);
+  return false;
+}
+
+bool fs_iter_next_directory(FsIter *it) {
+  while (fs_iter_next(it)) {
+    if (it->current.is_dir) {
+      return true;
+    }
+  }
+  return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -4033,7 +4064,7 @@ Str os_getenv(const char *env, Error *error) {
 #include <string.h>
 #include <unistd.h>
 
-void os_chdir(Str path) {
+void os_chdir(Path path) {
   char pathname[FILENAME_MAX] = {0};
   memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
   cebus_assert(chdir(pathname) == -1,
@@ -4041,7 +4072,7 @@ void os_chdir(Str path) {
                strerror(errno));
 }
 
-Str os_getcwd(Arena *arena) {
+Path os_getcwd(Arena *arena) {
   char *buf = arena_alloc(arena, FILENAME_MAX);
   char *ret = getcwd(buf, FILENAME_MAX);
   cebus_assert(ret, "Could not get cwd");
@@ -4054,13 +4085,13 @@ Str os_getcwd(Arena *arena) {
 #include <direct.h>
 #include <windows.h>
 
-void os_chdir(Str path) {
+void os_chdir(Path path) {
   char buffer[FILENAME_MAX] = {0};
   memcpy(buffer, path.data, usize_min(path.len, FILENAME_MAX));
   _chdir(buffer);
 }
 
-Str os_getcwd(Arena *arena) {
+Path os_getcwd(Arena *arena) {
   DWORD size = GetCurrentDirectory(0, NULL);
   char *buf = arena_alloc(arena, size);
   GetCurrentDirectory((DWORD)size, buf);
@@ -4509,7 +4540,45 @@ INTEGER_IMPL(u64, U64_BITS)
 INTEGER_IMPL(i64, I64_BITS)
 INTEGER_IMPL(usize, USIZE_BITS)
 
-// #include "string.h"
+// #include "path.h"
+// #include "cebus/collection/da.h"
+// #include "cebus/type/string.h"
+
+#include <stdarg.h>
+
+Path _path_new(Arena *arena, ...) {
+  Arena scratch = {0};
+  DA(Path) paths = da_new(&scratch);
+  va_list va;
+  va_start(va, arena);
+  Path path = va_arg(va, Path);
+  while (path.len > 0) {
+    da_push(&paths, path);
+    path = va_arg(va, Path);
+  }
+  va_end(va);
+
+  Path fullpath = str_join(STR("/"), paths.len, paths.items, arena);
+  arena_free(&scratch);
+  return fullpath;
+}
+
+Path path_join(Arena *arena, PathDa *da) {
+  // TODO: operationg system dependent
+  return str_join(STR("/"), da->len, da->items, arena);
+}
+
+Str path_name(Path path) {
+  Str file = str_chop_right_by_delim(&path, '/');
+  return str_chop_by_delim(&file, '.');
+}
+
+Path path_parent(Path path) {
+  (void)str_chop_right_by_delim(&path, '/');
+  return path;
+}
+
+// #include "./string.h"
 
 // #include "cebus/core/arena.h"
 // #include "cebus/type/byte.h"

@@ -9,8 +9,8 @@ int main(void) {
 
   cebus_assert(fs_exists(STR(__FILE__)), "This file should exist");
 
-  Str filename1 = STR("__test_1_");
-  Str filename2 = STR("__test_2_");
+  Path filename1 = PATH("__test_1_");
+  Path filename2 = PATH("__test_2_");
 
   Error *PANIC = ErrPanic;
 

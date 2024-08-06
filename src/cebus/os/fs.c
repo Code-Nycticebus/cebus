@@ -24,9 +24,9 @@ static usize file_size(FILE *handle, Error *error) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-FILE *fs_file_open(Str filename, const char *mode, Error *error) {
+FILE *fs_file_open(Path path, const char *mode, Error *error) {
   char _filename[FILENAME_MAX] = {0};
-  memcpy(_filename, filename.data, filename.len);
+  memcpy(_filename, path.data, path.len);
   errno = 0;
   FILE *handle = fopen(_filename, mode);
   if (handle == NULL) {
@@ -48,7 +48,7 @@ void fs_file_close(FILE *file, Error *error) {
   }
 }
 
-Bytes fs_file_read_bytes(Str filename, Arena *arena, Error *error) {
+Bytes fs_file_read_bytes(Path filename, Arena *arena, Error *error) {
   Bytes result = {0};
   FILE *handle = fs_file_open(filename, "r", error);
   error_propagate(error, { goto defer; });
@@ -66,14 +66,14 @@ defer:
   return result;
 }
 
-Str fs_file_read_str(Str filename, Arena *arena, Error *error) {
+Str fs_file_read_str(Path filename, Arena *arena, Error *error) {
   Bytes bytes = fs_file_read_bytes(filename, arena, error);
   // error_emit(error, 0, "FUCK");
   error_propagate(error, { return (Str){0}; });
   return str_from_bytes(bytes);
 }
 
-Utf8 fs_file_read_utf8(Str filename, Arena *arena, Error *error) {
+Utf8 fs_file_read_utf8(Path filename, Arena *arena, Error *error) {
   Utf8 res = {0};
   Bytes bytes = fs_file_read_bytes(filename, arena, error);
   error_propagate(error, { return (Utf8){0}; });
@@ -82,7 +82,7 @@ Utf8 fs_file_read_utf8(Str filename, Arena *arena, Error *error) {
   return res;
 }
 
-void fs_file_write_bytes(Str filename, Bytes bytes, Error *error) {
+void fs_file_write_bytes(Path filename, Bytes bytes, Error *error) {
   FILE *handle = fs_file_open(filename, "w", error);
   error_propagate(error, { goto defer; });
 
@@ -95,17 +95,17 @@ defer:
   }
 }
 
-void fs_file_write_str(Str filename, Str content, Error *error) {
+void fs_file_write_str(Path filename, Str content, Error *error) {
   fs_file_write_bytes(filename, str_to_bytes(content), error);
 }
 
-void fs_file_write_utf8(Str filename, Utf8 content, Error *error) {
+void fs_file_write_utf8(Path filename, Utf8 content, Error *error) {
   Bytes bytes = utf8_encode(content, error);
   error_propagate(error, { return; });
   fs_file_write_bytes(filename, bytes, error);
 }
 
-void fs_rename(Str old_path, Str new_path, Error *error) {
+void fs_rename(Path old_path, Path new_path, Error *error) {
   char _old_path[FILENAME_MAX] = {0};
   memcpy(_old_path, old_path.data, old_path.len);
 
@@ -120,7 +120,7 @@ void fs_rename(Str old_path, Str new_path, Error *error) {
   }
 }
 
-void fs_remove(Str path, Error *error) {
+void fs_remove(Path path, Error *error) {
   char _path[FILENAME_MAX] = {0};
   memcpy(_path, path.data, path.len);
 
@@ -146,13 +146,13 @@ typedef struct Node {
   char dir[];
 } Node;
 
-bool fs_exists(Str path) {
+bool fs_exists(Path path) {
   char _path[FILENAME_MAX] = {0};
   memcpy(_path, path.data, path.len);
   return access(_path, 0) == 0;
 }
 
-bool fs_is_dir(Str path) {
+bool fs_is_dir(Path path) {
   char _path[FILENAME_MAX] = {0};
   memcpy(_path, path.data, path.len);
 
@@ -164,12 +164,12 @@ bool fs_is_dir(Str path) {
   return S_ISDIR(entry_info.st_mode);
 }
 
-FsIter fs_iter_begin(Str dir, bool recursive) {
+FsIter fs_iter_begin(Path directory, bool recursive) {
   FsIter it = {.recursive = recursive, .error = ErrNew};
 
-  const usize size = sizeof(Node) + dir.len + 1;
+  const usize size = sizeof(Node) + directory.len + 1;
   Node *node = arena_calloc_chunk(&it.scratch, size);
-  memcpy(node->dir, dir.data, dir.len);
+  memcpy(node->dir, directory.data, directory.len);
 
   node->handle = opendir(node->dir);
   if (node->handle == NULL) {

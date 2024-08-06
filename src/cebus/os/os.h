@@ -35,8 +35,8 @@ printf("Home directory: " STR_FMT "\n", STR_ARG(home));
 ////////////////////////////////////////////////////////////////////////////
 
 Str os_getenv(const char *env, Error *error);
-void os_chdir(Str path);
-Str os_getcwd(Arena *arena);
+void os_chdir(Path path);
+Path os_getcwd(Arena *arena);
 
 ////////////////////////////////////////////////////////////////////////////
 

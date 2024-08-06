@@ -57,21 +57,21 @@ typedef enum {
 
 ////////////////////////////////////////////////////////////////////////////
 
-FILE *fs_file_open(Str filename, const char *mode, Error *error);
+FILE *fs_file_open(Path path, const char *mode, Error *error);
 void fs_file_close(FILE *file, Error *error);
 
-Bytes fs_file_read_bytes(Str filename, Arena *arena, Error *error);
-Str fs_file_read_str(Str filename, Arena *arena, Error *error);
-Utf8 fs_file_read_utf8(Str filename, Arena *arena, Error *error);
+Bytes fs_file_read_bytes(Path filename, Arena *arena, Error *error);
+Str fs_file_read_str(Path filename, Arena *arena, Error *error);
+Utf8 fs_file_read_utf8(Path filename, Arena *arena, Error *error);
 
-void fs_file_write_bytes(Str filename, Bytes bytes, Error *error);
-void fs_file_write_str(Str filename, Str content, Error *error);
-void fs_file_write_utf8(Str filename, Utf8 content, Error *error);
+void fs_file_write_bytes(Path filename, Bytes bytes, Error *error);
+void fs_file_write_str(Path filename, Str content, Error *error);
+void fs_file_write_utf8(Path filename, Utf8 content, Error *error);
 
-void fs_rename(Str old_path, Str new_path, Error *error);
-void fs_remove(Str path, Error *error);
-bool fs_exists(Str path);
-bool fs_is_dir(Str path);
+void fs_rename(Path old_path, Path new_path, Error *error);
+void fs_remove(Path path, Error *error);
+bool fs_exists(Path path);
+bool fs_is_dir(Path path);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +105,7 @@ int main(void) {
 
 typedef struct {
   bool is_dir;
-  Str path;
+  Path path;
 } FsEntity;
 
 typedef struct {
@@ -116,7 +116,7 @@ typedef struct {
   void *_stack;
 } FsIter;
 
-FsIter fs_iter_begin(Str dir, bool recursive);
+FsIter fs_iter_begin(Path directory, bool recursive);
 void fs_iter_end(FsIter *it, Error *error);
 
 bool fs_iter_next(FsIter *it);

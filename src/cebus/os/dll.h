@@ -30,7 +30,7 @@ dll_close(myLib);
 typedef void Dll;
 typedef void (*Function)(void);
 
-Dll *dll_load(Str path, Error *error);
+Dll *dll_load(Path path, Error *error);
 void dll_close(Dll *handle);
 
 Function dll_symbol(Dll *handle, Str symbol, Error *error);

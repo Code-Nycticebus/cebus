@@ -26,7 +26,7 @@ Str os_getenv(const char *env, Error *error) {
 #include <string.h>
 #include <unistd.h>
 
-void os_chdir(Str path) {
+void os_chdir(Path path) {
   char pathname[FILENAME_MAX] = {0};
   memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
   cebus_assert(chdir(pathname) == -1,
@@ -34,7 +34,7 @@ void os_chdir(Str path) {
                strerror(errno));
 }
 
-Str os_getcwd(Arena *arena) {
+Path os_getcwd(Arena *arena) {
   char *buf = arena_alloc(arena, FILENAME_MAX);
   char *ret = getcwd(buf, FILENAME_MAX);
   cebus_assert(ret, "Could not get cwd");
@@ -47,13 +47,13 @@ Str os_getcwd(Arena *arena) {
 #include <direct.h>
 #include <windows.h>
 
-void os_chdir(Str path) {
+void os_chdir(Path path) {
   char buffer[FILENAME_MAX] = {0};
   memcpy(buffer, path.data, usize_min(path.len, FILENAME_MAX));
   _chdir(buffer);
 }
 
-Str os_getcwd(Arena *arena) {
+Path os_getcwd(Arena *arena) {
   DWORD size = GetCurrentDirectory(0, NULL);
   char *buf = arena_alloc(arena, size);
   GetCurrentDirectory((DWORD)size, buf);

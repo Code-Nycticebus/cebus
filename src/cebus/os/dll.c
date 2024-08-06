@@ -12,7 +12,7 @@
 #if defined(LINUX)
 #include <dlfcn.h>
 
-Dll *dll_load(Str path, Error *error) {
+Dll *dll_load(Path path, Error *error) {
   if (!fs_exists(path)) {
     error_emit(error, FS_NOT_FOUND, "dll: library does not exist: " STR_FMT,
                STR_ARG(path));
