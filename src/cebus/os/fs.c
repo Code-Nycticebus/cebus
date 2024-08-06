@@ -230,15 +230,16 @@ void fs_iter_next(FsIterator *it) {
 }
 
 bool fs_iter_end(FsIterator *it) {
-  error_propagate(it->error, { goto end; });
+  error_propagate(it->error, {
+    arena_free(&it->scratch);
+    return false;
+  });
   if (it->stack == NULL) {
-    goto end;
+    arena_free(&it->scratch);
+    return false;
   }
 
   return true;
-end:
-  arena_free(&it->scratch);
-  return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////
