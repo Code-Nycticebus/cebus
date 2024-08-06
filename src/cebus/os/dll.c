@@ -13,8 +13,8 @@
 #include <dlfcn.h>
 
 Dll *dll_load(Str path, Error *error) {
-  if (!file_exists(path)) {
-    error_emit(error, -1, "dll: library does not exist: " STR_FMT,
+  if (!fs_exists(path)) {
+    error_emit(error, FS_NOT_FOUND, "dll: library does not exist: " STR_FMT,
                STR_ARG(path));
     return NULL;
   }

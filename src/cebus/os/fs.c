@@ -94,40 +94,40 @@ defer:
   }
 }
 
-void file_write_str(Str filename, Str content, Error *error) {
-  file_write_bytes(filename, str_to_bytes(content), error);
+void fs_file_write_str(Str filename, Str content, Error *error) {
+  fs_file_write_bytes(filename, str_to_bytes(content), error);
 }
 
-void file_write_utf8(Str filename, Utf8 content, Error *error) {
+void fs_file_write_utf8(Str filename, Utf8 content, Error *error) {
   Bytes bytes = utf8_encode(content, error);
   error_propagate(error, { return; });
-  file_write_bytes(filename, bytes, error);
+  fs_file_write_bytes(filename, bytes, error);
 }
 
-void file_rename(Str old_name, Str new_name, Error *error) {
-  char _old_name[FILENAME_MAX] = {0};
-  memcpy(_old_name, old_name.data, old_name.len);
+void fs_rename(Str old_path, Str new_path, Error *error) {
+  char _old_path[FILENAME_MAX] = {0};
+  memcpy(_old_path, old_path.data, old_path.len);
 
-  char _new_name[FILENAME_MAX] = {0};
-  memcpy(_new_name, new_name.data, new_name.len);
+  char _new_path[FILENAME_MAX] = {0};
+  memcpy(_new_path, new_path.data, new_path.len);
 
   errno = 0;
-  int ret = rename(_old_name, _new_name);
+  int ret = rename(_old_path, _new_path);
   if (ret == -1) {
     error_emit(error, errno, "Could not rename the file: " STR_FMT ": %s",
-               STR_ARG(old_name), strerror(errno));
+               STR_ARG(old_path), strerror(errno));
   }
 }
 
-void file_remove(Str filename, Error *error) {
-  char _filename[FILENAME_MAX] = {0};
-  memcpy(_filename, filename.data, filename.len);
+void fs_remove(Str path, Error *error) {
+  char _path[FILENAME_MAX] = {0};
+  memcpy(_path, path.data, path.len);
 
   errno = 0;
-  int ret = remove(_filename);
+  int ret = remove(_path);
   if (ret == -1) {
     error_emit(error, errno, "Could not remove the file: " STR_FMT ": %s",
-               STR_ARG(filename), strerror(errno));
+               STR_ARG(path), strerror(errno));
   }
 }
 
@@ -136,10 +136,10 @@ void file_remove(Str filename, Error *error) {
 
 #include <unistd.h>
 
-bool file_exists(Str filename) {
-  char _filename[FILENAME_MAX] = {0};
-  memcpy(_filename, filename.data, filename.len);
-  return access(_filename, 0) == 0;
+bool fs_exists(Str path) {
+  char _path[FILENAME_MAX] = {0};
+  memcpy(_path, path.data, path.len);
+  return access(_path, 0) == 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,7 @@ bool file_exists(Str filename) {
 
 #include <io.h>
 
-bool file_exists(Str filename) {
+bool fs_exists(Str filename) {
   char _filename[FILENAME_MAX] = {0};
   memcpy(_filename, filename.data, filename.len);
   return _access(_filename, 0) == 0;

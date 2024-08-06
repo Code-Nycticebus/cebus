@@ -27,11 +27,11 @@ int main(int argc, const char **argv) {
   // Create error
   Error error = ErrNew;
   // Read the entire file
-  Str content = file_read_str(file, &arena, &error);
+  Str content = fs_file_read_str(file, &arena, &error);
   // Handle errors
   error_context(&error, {
     // catch a FILE_NOT_FOUND error
-    if (error_code(FileError) == FILE_NOT_FOUND) {
+    if (error_code(FileError) == FS_NOT_FOUND) {
       // log error message
       cebus_log_error(STR_FMT, STR_ARG(error_msg()));
       return -1;
@@ -76,7 +76,7 @@ int main(int argc, const char **argv) {
   // print out the 3 most occuring words
   for (usize i = 0; i < 3; ++i) {
     cebus_log_info(" %" USIZE_FMT ": %d times: '" STR_FMT "'", i + 1,
-                  da_get(&words, i).count, STR_ARG(da_get(&words, i).word));
+                   da_get(&words, i).count, STR_ARG(da_get(&words, i).word));
   }
 
   // free the memory
