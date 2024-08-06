@@ -7,7 +7,7 @@ cflags=[
   "-Wextra",
   "-Wconversion",
   "-Wpedantic",
-   "-fsanitize=address",
+  # "-fsanitize=address",
 ]
 
 [exe]
