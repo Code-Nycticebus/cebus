@@ -1,6 +1,7 @@
 #include "fs.h"
 
 #include "cebus/core/error.h"
+#include "cebus/type/path.h"
 #include "cebus/type/string.h"
 #include "cebus/type/utf8.h"
 #include "io.h"
@@ -132,121 +133,6 @@ void fs_remove(Path path, Error *error) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////
-#if defined(LINUX)
-
-#define _BSD_SOURCE
-#include <dirent.h>
-#include <sys/stat.h> // For struct stat and S_ISDIR
-#include <unistd.h>
-
-typedef struct Node {
-  DIR *handle;
-  struct Node *next;
-  char dir[];
-} Node;
-
-bool fs_exists(Path path) {
-  char _path[FILENAME_MAX] = {0};
-  memcpy(_path, path.data, path.len);
-  return access(_path, 0) == 0;
-}
-
-bool fs_is_dir(Path path) {
-  char _path[FILENAME_MAX] = {0};
-  memcpy(_path, path.data, path.len);
-
-  struct stat entry_info;
-  if (stat(_path, &entry_info) == -1) {
-    return false;
-  }
-
-  return S_ISDIR(entry_info.st_mode);
-}
-
-FsIter fs_iter_begin(Path directory, bool recursive) {
-  FsIter it = {.recursive = recursive, .error = ErrNew};
-
-  const usize size = sizeof(Node) + directory.len + 1;
-  Node *node = arena_calloc_chunk(&it.scratch, size);
-  memcpy(node->dir, directory.data, directory.len);
-
-  node->handle = opendir(node->dir);
-  if (node->handle == NULL) {
-    error_emit(&it.error, errno, "opendir failed: %s", strerror(errno));
-    return it;
-  }
-  it._stack = node;
-  return it;
-}
-
-void fs_iter_end(FsIter *it, Error *error) {
-  error_propagate(&it->error, {
-    if (error) {
-      const FileLocation loc = error->location;
-      *error = it->error;
-      error->location = loc;
-    } else {
-      error_panic();
-    }
-  });
-  while (it->_stack != NULL) {
-    Node *current = it->_stack;
-    it->_stack = current->next;
-    closedir(current->handle);
-    arena_free_chunk(&it->scratch, current);
-  }
-  arena_free(&it->scratch);
-}
-
-bool fs_iter_next(FsIter *it) {
-  while (it->_stack != NULL) {
-    arena_reset(&it->scratch);
-    Node *current = it->_stack;
-
-    struct dirent *entry = readdir(current->handle);
-    if (entry == NULL) {
-      closedir(current->handle);
-      it->_stack = current->next;
-      arena_free_chunk(&it->scratch, current);
-      continue;
-    }
-
-    // skip "." and ".." directories
-    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
-      continue;
-    }
-
-    Str path = str_format(&it->scratch, "%s/%s", current->dir, entry->d_name);
-
-    struct stat entry_info;
-    if (stat(path.data, &entry_info) == -1) {
-      error_emit(&it->error, errno, "stat failed: %s", strerror(errno));
-      return false;
-    }
-
-    it->current.path = path;
-    it->current.is_dir = S_ISDIR(entry_info.st_mode);
-
-    if (it->current.is_dir && it->recursive) {
-      const usize size = sizeof(Node) + path.len + 1;
-      Node *node = arena_calloc_chunk(&it->scratch, size);
-      memcpy(node->dir, path.data, path.len);
-      node->handle = opendir(path.data);
-      if (node->handle == NULL) {
-        error_emit(&it->error, errno, "opendir failed: %s", strerror(errno));
-        return false;
-      }
-      node->next = it->_stack;
-      it->_stack = node;
-    }
-
-    return true;
-  }
-
-  return false;
-}
-
 bool fs_iter_next_filter(FsIter *it, bool (*filter)(FsEntity *entity)) {
   while (fs_iter_next(it)) {
     if (filter(&it->current)) {
@@ -283,6 +169,121 @@ bool fs_iter_next_extension(FsIter *it, Str file_extension) {
   return false;
 }
 
+////////////////////////////////////////////////////////////////////////////
+#if defined(LINUX)
+
+#define _BSD_SOURCE
+#include <dirent.h>
+#include <sys/stat.h> // For struct stat and S_ISDIR
+#include <unistd.h>
+
+typedef struct FsNode {
+  DIR *handle;
+  struct FsNode *next;
+  char name[];
+} FsNode;
+
+bool fs_exists(Path path) {
+  char _path[FILENAME_MAX] = {0};
+  memcpy(_path, path.data, path.len);
+  return access(_path, 0) == 0;
+}
+
+bool fs_is_dir(Path path) {
+  char _path[FILENAME_MAX] = {0};
+  memcpy(_path, path.data, path.len);
+
+  struct stat entry_info;
+  if (stat(_path, &entry_info) == -1) {
+    return false;
+  }
+
+  return S_ISDIR(entry_info.st_mode);
+}
+
+FsIter fs_iter_begin(Path directory, bool recursive) {
+  FsIter it = {.recursive = recursive, .error = ErrNew};
+
+  const usize size = sizeof(FsNode) + directory.len + 1;
+  FsNode *node = arena_calloc_chunk(&it.scratch, size);
+  memcpy(node->name, directory.data, directory.len);
+
+  node->handle = opendir(node->name);
+  if (node->handle == NULL) {
+    error_emit(&it.error, errno, "opendir failed: %s", strerror(errno));
+    return it;
+  }
+  it._stack = node;
+  return it;
+}
+
+void fs_iter_end(FsIter *it, Error *error) {
+  error_propagate(&it->error, {
+    if (error) {
+      const FileLocation loc = error->location;
+      *error = it->error;
+      error->location = loc;
+    } else {
+      error_panic();
+    }
+  });
+  while (it->_stack != NULL) {
+    FsNode *current = it->_stack;
+    it->_stack = current->next;
+    closedir(current->handle);
+    arena_free_chunk(&it->scratch, current);
+  }
+  arena_free(&it->scratch);
+}
+
+bool fs_iter_next(FsIter *it) {
+  while (it->_stack != NULL) {
+    arena_reset(&it->scratch);
+    FsNode *current = it->_stack;
+
+    struct dirent *entry = readdir(current->handle);
+    if (entry == NULL) {
+      closedir(current->handle);
+      it->_stack = current->next;
+      arena_free_chunk(&it->scratch, current);
+      continue;
+    }
+
+    // skip "." and ".." directories
+    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+      continue;
+    }
+
+    Str path = str_format(&it->scratch, "%s/%s", current->name, entry->d_name);
+
+    struct stat entry_info;
+    if (stat(path.data, &entry_info) == -1) {
+      error_emit(&it->error, errno, "stat failed: %s", strerror(errno));
+      return false;
+    }
+
+    it->current.path = path;
+    it->current.is_dir = S_ISDIR(entry_info.st_mode);
+
+    if (it->current.is_dir && it->recursive) {
+      const usize size = sizeof(FsNode) + path.len + 1;
+      FsNode *node = arena_calloc_chunk(&it->scratch, size);
+      memcpy(node->name, path.data, path.len);
+      node->handle = opendir(path.data);
+      if (node->handle == NULL) {
+        error_emit(&it->error, errno, "opendir failed: %s", strerror(errno));
+        return false;
+      }
+      node->next = it->_stack;
+      it->_stack = node;
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 #elif defined(WINDOWS)
 
@@ -296,8 +297,9 @@ bool fs_exists(Str filename) {
 
 #error "fs_is_dir not implemented"
 #error "fs_iter_begin not implemented"
-#error "fs_iter_next not implemented"
 #error "fs_iter_end not implemented"
+
+#error "fs_iter_next not implemented"
 
 //////////////////////////////////////////////////////////////////////////////
 #endif
