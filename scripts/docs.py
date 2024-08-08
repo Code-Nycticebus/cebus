@@ -8,7 +8,8 @@ REMOTE = (
     .decode()
     .strip()[:-4]
 )
-CWD = Path.cwd()
+
+CWD = Path(__file__).parent.parent
 SRC = Path(CWD, "src")
 DOC = CWD
 README = DOC / "README.md"
