@@ -1,13 +1,8 @@
 from pathlib import Path, PurePosixPath
 from collections import defaultdict
-import subprocess
 from typing import TextIO
 
-REMOTE = (
-    subprocess.check_output(["git", "config", "--get", "remote.origin.url"])
-    .decode()
-    .strip()[:-4]
-)
+REMOTE = "https://github.com/Code-Nycticebus/cebus"
 
 CWD = Path(__file__).parent.parent
 SRC = Path(CWD, "src")
