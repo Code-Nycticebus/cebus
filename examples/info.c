@@ -9,6 +9,5 @@ int main(void) {
 #else
   cebus_log_info("Bit:\t32-bit");
 #endif
-  cebus_log_info("%s endian",
-                CEBUS_BYTE_ORDER == ENDIAN_LITTLE ? "little" : "big");
+  cebus_log_info("%s endian", CEBUS_BYTE_ORDER == ENDIAN_LITTLE ? "little" : "big");
 }

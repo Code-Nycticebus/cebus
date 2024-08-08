@@ -16,17 +16,11 @@ void sb_clear(StringBuilder *sb) { da_clear(sb); }
 
 Str sb_to_str(StringBuilder *sb) { return str_from_parts(sb->len, sb->items); }
 
-void sb_append_parts(StringBuilder *sb, usize size, const char *s) {
-  da_extend(sb, size, s);
-}
+void sb_append_parts(StringBuilder *sb, usize size, const char *s) { da_extend(sb, size, s); }
 
-void sb_append_cstr(StringBuilder *sb, const char *cstr) {
-  da_extend(sb, strlen(cstr), cstr);
-}
+void sb_append_cstr(StringBuilder *sb, const char *cstr) { da_extend(sb, strlen(cstr), cstr); }
 
-void sb_append_str(StringBuilder *sb, Str str) {
-  da_extend(sb, str.len, str.data);
-}
+void sb_append_str(StringBuilder *sb, Str str) { da_extend(sb, str.len, str.data); }
 
 void sb_append_c(StringBuilder *sb, char c) { da_push(sb, c); }
 

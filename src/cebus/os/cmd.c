@@ -7,9 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void cmd_exec_da(Error *error, const Cmd *cmd) {
-  cmd_exec(error, cmd->len, cmd->items);
-}
+void cmd_exec_da(Error *error, const Cmd *cmd) { cmd_exec(error, cmd->len, cmd->items); }
 
 ////////////////////////////////////////////////////////////////////////////
 #if defined(LINUX)
@@ -45,12 +43,10 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
   if (WIFEXITED(status)) {
     int exit_code = WEXITSTATUS(status);
     if (exit_code == CMD_NOT_FOUND) {
-      error_emit(error, CMD_NOT_FOUND, "command not found: " STR_FMT,
-                 STR_ARG(argv[0]));
+      error_emit(error, CMD_NOT_FOUND, "command not found: " STR_FMT, STR_ARG(argv[0]));
     } else if (exit_code != 0) {
-      error_emit(error, exit_code,
-                 "command failed: " STR_FMT ": exit code: %d\n",
-                 STR_ARG(argv[0]), exit_code);
+      error_emit(error, exit_code, "command failed: " STR_FMT ": exit code: %d\n", STR_ARG(argv[0]),
+                 exit_code);
     }
   }
 }
@@ -81,11 +77,9 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
   if (!CreateProcessA(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
     DWORD ec = GetLastError();
     if (ec == 0x2) {
-      error_emit(error, CMD_NOT_FOUND, "command not found: " STR_FMT,
-                 STR_ARG(argv[0]));
+      error_emit(error, CMD_NOT_FOUND, "command not found: " STR_FMT, STR_ARG(argv[0]));
     } else {
-      error_emit(error, (i32)ec, "command creation failed: " STR_FMT ": %lu",
-                 STR_ARG(argv[0]), ec);
+      error_emit(error, (i32)ec, "command creation failed: " STR_FMT ": %lu", STR_ARG(argv[0]), ec);
     }
     goto defer;
   }
@@ -94,14 +88,13 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
   DWORD exit_code = 0;
   if (!GetExitCodeProcess(pi.hProcess, &exit_code)) {
     DWORD ec = GetLastError();
-    error_emit(error, (i32)ec,
-               "Could not get exit code of process: " STR_FMT ": %lu",
+    error_emit(error, (i32)ec, "Could not get exit code of process: " STR_FMT ": %lu",
                STR_ARG(argv[0]), ec);
     goto defer;
   }
   if (exit_code != 0) {
-    error_emit(error, (i32)exit_code, "command failed: " STR_FMT ": %lu",
-               STR_ARG(command), exit_code);
+    error_emit(error, (i32)exit_code, "command failed: " STR_FMT ": %lu", STR_ARG(command),
+               exit_code);
     goto defer;
   }
 

@@ -32,8 +32,7 @@ FILE *fs_file_open(Path path, const char *mode, Error *error) {
   errno = 0;
   FILE *handle = fopen(_filename, mode);
   if (handle == NULL) {
-    error_emit(error, errno, "Could not open file: '%s': %s", _filename,
-               strerror(errno));
+    error_emit(error, errno, "Could not open file: '%s': %s", _filename, strerror(errno));
   }
   return handle;
 }
@@ -116,8 +115,8 @@ void fs_rename(Path old_path, Path new_path, Error *error) {
   errno = 0;
   int ret = rename(_old_path, _new_path);
   if (ret == -1) {
-    error_emit(error, errno, "Could not rename the file: " STR_FMT ": %s",
-               STR_ARG(old_path), strerror(errno));
+    error_emit(error, errno, "Could not rename the file: " STR_FMT ": %s", STR_ARG(old_path),
+               strerror(errno));
   }
 }
 
@@ -128,8 +127,8 @@ void fs_remove(Path path, Error *error) {
   errno = 0;
   int ret = remove(_path);
   if (ret == -1) {
-    error_emit(error, errno, "Could not remove the file: " STR_FMT ": %s",
-               STR_ARG(path), strerror(errno));
+    error_emit(error, errno, "Could not remove the file: " STR_FMT ": %s", STR_ARG(path),
+               strerror(errno));
   }
 }
 

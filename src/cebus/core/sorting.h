@@ -22,14 +22,13 @@ that takes an additional context parameter.
 ////////////////////////////////////////////////////////////////////////////
 
 /* Sort an array with a function */
-void quicksort(const void *src, void *dest, usize size, usize nelem,
-               CompareFn compare);
+void quicksort(const void *src, void *dest, usize size, usize nelem, CompareFn compare);
 
 ////////////////////////////////////////////////////////////////////////////
 
 /* Sort an array with a function that also takes a context */
-void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
-                   CompareCtxFn compare, const void *ctx);
+void quicksort_ctx(const void *src, void *dest, usize size, usize nelem, CompareCtxFn compare,
+                   const void *ctx);
 
 ////////////////////////////////////////////////////////////////////////////
 

@@ -3,19 +3,18 @@
 #include "cebus/core/debug.h"
 #include "cebus/type/string.h"
 
-#define ASSERT(s, e)                                                           \
-  cebus_assert(str_eq(s, e), "'" STR_FMT "' : '" STR_FMT "'", STR_ARG(s),      \
-               STR_ARG(e))
+#define ASSERT(s, e)                                                                               \
+  cebus_assert(str_eq(s, e), "'" STR_FMT "' : '" STR_FMT "'", STR_ARG(s), STR_ARG(e))
 
 typedef struct {
   Path test;
   Path expected;
 } TestCases;
 
-#define test_case(cases, fn)                                                   \
-  for (u32 i = 0; i < ARRAY_LEN(cases); ++i) {                                 \
-    Str out = fn(cases[i].test);                                               \
-    ASSERT(out, tests[i].expected);                                            \
+#define test_case(cases, fn)                                                                       \
+  for (u32 i = 0; i < ARRAY_LEN(cases); ++i) {                                                     \
+    Str out = fn(cases[i].test);                                                                   \
+    ASSERT(out, tests[i].expected);                                                                \
   }
 
 static void test_name(void) {

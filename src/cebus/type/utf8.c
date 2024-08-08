@@ -23,10 +23,8 @@ Utf8 utf8_decode(Bytes bytes, Error *error) {
     usize idx = i;
     for (usize j = 1; j < bit_count; j++) {
       if (!(u8_leading_ones(bytes.data[idx + j]) == 1)) {
-        error_emit(
-            error, UTF8_DECODE,
-            "Decoding utf-8 failed: wrong bits in between at %" USIZE_FMT,
-            idx + j);
+        error_emit(error, UTF8_DECODE,
+                   "Decoding utf-8 failed: wrong bits in between at %" USIZE_FMT, idx + j);
         return str;
       }
       i++;

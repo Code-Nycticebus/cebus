@@ -14,8 +14,7 @@
 
 Dll *dll_load(Path path, Error *error) {
   if (!fs_exists(path)) {
-    error_emit(error, FS_NOT_FOUND, "dll: library does not exist: " STR_FMT,
-               STR_ARG(path));
+    error_emit(error, FS_NOT_FOUND, "dll: library does not exist: " STR_FMT, STR_ARG(path));
     return NULL;
   }
   char lib_path[FILENAME_MAX] = {0};
@@ -54,8 +53,7 @@ defer:
 
 Dll *dll_load(Str path, Error *error) {
   if (!file_exists(path)) {
-    error_emit(error, -1, "dll: library does not exist: " STR_FMT,
-               STR_ARG(path));
+    error_emit(error, -1, "dll: library does not exist: " STR_FMT, STR_ARG(path));
     return NULL;
   }
   char lib_path[FILENAME_MAX] = {0};
@@ -71,8 +69,8 @@ Dll *dll_load(Str path, Error *error) {
   HINSTANCE handle = LoadLibraryA(temp_file_name);
   if (handle == NULL) {
     DWORD ec = GetLastError();
-    error_emit(error, (i32)ec, "error loading library: " STR_FMT ": %lu\n",
-               STR_ARG(path), GetLastError());
+    error_emit(error, (i32)ec, "error loading library: " STR_FMT ": %lu\n", STR_ARG(path),
+               GetLastError());
     return NULL;
   }
   return handle;
@@ -91,8 +89,7 @@ Function dll_symbol(Dll *handle, Str symbol, Error *error) {
   Function fn = (Function)GetProcAddress(handle, symbol.data);
   if (fn == NULL) {
     DWORD err_code = GetLastError();
-    error_emit(error, (i32)err_code, "dll function: %s: %lu\n", symbol.data,
-               err_code);
+    error_emit(error, (i32)err_code, "dll function: %s: %lu\n", symbol.data, err_code);
     goto defer;
   }
 

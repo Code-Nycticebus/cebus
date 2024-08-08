@@ -54,20 +54,19 @@ NORETURN int raise(int);
 
 #if defined(NDEBUG)
 #if defined(GCC) || defined(CLANG) || defined(MINGW32) || defined(MINGW64)
-#define UNREACHABLE()                                                          \
-  __builtin_unreachable();                                                     \
+#define UNREACHABLE()                                                                              \
+  __builtin_unreachable();                                                                         \
   abort()
 #elif defined(MSVC)
-#define UNREACHABLE()                                                          \
-  __assume(0);                                                                 \
+#define UNREACHABLE()                                                                              \
+  __assume(0);                                                                                     \
   abort()
 #else
 #define UNREACHABLE() abort()
 #endif
 #else
-#define UNREACHABLE()                                                          \
-  cebus_log_error("UNREACHABLE: " FILE_LOCATION_FMT,                           \
-                  FILE_LOCATION_ARG_CURRENT);                                  \
+#define UNREACHABLE()                                                                              \
+  cebus_log_error("UNREACHABLE: " FILE_LOCATION_FMT, FILE_LOCATION_ARG_CURRENT);                   \
   abort()
 #endif
 
@@ -76,48 +75,47 @@ NORETURN int raise(int);
 #if defined(NDEBUG)
 #define NOT_IMPLEMENTED() abort()
 #else
-#define NOT_IMPLEMENTED()                                                      \
-  cebus_log_error("NOT IMPLEMENTED: " FILE_LOCATION_FMT,                       \
-                  FILE_LOCATION_ARG_CURRENT);                                  \
+#define NOT_IMPLEMENTED()                                                                          \
+  cebus_log_error("NOT IMPLEMENTED: " FILE_LOCATION_FMT, FILE_LOCATION_ARG_CURRENT);               \
   abort()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define _cebus_assert_print(level, expr, ...)                                  \
-  cebus_log_level(level, FILE_LOCATION_FMT, FILE_LOCATION_ARG_CURRENT);        \
-  cebus_log_level(level, "  Assertion '%s' failed", expr);                     \
+#define _cebus_assert_print(level, expr, ...)                                                      \
+  cebus_log_level(level, FILE_LOCATION_FMT, FILE_LOCATION_ARG_CURRENT);                            \
+  cebus_log_level(level, "  Assertion '%s' failed", expr);                                         \
   cebus_log_level(level, "  Description: "__VA_ARGS__)
 
-#define cebus_assert(expression, ...)                                          \
-  do {                                                                         \
-    if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_ERROR, #expression, __VA_ARGS__);          \
-      DEBUGBREAK();                                                            \
-    }                                                                          \
+#define cebus_assert(expression, ...)                                                              \
+  do {                                                                                             \
+    if (!(expression)) {                                                                           \
+      _cebus_assert_print(CEBUS_LOG_ERROR, #expression, __VA_ARGS__);                              \
+      DEBUGBREAK();                                                                                \
+    }                                                                                              \
   } while (0)
 
-#define cebus_assert_return(expression, ret)                                   \
-  do {                                                                         \
-    if (!(expression)) {                                                       \
-      return ret;                                                              \
-    }                                                                          \
+#define cebus_assert_return(expression, ret)                                                       \
+  do {                                                                                             \
+    if (!(expression)) {                                                                           \
+      return ret;                                                                                  \
+    }                                                                                              \
   } while (0)
 
-#define cebus_assert_warn(expression, ...)                                     \
-  do {                                                                         \
-    if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_WARNING, #expression, __VA_ARGS__);        \
-    }                                                                          \
+#define cebus_assert_warn(expression, ...)                                                         \
+  do {                                                                                             \
+    if (!(expression)) {                                                                           \
+      _cebus_assert_print(CEBUS_LOG_WARNING, #expression, __VA_ARGS__);                            \
+    }                                                                                              \
   } while (0)
 
 #ifndef NDEBUG
-#define cebus_assert_debug(expression, ...)                                    \
-  do {                                                                         \
-    if (!(expression)) {                                                       \
-      _cebus_assert_print(CEBUS_LOG_DEBUG, #expression, __VA_ARGS__);          \
-      DEBUGBREAK();                                                            \
-    }                                                                          \
+#define cebus_assert_debug(expression, ...)                                                        \
+  do {                                                                                             \
+    if (!(expression)) {                                                                           \
+      _cebus_assert_print(CEBUS_LOG_DEBUG, #expression, __VA_ARGS__);                              \
+      DEBUGBREAK();                                                                                \
+    }                                                                                              \
   } while (0)
 #else
 #define cebus_assert_debug(...)

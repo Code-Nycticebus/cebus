@@ -14,8 +14,7 @@ static void test_vec(void) {
   }
 
   for (usize i = 0; i < list.len; ++i) {
-    cebus_assert(list.items[i] == i + 1,
-                 "Numbers were not pushed on the stack correctly");
+    cebus_assert(list.items[i] == i + 1, "Numbers were not pushed on the stack correctly");
   }
   da_clear(&list);
   cebus_assert(list.len == 0, "Clearing did not reset list.len");
@@ -75,8 +74,7 @@ static void test_sort(void) {
   arena_free(&arena);
 }
 
-static CmpOrdering sort_smallest(const void *_ctx, const void *a,
-                                 const void *b) {
+static CmpOrdering sort_smallest(const void *_ctx, const void *a, const void *b) {
   if (*(const usize *)a == *(const usize *)_ctx) {
     return CMP_LESS;
   }
@@ -135,11 +133,9 @@ static void test_reserve(void) {
   DA(i32) list = {0};
   da_init(&list, &arena);
   da_resize(&list, 20);
-  cebus_assert(list.cap == 20, "Capacity was not increased: %" USIZE_FMT,
-               list.cap);
+  cebus_assert(list.cap == 20, "Capacity was not increased: %" USIZE_FMT, list.cap);
   da_reserve(&list, 50);
-  cebus_assert(list.cap == 80, "Capacity was not increased: %" USIZE_FMT,
-               list.cap);
+  cebus_assert(list.cap == 80, "Capacity was not increased: %" USIZE_FMT, list.cap);
   arena_free(&arena);
 }
 

@@ -9,9 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Bytes bytes_from_parts(usize size, const void *data) {
-  return (Bytes){.size = size, .data = data};
-}
+Bytes bytes_from_parts(usize size, const void *data) { return (Bytes){.size = size, .data = data}; }
 
 ///////////////////////////////////////////////////////////////////////////////
 

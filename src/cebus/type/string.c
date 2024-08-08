@@ -12,19 +12,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Str str_from_parts(usize size, const char *cstr) {
-  return (Str){.len = size, .data = cstr};
-}
+Str str_from_parts(usize size, const char *cstr) { return (Str){.len = size, .data = cstr}; }
 
-Str str_from_bytes(Bytes bytes) {
-  return str_from_parts(bytes.size, (const char *)bytes.data);
-}
+Str str_from_bytes(Bytes bytes) { return str_from_parts(bytes.size, (const char *)bytes.data); }
 
 Bytes str_to_bytes(Str s) { return bytes_from_parts(s.len, s.data); }
 
-Str str_from_cstr(const char *cstr) {
-  return (Str){.len = strlen(cstr), .data = cstr};
-}
+Str str_from_cstr(const char *cstr) { return (Str){.len = strlen(cstr), .data = cstr}; }
 
 Str str_format(Arena *arena, const char *fmt, ...) {
   va_list va;
@@ -410,8 +404,7 @@ Str str_trim_by_delim(Str s, char delim) {
   return str_trim_left_by_delim(str_trim_right_by_delim(s, delim), delim);
 }
 Str str_trim_by_predicate(Str s, bool (*predicate)(char)) {
-  return str_trim_left_by_predicate(str_trim_right_by_predicate(s, predicate),
-                                    predicate);
+  return str_trim_left_by_predicate(str_trim_right_by_predicate(s, predicate), predicate);
 }
 
 bool str_try_chop_by_delim(Str *s, char delim, Str *chunk) {

@@ -76,43 +76,42 @@ typedef struct {
   ErrorInfo *info;
 } Error;
 
-#define ErrNew                                                                 \
-  ((Error){                                                                    \
-      .failure = false,                                                        \
-      .panic_on_emit = false,                                                  \
-      .location = FILE_LOCATION_CURRENT,                                       \
-      .arena = {0},                                                            \
+#define ErrNew                                                                                     \
+  ((Error){                                                                                        \
+      .failure = false,                                                                            \
+      .panic_on_emit = false,                                                                      \
+      .location = FILE_LOCATION_CURRENT,                                                           \
+      .arena = {0},                                                                                \
   })
 
-#define ErrPanic                                                               \
-  ((Error[]){{                                                                 \
-      .failure = false,                                                        \
-      .panic_on_emit = true,                                                   \
-      .location = FILE_LOCATION_CURRENT,                                       \
-      .arena = {0},                                                            \
+#define ErrPanic                                                                                   \
+  ((Error[]){{                                                                                     \
+      .failure = false,                                                                            \
+      .panic_on_emit = true,                                                                       \
+      .location = FILE_LOCATION_CURRENT,                                                           \
+      .arena = {0},                                                                                \
   }})
 
 #define ErrDefault ((Error *)NULL)
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define error_emit(E, code, ...)                                               \
-  _error_internal_emit(E, code, FILE_LOCATION_CURRENT, __VA_ARGS__);
+#define error_emit(E, code, ...) _error_internal_emit(E, code, FILE_LOCATION_CURRENT, __VA_ARGS__);
 
-#define error_context(E, ...)                                                  \
-  if (_error_internal_occured(E)) {                                            \
-    Error *__error_context__ = (E);                                            \
-    __VA_ARGS__                                                                \
-    if ((E)->failure) {                                                        \
-      _error_internal_panic(E);                                                \
-    }                                                                          \
+#define error_context(E, ...)                                                                      \
+  if (_error_internal_occured(E)) {                                                                \
+    Error *__error_context__ = (E);                                                                \
+    __VA_ARGS__                                                                                    \
+    if ((E)->failure) {                                                                            \
+      _error_internal_panic(E);                                                                    \
+    }                                                                                              \
   }
 
-#define error_propagate(E, ...)                                                \
-  if (_error_internal_occured(E)) {                                            \
-    Error *__error_context__ = (E);                                            \
-    error_add_location();                                                      \
-    __VA_ARGS__                                                                \
+#define error_propagate(E, ...)                                                                    \
+  if (_error_internal_occured(E)) {                                                                \
+    Error *__error_context__ = (E);                                                                \
+    error_add_location();                                                                          \
+    __VA_ARGS__                                                                                    \
   }
 
 #define error_panic() _error_internal_panic(__error_context__)
@@ -121,20 +120,16 @@ typedef struct {
 #define error_msg() (__error_context__->info->msg)
 #define error_code(T) ((T)__error_context__->info->code)
 
-#define error_set_code(code)                                                   \
-  _error_internal_set_code(__error_context__, (i64)code)
-#define error_set_msg(...)                                                     \
-  _error_internal_set_msg(__error_context__, __VA_ARGS__)
+#define error_set_code(code) _error_internal_set_code(__error_context__, (i64)code)
+#define error_set_msg(...) _error_internal_set_msg(__error_context__, __VA_ARGS__)
 
-#define error_add_location(...)                                                \
+#define error_add_location(...)                                                                    \
   _error_internal_add_location(__error_context__, FILE_LOCATION_CURRENT)
-#define error_add_note(...)                                                    \
-  _error_internal_add_note(__error_context__, __VA_ARGS__)
+#define error_add_note(...) _error_internal_add_note(__error_context__, __VA_ARGS__)
 
 ////////////////////////////////////////////////////////////////////////////
 
-void FMT(4) _error_internal_emit(Error *err, i32 code, FileLocation location,
-                                 const char *fmt, ...);
+void FMT(4) _error_internal_emit(Error *err, i32 code, FileLocation location, const char *fmt, ...);
 bool _error_internal_occured(Error *err);
 void NORETURN _error_internal_panic(Error *err);
 void _error_internal_except(Error *err);

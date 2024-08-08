@@ -49,7 +49,7 @@ typedef struct {
 #define FILE_LOCATION_FMT "%s:%d: %s()"
 #define FILE_LOCATION_ARG(fl) (fl).file, (fl).line, (fl).function
 #define FILE_LOCATION_ARG_CURRENT __FILE__, __LINE__, __func__
-#define FILE_LOCATION_CURRENT                                                  \
+#define FILE_LOCATION_CURRENT                                                                      \
   (FileLocation) { __FILE__, __LINE__, __func__ }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -165,12 +165,12 @@ typedef double f64;
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define BYTES(...)                                                             \
-  (Bytes) {                                                                    \
-    sizeof((const u8[]){__VA_ARGS__}), (const u8[]) { __VA_ARGS__ }            \
+#define BYTES(...)                                                                                 \
+  (Bytes) {                                                                                        \
+    sizeof((const u8[]){__VA_ARGS__}), (const u8[]) { __VA_ARGS__ }                                \
   }
 
-#define BYTES_STR(s)                                                           \
+#define BYTES_STR(s)                                                                               \
   (Bytes) { sizeof(s) - 1, (const u8 *)(s) }
 
 typedef struct {

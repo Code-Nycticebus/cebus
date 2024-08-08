@@ -62,10 +62,8 @@ void cmd_exec(Error *error, size_t argc, Str *argv);
 typedef DA(Str) Cmd;
 
 #define cmd_new(arena) da_new(arena)
-#define cmd_push(cmd, ...)                                                     \
-  da_extend(cmd, ARRAY_LEN((Str[]){__VA_ARGS__}), (Str[]){__VA_ARGS__})
-#define cmd_extend(cmd, ...)                                                   \
-  da_extend(cmd, ARRAY_LEN(__VA_ARGS__), (__VA_ARGS__))
+#define cmd_push(cmd, ...) da_extend(cmd, ARRAY_LEN((Str[]){__VA_ARGS__}), (Str[]){__VA_ARGS__})
+#define cmd_extend(cmd, ...) da_extend(cmd, ARRAY_LEN(__VA_ARGS__), (__VA_ARGS__))
 #define cmd_extend_da(cmd, da) da_extend(cmd, (da)->len, (da)->items)
 
 void cmd_exec_da(Error *error, const Cmd *cmd);

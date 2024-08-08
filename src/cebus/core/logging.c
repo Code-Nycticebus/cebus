@@ -42,15 +42,14 @@ static const struct CmLogLevelPrefix log_level_str[] = {
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define _LOG(__log_level, __fmt)                                               \
-  _cebus_log(__log_level);                                                     \
-  va_list __args;                                                              \
-  va_start(__args, __fmt);                                                     \
-  vfprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout, \
-           __fmt, __args);                                                     \
-  va_end(__args);                                                              \
-  fprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout,  \
-          "%s\n", display_colors ? FMT_RESET : "");
+#define _LOG(__log_level, __fmt)                                                                   \
+  _cebus_log(__log_level);                                                                         \
+  va_list __args;                                                                                  \
+  va_start(__args, __fmt);                                                                         \
+  vfprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout, __fmt, __args);     \
+  va_end(__args);                                                                                  \
+  fprintf(log_level_str[__log_level].file == STDERR_FILENO ? stderr : stdout, "%s\n",              \
+          display_colors ? FMT_RESET : "");
 
 static bool display_colors = false;
 static bool tty_checked = false;

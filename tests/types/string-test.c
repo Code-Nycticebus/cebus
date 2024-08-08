@@ -63,8 +63,7 @@ static void test_append(void) {
   cebus_assert(str_eq(append, STR("filename.c")), "did not append correctly");
 
   Str prepend = str_prepend(STR("filename.c"), STR("used_mark__"), &arena);
-  cebus_assert(str_eq(prepend, STR("used_mark__filename.c")),
-               "did not prepend correctly");
+  cebus_assert(str_eq(prepend, STR("used_mark__filename.c")), "did not prepend correctly");
 
   Str wrap = str_wrap(STR("command here"), STR("'"), &arena);
   cebus_assert(str_eq(wrap, STR("'command here'")), "did not wrap correctly");
@@ -184,8 +183,7 @@ static void test_replace(void) {
   Str all = str_replace(s, STR("World"), STR("All!"), &arena);
 
   cebus_assert(str_eq(s, STR("Hello, World")), "");
-  cebus_assert(str_eq(goodbye, STR("Goodbye, World")), STR_FMT,
-               STR_ARG(goodbye));
+  cebus_assert(str_eq(goodbye, STR("Goodbye, World")), STR_FMT, STR_ARG(goodbye));
   cebus_assert(str_eq(all, STR("Hello, All!")), "");
 
   Str max_test = STR("test test test");
@@ -216,20 +214,16 @@ static void test_substring(void) {
 
 static void test_join(void) {
   Arena arena = {0};
-  Str res =
-      str_join(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")}, &arena);
+  Str res = str_join(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")}, &arena);
   cebus_assert(str_eq(res, STR("Hello, World")), "");
 
-  Str res2 = str_join_suffix(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")},
-                             &arena);
+  Str res2 = str_join_suffix(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")}, &arena);
   cebus_assert(str_eq(res2, STR("Hello, World, ")), "");
 
-  Str res3 = str_join_prefix(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")},
-                             &arena);
+  Str res3 = str_join_prefix(STR(", "), 2, (Str[2]){STR("Hello"), STR("World")}, &arena);
   cebus_assert(str_eq(res3, STR(", Hello, World")), "");
 
-  Str res4 = str_join_wrap(STR(" "), STR("'"), 2,
-                           (Str[2]){STR("One"), STR("Two")}, &arena);
+  Str res4 = str_join_wrap(STR(" "), STR("'"), 2, (Str[2]){STR("One"), STR("Two")}, &arena);
   cebus_assert(str_eq(res4, STR("'One' 'Two'")), STR_FMT, STR_ARG(res4));
 
   arena_free(&arena);
@@ -285,8 +279,7 @@ static void test_hash(void) {
 
   for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
     const u64 hash = str_hash(tests[i].s);
-    cebus_assert(hash == tests[i].hash,
-                 "'" STR_FMT "': has 0x%" U64_HEX " expected 0x%" U64_HEX,
+    cebus_assert(hash == tests[i].hash, "'" STR_FMT "': has 0x%" U64_HEX " expected 0x%" U64_HEX,
                  STR_ARG(tests[i].s), hash, tests[i].hash);
   }
 }

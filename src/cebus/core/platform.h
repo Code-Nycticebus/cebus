@@ -52,22 +52,19 @@ MSVC.
 #elif defined(__ARM_ARCH_6T2_) || defined(__ARM_ARCH_6T2_)
 #define ARM6T2
 #define CEBUS_ARCHITECTURE "ARM6T2"
-#elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) ||                   \
-    defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6Z__) ||                    \
-    defined(__ARM_ARCH_6ZK__)
+#elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) ||           \
+    defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__)
 #define ARM6
 #define CEBUS_ARCHITECTURE "ARM6"
-#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) ||                   \
-    defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) ||                    \
-    defined(__ARM_ARCH_7S__)
+#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) ||           \
+    defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__)
 #define ARM7
 #define CEBUS_ARCHITECTURE "ARM7"
-#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) ||                  \
-    defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__)
+#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) ||          \
+    defined(__ARM_ARCH_7S__)
 #define ARM7A
 #define CEBUS_ARCHITECTURE "ARM7A"
-#elif defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) ||                  \
-    defined(__ARM_ARCH_7S__)
+#elif defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__)
 #define ARM7R
 #define CEBUS_ARCHITECTURE "ARM7R"
 #elif defined(__ARM_ARCH_7M__)
@@ -85,9 +82,8 @@ MSVC.
 #elif defined(__sh__)
 #define SUPERH
 #define CEBUS_ARCHITECTURE "SUPERH"
-#elif defined(__powerpc) || defined(__powerpc__) || defined(__powerpc64__) ||  \
-    defined(__POWERPC__) || defined(__ppc__) || defined(__PPC__) ||            \
-    defined(_ARCH_PPC)
+#elif defined(__powerpc) || defined(__powerpc__) || defined(__powerpc64__) ||                      \
+    defined(__POWERPC__) || defined(__ppc__) || defined(__PPC__) || defined(_ARCH_PPC)
 #define POWERPC
 #define CEBUS_ARCHITECTURE "POWERPC"
 #elif defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
@@ -145,8 +141,7 @@ MSVC.
 
 ////////////////////////////////////////////////////////////////////////////
 /* Byte-Order */
-#if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) &&                \
-    defined(__ORDER_LITTLE_ENDIAN__)
+#if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && defined(__ORDER_LITTLE_ENDIAN__)
 
 #define ENDIAN_LITTLE __ORDER_LITTLE_ENDIAN__
 #define ENDIAN_BIG __ORDER_BIG_ENDIAN__

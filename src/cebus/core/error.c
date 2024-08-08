@@ -12,8 +12,8 @@
 
 static void error_dump(Error *error) {
 
-  fprintf(stderr, "[Error]: %s:%d: %s()\n", error->location.file,
-          error->location.line, error->location.function);
+  fprintf(stderr, "[Error]: %s:%d: %s()\n", error->location.file, error->location.line,
+          error->location.function);
   Str message = sb_to_str(&error->info->message);
   Str msg = str_chop_by_delim(&message, '\n');
   fprintf(stderr, "  [Message]: " STR_FMT "\n", STR_ARG(msg));
@@ -26,15 +26,14 @@ static void error_dump(Error *error) {
   usize location_count = error->info->locations.len;
   for (usize i = 0; i < location_count; ++i) {
     FileLocation *location = &da_pop(&error->info->locations);
-    fprintf(stderr, "  [%" USIZE_FMT "]: %s:%d: %s()\n", i + 1, location->file,
-            location->line, location->function);
+    fprintf(stderr, "  [%" USIZE_FMT "]: %s:%d: %s()\n", i + 1, location->file, location->line,
+            location->function);
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-void _error_internal_emit(Error *err, i32 code, FileLocation location,
-                          const char *fmt, ...) {
+void _error_internal_emit(Error *err, i32 code, FileLocation location, const char *fmt, ...) {
   if (err == ErrDefault) {
     err = ((Error[]){{
         .failure = true,

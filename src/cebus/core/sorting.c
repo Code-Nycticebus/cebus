@@ -5,8 +5,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-void quicksort(const void *src, void *dest, usize size, usize nelem,
-               CompareFn compare) {
+void quicksort(const void *src, void *dest, usize size, usize nelem, CompareFn compare) {
   if (dest != src) {
     memcpy(dest, src, size * nelem);
   }
@@ -27,8 +26,8 @@ static inline void swap(void *a, void *b, usize size) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-static inline usize partition_ctx(u8 *base, usize size, usize low, usize high,
-                                  CompareCtxFn compare, const void *ctx) {
+static inline usize partition_ctx(u8 *base, usize size, usize low, usize high, CompareCtxFn compare,
+                                  const void *ctx) {
   u8 *pivot = &base[high * size];
   usize i = low - 1;
   for (usize j = low; j <= high - 1; j++) {
@@ -41,8 +40,8 @@ static inline usize partition_ctx(u8 *base, usize size, usize low, usize high,
   return (i + 1);
 }
 
-static void _quicksort_ctx(void *base, size_t size, usize low, usize high,
-                           CompareCtxFn compare, const void *ctx) {
+static void _quicksort_ctx(void *base, size_t size, usize low, usize high, CompareCtxFn compare,
+                           const void *ctx) {
   if (low < high) {
     usize pi = partition_ctx(base, size, low, high, compare, ctx);
     _quicksort_ctx(base, size, low, pi ? pi - 1 : 0, compare, ctx);
@@ -50,8 +49,8 @@ static void _quicksort_ctx(void *base, size_t size, usize low, usize high,
   }
 }
 
-void quicksort_ctx(const void *src, void *dest, usize size, usize nelem,
-                   CompareCtxFn compare, const void *ctx) {
+void quicksort_ctx(const void *src, void *dest, usize size, usize nelem, CompareCtxFn compare,
+                   const void *ctx) {
   if (dest != src) {
     memcpy(dest, src, size * nelem);
   }

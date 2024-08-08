@@ -23,8 +23,7 @@ static void test_arena(void) {
   cebus_assert(arena.begin, "Begin was not set");
 
   TestChunk *tc = (TestChunk *)arena.begin;
-  cebus_assert(tc->allocated == test_align(n_bytes),
-               "Not enough bytes are allocated");
+  cebus_assert(tc->allocated == test_align(n_bytes), "Not enough bytes are allocated");
 
   arena_free(&arena);
 }
@@ -36,8 +35,7 @@ static void test_chunks(void) {
   cebus_assert(buffer, "Buffer was not allocated");
 
   char *buffer2 = arena_alloc(&arena, n_bytes);
-  cebus_assert(buffer + test_align(n_bytes) == buffer2,
-               "'buffer2' was not next to 'buffer'");
+  cebus_assert(buffer + test_align(n_bytes) == buffer2, "'buffer2' was not next to 'buffer'");
 
   TestChunk *tc = (TestChunk *)arena.begin;
   const usize more_bytes = tc->cap;
@@ -84,8 +82,7 @@ static void test_reset(void) { // NOLINT
 
   char *buffer_after_reset = arena_alloc(&arena, n_bytes);
   cebus_assert(buffer_after_reset, "Buffer was not allocated");
-  cebus_assert(tc->allocated == test_align(n_bytes),
-               "Not enough bytes are allocated");
+  cebus_assert(tc->allocated == test_align(n_bytes), "Not enough bytes are allocated");
 
   char *big_buffer_after_reset = arena_alloc(&arena, more_bytes);
   cebus_assert(big_buffer_after_reset, "Buffer was not allocated");
@@ -100,8 +97,8 @@ static void test_size(void) {
   Arena arena = {0};
 
   int *i = arena_alloc(&arena, sizeof(*i));
-  cebus_assert(arena_size(&arena) == test_align(sizeof(*i)),
-               "size not matching: %zu", arena_size(&arena));
+  cebus_assert(arena_size(&arena) == test_align(sizeof(*i)), "size not matching: %zu",
+               arena_size(&arena));
   cebus_assert(arena_real_size(&arena) == KILOBYTES(8), // NOLINT
                "chunk size does not match. did the default chunk size change?");
 

@@ -83,12 +83,12 @@ destination.
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define DA(T)                                                                  \
-  struct {                                                                     \
-    usize cap;                                                                 \
-    usize len;                                                                 \
-    Arena *arena;                                                              \
-    T *items;                                                                  \
+#define DA(T)                                                                                      \
+  struct {                                                                                         \
+    usize cap;                                                                                     \
+    usize len;                                                                                     \
+    Arena *arena;                                                                                  \
+    T *items;                                                                                      \
   }
 
 #define da_first(list) (list)->items[0]
@@ -102,170 +102,171 @@ destination.
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define da_new(_arena)                                                         \
-  { .arena = (_arena), .items = NULL, }
+#define da_new(_arena)                                                                             \
+  {                                                                                                \
+      .arena = (_arena),                                                                           \
+      .items = NULL,                                                                               \
+  }
 
 // depricated
-#define da_init(list, _arena)                                                  \
-  do {                                                                         \
-    (list)->len = 0;                                                           \
-    (list)->cap = 0;                                                           \
-    (list)->arena = _arena;                                                    \
-    (list)->items = NULL;                                                      \
+#define da_init(list, _arena)                                                                      \
+  do {                                                                                             \
+    (list)->len = 0;                                                                               \
+    (list)->cap = 0;                                                                               \
+    (list)->arena = _arena;                                                                        \
+    (list)->items = NULL;                                                                          \
   } while (0)
 
-#define da_init_list(list, _arena, count, array)                               \
-  do {                                                                         \
-    (list)->len = count;                                                       \
-    (list)->cap = 0;                                                           \
-    (list)->arena = _arena;                                                    \
-    (list)->items = NULL;                                                      \
-    da_resize(list, count);                                                    \
-    for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
-      (list)->items[__e_i] = (array)[__e_i];                                   \
-    }                                                                          \
+#define da_init_list(list, _arena, count, array)                                                   \
+  do {                                                                                             \
+    (list)->len = count;                                                                           \
+    (list)->cap = 0;                                                                               \
+    (list)->arena = _arena;                                                                        \
+    (list)->items = NULL;                                                                          \
+    da_resize(list, count);                                                                        \
+    for (usize __e_i = 0; __e_i < (count); __e_i++) {                                              \
+      (list)->items[__e_i] = (array)[__e_i];                                                       \
+    }                                                                                              \
   } while (0)
 
-#define da_init_static(list, _arena, ...)                                      \
-  do {                                                                         \
-    da_init_list(list, _arena, ARRAY_LEN((__VA_ARGS__)), (__VA_ARGS__));       \
+#define da_init_static(list, _arena, ...)                                                          \
+  do {                                                                                             \
+    da_init_list(list, _arena, ARRAY_LEN((__VA_ARGS__)), (__VA_ARGS__));                           \
   } while (0)
 
-#define da_copy(src, dest)                                                     \
-  do {                                                                         \
-    da_resize((dest), (src)->len);                                             \
-    for (usize __c_i = 0; __c_i < (src)->len; __c_i++) {                       \
-      (dest)->items[__c_i] = (src)->items[__c_i];                              \
-    }                                                                          \
-    (dest)->len = (src)->len;                                                  \
-  } while (0)
-
-///////////////////////////////////////////////////////////////////////////////
-
-#define da_resize(list, size)                                                  \
-  do {                                                                         \
-    if (size < (list)->cap) {                                                  \
-      break;                                                                   \
-    }                                                                          \
-    (list)->cap = size;                                                        \
-    (list)->items = arena_realloc_chunk((list)->arena, (list)->items,          \
-                                        (list)->cap * sizeof(*(list)->items)); \
-  } while (0)
-
-#define da_reserve(list, size)                                                 \
-  do {                                                                         \
-    const usize __rs = da_len(list) + size;                                    \
-    if (__rs < (list)->cap) {                                                  \
-      break;                                                                   \
-    }                                                                          \
-    usize __ns = (list)->cap == 0 ? 5 : (list)->cap;                           \
-    while (__ns < __rs) {                                                      \
-      __ns *= 2;                                                               \
-    }                                                                          \
-    da_resize(list, __ns);                                                     \
+#define da_copy(src, dest)                                                                         \
+  do {                                                                                             \
+    da_resize((dest), (src)->len);                                                                 \
+    for (usize __c_i = 0; __c_i < (src)->len; __c_i++) {                                           \
+      (dest)->items[__c_i] = (src)->items[__c_i];                                                  \
+    }                                                                                              \
+    (dest)->len = (src)->len;                                                                      \
   } while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define da_push(list, ...)                                                     \
-  do {                                                                         \
-    da_reserve((list), 1);                                                     \
-    da_get(list, da_len(list)++) = (__VA_ARGS__);                              \
+#define da_resize(list, size)                                                                      \
+  do {                                                                                             \
+    if (size < (list)->cap) {                                                                      \
+      break;                                                                                       \
+    }                                                                                              \
+    (list)->cap = size;                                                                            \
+    (list)->items =                                                                                \
+        arena_realloc_chunk((list)->arena, (list)->items, (list)->cap * sizeof(*(list)->items));   \
   } while (0)
 
-#define da_extend(list, count, ...)                                            \
-  do {                                                                         \
-    da_reserve((list), (count));                                               \
-    for (usize __e_i = 0; __e_i < (count); __e_i++) {                          \
-      da_get(list, da_len(list) + __e_i) = (__VA_ARGS__)[__e_i];               \
-    }                                                                          \
-    (list)->len += count;                                                      \
-  } while (0)
-
-#define da_insert(list, value, idx)                                            \
-  do {                                                                         \
-    da_reserve(list, 1);                                                       \
-    for (usize __r_i = idx + 1; __r_i < da_len(list) + 1; __r_i++) {           \
-      da_get(list, __r_i) = da_get(list, __r_i - 1);                           \
-    }                                                                          \
-    da_get(list, idx) = value;                                                 \
-    da_len(list)++;                                                            \
-  } while (0)
-
-#define da_remove(list, idx)                                                   \
-  do {                                                                         \
-    for (usize __r_i = idx + 1; __r_i < da_len(list); __r_i++) {               \
-      da_get(list, __r_i - 1) = da_get(list, __r_i);                           \
-    }                                                                          \
-    da_len(list)--;                                                            \
+#define da_reserve(list, size)                                                                     \
+  do {                                                                                             \
+    const usize __rs = da_len(list) + size;                                                        \
+    if (__rs < (list)->cap) {                                                                      \
+      break;                                                                                       \
+    }                                                                                              \
+    usize __ns = (list)->cap == 0 ? 5 : (list)->cap;                                               \
+    while (__ns < __rs) {                                                                          \
+      __ns *= 2;                                                                                   \
+    }                                                                                              \
+    da_resize(list, __ns);                                                                         \
   } while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define da_map(src, dest, map)                                                 \
-  do {                                                                         \
-    da_reserve((dest), da_len(src));                                           \
-    for (usize __m_i = 0; __m_i < da_len(src); __m_i++) {                      \
-      da_get(dest, __m_i) = map(da_get(src, __m_i));                           \
-    }                                                                          \
-    da_len(dest) = da_len(src);                                                \
+#define da_push(list, ...)                                                                         \
+  do {                                                                                             \
+    da_reserve((list), 1);                                                                         \
+    da_get(list, da_len(list)++) = (__VA_ARGS__);                                                  \
   } while (0)
 
-#define da_map_ctx(src, dest, map, ctx)                                        \
-  do {                                                                         \
-    da_reserve((dest), da_len(src));                                           \
-    for (usize __m_i = 0; __m_i < da_len(src); __m_i++) {                      \
-      da_get(dest, __m_i) = map(ctx, da_get(src, __m_i));                      \
-    }                                                                          \
-    da_len(dest) = da_len(src);                                                \
+#define da_extend(list, count, ...)                                                                \
+  do {                                                                                             \
+    da_reserve((list), (count));                                                                   \
+    for (usize __e_i = 0; __e_i < (count); __e_i++) {                                              \
+      da_get(list, da_len(list) + __e_i) = (__VA_ARGS__)[__e_i];                                   \
+    }                                                                                              \
+    (list)->len += count;                                                                          \
   } while (0)
 
-#define da_filter(src, dest, filter)                                           \
-  do {                                                                         \
-    da_reserve((dest), da_len(src));                                           \
-    usize __f_count = 0;                                                       \
-    for (usize __f_i = 0; __f_i < da_len(src); __f_i++) {                      \
-      if (filter(da_get(src, __f_i))) {                                        \
-        da_get(dest, __f_count++) = da_get(src, __f_i);                        \
-      }                                                                        \
-    }                                                                          \
-    da_len(dest) = __f_count;                                                  \
+#define da_insert(list, value, idx)                                                                \
+  do {                                                                                             \
+    da_reserve(list, 1);                                                                           \
+    for (usize __r_i = idx + 1; __r_i < da_len(list) + 1; __r_i++) {                               \
+      da_get(list, __r_i) = da_get(list, __r_i - 1);                                               \
+    }                                                                                              \
+    da_get(list, idx) = value;                                                                     \
+    da_len(list)++;                                                                                \
   } while (0)
 
-#define da_filter_ctx(src, dest, filter, ctx)                                  \
-  do {                                                                         \
-    da_reserve((dest), da_len(src));                                           \
-    usize __f_count = 0;                                                       \
-    for (usize __f_i = 0; __f_i < da_len(src); __f_i++) {                      \
-      if (filter((ctx), da_get(src, __f_i))) {                                 \
-        da_get(dest, __f_count++) = da_get(src, __f_i);                        \
-      }                                                                        \
-    }                                                                          \
-    da_len(dest) = __f_count;                                                  \
+#define da_remove(list, idx)                                                                       \
+  do {                                                                                             \
+    for (usize __r_i = idx + 1; __r_i < da_len(list); __r_i++) {                                   \
+      da_get(list, __r_i - 1) = da_get(list, __r_i);                                               \
+    }                                                                                              \
+    da_len(list)--;                                                                                \
   } while (0)
 
-#define da_sort(src, dest, sort)                                               \
-  do {                                                                         \
-    da_reserve((dest), da_len(src));                                           \
-    quicksort(&da_get(src, 0), &da_get(dest, 0), sizeof(da_get(src, 0)),       \
-              da_len(src), sort);                                              \
+///////////////////////////////////////////////////////////////////////////////
+
+#define da_map(src, dest, map)                                                                     \
+  do {                                                                                             \
+    da_reserve((dest), da_len(src));                                                               \
+    for (usize __m_i = 0; __m_i < da_len(src); __m_i++) {                                          \
+      da_get(dest, __m_i) = map(da_get(src, __m_i));                                               \
+    }                                                                                              \
+    da_len(dest) = da_len(src);                                                                    \
   } while (0)
 
-#define da_sort_ctx(src, dest, sort, ctx)                                      \
-  do {                                                                         \
-    da_reserve((dest), da_len(src));                                           \
-    quicksort_ctx((src)->items, (dest)->items, sizeof(da_get(src, 0)),         \
-                  da_len(src), sort, ctx);                                     \
+#define da_map_ctx(src, dest, map, ctx)                                                            \
+  do {                                                                                             \
+    da_reserve((dest), da_len(src));                                                               \
+    for (usize __m_i = 0; __m_i < da_len(src); __m_i++) {                                          \
+      da_get(dest, __m_i) = map(ctx, da_get(src, __m_i));                                          \
+    }                                                                                              \
+    da_len(dest) = da_len(src);                                                                    \
   } while (0)
 
-#define da_reverse(list)                                                       \
-  do {                                                                         \
-    da_reserve((list), 1);                                                     \
-    for (usize __r_i = 0; __r_i < (list)->len - __r_i - 1; __r_i++) {          \
-      da_get(list, da_len(list)) = da_get(list, __r_i);                        \
-      da_get(list, __r_i) = da_get(list, da_len(list) - __r_i - 1);            \
-      da_get(list, da_len(list) - __r_i - 1) = da_get(list, da_len(list));     \
-    }                                                                          \
+#define da_filter(src, dest, filter)                                                               \
+  do {                                                                                             \
+    da_reserve((dest), da_len(src));                                                               \
+    usize __f_count = 0;                                                                           \
+    for (usize __f_i = 0; __f_i < da_len(src); __f_i++) {                                          \
+      if (filter(da_get(src, __f_i))) {                                                            \
+        da_get(dest, __f_count++) = da_get(src, __f_i);                                            \
+      }                                                                                            \
+    }                                                                                              \
+    da_len(dest) = __f_count;                                                                      \
+  } while (0)
+
+#define da_filter_ctx(src, dest, filter, ctx)                                                      \
+  do {                                                                                             \
+    da_reserve((dest), da_len(src));                                                               \
+    usize __f_count = 0;                                                                           \
+    for (usize __f_i = 0; __f_i < da_len(src); __f_i++) {                                          \
+      if (filter((ctx), da_get(src, __f_i))) {                                                     \
+        da_get(dest, __f_count++) = da_get(src, __f_i);                                            \
+      }                                                                                            \
+    }                                                                                              \
+    da_len(dest) = __f_count;                                                                      \
+  } while (0)
+
+#define da_sort(src, dest, sort)                                                                   \
+  do {                                                                                             \
+    da_reserve((dest), da_len(src));                                                               \
+    quicksort(&da_get(src, 0), &da_get(dest, 0), sizeof(da_get(src, 0)), da_len(src), sort);       \
+  } while (0)
+
+#define da_sort_ctx(src, dest, sort, ctx)                                                          \
+  do {                                                                                             \
+    da_reserve((dest), da_len(src));                                                               \
+    quicksort_ctx((src)->items, (dest)->items, sizeof(da_get(src, 0)), da_len(src), sort, ctx);    \
+  } while (0)
+
+#define da_reverse(list)                                                                           \
+  do {                                                                                             \
+    da_reserve((list), 1);                                                                         \
+    for (usize __r_i = 0; __r_i < (list)->len - __r_i - 1; __r_i++) {                              \
+      da_get(list, da_len(list)) = da_get(list, __r_i);                                            \
+      da_get(list, __r_i) = da_get(list, da_len(list) - __r_i - 1);                                \
+      da_get(list, da_len(list) - __r_i - 1) = da_get(list, da_len(list));                         \
+    }                                                                                              \
   } while (0)
 
 ///////////////////////////////////////////////////////////////////////////////

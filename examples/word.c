@@ -75,8 +75,8 @@ int main(int argc, const char **argv) {
   cebus_log_info("unique words: %" USIZE_FMT, words.len);
   // print out the 3 most occuring words
   for (usize i = 0; i < 3; ++i) {
-    cebus_log_info(" %" USIZE_FMT ": %d times: '" STR_FMT "'", i + 1,
-                   da_get(&words, i).count, STR_ARG(da_get(&words, i).word));
+    cebus_log_info(" %" USIZE_FMT ": %d times: '" STR_FMT "'", i + 1, da_get(&words, i).count,
+                   STR_ARG(da_get(&words, i).word));
   }
 
   // free the memory

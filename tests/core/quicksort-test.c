@@ -2,14 +2,10 @@
 
 #include "cebus/core/debug.h"
 
-static CmpOrdering cmp(const void *a, const void *b) {
-  return *(const i32 *)a - *(const i32 *)b;
-}
+static CmpOrdering cmp(const void *a, const void *b) { return *(const i32 *)a - *(const i32 *)b; }
 
 static CmpOrdering cmp_smallest(const void *ctx, const void *a, const void *b) {
-  return *(const i32 *)ctx == *(const i32 *)a
-             ? CMP_LESS
-             : *(const i32 *)a - *(const i32 *)b;
+  return *(const i32 *)ctx == *(const i32 *)a ? CMP_LESS : *(const i32 *)a - *(const i32 *)b;
 }
 
 // Example usage
@@ -26,8 +22,7 @@ int main(void) {
 
   i32 sorted_smallest[n];
   i32 smallest = 4;
-  quicksort_ctx(array, sorted_smallest, sizeof(i32), n, cmp_smallest,
-                &smallest);
+  quicksort_ctx(array, sorted_smallest, sizeof(i32), n, cmp_smallest, &smallest);
   cebus_assert(sorted_smallest[0] == 4, "Array was not sorted correctly");
   cebus_assert(sorted_smallest[1] == 1, "Array was not sorted correctly");
   cebus_assert(sorted_smallest[2] == 3, "Array was not sorted correctly");

@@ -9,27 +9,22 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define HM_TYPES(DO)                                                           \
-  DO(f32)                                                                      \
-  DO(f64)                                                                      \
-  DO(i8)                                                                       \
-  DO(u8)                                                                       \
-  DO(i16)                                                                      \
-  DO(u16)                                                                      \
-  DO(i32)                                                                      \
-  DO(u32)                                                                      \
-  DO(i64)                                                                      \
-  DO(u64)                                                                      \
+#define HM_TYPES(DO)                                                                               \
+  DO(f32)                                                                                          \
+  DO(f64)                                                                                          \
+  DO(i8)                                                                                           \
+  DO(u8)                                                                                           \
+  DO(i16)                                                                                          \
+  DO(u16)                                                                                          \
+  DO(i32)                                                                                          \
+  DO(u32)                                                                                          \
+  DO(i64)                                                                                          \
+  DO(u64)                                                                                          \
   DO(usize)
 
 #define HM_DECLARE_ENUM(T) HM_TYPE_##T,
 
-typedef enum {
-  HM_NONE,
-  HM_PTR,
-  HM_CONST_PTR,
-  HM_TYPES(HM_DECLARE_ENUM)
-} HashTypes;
+typedef enum { HM_NONE, HM_PTR, HM_CONST_PTR, HM_TYPES(HM_DECLARE_ENUM) } HashTypes;
 
 #define HM_DECLARE_MEMBER(T) T T;
 
@@ -112,8 +107,8 @@ static HashValue *hm_get(const HashMap *hm, u64 hash) {
 }
 
 static const char *hm_type(HashTypes type) {
-#define RETURN_STR(T)                                                          \
-  case HM_TYPE_##T:                                                            \
+#define RETURN_STR(T)                                                                              \
+  case HM_TYPE_##T:                                                                                \
     return #T;
 
   switch (type) {
@@ -227,20 +222,19 @@ bool hm_remove(HashMap *hm, u64 hash) {
   return false;
 }
 
-#define TYPE_CHECK(hm, T, ret)                                                 \
-  do {                                                                         \
-    if (hm->type != HM_NONE && (hm->type != T)) {                              \
-      cebus_log_warning("HashMap Type Error: expected '%s' got '%s'",          \
-                        hm_type(hm->type), #T);                                \
-      return ret;                                                              \
-    }                                                                          \
+#define TYPE_CHECK(hm, T, ret)                                                                     \
+  do {                                                                                             \
+    if (hm->type != HM_NONE && (hm->type != T)) {                                                  \
+      cebus_log_warning("HashMap Type Error: expected '%s' got '%s'", hm_type(hm->type), #T);      \
+      return ret;                                                                                  \
+    }                                                                                              \
   } while (0)
 
-#define HM_INSERT_IMPL(T)                                                      \
-  bool hm_insert_##T(HashMap *hm, u64 hash, T value) {                         \
-    TYPE_CHECK(hm, HM_TYPE_##T, false);                                        \
-    hm->type = HM_TYPE_##T;                                                    \
-    return hm_insert(hm, hash, (HashValue){.as.T = value});                    \
+#define HM_INSERT_IMPL(T)                                                                          \
+  bool hm_insert_##T(HashMap *hm, u64 hash, T value) {                                             \
+    TYPE_CHECK(hm, HM_TYPE_##T, false);                                                            \
+    hm->type = HM_TYPE_##T;                                                                        \
+    return hm_insert(hm, hash, (HashValue){.as.T = value});                                        \
   }
 
 HM_TYPES(HM_INSERT_IMPL)
@@ -259,11 +253,11 @@ bool hm_insert_ptr(HashMap *hm, u64 hash, const void *value) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define HM_GET_MUT_IMPL(T)                                                     \
-  T *hm_get_##T##_mut(const HashMap *hm, u64 hash) {                           \
-    TYPE_CHECK(hm, HM_TYPE_##T, NULL);                                         \
-    HashValue *value = hm_get(hm, hash);                                       \
-    return value ? &value->as.T : NULL;                                        \
+#define HM_GET_MUT_IMPL(T)                                                                         \
+  T *hm_get_##T##_mut(const HashMap *hm, u64 hash) {                                               \
+    TYPE_CHECK(hm, HM_TYPE_##T, NULL);                                                             \
+    HashValue *value = hm_get(hm, hash);                                                           \
+    return value ? &value->as.T : NULL;                                                            \
   }
 
 HM_TYPES(HM_GET_MUT_IMPL)
@@ -276,10 +270,8 @@ void *hm_get_ptr_mut(const HashMap *hm, u64 hash) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define HM_GET_IMPL(T)                                                         \
-  const T *hm_get_##T(const HashMap *hm, u64 hash) {                           \
-    return hm_get_##T##_mut(hm, hash);                                         \
-  }
+#define HM_GET_IMPL(T)                                                                             \
+  const T *hm_get_##T(const HashMap *hm, u64 hash) { return hm_get_##T##_mut(hm, hash); }
 
 HM_TYPES(HM_GET_IMPL)
 
