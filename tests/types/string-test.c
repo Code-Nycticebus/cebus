@@ -173,6 +173,10 @@ static void test_count(void) {
   cebus_assert(c == 2, "");
   c = str_count(s, STR("TEST"));
   cebus_assert(c == 0, "");
+
+  s = STR("--help");
+  c = str_count(s, STR("-"));
+  cebus_assert(c == 2, "");
 }
 
 static void test_replace(void) {

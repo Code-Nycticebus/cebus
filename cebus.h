@@ -5221,7 +5221,7 @@ usize str_count(Str haystack, Str needle) {
   for (usize i = 0; i < haystack.len - needle.len + 1; i++) {
     if (memcmp(&haystack.data[i], needle.data, needle.len) == 0) {
       count++;
-      i += needle.len;
+      i += needle.len - 1;
     }
   }
   return count;
