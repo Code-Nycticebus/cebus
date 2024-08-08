@@ -10,6 +10,7 @@ Include this file to include all the header files that are listed below.
 
 // IWYU pragma: begin_exports
 
+#include "cebus/collection/args.h"
 #include "cebus/collection/da.h"
 #include "cebus/collection/hashmap.h"
 #include "cebus/collection/set.h"

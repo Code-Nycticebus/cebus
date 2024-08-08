@@ -27,6 +27,7 @@ cebus = { dir = "path/to/cebus", type = "pybuildc" }
 - [Cebus](#Cebus)
    - [cebus.h](#cebush)
 - [Collection](#Collection)
+   - [args.h](#argsh)
    - [da.h](#dah)
    - [hashmap.h](#hashmaph)
    - [set.h](#seth)
