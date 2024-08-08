@@ -7,6 +7,7 @@
 #include "cebus/type/string.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef enum {
   ERR_INTERNAL,
@@ -47,7 +48,6 @@ void args_print_usage(Args *args, FILE *file) {
 void args_print_help(Args *args, FILE *file) {
   args_print_usage(args, file);
 
-  fprintf(file, "positional arguments:\n");
   for (u32 i = 0; i < args->arguments.len && i < args->positional; ++i) {
     Argument *argument = &args->arguments.items[i];
     const i32 padding = i32_max(0, 25 - (i32)argument->name.len);
@@ -55,7 +55,6 @@ void args_print_help(Args *args, FILE *file) {
             ' ', STR_ARG(argument->description));
   }
 
-  fprintf(file, "optional arguments\n");
   for (usize i = args->positional; i < args->arguments.len; i++) {
     Argument *argument = &args->arguments.items[i];
     const i32 padding = i32_max(0, 28 - (i32)argument->name.len);
@@ -101,11 +100,11 @@ bool args_parse(Args *args) {
 
     if (str_eq(arg, STR("-h"))) {
       args_print_usage(args, stdout);
-      return false;
+      exit(0);
     }
     if (str_eq(arg, STR("--help"))) {
       args_print_help(args, stdout);
-      return false;
+      exit(0);
     }
 
     bool is_optional = (arg.data[0] == '-') && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
@@ -121,11 +120,11 @@ bool args_parse(Args *args) {
   for (Str arg; (arg = args_shift(args)).data;) {
     if (str_eq(arg, STR("-h"))) {
       args_print_usage(args, stdout);
-      return false;
+      exit(0);
     }
     if (str_eq(arg, STR("--help"))) {
       args_print_help(args, stdout);
-      return false;
+      exit(0);
     }
 
     usize i = usize_min(str_count(arg, STR("-")), 2);
@@ -147,7 +146,7 @@ bool args_parse(Args *args) {
 defer:
   error_context(&error, {
     if (error_code(ArgParseError) == ERR_PARSE) {
-      fprintf(stderr, STR_FMT, STR_ARG(error_msg()));
+      fprintf(stderr, STR_FMT "\n", STR_ARG(error_msg()));
       args_print_usage(args, stderr);
       error_except();
       return false;
