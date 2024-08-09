@@ -1520,15 +1520,17 @@ typedef struct {
   enum {
     ARG_TYPE_NONE,
     ARG_TYPE_FLAG,
-    // Generic
+    // generic
     ARG_TYPE_I64,
+    ARG_TYPE_U64,
     ARG_TYPE_STR,
   } type;
   union {
     bool flag;
 
-    // Generic
+    // generic
     i64 i64;
+    u64 u64;
     Str str;
   } as;
 } Argument;
@@ -1551,13 +1553,16 @@ void args_print_help(Args *args, FILE *file);
 bool args_parse(Args *args);
 
 void args_add_i64(Args *args, const char *argument, const char *description);
+void args_add_u64(Args *args, const char *argument, const char *description);
 void args_add_str(Args *args, const char *argument, const char *description);
 
 void args_add_opt_i64(Args *args, const char *argument, i64 def, const char *description);
+void args_add_opt_u64(Args *args, const char *argument, u64 def, const char *description);
 void args_add_opt_str(Args *args, const char *argument, Str def, const char *description);
 void args_add_opt_flag(Args *args, const char *argument, const char *description);
 
 i64 args_get_i64(Args *args, const char *argument);
+u64 args_get_u64(Args *args, const char *argument);
 Str args_get_str(Args *args, const char *argument);
 bool args_get_flag(Args *args, const char *argument);
 
@@ -3568,6 +3573,21 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
     }
     argument->as.i64 = str_i64(arg);
   } break;
+  case ARG_TYPE_U64: {
+
+    bool minus_number = arg.data[0] == '-' && c_is_digit(arg.data[1]);
+    if (minus_number) {
+      error_emit(error, ERR_PARSE, STR_REPR ": " STR_REPR "minus numbers are not valid u64",
+                 STR_ARG(argument->name), STR_ARG(arg));
+      return;
+    }
+    if (!c_is_digit(arg.data[0])) {
+      error_emit(error, ERR_PARSE, STR_REPR ": " STR_REPR " not a valid u64",
+                 STR_ARG(argument->name), STR_ARG(arg));
+      return;
+    }
+    argument->as.u64 = str_u64(arg);
+  } break;
   case ARG_TYPE_STR: {
     argument->as.str = arg;
   } break;
@@ -3606,17 +3626,20 @@ bool args_parse(Args *args) {
       continue;
     }
 
-  try_again:
-    if (positional >= args->arguments.len) {
-      error_emit(&error, ERR_PARSE, STR_REPR ": too many positional arguments", STR_ARG(arg));
-      goto defer;
+    while (true) {
+      if (positional >= args->arguments.len) {
+        error_emit(&error, ERR_PARSE, STR_REPR ": too many positional arguments", STR_ARG(arg));
+        goto defer;
+      }
+      Argument *argument = &args->arguments.items[positional++];
+      if (argument->type == ARG_TYPE_FLAG) {
+        continue;
+      }
+
+      args_parse_argument(argument, arg, &error);
+      error_propagate(&error, { goto defer; });
+      break;
     }
-    Argument *argument = &args->arguments.items[positional++];
-    if (argument->type == ARG_TYPE_FLAG) {
-      goto try_again;
-    }
-    args_parse_argument(argument, arg, &error);
-    error_propagate(&error, { goto defer; });
   }
 
   if (positional < args->positional) {
@@ -3649,6 +3672,8 @@ defer:
                               });                                                                  \
   }                                                                                                \
   void args_add_##NAME(Args *args, const char *argument, const char *description) {                \
+    cebus_assert(args->positional == args->arguments.len,                                          \
+                 "an optional argument was passed before!");                                       \
     args->positional++;                                                                            \
     args_add_opt_##NAME(args, argument, (T){0}, description);                                      \
   }                                                                                                \
@@ -3659,6 +3684,7 @@ defer:
   }
 
 ARGS_GENERIC_IMPLEMENTATION(i64, i64, ARG_TYPE_I64)
+ARGS_GENERIC_IMPLEMENTATION(u64, u64, ARG_TYPE_U64)
 ARGS_GENERIC_IMPLEMENTATION(str, Str, ARG_TYPE_STR)
 
 void args_add_opt_flag(Args *args, const char *argument, const char *description) {
