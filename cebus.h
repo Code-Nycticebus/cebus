@@ -3577,13 +3577,8 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
 bool args_parse(Args *args) {
   Error error = ErrNew;
 
-  for (u32 i = 0; i < args->positional; ++i) {
-    Str arg = args_shift(args);
-    if (arg.data == NULL) {
-      error_emit(&error, ERR_PARSE, "not enough positional arguments");
-      goto defer;
-    }
-
+  u32 positional = 0;
+  for (Str arg; (arg = args_shift(args)).data;) {
     if (str_eq(arg, STR("-h"))) {
       args_print_usage(args, stdout);
       exit(0);
@@ -3595,38 +3590,38 @@ bool args_parse(Args *args) {
 
     bool is_optional = (arg.data[0] == '-') && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
     if (is_optional) {
-      error_emit(&error, ERR_PARSE, "positional arguments first");
-      goto defer;
-    }
-
-    args_parse_argument(&args->arguments.items[i], arg, &error);
-    error_propagate(&error, { goto defer; });
-  }
-
-  for (Str arg; (arg = args_shift(args)).data;) {
-    if (str_eq(arg, STR("-h"))) {
-      args_print_usage(args, stdout);
-      exit(0);
-    }
-    if (str_eq(arg, STR("--help"))) {
-      args_print_help(args, stdout);
-      exit(0);
-    }
-
-    usize i = usize_min(str_count(arg, STR("-")), 2);
-    if (i > 1) {
-      const usize *idx = hm_get_usize(args->hm, str_hash(str_substring(arg, i, arg.len)));
+      Str s = str_substring(arg, usize_min(str_count(arg, STR("-")), 2), arg.len);
+      const usize *idx = hm_get_usize(args->hm, str_hash(s));
       if (idx == NULL) {
-        continue;
+        error_emit(&error, ERR_PARSE, STR_REPR ": unknown argument", STR_ARG(arg));
+        goto defer;
       }
       Argument *argument = &args->arguments.items[*idx];
       if (argument->type == ARG_TYPE_FLAG) {
         argument->as.flag = true; // flag turned on
       } else {
         args_parse_argument(argument, args_shift(args), &error);
+        error_propagate(&error, { goto defer; });
       }
-      error_propagate(&error, { goto defer; });
+      continue;
     }
+
+  try_again:
+    if (positional >= args->arguments.len) {
+      error_emit(&error, ERR_PARSE, STR_REPR ": too many positional arguments", STR_ARG(arg));
+      goto defer;
+    }
+    Argument *argument = &args->arguments.items[positional++];
+    if (argument->type == ARG_TYPE_FLAG) {
+      goto try_again;
+    }
+    args_parse_argument(argument, arg, &error);
+    error_propagate(&error, { goto defer; });
+  }
+
+  if (positional < args->positional) {
+    error_emit(&error, ERR_PARSE, "not enough positional arguments");
+    goto defer;
   }
 
 defer:
