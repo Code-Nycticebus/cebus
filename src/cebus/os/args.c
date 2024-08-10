@@ -129,6 +129,9 @@ bool args_parse(Args *args) {
 
     bool arg_is_optional = arg.data[0] == '-' && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
     if (arg_is_optional) {
+      if (str_eq(arg, STR("--"))) {
+        return true;
+      }
       Str argument_prefix = str_substring(arg, 0, 2);
       usize dash_count = str_count(argument_prefix, STR("-"));
       Str real_argument = str_substring(arg, usize_clamp(0, 2, dash_count), arg.len);
@@ -149,12 +152,14 @@ bool args_parse(Args *args) {
 
     while (true) {
       if (positional_count >= args->arguments.len) {
-        error_emit(&error, ERR_PARSE, STR_REPR ": too many positional arguments", STR_ARG(arg));
+        error_emit(&error, ERR_PARSE,
+                   STR_REPR ": too many positional arguments. maybe you need to add a '--'",
+                   STR_ARG(arg));
         goto defer;
       }
       Argument *argument = &args->arguments.items[positional_count++];
       if (argument->type == ARG_TYPE_FLAG) {
-        continue; // skip
+        continue; // next
       }
 
       args_parse_argument(argument, arg, &error);
