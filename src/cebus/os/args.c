@@ -68,8 +68,8 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
     error_emit(error, ERR_PARSE, STR_REPR " needs parameter", STR_ARG(argument->name));
   }
   switch (argument->type) {
-  case ARG_TYPE_FLAG:
-  case ARG_TYPE_NONE: {
+  case ARG_TYPE_NONE:
+  case ARG_TYPE_FLAG: {
     error_emit(error, ERR_INTERNAL, "this type should never be parsed here: %d", argument->type);
     return;
   } break;
@@ -83,7 +83,6 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
     argument->as.i64 = str_i64(arg);
   } break;
   case ARG_TYPE_U64: {
-
     bool minus_number = arg.data[0] == '-' && c_is_digit(arg.data[1]);
     if (minus_number) {
       error_emit(error, ERR_PARSE, STR_REPR ": " STR_REPR "minus numbers are not valid u64",
@@ -106,8 +105,8 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
 bool args_parse(Args *args) {
   Error error = ErrNew;
 
-  u32 positional = 0;
-  for (Str arg; (arg = args_shift(args)).data;) {
+  u32 positional_count = 0;
+  for (Str arg = {0}; (arg = args_shift(args)).data;) {
     if (str_eq(arg, STR("-h"))) {
       args_print_usage(args, stdout);
       exit(0);
@@ -117,10 +116,12 @@ bool args_parse(Args *args) {
       exit(0);
     }
 
-    bool is_optional = (arg.data[0] == '-') && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
-    if (is_optional) {
-      Str s = str_substring(arg, usize_min(str_count(arg, STR("-")), 2), arg.len);
-      const usize *idx = hm_get_usize(args->hm, str_hash(s));
+    bool arg_is_optional = arg.data[0] == '-' && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
+    if (arg_is_optional) {
+      Str argument_prefix = str_substring(arg, 0, 2);
+      usize dash_count = str_count(argument_prefix, STR("-"));
+      Str real_argument = str_substring(arg, usize_clamp(0, 2, dash_count), arg.len);
+      const usize *idx = hm_get_usize(args->hm, str_hash(real_argument));
       if (idx == NULL) {
         error_emit(&error, ERR_PARSE, STR_REPR ": unknown argument", STR_ARG(arg));
         goto defer;
@@ -128,21 +129,21 @@ bool args_parse(Args *args) {
       Argument *argument = &args->arguments.items[*idx];
       if (argument->type == ARG_TYPE_FLAG) {
         argument->as.flag = true; // flag turned on
-      } else {
-        args_parse_argument(argument, args_shift(args), &error);
-        error_propagate(&error, { goto defer; });
+        continue;
       }
+      args_parse_argument(argument, args_shift(args), &error);
+      error_propagate(&error, { goto defer; });
       continue;
     }
 
     while (true) {
-      if (positional >= args->arguments.len) {
+      if (positional_count >= args->arguments.len) {
         error_emit(&error, ERR_PARSE, STR_REPR ": too many positional arguments", STR_ARG(arg));
         goto defer;
       }
-      Argument *argument = &args->arguments.items[positional++];
+      Argument *argument = &args->arguments.items[positional_count++];
       if (argument->type == ARG_TYPE_FLAG) {
-        continue;
+        continue; // skip
       }
 
       args_parse_argument(argument, arg, &error);
@@ -151,7 +152,7 @@ bool args_parse(Args *args) {
     }
   }
 
-  if (positional < args->positional) {
+  if (positional_count < args->positional) {
     error_emit(&error, ERR_PARSE, "not enough positional arguments");
     goto defer;
   }

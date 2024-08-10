@@ -11,15 +11,12 @@ typedef struct {
   enum {
     ARG_TYPE_NONE,
     ARG_TYPE_FLAG,
-    // generic
     ARG_TYPE_I64,
     ARG_TYPE_U64,
     ARG_TYPE_STR,
   } type;
   union {
     bool flag;
-
-    // generic
     i64 i64;
     u64 u64;
     Str str;

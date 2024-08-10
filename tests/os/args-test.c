@@ -3,7 +3,7 @@
 static void test_basic(void) {
   Arena arena = {0};
 
-  const char *argv[] = {"./a.out", "-2", "2", "--str", "passed string", "--opt-flag"};
+  const char *argv[] = {"./a.out", "-2", "2", "--str", "passed string", "-opt-flag"};
   int argc = ARRAY_LEN(argv);
   Args args = args_init(&arena, argc, argv);
 
