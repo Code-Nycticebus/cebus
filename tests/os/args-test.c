@@ -65,9 +65,11 @@ static void test_iterating(void) {
   };
 
   Args args = args_init(&arena, argc, argv);
+  cebus_assert(str_eq(args.program, expected[0]), STR_REPR, STR_ARG(args.program));
+
   Str arg = {0};
-  for (u32 i = 0; (arg = args_shift(&args)).data; ++i) {
-    cebus_assert(str_eq(arg, expected[i]), "");
+  for (u32 i = 1; (arg = args_shift(&args)).data; ++i) {
+    cebus_assert(str_eq(arg, expected[i]), STR_REPR, STR_ARG(arg));
   }
 
   arena_free(&arena);

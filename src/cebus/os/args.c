@@ -35,7 +35,8 @@ Args args_init(Arena *arena, int argc, const char **argv) {
   Args args = {.argc = argc, .argv = argv};
 
   da_init(&args.arguments, arena);
-  args.hm = hm_create(arena);
+  args.hm = NULL;
+  hm_create(arena);
 
   args.program = args_shift(&args);
 
@@ -182,6 +183,7 @@ defer:
 
 #define ARGS_GENERIC_IMPLEMENTATION(NAME, T, T_ENUM)                                               \
   void args_add_opt_##NAME(Args *args, const char *argument, T def, const char *description) {     \
+    args->hm = args->hm ? args->hm : hm_create(args->arguments.arena);                             \
     Str name = str_from_cstr(argument);                                                            \
     hm_insert_usize(args->hm, str_hash(name), da_len(&args->arguments));                           \
     da_push(&args->arguments, (Argument){                                                          \
@@ -198,6 +200,7 @@ defer:
     args_add_opt_##NAME(args, argument, (T){0}, description);                                      \
   }                                                                                                \
   T args_get_##NAME(Args *args, const char *argument) {                                            \
+    cebus_assert(args->hm != NULL, "no arguments were given");                                     \
     const usize *idx = hm_get_usize(args->hm, str_hash(str_from_cstr(argument)));                  \
     cebus_assert(idx && args->arguments.items[*idx].type == T_ENUM, "");                           \
     return args->arguments.items[*idx].as.NAME;                                                    \
@@ -208,6 +211,7 @@ ARGS_GENERIC_IMPLEMENTATION(u64, u64, ARG_TYPE_U64)
 ARGS_GENERIC_IMPLEMENTATION(str, Str, ARG_TYPE_STR)
 
 void args_add_opt_flag(Args *args, const char *argument, const char *description) {
+  args->hm = args->hm ? args->hm : hm_create(args->arguments.arena);
   usize idx = da_len(&args->arguments);
   Str name = str_from_cstr(argument);
   hm_insert_usize(args->hm, str_hash(name), idx);
@@ -220,6 +224,7 @@ void args_add_opt_flag(Args *args, const char *argument, const char *description
 }
 
 bool args_get_flag(Args *args, const char *argument) {
+  cebus_assert(args->hm != NULL, "no arguments were given");
   const usize *idx = hm_get_usize(args->hm, str_hash(str_from_cstr(argument)));
   cebus_assert(idx && args->arguments.items[*idx].type == ARG_TYPE_FLAG, "");
   return args->arguments.items[*idx].as.flag;

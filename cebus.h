@@ -1520,6 +1520,7 @@ typedef struct {
   enum {
     ARG_TYPE_NONE,
     ARG_TYPE_FLAG,
+    ARG_TYPE_LIST,
     ARG_TYPE_I64,
     ARG_TYPE_U64,
     ARG_TYPE_STR,
@@ -1544,7 +1545,10 @@ typedef struct {
   HashMap *hm;
 } Args;
 
+bool args_c_shift(int *argc, const char ***argv);
+
 Args args_init(Arena *arena, int argc, const char **argv);
+Str args_shift(Args *args);
 void args_print_usage(Args *args, FILE *file);
 void args_print_help(Args *args, FILE *file);
 bool args_parse(Args *args);
@@ -1558,16 +1562,10 @@ void args_add_opt_u64(Args *args, const char *argument, u64 def, const char *des
 void args_add_opt_str(Args *args, const char *argument, Str def, const char *description);
 void args_add_opt_flag(Args *args, const char *argument, const char *description);
 
-i64 args_add_list_i64(Args *args, const char *argument, const char *description);
-
 i64 args_get_i64(Args *args, const char *argument);
 u64 args_get_u64(Args *args, const char *argument);
 Str args_get_str(Args *args, const char *argument);
 bool args_get_flag(Args *args, const char *argument);
-
-void _args_get_list_i64(Args *args, const char *argument, DA(i64) * da);
-
-#define args_get_list_i64(args, argument, da) _args_get_list_i64(args, argument, (void *)(da))
 
 #endif /* !__CEBUS_ARGS_H__ */
 
@@ -3514,6 +3512,15 @@ typedef enum {
   ERR_PARSE,
 } ArgParseError;
 
+bool args_c_shift(int *argc, const char ***argv) {
+  if ((*argc) == 0) {
+    return false;
+  }
+  (*argc)--;
+  (*argv)++;
+  return true;
+}
+
 Str args_shift(Args *args) {
   if (args->argc == 0) {
     return (Str){0};
@@ -3526,7 +3533,8 @@ Args args_init(Arena *arena, int argc, const char **argv) {
   Args args = {.argc = argc, .argv = argv};
 
   da_init(&args.arguments, arena);
-  args.hm = hm_create(arena);
+  args.hm = NULL;
+  hm_create(arena);
 
   args.program = args_shift(&args);
 
@@ -3569,7 +3577,8 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
   }
   switch (argument->type) {
   case ARG_TYPE_NONE:
-  case ARG_TYPE_FLAG: {
+  case ARG_TYPE_FLAG:
+  case ARG_TYPE_LIST: {
     error_emit(error, ERR_INTERNAL, "this type should never be parsed here: %d", argument->type);
     return;
   } break;
@@ -3672,6 +3681,7 @@ defer:
 
 #define ARGS_GENERIC_IMPLEMENTATION(NAME, T, T_ENUM)                                               \
   void args_add_opt_##NAME(Args *args, const char *argument, T def, const char *description) {     \
+    args->hm = args->hm ? args->hm : hm_create(args->arguments.arena);                             \
     Str name = str_from_cstr(argument);                                                            \
     hm_insert_usize(args->hm, str_hash(name), da_len(&args->arguments));                           \
     da_push(&args->arguments, (Argument){                                                          \
@@ -3688,6 +3698,7 @@ defer:
     args_add_opt_##NAME(args, argument, (T){0}, description);                                      \
   }                                                                                                \
   T args_get_##NAME(Args *args, const char *argument) {                                            \
+    cebus_assert(args->hm != NULL, "no arguments were given");                                     \
     const usize *idx = hm_get_usize(args->hm, str_hash(str_from_cstr(argument)));                  \
     cebus_assert(idx && args->arguments.items[*idx].type == T_ENUM, "");                           \
     return args->arguments.items[*idx].as.NAME;                                                    \
@@ -3698,6 +3709,7 @@ ARGS_GENERIC_IMPLEMENTATION(u64, u64, ARG_TYPE_U64)
 ARGS_GENERIC_IMPLEMENTATION(str, Str, ARG_TYPE_STR)
 
 void args_add_opt_flag(Args *args, const char *argument, const char *description) {
+  args->hm = args->hm ? args->hm : hm_create(args->arguments.arena);
   usize idx = da_len(&args->arguments);
   Str name = str_from_cstr(argument);
   hm_insert_usize(args->hm, str_hash(name), idx);
@@ -3710,6 +3722,7 @@ void args_add_opt_flag(Args *args, const char *argument, const char *description
 }
 
 bool args_get_flag(Args *args, const char *argument) {
+  cebus_assert(args->hm != NULL, "no arguments were given");
   const usize *idx = hm_get_usize(args->hm, str_hash(str_from_cstr(argument)));
   cebus_assert(idx && args->arguments.items[*idx].type == ARG_TYPE_FLAG, "");
   return args->arguments.items[*idx].as.flag;
