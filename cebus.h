@@ -2443,7 +2443,13 @@ bool utf8_validate(Utf8 s);
 
 #endif /* !__CEBUS_UTF8_H__ */
 
+
 #ifdef CEBUS_IMPLEMENTATION
+/* this is needed so clangd does not report errors in single header */
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+#endif /* !__clang__ */
 // #include "hashmap.h"
 
 // #include "cebus/core/debug.h"
@@ -3556,8 +3562,8 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
     error_emit(error, ERR_PARSE, STR_REPR " needs parameter", STR_ARG(argument->name));
   }
   switch (argument->type) {
-  case ARG_TYPE_FLAG:
-  case ARG_TYPE_NONE: {
+  case ARG_TYPE_NONE:
+  case ARG_TYPE_FLAG: {
     error_emit(error, ERR_INTERNAL, "this type should never be parsed here: %d", argument->type);
     return;
   } break;
@@ -3594,7 +3600,7 @@ bool args_parse(Args *args) {
   Error error = ErrNew;
 
   u32 positional_count = 0;
-  for (Str arg; (arg = args_shift(args)).data;) {
+  for (Str arg = {0}; (arg = args_shift(args)).data;) {
     if (str_eq(arg, STR("-h"))) {
       args_print_usage(args, stdout);
       exit(0);
@@ -3606,11 +3612,10 @@ bool args_parse(Args *args) {
 
     bool arg_is_optional = arg.data[0] == '-' && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
     if (arg_is_optional) {
-      Str substring = str_substring(arg, 0, 2);
-      usize count = str_count(substring, STR("-"));
-      Str s = str_substring(arg, usize_clamp(0, 2, count), arg.len);
-      cebus_log_debug(STR_REPR, STR_ARG(s));
-      const usize *idx = hm_get_usize(args->hm, str_hash(s));
+      Str argument_prefix = str_substring(arg, 0, 2);
+      usize dash_count = str_count(argument_prefix, STR("-"));
+      Str real_argument = str_substring(arg, usize_clamp(0, 2, dash_count), arg.len);
+      const usize *idx = hm_get_usize(args->hm, str_hash(real_argument));
       if (idx == NULL) {
         error_emit(&error, ERR_PARSE, STR_REPR ": unknown argument", STR_ARG(arg));
         goto defer;
@@ -5701,4 +5706,8 @@ bool utf8_validate(Utf8 s) {
   return utf8_validate_bytes(bytes_from_parts(s.size, (const u8 *)s.data));
 }
 
+
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Weverything"
+#endif /* !__clang__ */
 #endif /* !CEBUS_IMPLEMENTATION */

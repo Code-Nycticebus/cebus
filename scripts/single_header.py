@@ -48,7 +48,23 @@ as follows:
             if header.name != "cebus.h" and header not in FIRST:
                 copy(f, header)
 
-        f.write("#ifdef CEBUS_IMPLEMENTATION\n")
+        f.write(
+            """
+#ifdef CEBUS_IMPLEMENTATION
+/* this is needed so clangd does not report errors in single header */
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+#endif /* !__clang__ */
+"""
+        )
         for source in sorted(Path(src).rglob("*.c")):
             copy(f, source)
-        f.write("#endif /* !CEBUS_IMPLEMENTATION */\n")
+        f.write(
+            """
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Weverything"
+#endif /* !__clang__ */
+#endif /* !CEBUS_IMPLEMENTATION */
+"""
+        )
