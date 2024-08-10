@@ -11,7 +11,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define CHUNK_DEFAULT_SIZE KILOBYTES(8)
+#define CHUNK_DEFAULT_SIZE KILOBYTES(4)
 
 struct Chunk {
   Chunk *next, *prev;

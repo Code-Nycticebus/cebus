@@ -3082,7 +3082,7 @@ usize sb_append_va(StringBuilder *sb, const char *fmt, va_list va) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define CHUNK_DEFAULT_SIZE KILOBYTES(8)
+#define CHUNK_DEFAULT_SIZE KILOBYTES(4)
 
 struct Chunk {
   Chunk *next, *prev;
