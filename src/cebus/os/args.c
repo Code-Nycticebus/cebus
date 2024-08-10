@@ -14,6 +14,15 @@ typedef enum {
   ERR_PARSE,
 } ArgParseError;
 
+bool args_c_shift(int *argc, const char ***argv) {
+  if ((*argc) == 0) {
+    return false;
+  }
+  (*argc)--;
+  (*argv)++;
+  return true;
+}
+
 Str args_shift(Args *args) {
   if (args->argc == 0) {
     return (Str){0};
@@ -69,7 +78,8 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
   }
   switch (argument->type) {
   case ARG_TYPE_NONE:
-  case ARG_TYPE_FLAG: {
+  case ARG_TYPE_FLAG:
+  case ARG_TYPE_LIST: {
     error_emit(error, ERR_INTERNAL, "this type should never be parsed here: %d", argument->type);
     return;
   } break;

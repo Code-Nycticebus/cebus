@@ -1,4 +1,5 @@
 #include "cebus.h"
+#include <string.h>
 
 static void test_basic(void) {
   Arena arena = {0};
@@ -50,7 +51,45 @@ static void test_advanced(void) {
   arena_free(&arena);
 }
 
+static void test_iterating(void) {
+  Arena arena = {0};
+
+  const char *argv[] = {"./a.out", "-2", "37", "420"};
+  int argc = ARRAY_LEN(argv);
+
+  const Str expected[] = {
+      STR_STATIC("./a.out"),
+      STR_STATIC("-2"),
+      STR_STATIC("37"),
+      STR_STATIC("420"),
+  };
+
+  Args args = args_init(&arena, argc, argv);
+  Str arg = {0};
+  for (u32 i = 0; (arg = args_shift(&args)).data; ++i) {
+    cebus_assert(str_eq(arg, expected[i]), "");
+  }
+
+  arena_free(&arena);
+}
+
+static void test_iterating_traditional_way(void) {
+  Arena arena = {0};
+
+  const char *argv[] = {"./a.out", "-2", "37", "420"};
+  int argc = ARRAY_LEN(argv);
+
+  const char *expected[] = {"./a.out", "-2", "37", "420"};
+  for (u32 i = 0; args_c_shift(&argc, (const char ***)&argv); ++i) {
+    cebus_assert(strcmp(*argv, expected[i]), "");
+  }
+
+  arena_free(&arena);
+}
+
 int main(void) {
   test_basic();
   test_advanced();
+  test_iterating();
+  test_iterating_traditional_way();
 }

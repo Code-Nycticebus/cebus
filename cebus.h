@@ -1558,10 +1558,16 @@ void args_add_opt_u64(Args *args, const char *argument, u64 def, const char *des
 void args_add_opt_str(Args *args, const char *argument, Str def, const char *description);
 void args_add_opt_flag(Args *args, const char *argument, const char *description);
 
+i64 args_add_list_i64(Args *args, const char *argument, const char *description);
+
 i64 args_get_i64(Args *args, const char *argument);
 u64 args_get_u64(Args *args, const char *argument);
 Str args_get_str(Args *args, const char *argument);
 bool args_get_flag(Args *args, const char *argument);
+
+void _args_get_list_i64(Args *args, const char *argument, DA(i64) * da);
+
+#define args_get_list_i64(args, argument, da) _args_get_list_i64(args, argument, (void *)(da))
 
 #endif /* !__CEBUS_ARGS_H__ */
 

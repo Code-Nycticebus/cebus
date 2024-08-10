@@ -11,6 +11,7 @@ typedef struct {
   enum {
     ARG_TYPE_NONE,
     ARG_TYPE_FLAG,
+    ARG_TYPE_LIST,
     ARG_TYPE_I64,
     ARG_TYPE_U64,
     ARG_TYPE_STR,
@@ -35,7 +36,10 @@ typedef struct {
   HashMap *hm;
 } Args;
 
+bool args_c_shift(int *argc, const char ***argv);
+
 Args args_init(Arena *arena, int argc, const char **argv);
+Str args_shift(Args *args);
 void args_print_usage(Args *args, FILE *file);
 void args_print_help(Args *args, FILE *file);
 bool args_parse(Args *args);
