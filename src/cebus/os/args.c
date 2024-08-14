@@ -74,9 +74,17 @@ void args_print_help(Args *args, FILE *file) {
 }
 
 static void args_parse_argument(Argument *argument, Str arg, Error *error) {
-  if (arg.data == NULL || str_startswith(arg, STR("--"))) {
-    error_emit(error, ERR_PARSE, STR_REPR " needs parameter", STR_ARG(argument->name));
+  if (arg.len == 0 || arg.data == NULL || str_startswith(arg, STR("--"))) {
+    error_emit(error, ERR_PARSE, STR_REPR " needs parameter: got " STR_REPR,
+               STR_ARG(argument->name), STR_ARG(arg));
+    return;
   }
+
+  if (arg.data[0] == '"') {
+    arg.data += 1;
+    arg.len -= 2;
+  }
+
   switch (argument->type) {
   case ARG_TYPE_NONE:
   case ARG_TYPE_FLAG:
@@ -135,9 +143,9 @@ bool args_parse(Args *args) {
       if (str_eq(arg, STR("--"))) {
         return true;
       }
-      Str argument_prefix = str_substring(arg, 0, 2);
-      usize dash_count = str_count(argument_prefix, STR("-"));
-      Str real_argument = str_substring(arg, usize_clamp(0, 2, dash_count), arg.len);
+      usize dash_count = str_count(str_substring(arg, 0, 2), STR("-"));
+      Str arg_no_prefix = str_substring(arg, dash_count, arg.len);
+      Str real_argument = str_chop_by_delim(&arg_no_prefix, '=');
       const usize *idx = hm_get_usize(args->hm, str_hash(real_argument));
       if (idx == NULL) {
         error_emit(&error, ERR_PARSE, STR_REPR ": unknown argument", STR_ARG(arg));
@@ -155,7 +163,9 @@ bool args_parse(Args *args) {
       if (argument->pos) {
         positional_count++;
       }
-      args_parse_argument(argument, args_shift(args), &error);
+
+      Str next_arg = arg_no_prefix.len ? arg_no_prefix : args_shift(args);
+      args_parse_argument(argument, next_arg, &error);
       error_propagate(&error, { goto defer; });
 
       continue;

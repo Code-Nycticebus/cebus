@@ -1517,7 +1517,8 @@ void quicksort_ctx(const void *src, void *dest, usize size, usize nelem, Compare
 typedef struct {
   Str name;
   Str description;
-  bool positional;
+  bool parsed;
+  bool pos;
   enum {
     ARG_TYPE_NONE,
     ARG_TYPE_FLAG,
@@ -3573,9 +3574,17 @@ void args_print_help(Args *args, FILE *file) {
 }
 
 static void args_parse_argument(Argument *argument, Str arg, Error *error) {
-  if (arg.data == NULL || str_startswith(arg, STR("--"))) {
-    error_emit(error, ERR_PARSE, STR_REPR " needs parameter", STR_ARG(argument->name));
+  if (arg.len == 0 || arg.data == NULL || str_startswith(arg, STR("--"))) {
+    error_emit(error, ERR_PARSE, STR_REPR " needs parameter: got " STR_REPR,
+               STR_ARG(argument->name), STR_ARG(arg));
+    return;
   }
+
+  if (arg.data[0] == '"') {
+    arg.data += 1;
+    arg.len -= 2;
+  }
+
   switch (argument->type) {
   case ARG_TYPE_NONE:
   case ARG_TYPE_FLAG:
@@ -3610,11 +3619,14 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
     argument->as.str = arg;
   } break;
   }
+
+  argument->parsed = true;
 }
 
 bool args_parse(Args *args) {
   Error error = ErrNew;
 
+  u32 argument_idx = 0;
   u32 positional_count = 0;
   for (Str arg = {0}; (arg = args_shift(args)).data;) {
     if (str_eq(arg, STR("-h"))) {
@@ -3626,52 +3638,65 @@ bool args_parse(Args *args) {
       exit(0);
     }
 
-    cebus_log_debug("-------");
     bool arg_is_optional = arg.data[0] == '-' && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
     if (arg_is_optional) {
       if (str_eq(arg, STR("--"))) {
         return true;
       }
-      Str argument_prefix = str_substring(arg, 0, 2);
-      usize dash_count = str_count(argument_prefix, STR("-"));
-      Str real_argument = str_substring(arg, usize_clamp(0, 2, dash_count), arg.len);
+      usize dash_count = str_count(str_substring(arg, 0, 2), STR("-"));
+      Str arg_no_prefix = str_substring(arg, dash_count, arg.len);
+      Str real_argument = str_chop_by_delim(&arg_no_prefix, '=');
       const usize *idx = hm_get_usize(args->hm, str_hash(real_argument));
       if (idx == NULL) {
         error_emit(&error, ERR_PARSE, STR_REPR ": unknown argument", STR_ARG(arg));
         goto defer;
       }
       Argument *argument = &args->arguments.items[*idx];
+      if (argument->parsed) {
+        error_emit(&error, ERR_PARSE, STR_REPR ": argument was passed twice", STR_ARG(arg));
+        goto defer;
+      }
       if (argument->type == ARG_TYPE_FLAG) {
         argument->as.flag = true; // flag turned on
         continue;
       }
-      args_parse_argument(argument, args_shift(args), &error);
+      if (argument->pos) {
+        positional_count++;
+      }
+
+      Str next_arg = arg_no_prefix.len ? arg_no_prefix : args_shift(args);
+      args_parse_argument(argument, next_arg, &error);
       error_propagate(&error, { goto defer; });
-      positional_count += argument->positional;
+
       continue;
     }
-    cebus_log_debug("-------");
 
     while (true) {
-      if (positional_count >= args->arguments.len) {
+      if (argument_idx >= args->arguments.len) {
         error_emit(&error, ERR_PARSE,
-                   STR_REPR ": too many positional arguments. maybe you need to add a '--'",
-                   STR_ARG(arg));
+                   STR_REPR ": too many positional arguments: got %d expected %" USIZE_FMT,
+                   STR_ARG(arg), argument_idx, args->positional);
         goto defer;
       }
-      Argument *argument = &args->arguments.items[positional_count++];
+      Argument *argument = &args->arguments.items[argument_idx++];
+      if (argument->parsed) {
+        continue; // next
+      }
       if (argument->type == ARG_TYPE_FLAG) {
         continue; // next
       }
 
+      positional_count++;
       args_parse_argument(argument, arg, &error);
       error_propagate(&error, { goto defer; });
+
       break;
     }
   }
 
   if (positional_count < args->positional) {
-    error_emit(&error, ERR_PARSE, "not enough positional arguments");
+    error_emit(&error, ERR_PARSE, "not enough positional arguments: got %d expected %" USIZE_FMT,
+               positional_count, args->positional);
     goto defer;
   }
 
@@ -3699,7 +3724,7 @@ defer:
     da_push(&args->arguments, (Argument){                                                          \
                                   .name = name,                                                    \
                                   .description = str_from_cstr(description),                       \
-                                  .positional = true,                                              \
+                                  .pos = true,                                                     \
                                   .type = T_ENUM,                                                  \
                                   .as = {0},                                                       \
                               });                                                                  \
@@ -3711,7 +3736,6 @@ defer:
     da_push(&args->arguments, (Argument){                                                          \
                                   .name = name,                                                    \
                                   .description = str_from_cstr(description),                       \
-                                  .positional = false,                                             \
                                   .type = T_ENUM,                                                  \
                                   .as.NAME = def,                                                  \
                               });                                                                  \
@@ -3735,7 +3759,6 @@ void args_add_opt_flag(Args *args, const char *argument, const char *description
   da_push(&args->arguments, (Argument){
                                 .name = name,
                                 .description = str_from_cstr(description),
-                                .positional = false,
                                 .type = ARG_TYPE_FLAG,
                                 .as.flag = false,
                             });

@@ -149,6 +149,37 @@ static void test_getting_rest(void) {
   arena_free(&arena);
 }
 
+static void test_equal(void) {
+  Arena arena = {0};
+
+  const char *argv[] = {
+      "./a.out",
+      "--i64=-32",
+      "--str1=basic",
+      "--str2=\"very \"complicated\" string \"",
+  };
+  int argc = ARRAY_LEN(argv);
+
+  Args args = args_init(&arena, argc, argv);
+
+  args_add_i64(&args, "i64", "number description");
+  args_add_opt_str(&args, "str1", STR("not string"), "string description");
+  args_add_opt_str(&args, "str2", STR("not string"), "string description");
+
+  cebus_assert(args_parse(&args), "parsing failed");
+
+  i64 n1 = args_get_i64(&args, "i64");
+  cebus_assert(n1 == -32, "");
+
+  Str s1 = args_get_str(&args, "str1");
+  cebus_assert(str_eq(s1, STR("basic")), "");
+
+  Str s2 = args_get_str(&args, "str2");
+  cebus_assert(str_eq(s2, STR("very \"complicated\" string ")), "");
+
+  arena_free(&arena);
+}
+
 int main(void) {
   test_basic();
   test_advanced();
@@ -156,4 +187,5 @@ int main(void) {
   test_iterating();
   test_iterating_traditional_way();
   test_getting_rest();
+  test_equal();
 }
