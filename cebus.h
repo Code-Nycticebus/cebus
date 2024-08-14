@@ -1517,6 +1517,7 @@ void quicksort_ctx(const void *src, void *dest, usize size, usize nelem, Compare
 typedef struct {
   Str name;
   Str description;
+  bool positional;
   enum {
     ARG_TYPE_NONE,
     ARG_TYPE_FLAG,
@@ -3625,6 +3626,7 @@ bool args_parse(Args *args) {
       exit(0);
     }
 
+    cebus_log_debug("-------");
     bool arg_is_optional = arg.data[0] == '-' && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
     if (arg_is_optional) {
       if (str_eq(arg, STR("--"))) {
@@ -3645,8 +3647,10 @@ bool args_parse(Args *args) {
       }
       args_parse_argument(argument, args_shift(args), &error);
       error_propagate(&error, { goto defer; });
+      positional_count += argument->positional;
       continue;
     }
+    cebus_log_debug("-------");
 
     while (true) {
       if (positional_count >= args->arguments.len) {
@@ -3685,6 +3689,21 @@ defer:
 }
 
 #define ARGS_GENERIC_IMPLEMENTATION(NAME, T, T_ENUM)                                               \
+  void args_add_##NAME(Args *args, const char *argument, const char *description) {                \
+    cebus_assert(args->positional == args->arguments.len,                                          \
+                 "an optional argument was passed before!");                                       \
+    args->positional++;                                                                            \
+    args->hm = args->hm ? args->hm : hm_create(args->arguments.arena);                             \
+    Str name = str_from_cstr(argument);                                                            \
+    hm_insert_usize(args->hm, str_hash(name), da_len(&args->arguments));                           \
+    da_push(&args->arguments, (Argument){                                                          \
+                                  .name = name,                                                    \
+                                  .description = str_from_cstr(description),                       \
+                                  .positional = true,                                              \
+                                  .type = T_ENUM,                                                  \
+                                  .as = {0},                                                       \
+                              });                                                                  \
+  }                                                                                                \
   void args_add_opt_##NAME(Args *args, const char *argument, T def, const char *description) {     \
     args->hm = args->hm ? args->hm : hm_create(args->arguments.arena);                             \
     Str name = str_from_cstr(argument);                                                            \
@@ -3692,15 +3711,10 @@ defer:
     da_push(&args->arguments, (Argument){                                                          \
                                   .name = name,                                                    \
                                   .description = str_from_cstr(description),                       \
+                                  .positional = false,                                             \
                                   .type = T_ENUM,                                                  \
                                   .as.NAME = def,                                                  \
                               });                                                                  \
-  }                                                                                                \
-  void args_add_##NAME(Args *args, const char *argument, const char *description) {                \
-    cebus_assert(args->positional == args->arguments.len,                                          \
-                 "an optional argument was passed before!");                                       \
-    args->positional++;                                                                            \
-    args_add_opt_##NAME(args, argument, (T){0}, description);                                      \
   }                                                                                                \
   T args_get_##NAME(Args *args, const char *argument) {                                            \
     cebus_assert(args->hm != NULL, "no arguments were given");                                     \
@@ -3721,6 +3735,7 @@ void args_add_opt_flag(Args *args, const char *argument, const char *description
   da_push(&args->arguments, (Argument){
                                 .name = name,
                                 .description = str_from_cstr(description),
+                                .positional = false,
                                 .type = ARG_TYPE_FLAG,
                                 .as.flag = false,
                             });

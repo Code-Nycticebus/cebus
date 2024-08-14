@@ -111,11 +111,14 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
     argument->as.str = arg;
   } break;
   }
+
+  argument->parsed = true;
 }
 
 bool args_parse(Args *args) {
   Error error = ErrNew;
 
+  u32 argument_idx = 0;
   u32 positional_count = 0;
   for (Str arg = {0}; (arg = args_shift(args)).data;) {
     if (str_eq(arg, STR("-h"))) {
@@ -141,35 +144,49 @@ bool args_parse(Args *args) {
         goto defer;
       }
       Argument *argument = &args->arguments.items[*idx];
+      if (argument->parsed) {
+        error_emit(&error, ERR_PARSE, STR_REPR ": argument was passed twice", STR_ARG(arg));
+        goto defer;
+      }
       if (argument->type == ARG_TYPE_FLAG) {
         argument->as.flag = true; // flag turned on
         continue;
       }
+      if (argument->pos) {
+        positional_count++;
+      }
       args_parse_argument(argument, args_shift(args), &error);
       error_propagate(&error, { goto defer; });
+
       continue;
     }
 
     while (true) {
-      if (positional_count >= args->arguments.len) {
+      if (argument_idx >= args->arguments.len) {
         error_emit(&error, ERR_PARSE,
-                   STR_REPR ": too many positional arguments. maybe you need to add a '--'",
-                   STR_ARG(arg));
+                   STR_REPR ": too many positional arguments: got %d expected %" USIZE_FMT,
+                   STR_ARG(arg), argument_idx, args->positional);
         goto defer;
       }
-      Argument *argument = &args->arguments.items[positional_count++];
+      Argument *argument = &args->arguments.items[argument_idx++];
+      if (argument->parsed) {
+        continue; // next
+      }
       if (argument->type == ARG_TYPE_FLAG) {
         continue; // next
       }
 
+      positional_count++;
       args_parse_argument(argument, arg, &error);
       error_propagate(&error, { goto defer; });
+
       break;
     }
   }
 
   if (positional_count < args->positional) {
-    error_emit(&error, ERR_PARSE, "not enough positional arguments");
+    error_emit(&error, ERR_PARSE, "not enough positional arguments: got %d expected %" USIZE_FMT,
+               positional_count, args->positional);
     goto defer;
   }
 
@@ -187,6 +204,21 @@ defer:
 }
 
 #define ARGS_GENERIC_IMPLEMENTATION(NAME, T, T_ENUM)                                               \
+  void args_add_##NAME(Args *args, const char *argument, const char *description) {                \
+    cebus_assert(args->positional == args->arguments.len,                                          \
+                 "an optional argument was passed before!");                                       \
+    args->positional++;                                                                            \
+    args->hm = args->hm ? args->hm : hm_create(args->arguments.arena);                             \
+    Str name = str_from_cstr(argument);                                                            \
+    hm_insert_usize(args->hm, str_hash(name), da_len(&args->arguments));                           \
+    da_push(&args->arguments, (Argument){                                                          \
+                                  .name = name,                                                    \
+                                  .description = str_from_cstr(description),                       \
+                                  .pos = true,                                                     \
+                                  .type = T_ENUM,                                                  \
+                                  .as = {0},                                                       \
+                              });                                                                  \
+  }                                                                                                \
   void args_add_opt_##NAME(Args *args, const char *argument, T def, const char *description) {     \
     args->hm = args->hm ? args->hm : hm_create(args->arguments.arena);                             \
     Str name = str_from_cstr(argument);                                                            \
@@ -197,12 +229,6 @@ defer:
                                   .type = T_ENUM,                                                  \
                                   .as.NAME = def,                                                  \
                               });                                                                  \
-  }                                                                                                \
-  void args_add_##NAME(Args *args, const char *argument, const char *description) {                \
-    cebus_assert(args->positional == args->arguments.len,                                          \
-                 "an optional argument was passed before!");                                       \
-    args->positional++;                                                                            \
-    args_add_opt_##NAME(args, argument, (T){0}, description);                                      \
   }                                                                                                \
   T args_get_##NAME(Args *args, const char *argument) {                                            \
     cebus_assert(args->hm != NULL, "no arguments were given");                                     \

@@ -8,6 +8,8 @@
 typedef struct {
   Str name;
   Str description;
+  bool parsed;
+  bool pos;
   enum {
     ARG_TYPE_NONE,
     ARG_TYPE_FLAG,
