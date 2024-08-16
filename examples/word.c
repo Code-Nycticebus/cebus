@@ -18,11 +18,19 @@ static CmpOrdering sort_by_occurence(const void *a_ptr, const void *b_ptr) {
 }
 
 int main(int argc, const char **argv) {
-  // Takes an argument
-  Str file = argc < 2 ? STR(__FILE__) : str_from_cstr(argv[1]);
-
   // Initialize arena for allocation
   Arena arena = {0};
+
+  // Parse args
+  Args args = args_init(&arena, argc, argv);
+  args_add_opt_str(&args, "file", STR(__FILE__), "file to be analized");
+  args_add_opt_u64(&args, "top", 3, "print out the top N words");
+  if (!args_parse(&args)) {
+    return -1;
+  }
+
+  // Takes an argument
+  Str file = args_get_str(&args, "file");
 
   // Create error
   Error error = ErrNew;
@@ -74,7 +82,8 @@ int main(int argc, const char **argv) {
   cebus_log_info("total words:  %" USIZE_FMT, total_words);
   cebus_log_info("unique words: %" USIZE_FMT, words.len);
   // print out the 3 most occuring words
-  for (usize i = 0; i < 3; ++i) {
+  u64 n = args_get_u64(&args, "top");
+  for (usize i = 0; i < n; ++i) {
     cebus_log_info(" %" USIZE_FMT ": %d times: '" STR_FMT "'", i + 1, da_get(&words, i).count,
                    STR_ARG(da_get(&words, i).word));
   }
