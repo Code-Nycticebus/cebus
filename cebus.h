@@ -3663,7 +3663,7 @@ bool args_parse(Args *args) {
     bool arg_is_optional = arg.data[0] == '-' && (arg.data[1] == '-' || !c_is_digit(arg.data[1]));
     if (arg_is_optional) {
       if (str_eq(arg, STR("--"))) {
-        return true;
+        break;
       }
       usize dash_count = str_count(str_substring(arg, 0, 2), STR("-"));
       Str arg_no_prefix = str_substring(arg, dash_count, arg.len);
