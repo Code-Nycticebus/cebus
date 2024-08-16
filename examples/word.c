@@ -23,7 +23,7 @@ int main(int argc, const char **argv) {
 
   // Parse args
   Args args = args_init(&arena, argc, argv);
-  args_add_opt_str(&args, "file", STR(__FILE__), "file to be analized");
+  args_add_opt_str(&args, "file", STR(__FILE__), "file to be analised");
   args_add_opt_u64(&args, "top", 3, "print out the top N words");
   if (!args_parse(&args)) {
     return -1;
