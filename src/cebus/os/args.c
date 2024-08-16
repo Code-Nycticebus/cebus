@@ -43,8 +43,12 @@ Args args_init(Arena *arena, int argc, const char **argv) {
   return args;
 }
 
+void args_add_description(Args *args, const char *description) {
+  args->description = str_from_cstr(description);
+}
+
 void args_print_usage(Args *args, FILE *file) {
-  fprintf(file, STR_FMT, STR_ARG(args->program));
+  fprintf(file, "usage: " STR_FMT, STR_ARG(args->program));
   for (u32 i = 0; i < args->positional; ++i) {
     Argument *argument = &args->arguments.items[i];
     fprintf(file, " <" STR_FMT ">", STR_ARG(argument->name));
@@ -57,14 +61,28 @@ void args_print_usage(Args *args, FILE *file) {
 
 void args_print_help(Args *args, FILE *file) {
   args_print_usage(args, file);
+  fprintf(file, "\n");
 
-  for (u32 i = 0; i < args->arguments.len && i < args->positional; ++i) {
-    Argument *argument = &args->arguments.items[i];
-    const i32 padding = i32_max(0, 25 - (i32)argument->name.len);
-    fprintf(file, " %2d. " STR_FMT " %*c " STR_FMT "\n", i + 1, STR_ARG(argument->name), padding,
-            ' ', STR_ARG(argument->description));
+  if (args->description.len) {
+    fprintf(file, STR_FMT "\n", STR_ARG(args->description));
+    fprintf(file, "\n");
   }
 
+  if (args->positional) {
+    fprintf(file, "positional arguments:\n");
+  }
+  for (u32 i = 0; i < args->arguments.len && i < args->positional; ++i) {
+    Argument *argument = &args->arguments.items[i];
+    const i32 padding = i32_max(0, 28 - (i32)argument->name.len);
+    fprintf(file, "  " STR_FMT " %*c " STR_FMT "\n", STR_ARG(argument->name), padding, ' ',
+            STR_ARG(argument->description));
+  }
+  if (args->positional) {
+    fprintf(file, "\n");
+  }
+
+  fprintf(file, "options:\n");
+  fprintf(file, "  -h, --help                    show usage or this help message\n");
   for (usize i = args->positional; i < args->arguments.len; i++) {
     Argument *argument = &args->arguments.items[i];
     const i32 padding = i32_max(0, 28 - (i32)argument->name.len);

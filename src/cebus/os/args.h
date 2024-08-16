@@ -28,6 +28,7 @@ typedef struct {
 
 typedef struct {
   Str program;
+  Str description;
 
   const char **argv;
   int argc;
@@ -39,12 +40,15 @@ typedef struct {
 } Args;
 
 bool args_c_shift(int *argc, const char ***argv);
+Str args_shift(Args *args);
 
 Args args_init(Arena *arena, int argc, const char **argv);
-Str args_shift(Args *args);
+
 void args_print_usage(Args *args, FILE *file);
 void args_print_help(Args *args, FILE *file);
 bool args_parse(Args *args);
+
+void args_add_description(Args *args, const char *description);
 
 void args_add_i64(Args *args, const char *argument, const char *description);
 void args_add_u64(Args *args, const char *argument, const char *description);
