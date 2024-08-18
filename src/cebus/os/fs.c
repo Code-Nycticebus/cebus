@@ -331,8 +331,9 @@ FsIter fs_iter_begin(Path directory, bool recursive) {
   WIN32_FIND_DATA findFileData;
   node->handle = FindFirstFile(node->name, &findFileData); 
   if (node->handle == INVALID_HANDLE_VALUE) {
-    printf("FindFirstFile failed (%ld)\n", GetLastError());
-    return (FsIter){0};
+    DWORD err = GetLastError();
+    error_emit(&it.error, (i32)err, "FindFirstFile failed (%ld)\n", err);
+    return it;
   }
 
   it._stack = node;
@@ -341,7 +342,7 @@ FsIter fs_iter_begin(Path directory, bool recursive) {
 }
 
 void fs_iter_end(FsIter *it, Error *error) {
-    error_propagate(&it->error, {
+  error_propagate(&it->error, {
     if (!error) {
       error_panic();
     }
@@ -393,8 +394,9 @@ bool fs_iter_next(FsIter *it) {
       memcpy(&node->name[path.len], "/*", 2);
       node->len = len;
       node->handle = FindFirstFile(node->name, &findFileData);
-      if (node->handle == NULL) {
-        error_emit(&it->error, errno, "FindFIrstFile failed");
+      if (node->handle == INVALID_HANDLE_VALUE) {
+        DWORD err = GetLastError();
+        error_emit(&it->error, (i32)err, "FindFirstFile failed (%ld)\n", err);
         return false;
       }
       node->next = it->_stack;
