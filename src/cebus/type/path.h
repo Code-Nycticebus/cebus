@@ -7,10 +7,11 @@
 
 typedef DA(Path) PathDa;
 
-Path _path_new(Arena *arena, ...);
-#define path_new(arena, ...) _path_new(arena, __VA_ARGS__, (Str){0})
+#define path_new(arena, ...)                                                                       \
+  path_join(arena, ARRAY_LEN((Path[]){__VA_ARGS__}), (Path[]){__VA_ARGS__})
 
-Path path_join(Arena *arena, PathDa *da);
+Path path_join(Arena *arena, usize size, Path *paths);
+Path path_join_da(Arena *arena, PathDa *da);
 
 Str path_name(Path path);
 Str path_suffix(Path path);
@@ -19,6 +20,7 @@ Path path_parent(Path path);
 
 // TODO
 // keep it io-less. i want a "pure" path api
+// TODO: operating system dependent delimiter
 // bool path_relative(Path path);
 // bool path_absolute(Path path);
 // bool path_relative_to(Path p1, Path p2);

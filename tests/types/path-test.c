@@ -17,6 +17,39 @@ typedef struct {
     ASSERT(out, tests[i].expected);                                                                \
   }
 
+static void test_new(void) {
+  Arena arena = {0};
+  Path new = path_new(&arena, PATH("."), PATH("cebus"), PATH("cebus.h"));
+
+  cebus_assert(str_eq(new, STR("./cebus/cebus.h")), "");
+
+  arena_free(&arena);
+}
+
+static void test_join(void) {
+  Arena arena = {0};
+  Path paths[] = {PATH("."), PATH("cebus"), PATH("cebus.h")};
+  usize len = ARRAY_LEN(paths);
+
+  Path new = path_join(&arena, len, paths);
+  cebus_assert(str_eq(new, STR("./cebus/cebus.h")), "");
+
+  arena_free(&arena);
+}
+
+static void test_join_da(void) {
+  Arena arena = {0};
+  PathDa paths = da_new(&arena);
+  da_push(&paths, PATH("."));
+  da_push(&paths, PATH("cebus"));
+  da_push(&paths, PATH("cebus.h"));
+
+  Path new = path_join_da(&arena, &paths);
+  cebus_assert(str_eq(new, STR("./cebus/cebus.h")), "");
+
+  arena_free(&arena);
+}
+
 static void test_name(void) {
   TestCases tests[] = {
       {PATH("."), STR("")},
@@ -94,6 +127,10 @@ static void test_directory(void) {
 }
 
 int main(void) {
+  test_new();
+  test_join();
+  test_join_da();
+
   test_name();
   test_suffix();
   test_stem();

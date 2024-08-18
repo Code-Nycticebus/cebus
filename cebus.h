@@ -2225,10 +2225,11 @@ INTEGER_DECL(usize)
 
 typedef DA(Path) PathDa;
 
-Path _path_new(Arena *arena, ...);
-#define path_new(arena, ...) _path_new(arena, __VA_ARGS__, (Str){0})
+#define path_new(arena, ...)                                                                       \
+  path_join(arena, ARRAY_LEN((Path[]){__VA_ARGS__}), (Path[]){__VA_ARGS__})
 
-Path path_join(Arena *arena, PathDa *da);
+Path path_join(Arena *arena, usize size, Path *paths);
+Path path_join_da(Arena *arena, PathDa *da);
 
 Str path_name(Path path);
 Str path_suffix(Path path);
@@ -2237,6 +2238,7 @@ Path path_parent(Path path);
 
 // TODO
 // keep it io-less. i want a "pure" path api
+// TODO: operating system dependent delimiter
 // bool path_relative(Path path);
 // bool path_absolute(Path path);
 // bool path_relative_to(Path p1, Path p2);
@@ -4880,31 +4882,11 @@ INTEGER_IMPL(usize, USIZE_BITS)
 // #include "path.h"
 // #include "cebus/type/string.h"
 
-#include <stdarg.h>
-
-Path _path_new(Arena *arena, ...) {
-  Arena scratch = {0};
-  DA(Path) paths = da_new(&scratch);
-  va_list va;
-  va_start(va, arena);
-  Path path = va_arg(va, Path);
-  while (path.data != NULL) {
-    if (path.len) {
-      da_push(&paths, path);
-    }
-    path = va_arg(va, Path);
-  }
-  va_end(va);
-
-  Path fullpath = str_join(STR("/"), paths.len, paths.items, arena);
-  arena_free(&scratch);
-  return fullpath;
+Path path_join(Arena *arena, usize size, Path *paths) {
+  return str_join(STR("/"), size, paths, arena);
 }
 
-Path path_join(Arena *arena, PathDa *da) {
-  // TODO: operating system dependent
-  return str_join(STR("/"), da->len, da->items, arena);
-}
+Path path_join_da(Arena *arena, PathDa *da) { return path_join(arena, da->len, da->items); }
 
 Str path_name(Path path) {
   if (str_eq(path, STR("."))) {

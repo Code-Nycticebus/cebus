@@ -1,31 +1,11 @@
 #include "path.h"
 #include "cebus/type/string.h"
 
-#include <stdarg.h>
-
-Path _path_new(Arena *arena, ...) {
-  Arena scratch = {0};
-  DA(Path) paths = da_new(&scratch);
-  va_list va;
-  va_start(va, arena);
-  Path path = va_arg(va, Path);
-  while (path.data != NULL) {
-    if (path.len) {
-      da_push(&paths, path);
-    }
-    path = va_arg(va, Path);
-  }
-  va_end(va);
-
-  Path fullpath = str_join(STR("/"), paths.len, paths.items, arena);
-  arena_free(&scratch);
-  return fullpath;
+Path path_join(Arena *arena, usize size, Path *paths) {
+  return str_join(STR("/"), size, paths, arena);
 }
 
-Path path_join(Arena *arena, PathDa *da) {
-  // TODO: operating system dependent
-  return str_join(STR("/"), da->len, da->items, arena);
-}
+Path path_join_da(Arena *arena, PathDa *da) { return path_join(arena, da->len, da->items); }
 
 Str path_name(Path path) {
   if (str_eq(path, STR("."))) {
