@@ -289,18 +289,123 @@ bool fs_iter_next(FsIter *it) {
 #elif defined(WINDOWS)
 
 #include <io.h>
+#include <windows.h>
 
-bool fs_exists(Str filename) {
-  char _filename[FILENAME_MAX] = {0};
-  memcpy(_filename, filename.data, filename.len);
-  return _access(_filename, 0) == 0;
+typedef struct FsNode {
+  HANDLE handle;
+  struct FsNode *next;
+  usize len;
+  char name[];
+} FsNode;
+
+bool fs_exists(Path path) {
+  char _path[FILENAME_MAX] = {0};
+  memcpy(_path, path.data, path.len);
+  return _access(_path, 0) == 0;
 }
 
-#error "fs_is_dir not implemented"
-#error "fs_iter_begin not implemented"
-#error "fs_iter_end not implemented"
+bool fs_is_dir(Path path) {
+  char _path[FILENAME_MAX] = {0};
+  memcpy(_path, path.data, path.len);
+  DWORD attributes = GetFileAttributes(_path);
+  if (attributes == INVALID_FILE_ATTRIBUTES) {
+      return false;
+  }
+  if (attributes & FILE_ATTRIBUTE_DIRECTORY) {
+      return true; 
+  }
 
-#error "fs_iter_next not implemented"
+  return false; 
+}
+
+FsIter fs_iter_begin(Path directory, bool recursive) {
+  FsIter it = {.recursive = recursive, .error = ErrNew};
+
+  const usize len = directory.len + (sizeof("/*") - 1);
+  const usize size = sizeof(FsNode) + len + 1;
+  FsNode *node = arena_calloc_chunk(&it.scratch, size);
+  memcpy(node->name, directory.data, directory.len);
+  memcpy(&node->name[directory.len], "/*", 2);
+  node->len = len;
+
+  WIN32_FIND_DATA findFileData;
+  node->handle = FindFirstFile(node->name, &findFileData); 
+  if (node->handle == INVALID_HANDLE_VALUE) {
+    printf("FindFirstFile failed (%ld)\n", GetLastError());
+    return (FsIter){0};
+  }
+
+  it._stack = node;
+  
+  return it;
+}
+
+void fs_iter_end(FsIter *it, Error *error) {
+    error_propagate(&it->error, {
+    if (!error) {
+      error_panic();
+    }
+    const FileLocation loc = error->location;
+    bool panic = error->panic_on_emit;
+    *error = it->error;
+    error->location = loc;
+    if (panic) {
+      error_panic();
+    }
+  });
+  while (it->_stack != NULL) {
+    FsNode *current = it->_stack;
+    it->_stack = current->next;
+    FindClose(current->handle);
+    arena_free_chunk(&it->scratch, current);
+  }
+  arena_free(&it->scratch);
+}
+
+bool fs_iter_next(FsIter *it) {
+  while (it->_stack != NULL) {
+    arena_reset(&it->scratch);
+    FsNode* current = it->_stack;
+
+    WIN32_FIND_DATA findFileData;
+    if (!FindNextFile(current->handle, &findFileData)) {
+      FindClose(current->handle);
+      it->_stack = current->next;
+      arena_free_chunk(&it->scratch, current);
+      continue;
+    }
+
+    // skip "." and ".." directories
+    if (strcmp(findFileData.cFileName, ".") == 0 || strcmp(findFileData.cFileName, "..") == 0) {
+      continue;
+    }
+
+    Str path = str_format(&it->scratch, "%.*s/%s", (i32)current->len - 2, current->name, findFileData.cFileName);
+
+    it->current.path = path;
+    it->current.is_dir = findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+
+    if (it->current.is_dir && it->recursive) {
+      const usize len = path.len + (sizeof("/*") - 1);
+      const usize size = sizeof(FsNode) + len + 1;
+      FsNode *node = arena_calloc_chunk(&it->scratch, size);
+      memcpy(node->name, path.data, path.len);
+      memcpy(&node->name[path.len], "/*", 2);
+      node->len = len;
+      node->handle = FindFirstFile(node->name, &findFileData);
+      if (node->handle == NULL) {
+        error_emit(&it->error, errno, "FindFIrstFile failed");
+        return false;
+      }
+      node->next = it->_stack;
+      it->_stack = node;
+    } 
+
+    return true;
+  }
+
+  return false;
+}
 
 //////////////////////////////////////////////////////////////////////////////
 #endif
