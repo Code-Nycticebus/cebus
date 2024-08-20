@@ -7,7 +7,7 @@ int main(void) {
 #if defined(CEBUS_64BIT)
   cebus_log_info("64-bit");
 #else
-  cebus_log_info("Bit:\t32-bit");
+  cebus_log_info("32-bit");
 #endif
   cebus_log_info("%s endian", CEBUS_BYTE_ORDER == ENDIAN_LITTLE ? "little" : "big");
 }
