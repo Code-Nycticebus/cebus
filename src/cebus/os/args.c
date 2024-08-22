@@ -105,8 +105,7 @@ static void args_parse_argument(Argument *argument, Str arg, Error *error) {
 
   switch (argument->type) {
   case ARG_TYPE_NONE:
-  case ARG_TYPE_FLAG:
-  case ARG_TYPE_LIST: {
+  case ARG_TYPE_FLAG: {
     error_emit(error, ERR_INTERNAL, "this type should never be parsed here: %d", argument->type);
     return;
   } break;

@@ -13,7 +13,6 @@ typedef struct {
   enum {
     ARG_TYPE_NONE,
     ARG_TYPE_FLAG,
-    ARG_TYPE_LIST,
     ARG_TYPE_I64,
     ARG_TYPE_U64,
     ARG_TYPE_STR,
