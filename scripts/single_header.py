@@ -23,7 +23,7 @@ def copy(file, src):
 
 if __name__ == "__main__":
     with open(output, "w") as f:
-        f.write("/* ")
+        f.write("/* \n")
         copy(f, Path("LICENSE"))
         f.write("*/\n")
 
