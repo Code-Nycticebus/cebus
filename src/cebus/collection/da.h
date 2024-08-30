@@ -69,8 +69,6 @@ destination.
 - `da_filter_ctx`: Filter dynamic array with a filter function, that takes a
 `void*` as a context, and place it into a destination.
 - `da_sort`: Sort the array using a comparison function.
-- `da_sort_ctx`: Sort the array using a comparison function that also takes a
-`void*` as a context.
 - `da_reverse`: Reverse the order of elements in the array.
 */
 
