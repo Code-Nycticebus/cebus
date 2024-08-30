@@ -79,7 +79,8 @@ destination.
 
 #include "cebus/core/arena.h"   // IWYU pragma: export
 #include "cebus/core/defines.h" // IWYU pragma: export
-#include "cebus/core/sorting.h" // IWYU pragma: export
+
+#include <stdlib.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -103,10 +104,7 @@ destination.
 ///////////////////////////////////////////////////////////////////////////////
 
 #define da_new(_arena)                                                                             \
-  {                                                                                                \
-      .arena = (_arena),                                                                           \
-      .items = NULL,                                                                               \
-  }
+  { .arena = (_arena), .items = NULL, }
 
 // depricated
 #define da_init(list, _arena)                                                                      \
@@ -247,17 +245,7 @@ destination.
     da_len(dest) = __f_count;                                                                      \
   } while (0)
 
-#define da_sort(src, dest, sort)                                                                   \
-  do {                                                                                             \
-    da_reserve((dest), da_len(src));                                                               \
-    quicksort(&da_get(src, 0), &da_get(dest, 0), sizeof(da_get(src, 0)), da_len(src), sort);       \
-  } while (0)
-
-#define da_sort_ctx(src, dest, sort, ctx)                                                          \
-  do {                                                                                             \
-    da_reserve((dest), da_len(src));                                                               \
-    quicksort_ctx((src)->items, (dest)->items, sizeof(da_get(src, 0)), da_len(src), sort, ctx);    \
-  } while (0)
+#define da_sort(src, sort) qsort(&da_get(src, 0), da_len(src), sizeof((src)->items[0]), sort)
 
 #define da_reverse(list)                                                                           \
   do {                                                                                             \

@@ -75,7 +75,7 @@ int main(int argc, const char **argv) {
   }
 
   // Sort the array
-  da_sort(&words, &words, sort_by_occurence);
+  da_sort(&words, sort_by_occurence);
 
   // print stats
   cebus_log_info("File: '" STR_FMT "'", STR_ARG(file));

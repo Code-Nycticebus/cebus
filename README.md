@@ -38,7 +38,6 @@ cebus = { dir = "path/to/cebus", type = "pybuildc" }
    - [error.h](#errorh)
    - [logging.h](#loggingh)
    - [platform.h](#platformh)
-   - [sorting.h](#sortingh)
 - [Os](#Os)
    - [args.h](#argsh)
    - [cmd.h](#cmdh)
@@ -466,21 +465,6 @@ ARM.
 MSVC.
 - **CPU Bitness**: Distinguishes between 32-bit and 64-bit environments.
 - **Byte Order**: Defines the system's byte order (endianness).
-
-# [sorting.h](https://github.com/Code-Nycticebus/cebus/blob/main/src/cebus/core/sorting.h)
-## Usage
-
-Sort an array by providing the array, its size, the number of elements, and a
-comparison function:
-
-```c
-int array[5] = {5, 4, 3, 2, 1};
-quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
-```
-
-For context-aware comparisons, use `quicksort_ctx` with a comparison function
-that takes an additional context parameter.
-
 
 # Os
 

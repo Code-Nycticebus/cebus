@@ -65,36 +65,11 @@ static void test_sort(void) {
     da_push(&list, n - i - 1);
   }
 
-  da_sort(&list, &list, usize_compare_qsort(CMP_LESS));
+  da_sort(&list, usize_compare_qsort(CMP_LESS));
 
   for (usize i = 0; i < list.len; ++i) {
     cebus_assert(list.items[i] == i, "sorting did not work correctly");
   }
-
-  arena_free(&arena);
-}
-
-static CmpOrdering sort_smallest(const void *_ctx, const void *a, const void *b) {
-  if (*(const usize *)a == *(const usize *)_ctx) {
-    return CMP_LESS;
-  }
-  return usize_compare_lt(*(const usize *)a, *(const usize *)b);
-}
-
-static void test_sort_ctx(void) {
-  Arena arena = {0};
-  const usize n = 10;
-  DA(usize) list = {0};
-  da_init(&list, &arena);
-  for (usize i = 0; i < n; ++i) {
-    da_push(&list, n - i - 1);
-  }
-
-  const usize smallest = 4;
-  da_sort_ctx(&list, &list, sort_smallest, &smallest);
-
-  cebus_assert(list.items[0] == 4, "sorting did not work correctly");
-  cebus_assert(list.items[1] == 0, "sorting did not work correctly");
 
   arena_free(&arena);
 }
@@ -285,7 +260,6 @@ int main(void) {
   test_reserve();
   test_reverse();
   test_sort();
-  test_sort_ctx();
   test_last();
   test_filter();
   test_filter_ctx();

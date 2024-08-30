@@ -766,7 +766,8 @@ destination.
 
 // #include "cebus/core/arena.h"   // IWYU pragma: export
 // #include "cebus/core/defines.h" // IWYU pragma: export
-// #include "cebus/core/sorting.h" // IWYU pragma: export
+
+#include <stdlib.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -790,10 +791,7 @@ destination.
 ///////////////////////////////////////////////////////////////////////////////
 
 #define da_new(_arena)                                                                             \
-  {                                                                                                \
-      .arena = (_arena),                                                                           \
-      .items = NULL,                                                                               \
-  }
+  { .arena = (_arena), .items = NULL, }
 
 // depricated
 #define da_init(list, _arena)                                                                      \
@@ -934,17 +932,7 @@ destination.
     da_len(dest) = __f_count;                                                                      \
   } while (0)
 
-#define da_sort(src, dest, sort)                                                                   \
-  do {                                                                                             \
-    da_reserve((dest), da_len(src));                                                               \
-    quicksort(&da_get(src, 0), &da_get(dest, 0), sizeof(da_get(src, 0)), da_len(src), sort);       \
-  } while (0)
-
-#define da_sort_ctx(src, dest, sort, ctx)                                                          \
-  do {                                                                                             \
-    da_reserve((dest), da_len(src));                                                               \
-    quicksort_ctx((src)->items, (dest)->items, sizeof(da_get(src, 0)), da_len(src), sort, ctx);    \
-  } while (0)
+#define da_sort(src, sort) qsort(&da_get(src, 0), da_len(src), sizeof((src)->items[0]), sort)
 
 #define da_reverse(list)                                                                           \
   do {                                                                                             \
@@ -1471,42 +1459,6 @@ void FMT(1) _cebus_log_trace(const char *fmt, ...);
 ////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CEBUS_LOGGING_H__ */
-
-/* DOCUMENTATION
-## Usage
-
-Sort an array by providing the array, its size, the number of elements, and a
-comparison function:
-
-```c
-int array[5] = {5, 4, 3, 2, 1};
-quicksort(array, array, sizeof(int), 5, i32_compare_qsort(CMP_LESS));
-```
-
-For context-aware comparisons, use `quicksort_ctx` with a comparison function
-that takes an additional context parameter.
-
-*/
-
-#ifndef __CEBUS_SORTING_H__
-#define __CEBUS_SORTING_H__
-
-// #include "cebus/core/defines.h"
-
-////////////////////////////////////////////////////////////////////////////
-
-/* Sort an array with a function */
-void quicksort(const void *src, void *dest, usize size, usize nelem, CompareFn compare);
-
-////////////////////////////////////////////////////////////////////////////
-
-/* Sort an array with a function that also takes a context */
-void quicksort_ctx(const void *src, void *dest, usize size, usize nelem, CompareCtxFn compare,
-                   const void *ctx);
-
-////////////////////////////////////////////////////////////////////////////
-
-#endif /* !__CEBUS_SORTING_H__ */
 
 #ifndef __CEBUS_ARGS_H__
 #define __CEBUS_ARGS_H__
@@ -3440,67 +3392,6 @@ void cebus_log_info(const char *fmt, ...) { _LOG(CEBUS_LOG_INFO, fmt); }
 
 void _cebus_log_debug(const char *fmt, ...) { _LOG(CEBUS_LOG_DEBUG, fmt); }
 void _cebus_log_trace(const char *fmt, ...) { _LOG(CEBUS_LOG_TRACE, fmt); }
-
-////////////////////////////////////////////////////////////////////////////
-
-// #include "sorting.h"
-
-#include <stdlib.h>
-#include <string.h>
-
-////////////////////////////////////////////////////////////////////////////
-
-void quicksort(const void *src, void *dest, usize size, usize nelem, CompareFn compare) {
-  if (dest != src) {
-    memcpy(dest, src, size * nelem);
-  }
-  qsort(dest, nelem, size, compare);
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-static inline void swap(void *a, void *b, usize size) {
-  u8 *pa = a;
-  u8 *pb = b;
-  for (usize i = 0; i < size; ++i) {
-    u8 temp = pa[i];
-    pa[i] = pb[i];
-    pb[i] = temp;
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-static inline usize partition_ctx(u8 *base, usize size, usize low, usize high, CompareCtxFn compare,
-                                  const void *ctx) {
-  u8 *pivot = &base[high * size];
-  usize i = low - 1;
-  for (usize j = low; j <= high - 1; j++) {
-    if (compare(ctx, &base[j * size], pivot) < 0) {
-      i++;
-      swap(&base[i * size], &base[j * size], size);
-    }
-  }
-  swap(&base[(i + 1) * size], pivot, size);
-  return (i + 1);
-}
-
-static void _quicksort_ctx(void *base, size_t size, usize low, usize high, CompareCtxFn compare,
-                           const void *ctx) {
-  if (low < high) {
-    usize pi = partition_ctx(base, size, low, high, compare, ctx);
-    _quicksort_ctx(base, size, low, pi ? pi - 1 : 0, compare, ctx);
-    _quicksort_ctx(base, size, pi + 1, high, compare, ctx);
-  }
-}
-
-void quicksort_ctx(const void *src, void *dest, usize size, usize nelem, CompareCtxFn compare,
-                   const void *ctx) {
-  if (dest != src) {
-    memcpy(dest, src, size * nelem);
-  }
-  _quicksort_ctx(dest, size, 0, nelem - 1, compare, ctx);
-}
 
 ////////////////////////////////////////////////////////////////////////////
 
