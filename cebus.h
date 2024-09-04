@@ -4989,6 +4989,9 @@ Str str_wrap(Str s, Str wrap, Arena *arena) {
 }
 
 Str str_join(Str sep, usize count, Str *s, Arena *arena) {
+  if (count == 0) {
+    return (Str){0};
+  }
   usize size = sep.len * (count - 1);
   for (usize i = 0; i < count; i++) {
     size += s[i].len;

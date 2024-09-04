@@ -230,6 +230,9 @@ static void test_join(void) {
   Str res4 = str_join_wrap(STR(" "), STR("'"), 2, (Str[2]){STR("One"), STR("Two")}, &arena);
   cebus_assert(str_eq(res4, STR("'One' 'Two'")), STR_FMT, STR_ARG(res4));
 
+  Str res5 = str_join(STR(" "), 0, NULL, &arena);
+  cebus_assert(str_eq(res5, STR("")), STR_REPR, STR_ARG(res5));
+
   arena_free(&arena);
 }
 
