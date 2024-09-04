@@ -1861,6 +1861,8 @@ printf("Home directory: " STR_FMT "\n", STR_ARG(home));
 ////////////////////////////////////////////////////////////////////////////
 
 Str os_getenv(const char *env, Error *error);
+void os_mkdir(Path path);
+void os_mkdir_mode(Path path, u32 mode);
 void os_chdir(Path path);
 Path os_getcwd(Arena *arena);
 
@@ -4406,6 +4408,7 @@ Str os_getenv(const char *env, Error *error) {
 
 #include <errno.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 void os_chdir(Path path) {
@@ -4413,6 +4416,16 @@ void os_chdir(Path path) {
   memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
   cebus_assert(chdir(pathname) == -1, "Could not change directory to '" STR_FMT "': %s",
                STR_ARG(path), strerror(errno));
+}
+
+void os_mkdir(Path path) {
+  os_mkdir_mode(path, 0755); // NOLINT
+}
+
+void os_mkdir_mode(Path path, u32 mode) {
+  char pathname[FILENAME_MAX] = {0};
+  memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
+  mkdir(pathname, mode);
 }
 
 Path os_getcwd(Arena *arena) {
@@ -4432,6 +4445,17 @@ void os_chdir(Path path) {
   char buffer[FILENAME_MAX] = {0};
   memcpy(buffer, path.data, usize_min(path.len, FILENAME_MAX));
   _chdir(buffer);
+}
+
+void os_mkdir(Path path) {
+  char pathname[FILENAME_MAX] = {0};
+  memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
+  _mkdir(pathname, mode);
+}
+
+void os_mkdir_mode(Path path, u32 mode) {
+  (void)mode;
+  os_mkdir(path);
 }
 
 Path os_getcwd(Arena *arena) {
