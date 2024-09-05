@@ -66,7 +66,7 @@ void os_chdir(Path path) {
 void os_mkdir(Path path) {
   char pathname[FILENAME_MAX] = {0};
   memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
-  _mkdir(pathname, mode);
+  _mkdir(pathname);
 }
 
 void os_mkdir_mode(Path path, u32 mode) {
