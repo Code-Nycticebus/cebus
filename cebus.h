@@ -57,7 +57,12 @@ MSVC.
 #define WINDOWS
 #define CEBUS_SYSTEM "Windows"
 #define _CRT_SECURE_NO_WARNINGS
+#define NOGDI
+#define NOUSER
 #define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef near
+#undef far
 #else
 #error "Platform not supported!"
 #endif
@@ -139,25 +144,22 @@ MSVC.
 /* Compiler */
 #if defined(__GNUC__) && !defined(__clang__)
 #define GCC
-#define CEBUS_COMPILER "GCC"
+#define CEBUS_COMPILER "gcc"
 #elif defined(__clang__)
 #define CLANG
-#define CEBUS_COMPILER "Clang"
+#define CEBUS_COMPILER "clang"
 #elif defined(__TINYC__)
 #define TINYC
-#define CEBUS_COMPILER "TinyC"
+#define CEBUS_COMPILER "tcc"
 #elif defined(_MSC_VER)
 #define MSVC
-#define CEBUS_COMPILER "MSVC"
+#define CEBUS_COMPILER "cl"
 #elif defined(__MINGW32__)
 #define MINGW32
-#define CEBUS_COMPILER "MinGW32"
+#define CEBUS_COMPILER "mingw32"
 #elif defined(__MINGW64__)
 #define MINGW64
-#define CEBUS_COMPILER "MinGW64"
-#elif defined(__INTEL_COMPILER)
-#define INTEL_COMPILER
-#define CEBUS_COMPILER "Intel Compiler"
+#define CEBUS_COMPILER "mingw64"
 #else
 #define COMPILER_UNKOWN
 #define CEBUS_COMPILER "COMPILER UNKOWN"
@@ -4450,7 +4452,7 @@ void os_chdir(Path path) {
 void os_mkdir(Path path) {
   char pathname[FILENAME_MAX] = {0};
   memcpy(pathname, path.data, usize_min(path.len, FILENAME_MAX));
-  _mkdir(pathname, mode);
+  _mkdir(pathname);
 }
 
 void os_mkdir_mode(Path path, u32 mode) {
