@@ -56,8 +56,6 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 
 #include "cebus/type/string.h"
 
-#include <windows.h>
-
 void cmd_exec(Error *error, size_t argc, Str *argv) {
   STARTUPINFOA si;
   PROCESS_INFORMATION pi;

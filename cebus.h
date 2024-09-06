@@ -3745,8 +3745,6 @@ void cmd_exec(Error *error, size_t argc, Str *argv) {
 
 // #include "cebus/type/string.h"
 
-#include <windows.h>
-
 void cmd_exec(Error *error, size_t argc, Str *argv) {
   STARTUPINFOA si;
   PROCESS_INFORMATION pi;
@@ -3846,8 +3844,6 @@ defer:
 
 //////////////////////////////////////////////////////////////////////////////
 #elif defined(WINDOWS)
-
-#include <windows.h>
 
 Dll *dll_load(Str path, Error *error) {
   if (!fs_exists(path)) {
@@ -4190,7 +4186,6 @@ bool fs_iter_next(FsIter *it) {
 #elif defined(WINDOWS)
 
 #include <io.h>
-#include <windows.h>
 
 typedef struct FsNode {
   HANDLE handle;
@@ -4210,13 +4205,13 @@ bool fs_is_dir(Path path) {
   memcpy(_path, path.data, path.len);
   DWORD attributes = GetFileAttributes(_path);
   if (attributes == INVALID_FILE_ATTRIBUTES) {
-      return false;
+    return false;
   }
   if (attributes & FILE_ATTRIBUTE_DIRECTORY) {
-      return true; 
+    return true;
   }
 
-  return false; 
+  return false;
 }
 
 FsIter fs_iter_begin(Path directory, bool recursive) {
@@ -4230,7 +4225,7 @@ FsIter fs_iter_begin(Path directory, bool recursive) {
   node->len = len;
 
   WIN32_FIND_DATA findFileData;
-  node->handle = FindFirstFile(node->name, &findFileData); 
+  node->handle = FindFirstFile(node->name, &findFileData);
   if (node->handle == INVALID_HANDLE_VALUE) {
     DWORD err = GetLastError();
     error_emit(&it.error, (i32)err, "FindFirstFile failed (%ld)\n", err);
@@ -4238,7 +4233,7 @@ FsIter fs_iter_begin(Path directory, bool recursive) {
   }
 
   it._stack = node;
-  
+
   return it;
 }
 
@@ -4267,7 +4262,7 @@ void fs_iter_end(FsIter *it, Error *error) {
 bool fs_iter_next(FsIter *it) {
   while (it->_stack != NULL) {
     arena_reset(&it->scratch);
-    FsNode* current = it->_stack;
+    FsNode *current = it->_stack;
 
     WIN32_FIND_DATA findFileData;
     if (!FindNextFile(current->handle, &findFileData)) {
@@ -4282,7 +4277,8 @@ bool fs_iter_next(FsIter *it) {
       continue;
     }
 
-    Str path = str_format(&it->scratch, "%.*s/%s", (i32)current->len - 2, current->name, findFileData.cFileName);
+    Str path = str_format(&it->scratch, "%.*s/%s", (i32)current->len - 2, current->name,
+                          findFileData.cFileName);
 
     it->current.path = path;
     it->current.is_dir = findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
@@ -4302,7 +4298,7 @@ bool fs_iter_next(FsIter *it) {
       }
       node->next = it->_stack;
       it->_stack = node;
-    } 
+    }
 
     return true;
   }
@@ -4441,7 +4437,6 @@ Path os_getcwd(Arena *arena) {
 #elif defined(WINDOWS)
 
 #include <direct.h>
-#include <windows.h>
 
 void os_chdir(Path path) {
   char buffer[FILENAME_MAX] = {0};
