@@ -23,7 +23,12 @@ MSVC.
 #define WINDOWS
 #define CEBUS_SYSTEM "Windows"
 #define _CRT_SECURE_NO_WARNINGS
+#define NOGDI
+#define NOUSER
 #define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef near
+#undef far
 #else
 #error "Platform not supported!"
 #endif
