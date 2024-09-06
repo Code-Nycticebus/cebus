@@ -252,6 +252,21 @@ static void test_remove(void) {
   arena_free(&arena);
 }
 
+static void test_for_each(void) {
+  Arena arena = {0};
+  DA(usize) list = {0};
+
+  usize el[] = {1, 2, 3, 4};
+  da_init_static(&list, &arena, el);
+
+  usize i = 0;
+  da_for_each(usize, element, &list, {
+    cebus_assert(*element == el[i], "");
+    i++;
+  });
+  cebus_assert(i == list.len, "");
+}
+
 int main(void) {
   test_vec();
   test_da_init();
@@ -267,4 +282,5 @@ int main(void) {
   test_pop();
   test_insert();
   test_remove();
+  test_for_each();
 }

@@ -49,8 +49,6 @@ defer:
 //////////////////////////////////////////////////////////////////////////////
 #elif defined(WINDOWS)
 
-#include <windows.h>
-
 Dll *dll_load(Str path, Error *error) {
   if (!fs_exists(path)) {
     error_emit(error, -1, "dll: library does not exist: " STR_FMT, STR_ARG(path));

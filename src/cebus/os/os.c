@@ -55,7 +55,6 @@ Path os_getcwd(Arena *arena) {
 #elif defined(WINDOWS)
 
 #include <direct.h>
-#include <windows.h>
 
 void os_chdir(Path path) {
   char buffer[FILENAME_MAX] = {0};
