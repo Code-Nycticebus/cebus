@@ -121,13 +121,13 @@ typedef int64_t i64;
 #define I64_MIN INT64_MIN
 #define I64_BITS 64
 #if defined(LINUX)
-#define I64_FMT "lu"
+#define I64_FMT "ld"
 #define I64_HEX "lx"
 #elif defined(WINDOWS)
-#define I64_FMT "llu"
+#define I64_FMT "lld"
 #define I64_HEX "llx"
 #else
-#define I64_FMT "lu"
+#define I64_FMT "ld"
 #define I32_FMT "lx"
 #endif
 
@@ -181,7 +181,8 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
-#define STR_STATIC(str) {.len = sizeof(str) - 1, .data = (str)}
+#define STR_STATIC(str)                                                                            \
+  { .len = sizeof(str) - 1, .data = (str) }
 #define STR_FMT "%.*s"
 #define STR_REPR "'%.*s'"
 #define STR_ARG(str) (i32)(str).len, (str).data
