@@ -175,8 +175,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
-#define STR_STATIC(str)                                                                            \
-  { .len = sizeof(str) - 1, .data = (str) }
+#define STR_STATIC(str) {.len = sizeof(str) - 1, .data = (str)}
 #define STR_FMT "%.*s"
 #define STR_REPR "'%.*s'"
 #define STR_ARG(str) (i32)(str).len, (str).data

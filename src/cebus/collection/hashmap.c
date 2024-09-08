@@ -297,3 +297,5 @@ const void *hm_get_ptr(const HashMap *hm, u64 hash) {
 #undef HM_TYPES
 #undef HM_DELETED_HASH
 #undef HM_DEFAULT_SIZE
+
+///////////////////////////////////////////////////////////////////////////////

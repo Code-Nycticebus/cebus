@@ -379,8 +379,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
-#define STR_STATIC(str)                                                                            \
-  { .len = sizeof(str) - 1, .data = (str) }
+#define STR_STATIC(str) {.len = sizeof(str) - 1, .data = (str)}
 #define STR_FMT "%.*s"
 #define STR_REPR "'%.*s'"
 #define STR_ARG(str) (i32)(str).len, (str).data
@@ -2713,6 +2712,8 @@ const void *hm_get_ptr(const HashMap *hm, u64 hash) {
 #undef HM_DELETED_HASH
 #undef HM_DEFAULT_SIZE
 
+///////////////////////////////////////////////////////////////////////////////
+
 // #include "set.h"
 
 // #include "cebus/type/integer.h"
@@ -2984,6 +2985,11 @@ Set set_union(const Set *set, const Set *other, Arena *arena) {
 
 //////////////////////////////////////////////////////////////////////////////
 
+#undef SET_DELETED_HASH
+#undef SET_DEFAULT_SIZE
+
+//////////////////////////////////////////////////////////////////////////////
+
 // #include "string_builder.h"
 
 // #include "cebus/type/string.h"
@@ -3013,14 +3019,14 @@ void sb_append_c(StringBuilder *sb, char c) { da_push(sb, c); }
 usize sb_append_fmt(StringBuilder *sb, const char *fmt, ...) {
   va_list va;
 
-  // get the size size without '\0'
+  // get the size without '\0'
   va_start(va, fmt);
   usize size = (usize)vsnprintf(NULL, 0, fmt, va);
   va_end(va);
 
   // allocate +1 so it does not overwrite
   da_reserve(sb, size + 1);
-  // write into buffer
+
   va_start(va, fmt);
   vsnprintf(&da_last(sb) + 1, size + 1, fmt, va);
   va_end(va);
@@ -3034,7 +3040,7 @@ usize sb_append_va(StringBuilder *sb, const char *fmt, va_list va) {
   va_list va2;
   va_copy(va2, va);
 
-  // get the size size without '\0'
+  // get the size without '\0'
   usize size = (usize)vsnprintf(NULL, 0, fmt, va);
 
   // allocate +1 so it does not overwrite
@@ -3410,6 +3416,9 @@ void _cebus_log_trace(const char *fmt, ...) { _LOG(CEBUS_LOG_TRACE, fmt); }
 ////////////////////////////////////////////////////////////////////////////
 
 #undef _LOG
+
+////////////////////////////////////////////////////////////////////////////
+
 // #include "args.h"
 
 // #include "cebus/core/debug.h"
