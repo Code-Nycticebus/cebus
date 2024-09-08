@@ -298,6 +298,33 @@ static void test_format(void) {
   arena_free(&arena);
 }
 
+static void test_take(void) {
+  Str s = STR("what a wonderful string");
+  cebus_assert(str_eq(str_take(&s, 2), STR("wh")), STR_REPR, STR_ARG(s));
+  cebus_assert(str_eq(str_take_right(&s, 2), STR("ng")), STR_REPR, STR_ARG(s));
+
+  cebus_assert(str_eq(str_take(&s, 8), STR("at a won")), STR_REPR, STR_ARG(s));
+  cebus_assert(str_eq(str_take_right(&s, 5), STR(" stri")), STR_REPR, STR_ARG(s));
+
+  cebus_assert(str_eq(s, STR("derful")), STR_REPR, STR_ARG(s));
+}
+
+static void test_try_take(void) {
+  Str s = STR("what a wonderful string");
+
+  Str chunk = {0};
+  cebus_assert(str_try_take(&s, 7, &chunk) == true, STR_REPR, STR_ARG(s));
+  cebus_assert(str_eq(chunk, STR("what a ")), STR_REPR, STR_ARG(s));
+
+  cebus_assert(str_try_take_right(&s, 7, &chunk) == true, STR_REPR, STR_ARG(s));
+  cebus_assert(str_eq(chunk, STR(" string")), STR_REPR, STR_ARG(s));
+
+  cebus_assert(str_eq(s, STR("wonderful")), STR_REPR, STR_ARG(s));
+  cebus_assert(str_try_take_right(&s, 9, &chunk) == true, STR_REPR, STR_ARG(s));
+
+  cebus_assert(str_try_take_right(&s, 2, &chunk) == false, STR_REPR, STR_ARG(s));
+}
+
 int main(void) {
   test_compare();
   test_transform();
@@ -319,4 +346,6 @@ int main(void) {
   test_reverse();
   test_hash();
   test_format();
+  test_take();
+  test_try_take();
 }

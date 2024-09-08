@@ -2332,7 +2332,9 @@ Str str_chop_by_predicate(Str *s, bool (*predicate)(char));
 Str str_chop_right_by_delim(Str *s, char delim);
 Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char));
 Str str_take(Str *s, usize count);
-bool str_try_take(Str *s, usize n, Str *chunk);
+bool str_try_take(Str *s, usize count, Str *chunk);
+Str str_take_right(Str *s, usize count);
+bool str_try_take_right(Str *s, usize count, Str *chunk);
 
 Str str_substring(Str s, usize start, usize end);
 
@@ -5511,6 +5513,23 @@ bool str_try_take(Str *s, usize count, Str *chunk) {
   *chunk = str_from_parts(count, s->data);
   s->len -= count;
   s->data += count;
+  return true;
+}
+
+Str str_take_right(Str *s, usize count) {
+  count = usize_min(s->len, count);
+  Str ret = str_from_parts(count, &s->data[s->len - count]);
+  s->len -= count;
+  return ret;
+}
+
+bool str_try_take_right(Str *s, usize count, Str *chunk) {
+  if (s->len == 0) {
+    return false;
+  }
+  count = usize_min(s->len, count);
+  *chunk = str_from_parts(count, &s->data[s->len - count]);
+  s->len -= count;
   return true;
 }
 

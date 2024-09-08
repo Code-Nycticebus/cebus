@@ -132,7 +132,9 @@ Str str_chop_by_predicate(Str *s, bool (*predicate)(char));
 Str str_chop_right_by_delim(Str *s, char delim);
 Str str_chop_right_by_predicate(Str *s, bool (*predicate)(char));
 Str str_take(Str *s, usize count);
-bool str_try_take(Str *s, usize n, Str *chunk);
+bool str_try_take(Str *s, usize count, Str *chunk);
+Str str_take_right(Str *s, usize count);
+bool str_try_take_right(Str *s, usize count, Str *chunk);
 
 Str str_substring(Str s, usize start, usize end);
 

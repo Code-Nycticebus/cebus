@@ -544,6 +544,23 @@ bool str_try_take(Str *s, usize count, Str *chunk) {
   return true;
 }
 
+Str str_take_right(Str *s, usize count) {
+  count = usize_min(s->len, count);
+  Str ret = str_from_parts(count, &s->data[s->len - count]);
+  s->len -= count;
+  return ret;
+}
+
+bool str_try_take_right(Str *s, usize count, Str *chunk) {
+  if (s->len == 0) {
+    return false;
+  }
+  count = usize_min(s->len, count);
+  *chunk = str_from_parts(count, &s->data[s->len - count]);
+  s->len -= count;
+  return true;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 u64 str_u64(Str s) {
