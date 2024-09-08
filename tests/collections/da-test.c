@@ -260,10 +260,10 @@ static void test_for_each(void) {
   da_init_static(&list, &arena, el);
 
   usize i = 0;
-  da_for_each(usize, element, &list, {
+  da_for_each(usize *, element, &list) {
     cebus_assert(*element == el[i], "");
     i++;
-  });
+  }
   cebus_assert(i == list.len, "");
 }
 

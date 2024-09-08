@@ -255,12 +255,7 @@ destination.
     }                                                                                              \
   } while (0)
 
-#define da_for_each(T, iter, da, ...)                                                              \
-  do {                                                                                             \
-    for (T *iter = &da_first(da); iter <= &da_last(da); iter++) {                                  \
-      __VA_ARGS__;                                                                                 \
-    }                                                                                              \
-  } while (0)
+#define da_for_each(T, iter, da) for (T iter = &da_first(da); iter <= &da_last(da); iter++)
 
 ///////////////////////////////////////////////////////////////////////////////
 
