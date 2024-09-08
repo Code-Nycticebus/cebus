@@ -271,44 +271,41 @@ typedef CmpOrdering (*CompareCtxFn)(const void *, const void *, const void *);
 
 typedef uint8_t u8;
 #define U8_MAX UINT8_MAX
-#define U8_MIN 0
-#define U8_BITS 8
 #define U8_FMT "hhu"
 #define U8_HEX "hhx"
 
 typedef int8_t i8;
 #define I8_MAX INT8_MAX
 #define I8_MIN INT8_MIN
-#define I8_BITS 8
 #define I8_FMT "hhd"
 #define I8_HEX "hhx"
 
 typedef uint16_t u16;
 #define U16_MAX UINT16_MAX
-#define U16_MIN 0
-#define U16_BITS 16
-#define U16_FMT "hd"
+#define U16_FMT "hu"
 #define U16_HEX "hx"
 
 typedef int16_t i16;
 #define I16_MAX INT16_MAX
 #define I16_MIN INT16_MIN
-#define I16_BITS 16
+#define I16_FMT "hd"
+#define I16_HEX "hx"
 
 typedef uint32_t u32;
 #define U32_MAX UINT32_MAX
 #define U32_MIN 0
-#define U32_BITS 32
+#define U32_FMT "u"
+#define U32_HEX "x"
 
 typedef int32_t i32;
 #define I32_MAX INT32_MAX
 #define I32_MIN INT32_MIN
-#define I32_BITS 32
+#define I32_FMT "d"
+#define I32_HEX "x"
 
 typedef uint64_t u64;
 #define U64_MAX UINT64_MAX
 #define U64_MIN 0
-#define U64_BITS 64
 #if defined(LINUX)
 #define U64_FMT "lu"
 #define U64_HEX "lx"
@@ -323,7 +320,6 @@ typedef uint64_t u64;
 typedef int64_t i64;
 #define I64_MAX INT64_MAX
 #define I64_MIN INT64_MIN
-#define I64_BITS 64
 #if defined(LINUX)
 #define I64_FMT "ld"
 #define I64_HEX "lx"
@@ -337,8 +333,6 @@ typedef int64_t i64;
 
 typedef size_t usize;
 #define USIZE_MAX SIZE_MAX
-#define USIZE_MIN 0
-#define USIZE_BITS (sizeof(usize) * 8)
 #if defined(WINDOWS) && defined(GCC)
 #define USIZE_FMT "llu"
 #else
@@ -2447,6 +2441,8 @@ bool utf8_validate(Utf8 s);
 
 typedef enum { HM_NONE, HM_PTR, HM_CONST_PTR, HM_TYPES(HM_DECLARE_ENUM) } HashTypes;
 
+#undef HM_DECLARE_ENUM
+
 #define HM_DECLARE_MEMBER(T) T T;
 
 typedef struct {
@@ -2456,6 +2452,8 @@ typedef struct {
     HM_TYPES(HM_DECLARE_MEMBER)
   } as;
 } HashValue;
+
+#undef HM_DECLARE_MEMBER
 
 typedef struct {
   u64 key;
@@ -2544,6 +2542,7 @@ static const char *hm_type(HashTypes type) {
   }
 
   UNREACHABLE();
+#undef RETURN_STR
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -2660,6 +2659,8 @@ bool hm_remove(HashMap *hm, u64 hash) {
 
 HM_TYPES(HM_INSERT_IMPL)
 
+#undef HM_INSERT_IMPL
+
 bool hm_insert_mut_ptr(HashMap *hm, u64 hash, void *value) {
   TYPE_CHECK(hm, HM_PTR, false);
   hm->type = HM_PTR;
@@ -2696,6 +2697,8 @@ void *hm_get_ptr_mut(const HashMap *hm, u64 hash) {
 
 HM_TYPES(HM_GET_IMPL)
 
+#undef HM_GET_IMPL
+
 const void *hm_get_ptr(const HashMap *hm, u64 hash) {
   TYPE_CHECK(hm, HM_CONST_PTR && hm->type != HM_PTR, NULL);
   HashValue *value = hm_get(hm, hash);
@@ -2703,6 +2706,12 @@ const void *hm_get_ptr(const HashMap *hm, u64 hash) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#undef TYPE_CHECK
+
+#undef HM_TYPES
+#undef HM_DELETED_HASH
+#undef HM_DEFAULT_SIZE
 
 // #include "set.h"
 
@@ -3400,6 +3409,7 @@ void _cebus_log_trace(const char *fmt, ...) { _LOG(CEBUS_LOG_TRACE, fmt); }
 
 ////////////////////////////////////////////////////////////////////////////
 
+#undef _LOG
 // #include "args.h"
 
 // #include "cebus/core/debug.h"
@@ -3689,6 +3699,8 @@ bool args_get_flag(Args *args, const char *argument) {
   cebus_assert(idx && args->arguments.items[*idx].type == ARG_TYPE_FLAG, "");
   return args->arguments.items[*idx].as.flag;
 }
+
+#undef ARGS_GENERIC_IMPLEMENTATION
 
 // #include "cmd.h"
 
@@ -4660,17 +4672,21 @@ char c_u8_to_HEX(u8 d) {
 FLOAT_IMPL(f32, 32)
 FLOAT_IMPL(f64, 64)
 
+#undef FLOAT_IMPL
+
 // #include "integer.h" // IWYU pragma: keep
 
 // #include "cebus/core/debug.h"
 // #include "cebus/core/platform.h"
 // #include "cebus/type/byte.h"
 
-#define INTEGER_IMPL(T, BITS)                                                                      \
+#define BITS(T) (sizeof(T) * 8)
+
+#define INTEGER_IMPL(T)                                                                            \
   /* BIT OPERATIONS */                                                                             \
   T T##_reverse_bits(T value) {                                                                    \
     T reversed = 0;                                                                                \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       reversed = (T)(reversed << 1);                                                               \
       if (value & 1) {                                                                             \
         reversed = reversed | 1;                                                                   \
@@ -4682,8 +4698,8 @@ FLOAT_IMPL(f64, 64)
                                                                                                    \
   usize T##_leading_ones(T value) {                                                                \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
-      if (!(value >> (BITS - i - 1) & (T)0x1)) {                                                   \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
+      if (!(value >> (BITS(T) - i - 1) & (T)0x1)) {                                                \
         break;                                                                                     \
       }                                                                                            \
       count++;                                                                                     \
@@ -4693,7 +4709,7 @@ FLOAT_IMPL(f64, 64)
                                                                                                    \
   usize T##_trailing_ones(T value) {                                                               \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       if (!(value >> i & (T)0x1)) {                                                                \
         break;                                                                                     \
       }                                                                                            \
@@ -4704,8 +4720,8 @@ FLOAT_IMPL(f64, 64)
                                                                                                    \
   usize T##_leading_zeros(T value) {                                                               \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
-      if (value >> (BITS - i - 1) & (T)0x1) {                                                      \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
+      if (value >> (BITS(T) - i - 1) & (T)0x1) {                                                   \
         break;                                                                                     \
       }                                                                                            \
       count++;                                                                                     \
@@ -4715,7 +4731,7 @@ FLOAT_IMPL(f64, 64)
                                                                                                    \
   usize T##_trailing_zeros(T value) {                                                              \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       if (value >> i & (T)0x1) {                                                                   \
         break;                                                                                     \
       }                                                                                            \
@@ -4726,7 +4742,7 @@ FLOAT_IMPL(f64, 64)
                                                                                                    \
   usize T##_count_zeros(T value) {                                                                 \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       if (!(value >> i & (T)0x1)) {                                                                \
         count++;                                                                                   \
       }                                                                                            \
@@ -4736,7 +4752,7 @@ FLOAT_IMPL(f64, 64)
                                                                                                    \
   usize T##_count_ones(T value) {                                                                  \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       if (value >> i & (T)0x1) {                                                                   \
         count++;                                                                                   \
       }                                                                                            \
@@ -4888,15 +4904,18 @@ FLOAT_IMPL(f64, 64)
     return ordering == CMP_LESS ? _##T##_cmp_lt : _##T##_cmp_gt;                                   \
   } /* UTILS END */
 
-INTEGER_IMPL(u8, U8_BITS)
-INTEGER_IMPL(i8, I8_BITS)
-INTEGER_IMPL(u16, U16_BITS)
-INTEGER_IMPL(i16, I16_BITS)
-INTEGER_IMPL(u32, U32_BITS)
-INTEGER_IMPL(i32, I32_BITS)
-INTEGER_IMPL(u64, U64_BITS)
-INTEGER_IMPL(i64, I64_BITS)
-INTEGER_IMPL(usize, USIZE_BITS)
+INTEGER_IMPL(u8)
+INTEGER_IMPL(i8)
+INTEGER_IMPL(u16)
+INTEGER_IMPL(i16)
+INTEGER_IMPL(u32)
+INTEGER_IMPL(i32)
+INTEGER_IMPL(u64)
+INTEGER_IMPL(i64)
+INTEGER_IMPL(usize)
+
+#undef INTEGER_IMPL
+#undef BITS
 
 // #include "path.h"
 // #include "cebus/type/string.h"

@@ -287,3 +287,5 @@ bool args_get_flag(Args *args, const char *argument) {
   cebus_assert(idx && args->arguments.items[*idx].type == ARG_TYPE_FLAG, "");
   return args->arguments.items[*idx].as.flag;
 }
+
+#undef ARGS_GENERIC_IMPLEMENTATION

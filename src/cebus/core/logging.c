@@ -87,3 +87,5 @@ void _cebus_log_debug(const char *fmt, ...) { _LOG(CEBUS_LOG_DEBUG, fmt); }
 void _cebus_log_trace(const char *fmt, ...) { _LOG(CEBUS_LOG_TRACE, fmt); }
 
 ////////////////////////////////////////////////////////////////////////////
+
+#undef _LOG

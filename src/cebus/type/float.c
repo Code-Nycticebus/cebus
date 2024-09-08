@@ -18,3 +18,5 @@
 
 FLOAT_IMPL(f32, 32)
 FLOAT_IMPL(f64, 64)
+
+#undef FLOAT_IMPL

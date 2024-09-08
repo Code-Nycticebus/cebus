@@ -26,6 +26,8 @@
 
 typedef enum { HM_NONE, HM_PTR, HM_CONST_PTR, HM_TYPES(HM_DECLARE_ENUM) } HashTypes;
 
+#undef HM_DECLARE_ENUM
+
 #define HM_DECLARE_MEMBER(T) T T;
 
 typedef struct {
@@ -35,6 +37,8 @@ typedef struct {
     HM_TYPES(HM_DECLARE_MEMBER)
   } as;
 } HashValue;
+
+#undef HM_DECLARE_MEMBER
 
 typedef struct {
   u64 key;
@@ -123,6 +127,7 @@ static const char *hm_type(HashTypes type) {
   }
 
   UNREACHABLE();
+#undef RETURN_STR
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -239,6 +244,8 @@ bool hm_remove(HashMap *hm, u64 hash) {
 
 HM_TYPES(HM_INSERT_IMPL)
 
+#undef HM_INSERT_IMPL
+
 bool hm_insert_mut_ptr(HashMap *hm, u64 hash, void *value) {
   TYPE_CHECK(hm, HM_PTR, false);
   hm->type = HM_PTR;
@@ -275,6 +282,8 @@ void *hm_get_ptr_mut(const HashMap *hm, u64 hash) {
 
 HM_TYPES(HM_GET_IMPL)
 
+#undef HM_GET_IMPL
+
 const void *hm_get_ptr(const HashMap *hm, u64 hash) {
   TYPE_CHECK(hm, HM_CONST_PTR && hm->type != HM_PTR, NULL);
   HashValue *value = hm_get(hm, hash);
@@ -282,3 +291,9 @@ const void *hm_get_ptr(const HashMap *hm, u64 hash) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#undef TYPE_CHECK
+
+#undef HM_TYPES
+#undef HM_DELETED_HASH
+#undef HM_DEFAULT_SIZE
