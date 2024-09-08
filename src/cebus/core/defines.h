@@ -67,44 +67,41 @@ typedef CmpOrdering (*CompareCtxFn)(const void *, const void *, const void *);
 
 typedef uint8_t u8;
 #define U8_MAX UINT8_MAX
-#define U8_MIN 0
-#define U8_BITS 8
 #define U8_FMT "hhu"
 #define U8_HEX "hhx"
 
 typedef int8_t i8;
 #define I8_MAX INT8_MAX
 #define I8_MIN INT8_MIN
-#define I8_BITS 8
 #define I8_FMT "hhd"
 #define I8_HEX "hhx"
 
 typedef uint16_t u16;
 #define U16_MAX UINT16_MAX
-#define U16_MIN 0
-#define U16_BITS 16
-#define U16_FMT "hd"
+#define U16_FMT "hu"
 #define U16_HEX "hx"
 
 typedef int16_t i16;
 #define I16_MAX INT16_MAX
 #define I16_MIN INT16_MIN
-#define I16_BITS 16
+#define I16_FMT "hd"
+#define I16_HEX "hx"
 
 typedef uint32_t u32;
 #define U32_MAX UINT32_MAX
 #define U32_MIN 0
-#define U32_BITS 32
+#define U32_FMT "u"
+#define U32_HEX "x"
 
 typedef int32_t i32;
 #define I32_MAX INT32_MAX
 #define I32_MIN INT32_MIN
-#define I32_BITS 32
+#define I32_FMT "d"
+#define I32_HEX "x"
 
 typedef uint64_t u64;
 #define U64_MAX UINT64_MAX
 #define U64_MIN 0
-#define U64_BITS 64
 #if defined(LINUX)
 #define U64_FMT "lu"
 #define U64_HEX "lx"
@@ -119,7 +116,6 @@ typedef uint64_t u64;
 typedef int64_t i64;
 #define I64_MAX INT64_MAX
 #define I64_MIN INT64_MIN
-#define I64_BITS 64
 #if defined(LINUX)
 #define I64_FMT "ld"
 #define I64_HEX "lx"
@@ -133,8 +129,6 @@ typedef int64_t i64;
 
 typedef size_t usize;
 #define USIZE_MAX SIZE_MAX
-#define USIZE_MIN 0
-#define USIZE_BITS (sizeof(usize) * 8)
 #if defined(WINDOWS) && defined(GCC)
 #define USIZE_FMT "llu"
 #else

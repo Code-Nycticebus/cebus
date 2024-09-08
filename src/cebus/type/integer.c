@@ -4,11 +4,13 @@
 #include "cebus/core/platform.h"
 #include "cebus/type/byte.h"
 
-#define INTEGER_IMPL(T, BITS)                                                                      \
+#define BITS(T) (sizeof(T) * 8)
+
+#define INTEGER_IMPL(T)                                                                            \
   /* BIT OPERATIONS */                                                                             \
   T T##_reverse_bits(T value) {                                                                    \
     T reversed = 0;                                                                                \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       reversed = (T)(reversed << 1);                                                               \
       if (value & 1) {                                                                             \
         reversed = reversed | 1;                                                                   \
@@ -20,8 +22,8 @@
                                                                                                    \
   usize T##_leading_ones(T value) {                                                                \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
-      if (!(value >> (BITS - i - 1) & (T)0x1)) {                                                   \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
+      if (!(value >> (BITS(T) - i - 1) & (T)0x1)) {                                                \
         break;                                                                                     \
       }                                                                                            \
       count++;                                                                                     \
@@ -31,7 +33,7 @@
                                                                                                    \
   usize T##_trailing_ones(T value) {                                                               \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       if (!(value >> i & (T)0x1)) {                                                                \
         break;                                                                                     \
       }                                                                                            \
@@ -42,8 +44,8 @@
                                                                                                    \
   usize T##_leading_zeros(T value) {                                                               \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
-      if (value >> (BITS - i - 1) & (T)0x1) {                                                      \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
+      if (value >> (BITS(T) - i - 1) & (T)0x1) {                                                   \
         break;                                                                                     \
       }                                                                                            \
       count++;                                                                                     \
@@ -53,7 +55,7 @@
                                                                                                    \
   usize T##_trailing_zeros(T value) {                                                              \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       if (value >> i & (T)0x1) {                                                                   \
         break;                                                                                     \
       }                                                                                            \
@@ -64,7 +66,7 @@
                                                                                                    \
   usize T##_count_zeros(T value) {                                                                 \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       if (!(value >> i & (T)0x1)) {                                                                \
         count++;                                                                                   \
       }                                                                                            \
@@ -74,7 +76,7 @@
                                                                                                    \
   usize T##_count_ones(T value) {                                                                  \
     usize count = 0;                                                                               \
-    for (usize i = 0; i < BITS; i++) {                                                             \
+    for (usize i = 0; i < BITS(T); i++) {                                                          \
       if (value >> i & (T)0x1) {                                                                   \
         count++;                                                                                   \
       }                                                                                            \
@@ -226,12 +228,14 @@
     return ordering == CMP_LESS ? _##T##_cmp_lt : _##T##_cmp_gt;                                   \
   } /* UTILS END */
 
-INTEGER_IMPL(u8, U8_BITS)
-INTEGER_IMPL(i8, I8_BITS)
-INTEGER_IMPL(u16, U16_BITS)
-INTEGER_IMPL(i16, I16_BITS)
-INTEGER_IMPL(u32, U32_BITS)
-INTEGER_IMPL(i32, I32_BITS)
-INTEGER_IMPL(u64, U64_BITS)
-INTEGER_IMPL(i64, I64_BITS)
-INTEGER_IMPL(usize, USIZE_BITS)
+INTEGER_IMPL(u8)
+INTEGER_IMPL(i8)
+INTEGER_IMPL(u16)
+INTEGER_IMPL(i16)
+INTEGER_IMPL(u32)
+INTEGER_IMPL(i32)
+INTEGER_IMPL(u64)
+INTEGER_IMPL(i64)
+INTEGER_IMPL(usize)
+
+#undef BITS
