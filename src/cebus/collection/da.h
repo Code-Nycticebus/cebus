@@ -99,6 +99,8 @@ destination.
 
 #define da_clear(list) ((list)->len = 0)
 
+#define DA_ARG(da) (da)->len, (da)->items
+
 ///////////////////////////////////////////////////////////////////////////////
 
 #define da_new(_arena)                                                                             \
