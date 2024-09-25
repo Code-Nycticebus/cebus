@@ -46,6 +46,7 @@ cebus = { dir = "path/to/cebus", type = "pybuildc" }
    - [io.h](#ioh)
    - [os.h](#osh)
 - [Type](#Type)
+   - [bool.h](#boolh)
    - [byte.h](#byteh)
    - [char.h](#charh)
    - [float.h](#floath)

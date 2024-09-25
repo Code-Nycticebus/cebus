@@ -269,41 +269,48 @@ typedef CmpOrdering (*CompareCtxFn)(const void *, const void *, const void *);
 
 ////////////////////////////////////////////////////////////////////////////
 
+#ifndef CEBUS_NO_INT_TYPEDEFS
 typedef uint8_t u8;
+typedef int8_t i8;
+typedef uint16_t u16;
+typedef int16_t i16;
+typedef uint32_t u32;
+typedef int32_t i32;
+typedef uint64_t u64;
+typedef int64_t i64;
+typedef size_t usize;
+typedef float f32;
+typedef double f64;
+#endif
+
 #define U8_MAX UINT8_MAX
 #define U8_FMT "hhu"
 #define U8_HEX "hhx"
 
-typedef int8_t i8;
 #define I8_MAX INT8_MAX
 #define I8_MIN INT8_MIN
 #define I8_FMT "hhd"
 #define I8_HEX "hhx"
 
-typedef uint16_t u16;
 #define U16_MAX UINT16_MAX
 #define U16_FMT "hu"
 #define U16_HEX "hx"
 
-typedef int16_t i16;
 #define I16_MAX INT16_MAX
 #define I16_MIN INT16_MIN
 #define I16_FMT "hd"
 #define I16_HEX "hx"
 
-typedef uint32_t u32;
 #define U32_MAX UINT32_MAX
 #define U32_MIN 0
 #define U32_FMT "u"
 #define U32_HEX "x"
 
-typedef int32_t i32;
 #define I32_MAX INT32_MAX
 #define I32_MIN INT32_MIN
 #define I32_FMT "d"
 #define I32_HEX "x"
 
-typedef uint64_t u64;
 #define U64_MAX UINT64_MAX
 #define U64_MIN 0
 #if defined(LINUX)
@@ -317,7 +324,6 @@ typedef uint64_t u64;
 #define U64_HEX "lx"
 #endif
 
-typedef int64_t i64;
 #define I64_MAX INT64_MAX
 #define I64_MIN INT64_MIN
 #if defined(LINUX)
@@ -331,7 +337,6 @@ typedef int64_t i64;
 #define I32_FMT "lx"
 #endif
 
-typedef size_t usize;
 #define USIZE_MAX SIZE_MAX
 #if defined(WINDOWS) && defined(GCC)
 #define USIZE_FMT "llu"
@@ -339,12 +344,10 @@ typedef size_t usize;
 #define USIZE_FMT "zu"
 #endif
 
-typedef float f32;
 #define F32_MAX FLT_MAX
 #define F32_MIN FLT_MIN
 #define F32_EPSILON FLT_EPSILON
 
-typedef double f64;
 #define F64_MAX DBL_MAX
 #define F64_MIN DBL_MIN
 #define F64_EPSILON DBL_EPSILON
@@ -379,7 +382,8 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////
 
 #define STR(str) ((Str){.len = sizeof(str) - 1, .data = (str)})
-#define STR_STATIC(str) {.len = sizeof(str) - 1, .data = (str)}
+#define STR_STATIC(str)                                                                            \
+  { .len = sizeof(str) - 1, .data = (str) }
 #define STR_FMT "%.*s"
 #define STR_REPR "'%.*s'"
 #define STR_ARG(str) (i32)(str).len, (str).data
@@ -781,6 +785,8 @@ destination.
 #define da_len(list) ((list)->len)
 
 #define da_clear(list) ((list)->len = 0)
+
+#define DA_ARG(da) (da)->len, (da)->items
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1867,6 +1873,18 @@ Path os_getcwd(Arena *arena);
 ////////////////////////////////////////////////////////////////////////////
 
 #endif /* !__CEBUS_OS_H__ */
+
+#ifndef __CEBUS_BOOL_H__
+#define __CEBUS_BOOL_H__
+
+// #include "cebus/core/defines.h"
+
+bool bool_toggle(bool b);
+
+bool bool_any(usize count, const bool *array);
+bool bool_all(usize count, const bool *array);
+
+#endif
 
 /* DOCUMENTATION
 ## Features and Functions
@@ -4492,6 +4510,28 @@ Path os_getcwd(Arena *arena) {
 //////////////////////////////////////////////////////////////////////////////
 
 #endif
+
+// #include "bool.h"
+
+bool bool_toggle(bool b) { return !b; }
+
+bool bool_any(usize count, const bool *array) {
+  for (usize i = 0; i < count; ++i) {
+    if (array[i]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool bool_all(usize count, const bool *array) {
+  for (usize i = 0; i < count; ++i) {
+    if (!array[i]) {
+      return false;
+    }
+  }
+  return true;
+}
 
 // #include "byte.h"
 
