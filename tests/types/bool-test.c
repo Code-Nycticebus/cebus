@@ -7,12 +7,7 @@
 static void bool_test_any(void) {
   Arena arena = {0};
   DA(bool) array = da_new(&arena);
-  da_init_static(&array, &arena,
-                 (bool[]){
-                     true,
-                     false,
-                     true,
-                 });
+  da_init_static(&array, &arena, (bool[]){true, false, true});
 
   cebus_assert(bool_any(DA_ARG(&array)), "");
   cebus_assert(!bool_all(DA_ARG(&array)), "");
@@ -23,12 +18,7 @@ static void bool_test_any(void) {
 static void bool_test_all(void) {
   Arena arena = {0};
   DA(bool) array = da_new(&arena);
-  da_init_static(&array, &arena,
-                 (bool[]){
-                     true,
-                     true,
-                     true,
-                 });
+  da_init_static(&array, &arena, (bool[]){true, true, true});
 
   cebus_assert(bool_any(DA_ARG(&array)), "");
   cebus_assert(bool_all(DA_ARG(&array)), "");
@@ -39,12 +29,7 @@ static void bool_test_all(void) {
 static void bool_test_none(void) {
   Arena arena = {0};
   DA(bool) array = da_new(&arena);
-  da_init_static(&array, &arena,
-                 (bool[]){
-                     false,
-                     false,
-                     false,
-                 });
+  da_init_static(&array, &arena, (bool[]){false, false, false});
 
   cebus_assert(!bool_any(DA_ARG(&array)), "");
   cebus_assert(!bool_all(DA_ARG(&array)), "");

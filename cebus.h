@@ -1881,6 +1881,9 @@ Path os_getcwd(Arena *arena);
 
 bool bool_toggle(bool b);
 
+u32 bool_pack_u32(usize count, const bool *array);
+u64 bool_pack_u64(usize count, const bool *array);
+
 bool bool_any(usize count, const bool *array);
 bool bool_all(usize count, const bool *array);
 
@@ -4514,6 +4517,14 @@ Path os_getcwd(Arena *arena) {
 // #include "bool.h"
 
 bool bool_toggle(bool b) { return !b; }
+
+u32 bool_pack_u32(usize count, const bool *array) {
+  u32 result = 0;
+  for (usize i = 0; i < count; ++i) {
+    result |= (u32)array[i] << i;
+  }
+  return result;
+}
 
 bool bool_any(usize count, const bool *array) {
   for (usize i = 0; i < count; ++i) {
