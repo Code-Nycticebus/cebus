@@ -15,7 +15,7 @@ static void test_file(void) {
 
   Error *PANIC = ErrPanic;
 
-  fs_file_write_bytes(filename1, BYTES(0x69, 0x69), PANIC);
+  fs_file_write_bytes(filename1, BYTES(0x69, 0x69, '\r', '\n'), PANIC);
   cebus_assert(fs_exists(filename1), "This file should exist");
 
   fs_rename(filename1, filename2, PANIC);
@@ -25,6 +25,8 @@ static void test_file(void) {
 
   cebus_assert(content.data[0] == 0x69, "Did not read the file correctly");
   cebus_assert(content.data[1] == 0x69, "Did not read the file correctly");
+  cebus_assert(content.data[2] == '\r', "Did not read the file correctly");
+  cebus_assert(content.data[3] == '\n', "Did not read the file correctly");
 
   fs_remove(filename2, PANIC);
 
