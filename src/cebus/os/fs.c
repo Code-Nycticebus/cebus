@@ -51,12 +51,15 @@ void fs_file_close(FILE *file, Error *error) {
 
 Bytes fs_file_read_bytes(Path filename, Arena *arena, Error *error) {
   Bytes result = {0};
-  FILE *handle = fs_file_open(filename, "r", error);
+
+  FILE *handle = fs_file_open(filename, "rb", error);
   error_propagate(error, { goto defer; });
+
   usize size = file_size(handle, error);
   error_propagate(error, { goto defer; });
 
   u8 *buffer = arena_alloc(arena, size);
+
   result = io_read_bytes(handle, size, buffer, error);
   error_propagate(error, { goto defer; });
 
@@ -68,16 +71,48 @@ defer:
 }
 
 Str fs_file_read_str(Path filename, Arena *arena, Error *error) {
-  Bytes bytes = fs_file_read_bytes(filename, arena, error);
-  error_propagate(error, { return (Str){0}; });
-  return str_from_bytes(bytes);
+  Bytes result = {0};
+
+  FILE *handle = fs_file_open(filename, "r", error);
+  error_propagate(error, { goto defer; });
+
+  usize size = file_size(handle, error);
+  error_propagate(error, { goto defer; });
+
+  u8 *buffer = arena_alloc(arena, size + 1);
+  buffer[size] = '\0';
+
+  result = io_read_bytes(handle, size, buffer, error);
+  error_propagate(error, { goto defer; });
+
+defer:
+  if (handle) {
+    fs_file_close(handle, error);
+  }
+  return str_from_bytes(result);
 }
 
 Utf8 fs_file_read_utf8(Path filename, Arena *arena, Error *error) {
-  Utf8 res = {0};
-  Bytes bytes = fs_file_read_bytes(filename, arena, error);
-  error_propagate(error, { return (Utf8){0}; });
-  res = utf8_decode(bytes, error);
+  Bytes result = {0};
+
+  FILE *handle = fs_file_open(filename, "r", error);
+  error_propagate(error, { goto defer; });
+
+  usize size = file_size(handle, error);
+  error_propagate(error, { goto defer; });
+
+  u8 *buffer = arena_alloc(arena, size + 1);
+  buffer[size] = '\0';
+
+  result = io_read_bytes(handle, size, buffer, error);
+  error_propagate(error, { goto defer; });
+
+defer:
+  if (handle) {
+    fs_file_close(handle, error);
+  }
+
+  Utf8 res = utf8_decode(result, error);
   error_propagate(error, { return (Utf8){0}; });
   return res;
 }
