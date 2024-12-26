@@ -183,6 +183,15 @@ destination.
     (list)->len += count;                                                                          \
   } while (0)
 
+#define da_extend_da(list, other)                                                                  \
+  do {                                                                                             \
+    da_reserve((list), (other)->len);                                                              \
+    for (usize __e_i = 0; __e_i < (other)->len; __e_i++) {                                         \
+      da_get(list, da_len(list) + __e_i) = (other)->items[__e_i];                                  \
+    }                                                                                              \
+    (list)->len += (other)->len;                                                                   \
+  } while (0)
+
 #define da_insert(list, value, idx)                                                                \
   do {                                                                                             \
     da_reserve(list, 1);                                                                           \

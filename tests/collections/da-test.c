@@ -100,6 +100,15 @@ static void test_extend(void) {
   cebus_assert(list.items[0] == 1 && list.items[1] == 2 && list.items[2] == 3,
                "List did not extend correctly");
 
+  i32 array[] = {1, 2, 3};
+  da_extend(&list, 3, array);
+  cebus_assert(list.items[3] == 1 && list.items[4] == 2 && list.items[5] == 3,
+               "List did not extend correctly");
+
+  da_extend_da(&list, &list);
+  cebus_assert(list.items[6] == 1 && list.items[7] == 2 && list.items[8] == 3,
+               "List did not extend correctly");
+
   arena_free(&arena);
 }
 
