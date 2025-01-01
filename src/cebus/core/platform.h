@@ -30,7 +30,7 @@ MSVC.
 #undef near
 #undef far
 #elif defined(__EMSCRIPTEN__)
-#define EMSCRIPTEN
+// #define EMSCRIPTEN
 #define CEBUS_SYSTEM "Emscripten"
 #include "emscripten.h"
 #else
