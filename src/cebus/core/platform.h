@@ -32,7 +32,7 @@ MSVC.
 #elif defined(__EMSCRIPTEN__)
 // #define EMSCRIPTEN
 #define CEBUS_SYSTEM "Emscripten"
-#include "emscripten.h"
+#include <emscripten.h>
 #else
 #error "Platform not supported!"
 #endif

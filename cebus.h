@@ -1,4 +1,4 @@
-/* 
+/*
 MIT License
 
 Copyright (c) 2024 Loris Kriyonas
@@ -66,7 +66,7 @@ MSVC.
 #elif defined(__EMSCRIPTEN__)
 // #define EMSCRIPTEN
 #define CEBUS_SYSTEM "Emscripten"
-// #include "emscripten.h"
+#include <emscripten.h>
 #else
 #error "Platform not supported!"
 #endif
@@ -2437,7 +2437,6 @@ bool utf8_validate_bytes(Bytes s);
 bool utf8_validate(Utf8 s);
 
 #endif /* !__CEBUS_UTF8_H__ */
-
 
 #ifdef CEBUS_IMPLEMENTATION
 /* this is needed so clangd does not report errors in single header */
@@ -5928,7 +5927,6 @@ bool utf8_validate_bytes(Bytes bytes) {
 bool utf8_validate(Utf8 s) {
   return utf8_validate_bytes(bytes_from_parts(s.size, (const u8 *)s.data));
 }
-
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Weverything"
