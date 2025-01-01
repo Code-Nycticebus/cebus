@@ -130,7 +130,7 @@ typedef double f64;
 #define I64_HEX "llx"
 #else
 #define I64_FMT "ld"
-#define I32_FMT "lx"
+#define I64_HEX "lx"
 #endif
 
 #define USIZE_MAX SIZE_MAX
