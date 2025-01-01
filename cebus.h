@@ -1,4 +1,4 @@
-/*
+/* 
 MIT License
 
 Copyright (c) 2024 Loris Kriyonas
@@ -338,7 +338,7 @@ typedef double f64;
 #define I64_HEX "llx"
 #else
 #define I64_FMT "ld"
-#define I32_FMT "lx"
+#define I64_HEX "lx"
 #endif
 
 #define USIZE_MAX SIZE_MAX
@@ -2437,6 +2437,7 @@ bool utf8_validate_bytes(Bytes s);
 bool utf8_validate(Utf8 s);
 
 #endif /* !__CEBUS_UTF8_H__ */
+
 
 #ifdef CEBUS_IMPLEMENTATION
 /* this is needed so clangd does not report errors in single header */
@@ -5927,6 +5928,7 @@ bool utf8_validate_bytes(Bytes bytes) {
 bool utf8_validate(Utf8 s) {
   return utf8_validate_bytes(bytes_from_parts(s.size, (const u8 *)s.data));
 }
+
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Weverything"
