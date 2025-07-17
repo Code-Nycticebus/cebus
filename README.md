@@ -1,3 +1,8 @@
+> ⚠️ This is the old version of [nsl.h](https://github.com/Code-Nycticebus/nsl) and therefore archived
+
+
+
+
 # C Library 
 
 This is an extension of the C standart library. 
